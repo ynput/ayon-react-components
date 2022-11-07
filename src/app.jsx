@@ -1,10 +1,44 @@
-import { Button } from './components'
+import { Button, Toolbar, LinkButton, Section, Panel, InputText } from '/src/components'
 
 function App() {
   return (
-    <div>
-      <Button label="pyco" />
-    </div>
+    <main
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 'var(--base-gap-large)',
+        padding: 'var(--base-gap-large)',
+      }}
+    >
+      <Section>
+        <Toolbar>
+          <Button label="Button with an icon" icon="folder" tooltip="And a tooltip" />
+          <Button icon="save" tooltip="Toolbutton (icon only)" />
+          <LinkButton label="Link button" tooltip="Button which looks like a link" />
+        </Toolbar>
+        <Panel>
+          <h1>Panel</h1>
+        </Panel>
+      </Section>
+      <Section>
+        <Toolbar>
+          <Button label="Disabled button" icon="folder" disabled={true} />
+          <Button label="Button without an icon" />
+          <InputText placeholder="Some text..." />
+        </Toolbar>
+        <Panel>
+          <h1>Panel</h1>
+        </Panel>
+        <Panel className="transparent">
+          <h1>Transparent panel</h1>
+        </Panel>
+      </Section>
+    </main>
   )
 }
 

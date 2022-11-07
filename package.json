@@ -15,6 +15,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "sass": "^1.56.0",
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
@@ -51,9 +52,11 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/openpype-components.esm.js",
-      "require": "./dist/openpype-components.cjs.js",
-      "default": "./dist/openpype-components.cjs.js"
+      "import": "./dist/openpype-components.es.js"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
     }
   },
   "main": "dist/openpype-components.umd.js",
