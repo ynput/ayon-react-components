@@ -1,5 +1,5 @@
 {
-  "name": "ayon-react",
+  "name": "openpype-components",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -51,11 +51,11 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/ayon-react.esm.js",
-      "require": "./dist/ayon-react.cjs.js",
-      "default": "./dist/ayon-react.cjs.js"
+      "import": "./dist/openpype-components.esm.js",
+      "require": "./dist/openpype-components.cjs.js",
+      "default": "./dist/openpype-components.cjs.js"
     }
   },
-  "main": "dist/ayon-react.umd.js",
-  "module": "dist/ayon-react.es.js"
+  "main": "dist/openpype-components.umd.js",
+  "module": "dist/openpype-components.es.js"
 }
