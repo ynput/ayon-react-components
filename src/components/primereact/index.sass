@@ -22,19 +22,6 @@ $prime-input-border: 1px solid $color-grey-03
 $prime-input-background: $color-grey-00
 $prime-button-background: $color-grey-03
 
-// input
-
-.p-inputtext, .p-multiselect, .p-dropdown, .p-password-input
-  background-color: $prime-input-background
-  border: $prime-input-border
-  border-radius: 4px
-  box-shadow: none !important
-  min-width: 120px
-
-  &:enabled, &:not(.p-disabled)
-    &:focus, &:hover
-      border-color: var(--color-hl-00)
-
 // button
 
 .p-button:not(.p-button-link)
@@ -221,48 +208,6 @@ $prime-button-background: $color-grey-03
       width: 100%
       text-align: center
       border: 0
-
-
-
-.tool-button
-  margin: 0,
-  padding: 0,
-  height: 32px,
-  width: auto,
-  aspect-ratio: 1,
-  display: flex
-  align-items: center
-  justify-content: center
-  box-shadow: none
-  border: 0 !important
-  color: var(--color-text) !important
-  span
-    font-size: 1.5rem !important
-
-.normal-button
-  margin: 0,
-  padding: 0 6px,
-  height: 32px,
-  display: flex
-  align-items: center
-  justify-content: center
-  box-shadow: none
-  border: 0 !important
-  color: var(--color-text) !important
-  gap: 6px
-
-  .icon
-    vertical-align: top !important
-    font-size: 1.5rem !important
-
-  .label
-    font-size: 1.1rem !important
-    display: block
-    flex-grow: 1
-
-.link-button
-  padding: 0
-  margin: 0
 
 
 

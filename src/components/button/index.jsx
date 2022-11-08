@@ -17,14 +17,17 @@ const Button = styled(BaseButton)`
   max-height: var(--base-input-size);
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   border: none;
   border-radius: var(--base-input-border-radius);
-  gap: var(--base-gap-small);
+  gap: var(--base-gap-medium);
   cursor: pointer;
-  padding: 0 10px;
   white-space: nowrap;
+
+  .material-symbols-outlined {
+    font-size: 1.5rem;
+  }
 
   &:hover {
     background: var(--button-background-hover);
@@ -51,8 +54,44 @@ const Button = styled(BaseButton)`
     }
   }
 
-  .material-symbols-outlined {
-    font-size: 1.5rem;
+  // Circle tool buttons (for arrows and crosses/pluses in the settings editor)
+
+  &.circle {
+    border-radius: 50%;
+    border: 1px solid var(--color-grey-03);
+    background: transparent;
+    padding: 0;
+    justify-content: center;
+    .material-symbols-outlined {
+      font-size: 2rem;
+    }
+  }
+
+  // Transparent button is used for the top level menus
+  // (project sidebar and user menu)
+
+  &.transparent {
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    justify-content: center;
+    padding: 0;
+    &:hover {
+      background: transparent;
+      .material-symbols-outlined {
+        color: white;
+      }
+    }
+    &:focus {
+      outline: none;
+      color: var(--color-hl-00);
+      .material-symbols-outlined {
+        color: var(--color-hl-00);
+      }
+    }
+    .material-symbols-outlined {
+      font-size: 2.2rem;
+    }
   }
 
   // Without a label, button is considered an icon button

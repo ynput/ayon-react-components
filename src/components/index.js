@@ -1,7 +1,17 @@
 import { Button, LinkButton } from './button'
-import { Section, Panel, ScrollArea, Toolbar, Spacer, FormLayout, FormRow } from './layout'
+import {
+  Section,
+  Panel,
+  ScrollArea,
+  Toolbar,
+  Spacer,
+  FormLayout,
+  FormRow,
+  Divider,
+  TableWrapper,
+} from './layout'
 import { Shade, LoaderShade } from './overlay/shade'
-import { InputText, Password } from './input'
+import { InputText, InputTextarea, Password } from './input'
 
 import './index.sass'
 
@@ -18,5 +28,8 @@ export {
   Shade,
   LoaderShade,
   InputText,
+  InputTextarea,
   Password,
+  Divider,
+  TableWrapper,
 }

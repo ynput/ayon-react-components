@@ -46,6 +46,25 @@ const Panel = styled.div`
   }
 `
 
+const TableWrapper = (props) => {
+  return (
+    <div style={{ flexGrow: 1, position: 'relative' }}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 3, // prevent header covering rounded corners of the parent panel
+          left: 0,
+          right: 0,
+          bottom: 0,
+          padding: 0,
+        }}
+      >
+        {props.children}
+      </div>
+    </div>
+  )
+}
+
 const ScrollArea = styled.div`
   position: absolute;
   top: 0;
@@ -87,6 +106,9 @@ const BaseFormRow = styled.div`
 
   .label {
     min-width: 120px;
+    display: block;
+    height: var(--base-input-size);
+    line-height: var(--base-input-size);
   }
 
   .field {
@@ -105,4 +127,37 @@ const FormRow = ({ label, children, className, style }) => {
   )
 }
 
-export { Section, Panel, ScrollArea, Toolbar, Spacer, FormLayout, FormRow }
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+
+  ${(props) =>
+    !props.children &&
+    `
+    border-bottom: 1px solid var(--color-grey-03);
+  `}
+
+  ${(props) =>
+    props.children &&
+    `
+    &::before,
+    &::after {
+      content: '';
+      height: 1px;
+      background-color: var(--color-grey-03);
+    }
+
+    &::before {
+      margin-right: 2rem;
+      flex-basis: 200px;
+    }
+
+    &::after {
+      margin-left: 2rem;
+      flex-grow: 1;
+    }
+  `}
+`
+
+export { Section, Panel, ScrollArea, Toolbar, Spacer, FormLayout, FormRow, Divider, TableWrapper }
