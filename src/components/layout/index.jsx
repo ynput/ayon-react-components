@@ -36,6 +36,8 @@ const Panel = styled.div`
   background-color: var(--panel-background);
   border-radius: var(--panel-border-radius);
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 
   &.transparent {
     background-color: transparent;

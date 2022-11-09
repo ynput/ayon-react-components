@@ -1,3 +1,6 @@
+import 'primereact/resources/primereact.min.css'
+import 'primeicons/primeicons.css'
+
 import {
   Button,
   Toolbar,
@@ -6,11 +9,14 @@ import {
   Panel,
   InputText,
   InputTextarea,
+  InputSwitch,
   FormLayout,
   FormRow,
   Divider,
   Spacer,
 } from '/src/components'
+
+import PrimeReactForm from '/src/primereact'
 
 const DemoForm = () => (
   <FormLayout>
@@ -25,6 +31,9 @@ const DemoForm = () => (
     </FormRow>
     <FormRow label="Text area">
       <InputTextarea placeholder="Some text..." rows={8} />
+    </FormRow>
+    <FormRow label="Switch">
+      <InputSwitch />
     </FormRow>
   </FormLayout>
 )
@@ -53,8 +62,10 @@ const App = () => {
         <Panel>
           <h1>Panel</h1>
           <Divider />
+          <PrimeReactForm />
         </Panel>
       </Section>
+
       <Section>
         <Toolbar>
           <Button label="Disabled button" icon="folder" disabled={true} />

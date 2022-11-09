@@ -1,7 +1,7 @@
 {
   "name": "openpype-components",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -32,6 +32,8 @@
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
+    "primeicons": "^6.0.1",
+    "primereact": "^8.7.1",
     "react-hooks": "^1.0.1",
     "vite": "^3.2.0",
     "vite-plugin-linter": "^1.2.0"

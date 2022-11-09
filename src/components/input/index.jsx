@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 const StyledInput = styled.input`
@@ -25,8 +26,8 @@ const StyledInput = styled.input`
   }
 `
 
-const InputText = ({ className, value, onChange, placeholder, disabled, tooltip }) => {
-  return (
+const InputText = forwardRef(
+  ({ className, value, onChange, placeholder, disabled, tooltip, style }, ref) => (
     <StyledInput
       className={className}
       value={value}
@@ -35,9 +36,29 @@ const InputText = ({ className, value, onChange, placeholder, disabled, tooltip 
       disabled={disabled}
       type="text"
       title={tooltip}
+      style={style}
+      ref={ref}
     />
-  )
-}
+  ),
+)
+InputText.displayName = 'InputText'
+
+const Password = forwardRef(
+  ({ className, value, onChange, placeholder, disabled, tooltip, style }, ref) => (
+    <StyledInput
+      className={className}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      disabled={disabled}
+      type="password"
+      title={tooltip}
+      style={style}
+      ref={ref}
+    />
+  ),
+)
+Password.displayName = 'Password'
 
 const InputTextarea = styled.textarea`
   color: var(--color-text);
@@ -45,7 +66,6 @@ const InputTextarea = styled.textarea`
   background-color: var(--color-grey-00);
   border-radius: var(--base-input-border-radius);
   min-height: var(--base-input-size);
-  max-height: calc(var(--base-input-size) * 4);
   padding: 6px 5px;
   resize: vertical;
 
@@ -57,19 +77,5 @@ const InputTextarea = styled.textarea`
     border-color: var(--color-hl-error);
   }
 `
-
-const Password = ({ className, value, onChange, placeholder, disabled, tooltip }) => {
-  return (
-    <StyledInput
-      className={className}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      type="password"
-      title={tooltip}
-    />
-  )
-}
 
 export { InputText, InputTextarea, Password }

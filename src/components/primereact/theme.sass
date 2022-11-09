@@ -67,13 +67,10 @@
   border-radius: 3px
 
   &:focus
-    outline: 0 none
-    outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    outline: 1px solid var(--color-hl-00)
 
 
-
-.p-inputtext, .p-multiselect, .p-dropdown, .p-password-input
+.p-inputtext, .p-multiselect, .p-dropdown, .p-password-input, .p-multiselect
   background-color: var(--color-grey-00)
   border: 1px solid var(--color-grey-03)
   border-radius: var(--base-input-border-radius)
@@ -83,7 +80,7 @@
   max-height: var(--base-input-size)
 
   &:enabled, &:not(.p-disabled)
-    &:focus, &:hover
+    &:focus, &.p-focus
       outline: 1px solid var(--color-hl-00)
 
 
@@ -245,21 +242,14 @@
   font-family: var(--base-font-family)
   font-size: var(--base-font-size)
   color: rgba(255, 255, 255, 0.87)
-  background: #121212
   padding: 0.5rem 0.5rem
-  border: 1px solid #383838
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
   appearance: none
-  border-radius: 3px
+  border-radius: var(--base-input-border-radius)
 
   &:enabled
-    &:hover
-      border-color: #64b5f6
-
-    &:focus
+    &:focus, &.p-focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
       border-color: #64b5f6
 
   &.p-invalid.p-component
@@ -321,21 +311,6 @@
 
 
 .p-multiselect
-  background: #121212
-  border: 1px solid #383838
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
-  border-radius: 3px
-
-  &:not(.p-disabled)
-    &:hover
-      border-color: #64b5f6
-
-    &.p-focus
-      outline: 0 none
-      outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
-      border-color: #64b5f6
-
   &.p-multiselect-clearable .p-multiselect-label
     padding-right: 1.5rem
 
@@ -421,9 +396,7 @@
         background: rgba(255, 255, 255, 0.03)
 
       &:focus
-        outline: 0 none
-        outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        outline: 1px solid var(--color-hl-00)
 
   .p-multiselect-items
     padding: 0.5rem 0
@@ -813,81 +786,19 @@
     border-color: var(--color-hl-error)
 
 .p-button
-  color: #212529
-  background: #64b5f6
-  border: 1px solid #64b5f6
+  color: var(--color-text)
+  background: var(--color-grey-03)
+  border: 1px solid var(--color-grey-03)
   padding: 0.5rem 1rem
   font-size: 1rem
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
   border-radius: 3px
 
-  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-    background: #43a5f4
-    color: #212529
-    border-color: #43a5f4
-
   &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-    background: #2396f2
-    color: #212529
-    border-color: #2396f2
-
-  &.p-button-outlined
-    background-color: transparent
-    color: #64b5f6
-    border: 1px solid
-
-    &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-      background: rgba(100, 181, 246, 0.04)
-      color: #64b5f6
-      border: 1px solid
-
-    &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-      background: rgba(100, 181, 246, 0.16)
-      color: #64b5f6
-      border: 1px solid
-
-    &.p-button-plain
-      color: rgba(255, 255, 255, 0.6)
-      border-color: rgba(255, 255, 255, 0.6)
-
-      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.6)
-
-      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-        background: rgba(255, 255, 255, 0.16)
-        color: rgba(255, 255, 255, 0.6)
-
-  &.p-button-text
-    background-color: transparent
-    color: #64b5f6
-    border-color: transparent
-
-    &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-      background: rgba(100, 181, 246, 0.04)
-      color: #64b5f6
-      border-color: transparent
-
-    &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-      background: rgba(100, 181, 246, 0.16)
-      color: #64b5f6
-      border-color: transparent
-
-    &.p-button-plain
-      color: rgba(255, 255, 255, 0.6)
-
-      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.6)
-
-      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-        background: rgba(255, 255, 255, 0.16)
-        color: rgba(255, 255, 255, 0.6)
+    background: var(--color-grey-04)
+    color: white
 
   &:focus
-    outline: 0 none
-    outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    outline: 1px solid var(--color-hl-00)
 
   .p-button-icon-left
     margin-right: 0.5rem

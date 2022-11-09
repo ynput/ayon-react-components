@@ -1,10 +1,16 @@
 import styled from 'styled-components'
 
-const BaseButton = ({ label, icon, className, onClick, disabled, tooltip }) => {
+const BaseButton = ({ label, icon, className, onClick, disabled, tooltip, style }) => {
   const iconElement = icon && <span className="material-symbols-outlined">{icon}</span>
 
   return (
-    <button className={className} onClick={onClick} title={tooltip} disabled={disabled}>
+    <button
+      className={className}
+      onClick={onClick}
+      title={tooltip}
+      disabled={disabled}
+      style={style}
+    >
       {iconElement} {label}
     </button>
   )
@@ -17,7 +23,7 @@ const Button = styled(BaseButton)`
   max-height: var(--base-input-size);
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border: none;
   border-radius: var(--base-input-border-radius);

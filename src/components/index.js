@@ -12,6 +12,7 @@ import {
 } from './layout'
 import { Shade, LoaderShade } from './overlay/shade'
 import { InputText, InputTextarea, Password } from './input'
+import { InputSwitch } from './input/switch'
 
 import './index.sass'
 
@@ -32,4 +33,5 @@ export {
   Password,
   Divider,
   TableWrapper,
+  InputSwitch,
 }
