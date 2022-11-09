@@ -20,9 +20,10 @@ const StyledInput = styled.input`
 
   &:disabled {
     color: var(--color-text-dim);
+    background-color: var(--input-disabled-background-color);
+    border-color: var(--input-disabled-border-color);
     font-style: italic;
     cursor: not-allowed;
-    border-style: dashed;
   }
 `
 

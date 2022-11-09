@@ -48,6 +48,8 @@
   --panel-background: var(--color-grey-00)
   --panel-border-radius: 5px
 
+  --input-disabled-background-color: #282c34
+  --input-disabled-border-color: #353b45
 
 
 *
@@ -62,3 +64,22 @@ html
 .material-symbols-outlined
   color: var(--color-icon)
   font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 200, 'opsz' 20
+
+// Scrollbars
+
+::-webkit-scrollbar
+  width: 20px
+  height: 20px
+
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner
+  background-color: transparent
+
+::-webkit-scrollbar-thumb
+  background-color: var(--color-grey-03)
+  border-radius: 20px
+  border: 6px solid transparent
+  background-clip: content-box
+
+  &:hover
+    background-color: var(--color-grey-04)
+

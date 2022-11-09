@@ -30,55 +30,6 @@ const Section = styled.section`
   }
 `
 
-const Panel = styled.div`
-  position: relative;
-  padding: 12px;
-  background-color: var(--panel-background);
-  border-radius: var(--panel-border-radius);
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-
-  &.transparent {
-    background-color: transparent;
-  }
-
-  &.nopad {
-    padding: 0;
-  }
-`
-
-const TableWrapper = (props) => {
-  return (
-    <div style={{ flexGrow: 1, position: 'relative' }}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 3, // prevent header covering rounded corners of the parent panel
-          left: 0,
-          right: 0,
-          bottom: 0,
-          padding: 0,
-        }}
-      >
-        {props.children}
-      </div>
-    </div>
-  )
-}
-
-const ScrollArea = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  gap: 12px;
-`
-
 const Toolbar = styled.nav`
   display: flex;
   flex-direction: row;
@@ -162,4 +113,4 @@ const Divider = styled.div`
   `}
 `
 
-export { Section, Panel, ScrollArea, Toolbar, Spacer, FormLayout, FormRow, Divider, TableWrapper }
+export { Section, Toolbar, Spacer, FormLayout, FormRow, Divider }

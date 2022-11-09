@@ -1,15 +1,14 @@
 import { Button, LinkButton } from './button'
+import { Section, Toolbar, Spacer, FormLayout, FormRow, Divider } from './layout'
+
 import {
-  Section,
   Panel,
-  ScrollArea,
-  Toolbar,
-  Spacer,
-  FormLayout,
-  FormRow,
-  Divider,
-  TableWrapper,
-} from './layout'
+  TablePanel,
+  ScrollPanel,
+  ScrollArea, // Deprecated
+  TableWrapper, // Deprecated
+} from './layout/panels'
+
 import { Shade, LoaderShade } from './overlay/shade'
 import { InputText, InputTextarea, Password } from './input'
 import { InputSwitch } from './input/switch'
@@ -34,4 +33,6 @@ export {
   Divider,
   TableWrapper,
   InputSwitch,
+  TablePanel,
+  ScrollPanel,
 }

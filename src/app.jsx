@@ -14,9 +14,23 @@ import {
   FormRow,
   Divider,
   Spacer,
+  TablePanel,
+  ScrollPanel,
 } from '/src/components'
 
 import PrimeReactForm from '/src/primereact'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
+
+const customers = [
+  { name: 'Customer 1', country: 'Country 1', representative: 'Representative 1' },
+  { name: 'Customer 2', country: 'Country 2', representative: 'Representative 2' },
+  { name: 'Customer 3', country: 'Country 3', representative: 'Representative 3' },
+  { name: 'Customer 4', country: 'Country 4', representative: 'Representative 4' },
+  { name: 'Customer 5', country: 'Country 5', representative: 'Representative 5' },
+  { name: 'Customer 6', country: 'Country 6', representative: 'Representative 6' },
+  { name: 'Customer 7', country: 'Country 7', representative: 'Representative 7' },
+]
 
 const DemoForm = () => (
   <FormLayout>
@@ -59,11 +73,39 @@ const App = () => {
           <Button icon="save" tooltip="Toolbutton (icon only)" />
           <LinkButton label="Link button" tooltip="Button which looks like a link" />
         </Toolbar>
-        <Panel>
-          <h1>Panel</h1>
+        <Panel style={{ flexGrow: 0 }}>
+          <h1>Primereact components</h1>
           <Divider />
           <PrimeReactForm />
         </Panel>
+        <TablePanel>
+          <DataTable value={customers}>
+            <Column field="name" header="Name" sortable />
+            <Column field="country" header="Country" sortable />
+            <Column field="representative" header="Representative" sortable />
+          </DataTable>
+        </TablePanel>
+        <ScrollPanel style={{ minHeight: 300 }} className="transparent">
+          <h1>Scroll panel</h1>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt
+            lacinia, nunc est aliquam nunc, eget lacinia nisl lorem nec nunc. Nulla facilisi. Donec
+            auctor, nisl eget aliquam tincidunt, nunc elit aliquam massa, eget aliquam nisl nisl sit
+            amet nunc. Sed euismod, nisl nec tincidunt lacinia, nunc est
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt
+            lacinia, nunc est aliquam nunc, eget lacinia nisl lorem nec nunc. Nulla facilisi. Donec
+            auctor, nisl eget aliquam tincidunt, nunc elit aliquam massa, eget aliquam nisl nisl sit
+            amet nunc. Sed euismod, nisl nec tincidunt lacinia, nunc est
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt
+            lacinia, nunc est aliquam nunc, eget lacinia nisl lorem nec nunc. Nulla facilisi. Donec
+            auctor, nisl eget aliquam tincidunt, nunc elit aliquam massa, eget aliquam nisl nisl sit
+            amet nunc. Sed euismod, nisl nec tincidunt lacinia, nunc est
+          </p>
+        </ScrollPanel>
       </Section>
 
       <Section>
@@ -76,7 +118,6 @@ const App = () => {
         </Toolbar>
         <Panel>
           <h1>Panel</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec</p>
           <Divider>Form layout</Divider>
           <DemoForm />
         </Panel>
