@@ -78,7 +78,7 @@ const App = () => {
           <Divider />
           <PrimeReactForm />
         </Panel>
-        <TablePanel>
+        <TablePanel loading={true}>
           <DataTable value={customers}>
             <Column field="name" header="Name" sortable />
             <Column field="country" header="Country" sortable />

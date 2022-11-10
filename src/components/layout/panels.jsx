@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { LoaderShade } from '/src/components/overlay/shade'
 
 const Panel = styled.div`
   position: relative;
@@ -62,6 +63,7 @@ const TablePanel = (props) => (
     }}
   >
     <div style={{ flexGrow: 1, position: 'relative' }}>
+      {props.loading ? <LoaderShade /> : null}
       <div
         style={{
           position: 'absolute',

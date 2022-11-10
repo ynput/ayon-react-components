@@ -1,5 +1,31 @@
 import styled from 'styled-components'
 
+const Loader = styled.div`
+  --loader-size: 40px;
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  &:after {
+    content: ' ';
+    display: block;
+    width: var(--loader-size);
+    height: var(--loader-size);
+    margin: 8px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    border-color: #fff transparent #fff transparent;
+    animation: lds-dual-ring 0.8s linear infinite;
+  }
+  @keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`
+
 const Shade = styled.div`
   position: absolute;
   top: 0;
@@ -18,7 +44,7 @@ const Shade = styled.div`
 const LoaderShade = (className, style, message) => {
   return (
     <Shade className={className} style={style}>
-      <div className="loader" />
+      <Loader />
       <div className="message">{message}</div>
     </Shade>
   )
