@@ -27,38 +27,10 @@ const StyledInput = styled.input`
   }
 `
 
-const InputText = forwardRef(
-  ({ className, value, onChange, placeholder, disabled, tooltip, style }, ref) => (
-    <StyledInput
-      className={className}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      type="text"
-      title={tooltip}
-      style={style}
-      ref={ref}
-    />
-  ),
-)
+const InputText = forwardRef((props, ref) => <StyledInput type="text" ref={ref} {...props} />)
 InputText.displayName = 'InputText'
 
-const Password = forwardRef(
-  ({ className, value, onChange, placeholder, disabled, tooltip, style }, ref) => (
-    <StyledInput
-      className={className}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      disabled={disabled}
-      type="password"
-      title={tooltip}
-      style={style}
-      ref={ref}
-    />
-  ),
-)
+const Password = forwardRef((props, ref) => <StyledInput type="password" ref={ref} {...props} />)
 Password.displayName = 'Password'
 
 const InputTextarea = styled.textarea`
