@@ -14,7 +14,8 @@ const StyledInput = styled.input`
     outline: 1px solid var(--color-hl-00);
   }
 
-  &.error {
+  &.error,
+  &:invalid {
     border-color: var(--color-hl-error);
   }
 
@@ -25,13 +26,28 @@ const StyledInput = styled.input`
     font-style: italic;
     cursor: not-allowed;
   }
+
+  &[type='number'] {
+    padding-right: 0;
+  }
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
+    // opacity: 1;
+    height: var(--base-input-size);
+    background-color: var(--color-grey-02);
+  }
 `
+
+const InputNumber = forwardRef((props, ref) => <StyledInput ref={ref} type="number" {...props} />)
+InputNumber.displayName = 'InputNumber'
 
 const InputText = forwardRef((props, ref) => <StyledInput type="text" ref={ref} {...props} />)
 InputText.displayName = 'InputText'
 
-const Password = forwardRef((props, ref) => <StyledInput type="password" ref={ref} {...props} />)
-Password.displayName = 'Password'
+const InputPassword = forwardRef((props, ref) => (
+  <StyledInput type="password" ref={ref} {...props} />
+))
+InputPassword.displayName = 'InputPassword'
 
 const InputTextarea = styled.textarea`
   color: var(--color-text);
@@ -51,4 +67,4 @@ const InputTextarea = styled.textarea`
   }
 `
 
-export { InputText, InputTextarea, Password }
+export { InputText, InputNumber, InputTextarea, InputPassword }

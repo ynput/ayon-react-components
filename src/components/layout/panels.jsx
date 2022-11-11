@@ -19,39 +19,6 @@ const Panel = styled.div`
   }
 `
 
-// DEPREACTED: Use ScrollPanel instead
-const ScrollArea = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  gap: 12px;
-`
-
-// DEPREACTED: Use TablePanel instead
-const TableWrapper = (props) => {
-  return (
-    <div style={{ flexGrow: 1, position: 'relative' }}>
-      <div
-        style={{
-          position: 'absolute',
-          top: 3, // prevent header covering rounded corners of the parent panel
-          left: 0,
-          right: 0,
-          bottom: 0,
-          padding: 0,
-        }}
-      >
-        {props.children}
-      </div>
-    </div>
-  )
-}
-
 const TablePanel = (props) => (
   <Panel
     className={props.className}
@@ -108,4 +75,4 @@ const ScrollPanel = (props) => (
   </Panel>
 )
 
-export { Panel, TablePanel, ScrollPanel, TableWrapper, ScrollArea }
+export { Panel, TablePanel, ScrollPanel }

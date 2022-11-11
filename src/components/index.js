@@ -1,16 +1,10 @@
 import { Button, LinkButton } from './button'
 import { Section, Toolbar, Spacer, FormLayout, FormRow, Divider } from './layout'
 
-import {
-  Panel,
-  TablePanel,
-  ScrollPanel,
-  ScrollArea, // Deprecated
-  TableWrapper, // Deprecated
-} from './layout/panels'
+import { Panel, TablePanel, ScrollPanel } from './layout/panels'
 
 import { Shade, LoaderShade } from './overlay/shade'
-import { InputText, InputTextarea, Password } from './input'
+import { InputText, InputNumber, InputTextarea, InputPassword } from './input'
 import { InputSwitch } from './input/switch'
 
 import './index.sass'
@@ -20,7 +14,6 @@ export {
   LinkButton,
   Section,
   Panel,
-  ScrollArea,
   Toolbar,
   Spacer,
   FormLayout,
@@ -28,10 +21,10 @@ export {
   Shade,
   LoaderShade,
   InputText,
+  InputNumber,
   InputTextarea,
-  Password,
+  InputPassword,
   Divider,
-  TableWrapper,
   InputSwitch,
   TablePanel,
   ScrollPanel,

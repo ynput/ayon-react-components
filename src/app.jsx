@@ -8,6 +8,7 @@ import {
   Section,
   Panel,
   InputText,
+  InputNumber,
   InputTextarea,
   InputSwitch,
   FormLayout,
@@ -35,13 +36,16 @@ const customers = [
 const DemoForm = () => (
   <FormLayout>
     <FormRow label="Label">
-      <InputText placeholder="Some text..." />
+      <InputText placeholder="Some text..." pattern="[a-zA-Z1-9_]{2,16}" />
     </FormRow>
     <FormRow label="Error input">
       <InputText placeholder="Error input" className="error" />
     </FormRow>
     <FormRow label="Disabled input">
       <InputText placeholder="Disabled input" disabled={true} />
+    </FormRow>
+    <FormRow label="Number input">
+      <InputNumber placeholder="Number input" min={0} max={10} />
     </FormRow>
     <FormRow label="Text area">
       <InputTextarea placeholder="Some text..." rows={8} />
@@ -117,8 +121,6 @@ const App = () => {
           <Button icon="person" className="transparent" tooltip="transparent button" />
         </Toolbar>
         <Panel>
-          <h1>Panel</h1>
-          <Divider>Form layout</Divider>
           <DemoForm />
         </Panel>
         <Panel className="transparent">
