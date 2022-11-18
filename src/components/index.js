@@ -4,7 +4,7 @@ import { Section, Toolbar, Spacer, FormLayout, FormRow, Divider } from './layout
 import { Panel, TablePanel, ScrollPanel } from './layout/panels'
 
 import { Shade, LoaderShade } from './overlay/shade'
-import { InputText, InputNumber, InputTextarea, InputPassword } from './input'
+import { InputText, InputNumber, InputTextarea, InputPassword, InputColor } from './input'
 import { InputSwitch } from './input/switch'
 
 import './index.sass'
@@ -24,6 +24,7 @@ export {
   InputNumber,
   InputTextarea,
   InputPassword,
+  InputColor,
   Divider,
   InputSwitch,
   TablePanel,

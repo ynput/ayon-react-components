@@ -69,6 +69,11 @@ const BaseFormRow = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: left;
+
+    .colorpick-eyedropper-input-trigger {
+      display: none;
+    }
+  }
 `
 
 const FormRow = ({ label, children, className, style }) => {

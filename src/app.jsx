@@ -11,6 +11,7 @@ import {
   InputNumber,
   InputTextarea,
   InputSwitch,
+  InputColor,
   FormLayout,
   FormRow,
   Divider,
@@ -46,6 +47,9 @@ const DemoForm = () => (
     </FormRow>
     <FormRow label="Number input">
       <InputNumber placeholder="Number input" min={0} max={10} />
+    </FormRow>
+    <FormRow label="Color input">
+      <InputColor placeholder="Color input" />
     </FormRow>
     <FormRow label="Text area">
       <InputTextarea placeholder="Some text..." rows={8} />
