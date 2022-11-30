@@ -32,16 +32,20 @@ const Shade = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
   z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   gap: 12px;
+
+  .message {
+    font-weight: bold;
+  }
 `
 
-const LoaderShade = (className, style, message) => {
+const LoaderShade = ({ className, style, message }) => {
   return (
     <Shade className={className} style={style}>
       <Loader />
