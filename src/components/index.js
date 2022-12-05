@@ -6,6 +6,7 @@ import { Panel, TablePanel, ScrollPanel } from './layout/panels'
 import { Shade, LoaderShade } from './overlay/shade'
 import { InputText, InputNumber, InputTextarea, InputPassword, InputColor } from './input'
 import { InputSwitch } from './input/switch'
+import { InputColorAlpha } from './input/colorPicker'
 
 import './index.sass'
 
@@ -29,4 +30,5 @@ export {
   InputSwitch,
   TablePanel,
   ScrollPanel,
+  InputColorAlpha,
 }
