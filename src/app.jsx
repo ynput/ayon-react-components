@@ -23,6 +23,8 @@ import {
 import PrimeReactForm from '/src/primereact'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
+import { InputColorAlpha } from './components'
+import { useState } from 'react'
 
 const customers = [
   { name: 'Customer 1', country: 'Country 1', representative: 'Representative 1' },
@@ -34,31 +36,43 @@ const customers = [
   { name: 'Customer 7', country: 'Country 7', representative: 'Representative 7' },
 ]
 
-const DemoForm = () => (
-  <FormLayout>
-    <FormRow label="Label">
-      <InputText placeholder="Some text..." pattern="[a-zA-Z1-9_]{2,16}" />
-    </FormRow>
-    <FormRow label="Error input">
-      <InputText placeholder="Error input" className="error" />
-    </FormRow>
-    <FormRow label="Disabled input">
-      <InputText placeholder="Disabled input" disabled={true} />
-    </FormRow>
-    <FormRow label="Number input">
-      <InputNumber placeholder="Number input" min={0} max={10} />
-    </FormRow>
-    <FormRow label="Color input">
-      <InputColor placeholder="Color input" />
-    </FormRow>
-    <FormRow label="Text area">
-      <InputTextarea placeholder="Some text..." rows={8} />
-    </FormRow>
-    <FormRow label="Switch">
-      <InputSwitch />
-    </FormRow>
-  </FormLayout>
-)
+const DemoForm = () => {
+  // demo for color picker
+  const [color, setColor] = useState([0.25, 0.5, 0.3, 0.99])
+
+  return (
+    <FormLayout>
+      <FormRow label="Label">
+        <InputText placeholder="Some text..." pattern="[a-zA-Z1-9_]{2,16}" />
+      </FormRow>
+      <FormRow label="Error input">
+        <InputText placeholder="Error input" className="error" />
+      </FormRow>
+      <FormRow label="Disabled input">
+        <InputText placeholder="Disabled input" disabled={true} />
+      </FormRow>
+      <FormRow label="Number input">
+        <InputNumber placeholder="Number input" min={0} max={10} />
+      </FormRow>
+      <FormRow label="Color input">
+        <InputColor placeholder="Color input" />
+      </FormRow>
+      <FormRow label="Color Alpha input">
+        <InputColorAlpha
+          placeholder="Color Alpha input"
+          values={color}
+          onChange={(v) => setColor(v)}
+        />
+      </FormRow>
+      <FormRow label="Text area">
+        <InputTextarea placeholder="Some text..." rows={8} />
+      </FormRow>
+      <FormRow label="Switch">
+        <InputSwitch />
+      </FormRow>
+    </FormLayout>
+  )
+}
 
 const App = () => {
   return (
