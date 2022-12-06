@@ -1,9 +1,10 @@
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import { InputNumber } from '.'
 
 // convert a hex value to float between 0-1
 const hexToFloat = (hex) => {
-  // round to 2 decimals\
+  // round to 2 decimals
   var r = Math.round((parseInt(hex.slice(1, 3), 16) / 255) * 100) / 100,
     g = Math.round((parseInt(hex.slice(3, 5), 16) / 255) * 100) / 100,
     b = Math.round((parseInt(hex.slice(5, 7), 16) / 255) * 100) / 100
@@ -11,6 +12,7 @@ const hexToFloat = (hex) => {
   return [r, g, b]
 }
 
+// convert an array of floats [0-1, 0-1, 0-1] to HEX #24C7BD
 const floatToHex = (float) => {
   return (
     '#' +
@@ -25,8 +27,8 @@ const floatToHex = (float) => {
   )
 }
 
-// values = array of floats [0.5, 0.25, 0.6, 1]
-const colorPicker = ({ style, className, values, onChange }) => {
+// REACT FUNCTIONAL COMPONENT
+const colorPickerAlpha = ({ style, className, values, onChange }) => {
   const channels = ['r', 'g', 'b', 'a']
 
   const handleOnChange = (e) => {
@@ -38,9 +40,9 @@ const colorPicker = ({ style, className, values, onChange }) => {
     }
     // create copy of current values
     let newValues = [...values]
-    // delete updating value
+    // replace new colour  value in array
     newValues.splice(channels.indexOf(id), 1, parseFloat(value))
-
+    // update values state
     onChange && onChange(newValues)
   }
 
@@ -50,7 +52,6 @@ const colorPicker = ({ style, className, values, onChange }) => {
     const newValues = hexToFloat(e.target.value)
     // insert alpha
     newValues.push(values[3])
-
     // update values state
     onChange && onChange(newValues)
   }
@@ -80,7 +81,21 @@ const colorPicker = ({ style, className, values, onChange }) => {
   )
 }
 
-const InputColorAlpha = styled(colorPicker)`
+// values prop type checks it's an array of 4 floats
+colorPickerAlpha.propTypes = {
+  style: PropTypes.object,
+  className: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  values: (props, propName) =>
+    !Array.isArray(props[propName]) ||
+    props[propName].length != 4 ||
+    props[propName].some((v) => typeof v !== 'number')
+      ? new Error(`${propName} needs to be an array of four numbers`)
+      : null,
+}
+
+// styles
+const InputColorAlpha = styled(colorPickerAlpha)`
   color: var(--color-text);
   border: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
@@ -126,7 +141,5 @@ const InputColorAlpha = styled(colorPicker)`
     cursor: not-allowed;
   }
 `
-
-// colorPicker.propTypes = {}
 
 export { InputColorAlpha }
