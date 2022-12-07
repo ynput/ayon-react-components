@@ -37,7 +37,21 @@ const customers = [
 
 const DemoForm = () => {
   // demo for color picker
-  const [color, setColor] = useState([0.25, 0.5, 0.3, 0.99])
+  const colors = {
+    hex: '#c600ff',
+    hexAlpha: '#c600ff99',
+    float: [0.5, 0.3, 0.9],
+    floatAlpha: [0.5, 0.3, 0.9, 0.7],
+    uint8: [255, 145, 56],
+    uint8Alpha: [255, 145, 56, 0.8],
+    uint16: [255, 145, 56],
+    uint16Alpha: [255, 145, 56, 0.8],
+  }
+  const format = 'hex'
+  const alpha = true
+  const useFormatAlpha = true
+  const colorKey = `${format}${useFormatAlpha ? 'Alpha' : ''}`
+  const [color, setColor] = useState(colors[colorKey])
 
   return (
     <FormLayout>
@@ -54,7 +68,13 @@ const DemoForm = () => {
         <InputNumber placeholder="Number input" min={0} max={10} />
       </FormRow>
       <FormRow label="Color input">
-        <InputColor placeholder="Color Alpha input" value={color} onChange={(v) => setColor(v)} />
+        <InputColor
+          placeholder="Color Alpha input"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+          format={format}
+          alpha={alpha}
+        />
       </FormRow>
       <FormRow label="Text area">
         <InputTextarea placeholder="Some text..." rows={8} />
