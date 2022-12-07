@@ -22,9 +22,22 @@ const ColorPreviewButton = styled.button`
 `
 
 // REACT FUNCTIONAL COMPONENT
-const InputColor = ({ style, className, value, onChange }) => {
+const InputColor = ({ style, className, value, onChange, alpha }) => {
+  let initValue = value
+  // validate value is in correct format
+  if (!Array.isArray(initValue)) initValue = [0, 0, 0]
+  // check value has/hasn't got an alpha value
+  if (alpha && initValue.length !== 4) initValue = [...initValue, 1]
+  if (!alpha && initValue.length === 4) initValue.pop()
+
+  // use local state and then update global state once dialog closes
+  const [localValue, setLocalValue] = useState(initValue)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const channels = ['r', 'g', 'b', 'a']
+
+  // set channel inputs
+  const channels = ['r', 'g', 'b']
+  // add alpha input
+  if (alpha) channels.push('a')
 
   const handleOnChange = (e) => {
     e.preventDefault()
@@ -34,36 +47,42 @@ const InputColor = ({ style, className, value, onChange }) => {
       return console.error('Value is not a number')
     }
     // create copy of current value
-    let newValue = [...value]
+    let newValue = [...localValue]
     // replace new colour value in array
     newValue.splice(channels.indexOf(id), 1, parseFloat(targetValue))
-    // update value state
-    onChange && onChange(newValue)
+    // update state
+    setLocalValue(newValue)
+  }
+
+  const handleCloseDialog = () => {
+    // close dialog
+    setDialogOpen(false)
+    // update global state
+    onChange(localValue)
   }
 
   return (
     <div style={style} className={className}>
       <ColorPreviewButton onClick={() => setDialogOpen(true)} />
       {dialogOpen && (
-        <Dialog header={'Color Picker'} onHide={() => setDialogOpen(false)}>
+        <Dialog header={'Color Picker'} onHide={handleCloseDialog}>
           <ColorInputs>
-            {value &&
-              value.map((v, i) => {
-                const c = channels[i]
-                return (
-                  <div key={c}>
-                    <label htmlFor={c}>{c.toUpperCase()}</label>
-                    <InputNumber
-                      id={c}
-                      min={0}
-                      max={1}
-                      value={v}
-                      step={'any'}
-                      onChange={handleOnChange}
-                    />
-                  </div>
-                )
-              })}
+            {channels.map((c, i) => {
+              const v = localValue[i]
+              return (
+                <div key={c}>
+                  <label htmlFor={c}>{c.toUpperCase()}</label>
+                  <InputNumber
+                    id={c}
+                    min={0}
+                    max={1}
+                    value={v}
+                    step={'any'}
+                    onChange={handleOnChange}
+                  />
+                </div>
+              )
+            })}
           </ColorInputs>
         </Dialog>
       )}
