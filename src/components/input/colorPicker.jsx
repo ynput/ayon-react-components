@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import PropTypes from 'prop-types'
 import { InputNumber } from '.'
 import Dialog from '../overlay/dialog'
 import { useState } from 'react'
@@ -70,19 +69,6 @@ const InputColor = ({ style, className, values, onChange }) => {
       )}
     </div>
   )
-}
-
-// values prop type checks it's an array of 4 floats
-InputColor.propTypes = {
-  style: PropTypes.object,
-  className: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  values: (props, propName) =>
-    !Array.isArray(props[propName]) ||
-    props[propName].length != 4 ||
-    props[propName].some((v) => typeof v !== 'number')
-      ? new Error(`${propName} needs to be an array of four numbers`)
-      : null,
 }
 
 export { InputColor }
