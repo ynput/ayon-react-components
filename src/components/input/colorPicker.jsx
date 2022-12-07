@@ -24,12 +24,30 @@ const ColorPreviewButton = styled.button`
   max-width: var(--base-input-size);
   min-width: var(--base-input-size);
   cursor: pointer;
+  position: relative;
 
   color: var(--color-text);
   border: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
   border-radius: var(--base-input-border-radius);
   padding: 0 5px;
+
+  &::after,
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  &::before {
+    /* DOES NOT SUPPORT IE or pre-Chromium Edge */
+    background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 15px 15px;
+  }
+
+  &:after {
+    background-color: ${(props) => (props.hex ? props.hex : 'var(--color-grey-00)')};
+    opacity: ${(props) => (props.alpha ? props.alpha : 'var(--color-grey-00)')};
+  }
 
   &.error,
   &:invalid {
@@ -122,10 +140,12 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
   }
 
   const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
+  //TODO: format the alpha as a number between 0-1 and set CSS opacity
+  const normalisedAlpha = alpha ? 0.6 : 1
 
   return (
     <div style={style} className={className}>
-      <ColorPreviewButton onClick={() => setDialogOpen(true)} />
+      <ColorPreviewButton onClick={() => setDialogOpen(true)} hex={value} alpha={normalisedAlpha} />
       {dialogOpen && (
         <Dialog header={DialogTitle} onHide={handleCloseDialog}>
           <ColorInputs>
