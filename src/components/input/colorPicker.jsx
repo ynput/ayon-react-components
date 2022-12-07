@@ -45,6 +45,25 @@ const ColorPreviewButton = styled.button`
   }
 `
 
+const formatsConfig = {
+  hex: {
+    placeholder: '#34C95C',
+  },
+  float: {
+    placeholder: 0.5,
+    step: 0.01,
+  },
+
+  uint8: {
+    placeholder: 255,
+    step: 1,
+  },
+  uint16: {
+    placeholder: 65535,
+    step: 10,
+  },
+}
+
 // REACT FUNCTIONAL COMPONENT
 const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }) => {
   const isHex = format === 'hex'
@@ -83,14 +102,10 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     if (isHex) {
       newValue = targetValue
     } else {
-      // fist check value is a number and convert to float
-      if (isNaN(targetValue)) {
-        return console.error('Value is not a number')
-      }
       // create copy of current value
       newValue = [...localValue]
       // replace new colour value in array
-      newValue.splice(channels.indexOf(id), 1, parseFloat(targetValue))
+      newValue.splice(channels.indexOf(id), 1, targetValue)
     }
     // update state
     setLocalValue(newValue)
@@ -99,15 +114,20 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
   const handleCloseDialog = () => {
     // close dialog
     setDialogOpen(false)
+
+    // TODO: validate value matches chosen format
+
     // update global state
     onChange(localValue)
   }
+
+  const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
 
   return (
     <div style={style} className={className}>
       <ColorPreviewButton onClick={() => setDialogOpen(true)} />
       {dialogOpen && (
-        <Dialog header={'Color Picker'} onHide={handleCloseDialog}>
+        <Dialog header={DialogTitle} onHide={handleCloseDialog}>
           <ColorInputs>
             {isHex ? (
               <div>
@@ -118,6 +138,9 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                   onChange={handleOnChange}
                   name="hex"
                   maxLength={alpha ? 9 : 7}
+                  placeholder={
+                    alpha ? formatsConfig.hex.placeholder + 'FF' : formatsConfig.hex.placeholder
+                  }
                 />
               </div>
             ) : (
@@ -131,8 +154,9 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                       min={0}
                       max={1}
                       value={v}
-                      step={'any'}
+                      step={formatsConfig[format].step}
                       onChange={handleOnChange}
+                      placeholder={formatsConfig[format].placeholder}
                     />
                   </div>
                 )
