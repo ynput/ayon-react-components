@@ -70,15 +70,18 @@ const formatsConfig = {
   float: {
     placeholder: 0.5,
     step: 0.01,
+    max: 1,
   },
 
   uint8: {
     placeholder: 255,
     step: 1,
+    max: 255,
   },
   uint16: {
     placeholder: 65535,
     step: 10,
+    max: 65535,
   },
 }
 
@@ -174,7 +177,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                     <InputNumber
                       id={c}
                       min={0}
-                      max={1}
+                      max={formatsConfig[format].max}
                       value={v}
                       step={formatsConfig[format].step}
                       onChange={handleOnChange}
