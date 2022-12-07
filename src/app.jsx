@@ -54,7 +54,7 @@ const DemoForm = () => {
         <InputNumber placeholder="Number input" min={0} max={10} />
       </FormRow>
       <FormRow label="Color input">
-        <InputColor placeholder="Color Alpha input" values={color} onChange={(v) => setColor(v)} />
+        <InputColor placeholder="Color Alpha input" value={color} onChange={(v) => setColor(v)} />
       </FormRow>
       <FormRow label="Text area">
         <InputTextarea placeholder="Some text..." rows={8} />
