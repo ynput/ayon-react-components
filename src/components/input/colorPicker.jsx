@@ -135,8 +135,10 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
 
     // TODO: validate value matches chosen format
 
+    // create an event object to return
+    const event = { target: { value: localValue } }
     // update global state
-    onChange(localValue)
+    onChange(event)
   }
 
   const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
