@@ -1,4 +1,4 @@
-import { useMemo, useEffect, useRef } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 const Shade = styled.div`
@@ -70,12 +70,6 @@ const Dialog = ({
   bodyStyle,
   footerStyle,
 }) => {
-  const dialogRef = useRef(null)
-
-  useEffect(() => {
-    dialogRef.current.focus()
-  }, [dialogRef.current])
-
   const headerComp = useMemo(() => {
     if (!header) return null
     return <DialogHeader style={headerStyle}>{header}</DialogHeader>
@@ -99,13 +93,7 @@ const Dialog = ({
 
   return (
     <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown}>
-      <DialogWindow
-        className={className}
-        style={style}
-        onKeyDown={onKeyDown}
-        ref={dialogRef}
-        tabIndex={0}
-      >
+      <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={0}>
         {headerComp}
         <DialogBody style={bodyStyle}>{children}</DialogBody>
         {footerComp}
