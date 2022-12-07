@@ -11,7 +11,6 @@ import {
   InputNumber,
   InputTextarea,
   InputSwitch,
-  InputColor,
   FormLayout,
   FormRow,
   Divider,
@@ -23,7 +22,7 @@ import {
 import PrimeReactForm from '/src/primereact'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { InputColorAlpha } from './components'
+import { InputColor } from './components'
 import { useState } from 'react'
 
 const customers = [
@@ -55,14 +54,7 @@ const DemoForm = () => {
         <InputNumber placeholder="Number input" min={0} max={10} />
       </FormRow>
       <FormRow label="Color input">
-        <InputColor placeholder="Color input" />
-      </FormRow>
-      <FormRow label="Color Alpha input">
-        <InputColorAlpha
-          placeholder="Color Alpha input"
-          values={color}
-          onChange={(v) => setColor(v)}
-        />
+        <InputColor placeholder="Color Alpha input" values={color} onChange={(v) => setColor(v)} />
       </FormRow>
       <FormRow label="Text area">
         <InputTextarea placeholder="Some text..." rows={8} />

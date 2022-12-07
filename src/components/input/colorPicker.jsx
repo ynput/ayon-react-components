@@ -28,7 +28,7 @@ const floatToHex = (float) => {
 }
 
 // REACT FUNCTIONAL COMPONENT
-const colorPickerAlpha = ({ style, className, values, onChange }) => {
+const colorPicker = ({ style, className, values, onChange }) => {
   const channels = ['r', 'g', 'b', 'a']
 
   const handleOnChange = (e) => {
@@ -82,7 +82,7 @@ const colorPickerAlpha = ({ style, className, values, onChange }) => {
 }
 
 // values prop type checks it's an array of 4 floats
-colorPickerAlpha.propTypes = {
+colorPicker.propTypes = {
   style: PropTypes.object,
   className: PropTypes.string,
   onChange: PropTypes.func.isRequired,
@@ -95,7 +95,7 @@ colorPickerAlpha.propTypes = {
 }
 
 // styles
-const InputColorAlpha = styled(colorPickerAlpha)`
+const InputColor = styled(colorPicker)`
   color: var(--color-text);
   border: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
@@ -142,4 +142,4 @@ const InputColorAlpha = styled(colorPickerAlpha)`
   }
 `
 
-export { InputColorAlpha }
+export { InputColor }
