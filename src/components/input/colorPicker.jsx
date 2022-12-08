@@ -8,63 +8,21 @@ import int8ToHex from '../../helpers/int8ToHex'
 import floatToInt8 from '../../helpers/floatToInt8'
 import toHexColor from '../../helpers/toHexColor'
 import validateHexColor from '../../helpers/validateHexColor'
+import ColorPickerPreview from '../button/colorPickerPreview'
+import floatToInt16 from '../../helpers/floatToInt16'
 
 const ColorInputs = styled.div`
   display: flex;
   align-items: center;
 
-  input {
+  input[type='number'],
+  input[type='text'] {
     margin: 5px;
   }
 
   input[type='number'] {
     width: 70px;
     margin: 5px;
-  }
-`
-
-const ColorPreviewButton = styled.button`
-  min-height: var(--base-input-size);
-  max-height: var(--base-input-size);
-  max-width: var(--base-input-size);
-  min-width: var(--base-input-size);
-  cursor: pointer;
-  position: relative;
-
-  color: var(--color-text);
-  border: 1px solid var(--color-grey-03);
-  background-color: var(--color-grey-00);
-  border-radius: var(--base-input-border-radius);
-  padding: 0 5px;
-
-  &::after,
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  &::before {
-    /* DOES NOT SUPPORT IE or pre-Chromium Edge */
-    background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 15px 15px;
-  }
-
-  &:after {
-    background-color: ${(props) => (props.hex ? props.hex : 'var(--color-grey-00)')};
-    opacity: ${(props) => (props.alpha || props.alpha === 0 ? props.alpha : 1)};
-  }
-
-  &.error,
-  &:invalid {
-    border-color: var(--color-hl-error);
-  }
-
-  &:disabled {
-    color: var(--color-text-dim);
-    background-color: var(--input-disabled-background-color);
-    border-color: var(--input-disabled-border-color);
-    font-style: italic;
-    cursor: not-allowed;
   }
 `
 
@@ -85,7 +43,7 @@ const formatsConfig = {
   },
   uint16: {
     placeholder: 65535,
-    step: 10,
+    step: 1,
     max: 65535,
   },
 }
@@ -139,6 +97,30 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     setLocalValue(newValue)
   }
 
+  const handleColorInputOnChange = (e) => {
+    e.preventDefault()
+    // handles the native color input on change (always a hex string)
+    const value = e.target.value
+    // if format is hex no conversion required
+    if (isHex) return setLocalValue(value)
+
+    // convert to floats
+    const floats = value
+      .slice(1, 7)
+      .match(/.{1,2}/g)
+      .map((v) => hexToFloat(v))
+
+    if (format === 'float') return setLocalValue(floats)
+
+    if (format === 'uint8') return setLocalValue(floats.map((v) => floatToInt8(v)))
+
+    if (format === 'uint16') return setLocalValue(floats.map((v) => floatToInt16(v)))
+  }
+
+  const handleOpenDialog = () => {
+    setDialogOpen(true)
+  }
+
   const handleCloseDialog = () => {
     // close dialog
     setDialogOpen(false)
@@ -176,8 +158,6 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
       }
     }
 
-    console.log(newState)
-
     // create an event object to return
     const event = { target: { value: newState } }
     // update global state
@@ -186,16 +166,22 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
 
   const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
 
+  const hex = isHex ? localValue : toHexColor(localValue, format)
+  // add alpha is required
+  let previewBG = hex
+  if (alpha) previewBG = hex + (localAlpha > 0 ? int8ToHex(floatToInt8(localAlpha)) : '00')
+
   return (
     <div style={style} className={className}>
-      <ColorPreviewButton
-        onClick={() => setDialogOpen(true)}
-        hex={isHex ? initValue : toHexColor(initValue, format)}
-        alpha={localAlpha}
-      />
+      <ColorPickerPreview onClick={handleOpenDialog} backgroundColor={previewBG} value={hex} />
       {dialogOpen && (
         <Dialog header={DialogTitle} onHide={handleCloseDialog}>
           <ColorInputs>
+            <ColorPickerPreview
+              onChange={handleColorInputOnChange}
+              backgroundColor={previewBG}
+              value={hex}
+            />
             {isHex ? (
               <div>
                 <label htmlFor={'hex'}>HEX</label>
