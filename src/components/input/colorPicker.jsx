@@ -6,6 +6,8 @@ import Proptypes from 'prop-types'
 import hexToFloat from '../../helpers/hexToFloat'
 import int8ToHex from '../../helpers/int8ToHex'
 import floatToInt8 from '../../helpers/floatToInt8'
+import toHexColor from '../../helpers/toHexColor'
+import validateHexColor from '../../helpers/validateHexColor'
 
 const ColorInputs = styled.div`
   display: flex;
@@ -49,7 +51,7 @@ const ColorPreviewButton = styled.button`
 
   &:after {
     background-color: ${(props) => (props.hex ? props.hex : 'var(--color-grey-00)')};
-    opacity: ${(props) => (props.alpha ? props.alpha : 'var(--color-grey-00)')};
+    opacity: ${(props) => (props.alpha || props.alpha === 0 ? props.alpha : 1)};
   }
 
   &.error,
@@ -92,6 +94,7 @@ const formatsConfig = {
 const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }) => {
   const isHex = format === 'hex'
   let initValue
+
   let initAlpha = 1
 
   if (isHex) {
@@ -99,7 +102,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     // check value is a string
     if (!(typeof initValue === 'string')) initValue = '#FFFFFF'
     // remove alpha from value and add to localAlpha
-    initAlpha = hexToFloat(initValue.slice(7, 9)) || 1
+    initAlpha = alpha ? hexToFloat(initValue.slice(7, 9)) : 1
     initValue = initValue.slice(0, 7)
   } else {
     initValue = [...value]
@@ -107,7 +110,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     if (!Array.isArray(value)) initValue = [0, 0, 0]
 
     // remove alpha from  value and add to localAlpha
-    initAlpha = initValue[3] || 1
+    initAlpha = alpha ? initValue[3] || 1 : 1
     initValue = initValue.slice(0, 3)
   }
 
@@ -139,23 +142,42 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
   const handleCloseDialog = () => {
     // close dialog
     setDialogOpen(false)
-
     let newState
+
+    // VALIDATE VALUES
+    if (isHex) {
+      newState = localValue
+      // validate hex string
+      newState = validateHexColor(newState, initValue)
+    } else {
+      newState = [...localValue]
+      // validate all numbers
+      newState = newState.map((v, i) => (isNaN(v) || v === '' ? initValue[i] : parseFloat(v)))
+    }
+
+    // update local state
+    setLocalValue(newState)
+
     // add alphas back to value
     if (alpha) {
+      // validate alpha is number
+      let newAlpha = localAlpha === '' || isNaN(localAlpha) ? initAlpha : localAlpha
+      // clamp alpha
+      newAlpha = Math.min(Math.max(parseFloat(newAlpha), 0), 1)
+
+      // update local state
+      setLocalAlpha(newAlpha)
       if (isHex) {
         // convert local alpha to text
-        newState = localValue + int8ToHex(floatToInt8(localAlpha))
+        newState = newState + (newAlpha > 0 ? int8ToHex(floatToInt8(newAlpha)) : '00')
       } else {
         // add in alpha value
-        newState = [...localValue, localAlpha]
+        newState = [...newState, newAlpha]
       }
-    } else {
-      newState = localValue
     }
-    // TODO: validate value matches chosen format
 
-    console.log({ newState })
+    console.log(newState)
+
     // create an event object to return
     const event = { target: { value: newState } }
     // update global state
@@ -166,7 +188,11 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
 
   return (
     <div style={style} className={className}>
-      <ColorPreviewButton onClick={() => setDialogOpen(true)} hex={value} alpha={localAlpha} />
+      <ColorPreviewButton
+        onClick={() => setDialogOpen(true)}
+        hex={isHex ? initValue : toHexColor(initValue, format)}
+        alpha={localAlpha}
+      />
       {dialogOpen && (
         <Dialog header={DialogTitle} onHide={handleCloseDialog}>
           <ColorInputs>
@@ -180,6 +206,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                   name="hex"
                   maxLength={7}
                   placeholder={formatsConfig.hex.placeholder}
+                  required
                 />
               </div>
             ) : (
@@ -196,6 +223,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                       step={formatsConfig[format].step}
                       onChange={handleOnChange}
                       placeholder={formatsConfig[format].placeholder}
+                      required
                     />
                   </div>
                 )
@@ -210,8 +238,9 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
                   max={1}
                   value={localAlpha}
                   step={0.01}
-                  onChange={(e) => setLocalAlpha(parseFloat(e.target.value))}
+                  onChange={(e) => setLocalAlpha(e.target.value)}
                   placeholder={0.5}
+                  required
                 />
               </div>
             )}
