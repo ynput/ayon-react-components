@@ -171,9 +171,18 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
   let previewBG = hex
   if (alpha) previewBG = hex + (localAlpha > 0 ? int8ToHex(floatToInt8(localAlpha)) : '00')
 
+  // check if dialog is actually required
+  const useDialog = alpha || ['uint16', 'float'].includes(format)
+
   return (
     <div style={style} className={className}>
-      <ColorPickerPreview onClick={handleOpenDialog} backgroundColor={previewBG} value={hex} />
+      <ColorPickerPreview
+        onClick={useDialog ? handleOpenDialog : undefined}
+        backgroundColor={previewBG}
+        value={hex}
+        onChange={!useDialog ? handleColorInputOnChange : undefined}
+        onBlur={() => !useDialog && handleCloseDialog()}
+      />
       {dialogOpen && (
         <Dialog header={DialogTitle} onHide={handleCloseDialog}>
           <ColorInputs>

@@ -62,7 +62,7 @@ const ColorButton = styled.button`
   ${buttonStyles}
 `
 
-const ColorPickerPreview = ({ onClick, onChange, backgroundColor, value }) => {
+const ColorPickerPreview = ({ onClick, onChange, backgroundColor, value, onBlur }) => {
   return (
     <Wrapper>
       <Input
@@ -71,6 +71,7 @@ const ColorPickerPreview = ({ onClick, onChange, backgroundColor, value }) => {
         tabIndex={!onChange ? -1 : 0}
         onChange={onChange && onChange}
         value={value}
+        onBlur={onBlur}
       />
       <Checkerboard />
       <ColorButton
