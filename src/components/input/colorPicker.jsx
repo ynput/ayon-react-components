@@ -10,6 +10,7 @@ import toHexColor from '../../helpers/toHexColor'
 import validateHexColor from '../../helpers/validateHexColor'
 import ColorPickerPreview from '../button/colorPickerPreview'
 import floatToInt16 from '../../helpers/floatToInt16'
+import { Button } from '../button'
 
 const ColorInputs = styled.div`
   display: flex;
@@ -24,6 +25,13 @@ const ColorInputs = styled.div`
     width: 70px;
     margin: 5px;
   }
+`
+
+const Confirmations = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: var(--base-gap-large);
+  margin-top: 12px;
 `
 
 const formatsConfig = {
@@ -121,7 +129,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     setDialogOpen(true)
   }
 
-  const handleCloseDialog = () => {
+  const handleConfirmDialog = () => {
     // close dialog
     setDialogOpen(false)
     let newState
@@ -136,6 +144,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
       // validate all numbers
       newState = newState.map((v, i) => (isNaN(v) || v === '' ? initValue[i] : parseFloat(v)))
     }
+    console.log(localValue)
 
     // update local state
     setLocalValue(newState)
@@ -164,6 +173,15 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     onChange(event)
   }
 
+  const handleCancelDialog = () => {
+    console.log('cancelling')
+    // reset local variables
+    setLocalValue(initValue)
+    setLocalAlpha(initAlpha)
+    // close dialog
+    setDialogOpen(false)
+  }
+
   const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
 
   const hex = isHex ? localValue : toHexColor(localValue, format)
@@ -181,10 +199,10 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
         backgroundColor={previewBG}
         value={hex}
         onChange={!useDialog ? handleColorInputOnChange : undefined}
-        onBlur={() => !useDialog && handleCloseDialog()}
+        onBlur={() => !useDialog && handleConfirmDialog()}
       />
       {dialogOpen && (
-        <Dialog header={DialogTitle} onHide={handleCloseDialog}>
+        <Dialog header={DialogTitle} onHide={handleCancelDialog}>
           <ColorInputs>
             <ColorPickerPreview
               onChange={handleColorInputOnChange}
@@ -240,6 +258,10 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
               </div>
             )}
           </ColorInputs>
+          <Confirmations>
+            <Button label={'Cancel'} onClick={handleCancelDialog} />
+            <Button label={'Apply'} onClick={handleConfirmDialog} />
+          </Confirmations>
         </Dialog>
       )}
     </div>
