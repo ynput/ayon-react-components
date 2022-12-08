@@ -38,9 +38,6 @@ const StyledInput = styled.input`
   }
 `
 
-const InputColor = forwardRef((props, ref) => <StyledInput ref={ref} type="color" {...props} />)
-InputColor.displayName = 'InputColor'
-
 const InputNumber = forwardRef((props, ref) => <StyledInput ref={ref} type="number" {...props} />)
 InputNumber.displayName = 'InputNumber'
 
@@ -70,4 +67,4 @@ const InputTextarea = styled.textarea`
   }
 `
 
-export { InputText, InputNumber, InputTextarea, InputPassword, InputColor }
+export { InputText, InputNumber, InputTextarea, InputPassword }
