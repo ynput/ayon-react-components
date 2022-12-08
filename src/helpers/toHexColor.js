@@ -1,8 +1,6 @@
-// conversions for different formats to HEX color format
-
-import floatToInt8 from './floatToInt8'
 import int8ToHex from './int8ToHex'
 
+// conversions for different formats to HEX color format
 const toHexColor = (value = [], format) => {
   const formats = ['float', 'uint8', 'uint16']
 
@@ -11,16 +9,6 @@ const toHexColor = (value = [], format) => {
 
   //   between 0 - 255
   let int8 = []
-
-  //   between 0-1
-  const hasAlpha = value.length === 4
-  let alpha
-  if (hasAlpha) {
-    // clamp alpha to between 0-1
-    alpha = Math.max(Math.min([...value].pop(), 1), 0)
-    // convert alpha float to hex string
-    alpha = int8ToHex(floatToInt8(alpha))
-  }
 
   // normalise all formats down to a 8bit int between 0-255 (hex is 8bit)
   if (format === 'float') {
@@ -39,8 +27,6 @@ const toHexColor = (value = [], format) => {
 
   // convert int8 to hex for each channel
   const hex = '#' + int8ToHex(int8[0]) + int8ToHex(int8[1]) + int8ToHex(int8[2])
-  // add alpha to the end if required
-  if (alpha) hex + alpha
 
   return hex
 }
