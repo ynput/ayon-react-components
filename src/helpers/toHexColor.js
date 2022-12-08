@@ -1,5 +1,3 @@
-import int8ToHex from './int8ToHex'
-
 // conversions for different formats to HEX color format
 const toHexColor = (value = [], format) => {
   const formats = ['float', 'uint8', 'uint16']
@@ -26,7 +24,7 @@ const toHexColor = (value = [], format) => {
   int8 = int8.map((v) => Math.max(Math.min(Math.round(v), 255), 0))
 
   // convert int8 to hex for each channel
-  const hex = '#' + int8ToHex(int8[0]) + int8ToHex(int8[1]) + int8ToHex(int8[2])
+  const hex = '#' + ((1 << 24) | (int8[0] << 16) | (int8[1] << 8) | int8[2]).toString(16).slice(1)
 
   return hex
 }
