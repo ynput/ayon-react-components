@@ -44,6 +44,7 @@ const buttonStyles = css`
   color: var(--color-text);
   border: 1px solid var(--color-grey-03);
   cursor: pointer;
+  margin: 0;
 
   /* if disabled remove click events */
   pointer-events: ${(props) => props.disabled && 'none'};
