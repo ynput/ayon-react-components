@@ -93,7 +93,7 @@ const Dialog = ({
 
   return (
     <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown}>
-      <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={0}>
+      <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={-1}>
         {headerComp}
         <DialogBody style={bodyStyle}>{children}</DialogBody>
         {footerComp}
