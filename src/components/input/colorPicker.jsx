@@ -8,12 +8,16 @@ import int8ToHex from '../../helpers/int8ToHex'
 import floatToInt8 from '../../helpers/floatToInt8'
 import toHexColor from '../../helpers/toHexColor'
 import validateHexColor from '../../helpers/validateHexColor'
+import ColorPickerPreview from '../button/colorPickerPreview'
+import floatToInt16 from '../../helpers/floatToInt16'
+import { Button } from '../button'
 
 const ColorInputs = styled.div`
   display: flex;
   align-items: center;
 
-  input {
+  input[type='number'],
+  input[type='text'] {
     margin: 5px;
   }
 
@@ -23,49 +27,11 @@ const ColorInputs = styled.div`
   }
 `
 
-const ColorPreviewButton = styled.button`
-  min-height: var(--base-input-size);
-  max-height: var(--base-input-size);
-  max-width: var(--base-input-size);
-  min-width: var(--base-input-size);
-  cursor: pointer;
-  position: relative;
-
-  color: var(--color-text);
-  border: 1px solid var(--color-grey-03);
-  background-color: var(--color-grey-00);
-  border-radius: var(--base-input-border-radius);
-  padding: 0 5px;
-
-  &::after,
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-  }
-
-  &::before {
-    /* DOES NOT SUPPORT IE or pre-Chromium Edge */
-    background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 15px 15px;
-  }
-
-  &:after {
-    background-color: ${(props) => (props.hex ? props.hex : 'var(--color-grey-00)')};
-    opacity: ${(props) => (props.alpha || props.alpha === 0 ? props.alpha : 1)};
-  }
-
-  &.error,
-  &:invalid {
-    border-color: var(--color-hl-error);
-  }
-
-  &:disabled {
-    color: var(--color-text-dim);
-    background-color: var(--input-disabled-background-color);
-    border-color: var(--input-disabled-border-color);
-    font-style: italic;
-    cursor: not-allowed;
-  }
+const Confirmations = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: var(--base-gap-large);
+  margin-top: 12px;
 `
 
 const formatsConfig = {
@@ -85,7 +51,7 @@ const formatsConfig = {
   },
   uint16: {
     placeholder: 65535,
-    step: 10,
+    step: 1,
     max: 65535,
   },
 }
@@ -139,7 +105,31 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     setLocalValue(newValue)
   }
 
-  const handleCloseDialog = () => {
+  const handleColorInputOnChange = (e) => {
+    e.preventDefault()
+    // handles the native color input on change (always a hex string)
+    const value = e.target.value
+    // if format is hex no conversion required
+    if (isHex) return setLocalValue(value)
+
+    // convert to floats
+    const floats = value
+      .slice(1, 7)
+      .match(/.{1,2}/g)
+      .map((v) => hexToFloat(v))
+
+    if (format === 'float') return setLocalValue(floats)
+
+    if (format === 'uint8') return setLocalValue(floats.map((v) => floatToInt8(v)))
+
+    if (format === 'uint16') return setLocalValue(floats.map((v) => floatToInt16(v)))
+  }
+
+  const handleOpenDialog = () => {
+    setDialogOpen(true)
+  }
+
+  const handleConfirmDialog = () => {
     // close dialog
     setDialogOpen(false)
     let newState
@@ -154,6 +144,7 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
       // validate all numbers
       newState = newState.map((v, i) => (isNaN(v) || v === '' ? initValue[i] : parseFloat(v)))
     }
+    console.log(localValue)
 
     // update local state
     setLocalValue(newState)
@@ -176,26 +167,48 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
       }
     }
 
-    console.log(newState)
-
     // create an event object to return
     const event = { target: { value: newState } }
     // update global state
     onChange(event)
   }
 
+  const handleCancelDialog = () => {
+    console.log('cancelling')
+    // reset local variables
+    setLocalValue(initValue)
+    setLocalAlpha(initAlpha)
+    // close dialog
+    setDialogOpen(false)
+  }
+
   const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
+
+  const hex = isHex ? localValue : toHexColor(localValue, format)
+  // add alpha is required
+  let previewBG = hex
+  if (alpha) previewBG = hex + (localAlpha > 0 ? int8ToHex(floatToInt8(localAlpha)) : '00')
+
+  // check if dialog is actually required
+  const useDialog = alpha || ['uint16', 'float'].includes(format)
 
   return (
     <div style={style} className={className}>
-      <ColorPreviewButton
-        onClick={() => setDialogOpen(true)}
-        hex={isHex ? initValue : toHexColor(initValue, format)}
-        alpha={localAlpha}
+      <ColorPickerPreview
+        onClick={useDialog ? handleOpenDialog : undefined}
+        backgroundColor={previewBG}
+        value={hex}
+        onChange={!useDialog ? handleColorInputOnChange : undefined}
+        onBlur={() => !useDialog && handleConfirmDialog()}
       />
       {dialogOpen && (
-        <Dialog header={DialogTitle} onHide={handleCloseDialog}>
+        <Dialog header={DialogTitle} onHide={handleCancelDialog}>
           <ColorInputs>
+            <ColorPickerPreview
+              onChange={handleColorInputOnChange}
+              backgroundColor={previewBG}
+              value={hex}
+            />
             {isHex ? (
               <div>
                 <label htmlFor={'hex'}>HEX</label>
@@ -245,6 +258,10 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
               </div>
             )}
           </ColorInputs>
+          <Confirmations>
+            <Button label={'Cancel'} onClick={handleCancelDialog} />
+            <Button label={'Apply'} onClick={handleConfirmDialog} />
+          </Confirmations>
         </Dialog>
       )}
     </div>

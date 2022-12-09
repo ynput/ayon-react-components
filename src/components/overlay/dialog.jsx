@@ -17,12 +17,12 @@ const Shade = styled.div`
 `
 
 const DialogWindow = styled.div`
-  padding: 6px;
   background-color: var(--color-grey-01);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
+  padding: 12px;
   min-width: 200px;
   min-height: 100px;
   max-width: 85%;
@@ -35,7 +35,6 @@ const DialogWindow = styled.div`
 `
 
 const BaseDialogEdge = styled.div`
-  padding: 12px 6px;
   display: flex;
   flex-direction: row;
   gap: 6px;
@@ -51,12 +50,10 @@ const DialogFooter = styled(BaseDialogEdge)`
 `
 
 const DialogBody = styled.div`
-  padding: 12px 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+
   flex-grow: 1;
-  overflow: auto;
 `
 
 const Dialog = ({
@@ -93,7 +90,7 @@ const Dialog = ({
 
   return (
     <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown}>
-      <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={0}>
+      <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={-1}>
         {headerComp}
         <DialogBody style={bodyStyle}>{children}</DialogBody>
         {footerComp}
