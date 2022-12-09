@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { InputNumber, InputText } from '.'
 import Dialog from '../overlay/dialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Proptypes from 'prop-types'
 import hexToFloat from '../../helpers/hexToFloat'
 import int8ToHex from '../../helpers/int8ToHex'
@@ -59,9 +59,9 @@ const formatsConfig = {
 // REACT FUNCTIONAL COMPONENT
 const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }) => {
   const isHex = format === 'hex'
-  let initValue
 
-  let initAlpha = 1
+  let initValue
+  let initAlpha
 
   if (isHex) {
     initValue = value
@@ -84,6 +84,12 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
   const [localValue, setLocalValue] = useState(initValue)
   const [localAlpha, setLocalAlpha] = useState(initAlpha)
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  useEffect(() => {
+    // update state when value changes
+    setLocalAlpha(initAlpha)
+    setLocalValue(initValue)
+  }, [value, setLocalAlpha, setLocalValue])
 
   // set channel inputs
   const channels = ['r', 'g', 'b']
