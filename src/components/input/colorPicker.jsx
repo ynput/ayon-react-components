@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { InputNumber, InputText } from '.'
-import Dialog from '../overlay/dialog'
+import { Dialog } from 'primereact/dialog'
 import { useEffect, useState } from 'react'
 import Proptypes from 'prop-types'
 import hexToFloat from '../../helpers/hexToFloat'
@@ -207,69 +207,70 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
         onChange={!useDialog ? handleColorInputOnChange : undefined}
         onBlur={() => !useDialog && handleConfirmDialog()}
       />
-      {dialogOpen && (
-        <Dialog header={DialogTitle} onHide={handleCancelDialog}>
-          <ColorInputs>
-            <ColorPickerPreview
-              onChange={handleColorInputOnChange}
-              backgroundColor={previewBG}
-              value={hex}
-            />
-            {isHex ? (
-              <div>
-                <label htmlFor={'hex'}>HEX</label>
-                <InputText
-                  id="hex"
-                  value={localValue}
-                  onChange={handleOnChange}
-                  name="hex"
-                  maxLength={7}
-                  placeholder={formatsConfig.hex.placeholder}
-                  required
-                />
-              </div>
-            ) : (
-              channels.map((c, i) => {
-                const v = localValue[i]
-                return (
-                  <div key={c}>
-                    <label htmlFor={c}>{c.toUpperCase()}</label>
-                    <InputNumber
-                      id={c}
-                      min={0}
-                      max={formatsConfig[format].max}
-                      value={v}
-                      step={formatsConfig[format].step}
-                      onChange={handleOnChange}
-                      placeholder={formatsConfig[format].placeholder}
-                      required
-                    />
-                  </div>
-                )
-              })
-            )}
-            {alpha && (
-              <div key={'a'}>
-                <label htmlFor={'a'}>{'A'}</label>
-                <InputNumber
-                  id={'a'}
-                  min={0}
-                  max={1}
-                  value={localAlpha}
-                  step={0.01}
-                  onChange={(e) => setLocalAlpha(e.target.value)}
-                  placeholder={0.5}
-                  required
-                />
-              </div>
-            )}
-          </ColorInputs>
-          <Confirmations>
-            <Button label={'Cancel'} onClick={handleCancelDialog} />
-            <Button label={'Apply'} onClick={handleConfirmDialog} />
-          </Confirmations>
-        </Dialog>
-      )}
+      <Dialog header={DialogTitle} onHide={handleCancelDialog} visible={dialogOpen}>
+        <ColorInputs>
+          <ColorPickerPreview
+            onChange={handleColorInputOnChange}
+            backgroundColor={previewBG}
+            value={hex}
+          />
+          {isHex ? (
+            <div>
+              <label htmlFor={'hex'}>HEX</label>
+              <InputText
+                id="hex"
+                value={localValue}
+                onChange={handleOnChange}
+                name="hex"
+                maxLength={7}
+                placeholder={formatsConfig.hex.placeholder}
+                required
+                onKeyPress={(e) => e.charCode === 13 && handleConfirmDialog()}
+              />
+            </div>
+          ) : (
+            channels.map((c, i) => {
+              const v = localValue[i]
+              return (
+                <div key={c}>
+                  <label htmlFor={c}>{c.toUpperCase()}</label>
+                  <InputNumber
+                    id={c}
+                    min={0}
+                    max={formatsConfig[format].max}
+                    value={v}
+                    step={formatsConfig[format].step}
+                    onChange={handleOnChange}
+                    placeholder={formatsConfig[format].placeholder}
+                    required
+                    onKeyPress={(e) => e.charCode === 13 && handleConfirmDialog()}
+                  />
+                </div>
+              )
+            })
+          )}
+          {alpha && (
+            <div key={'a'}>
+              <label htmlFor={'a'}>{'A'}</label>
+              <InputNumber
+                id={'a'}
+                min={0}
+                max={1}
+                value={localAlpha}
+                step={0.01}
+                onChange={(e) => setLocalAlpha(e.target.value)}
+                placeholder={0.5}
+                required
+                onKeyPress={(e) => e.charCode === 13 && handleConfirmDialog()}
+              />
+            </div>
+          )}
+        </ColorInputs>
+        <Confirmations>
+          <Button label={'Cancel'} onClick={handleCancelDialog} />
+          <Button label={'Apply'} onClick={handleConfirmDialog} />
+        </Confirmations>
+      </Dialog>
     </div>
   )
 }
