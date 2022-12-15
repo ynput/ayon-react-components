@@ -17,9 +17,9 @@ export default defineConfig((configEnv) => ({
   build: {
     lib: {
       entry: resolve('src', 'components/index.js'),
-      name: 'OpenpypeComponents',
+      name: 'AyonReactComponents',
       formats: ['es', 'umd'],
-      fileName: (format) => `openpype-components.${format}.js`,
+      fileName: (format) => `ayon-react-components.${format}.js`,
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'styled-components'],
