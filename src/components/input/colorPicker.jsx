@@ -69,6 +69,9 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     if (!(typeof initValue === 'string')) initValue = '#FFFFFF'
     // remove alpha from value and add to localAlpha
     initAlpha = alpha ? hexToFloat(initValue.slice(7, 9)) : 1
+
+    // no hex alpha should default to 1
+    if (value.length < 8) initAlpha = 1
     initValue = initValue.slice(0, 7)
   } else {
     initValue = [...value]
@@ -76,7 +79,11 @@ const InputColor = ({ style, className, value, onChange, alpha, format = 'hex' }
     if (!Array.isArray(value)) initValue = [0, 0, 0]
 
     // remove alpha from  value and add to localAlpha
-    initAlpha = alpha ? initValue[3] || 1 : 1
+    if (alpha) {
+      if (initValue[3] || initValue[3] == 0) {
+        initAlpha = initValue[3]
+      } else initAlpha = 1
+    }
     initValue = initValue.slice(0, 3)
   }
 
