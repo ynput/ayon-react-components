@@ -65,4 +65,4 @@ const InputSwitch = styled(BaseSwitch)`
   } // switch-body
 `
 
-export { InputSwitch }
+export default InputSwitch

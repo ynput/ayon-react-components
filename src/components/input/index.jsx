@@ -62,8 +62,17 @@ const InputTextarea = styled.textarea`
     outline: 1px solid var(--color-hl-00);
   }
 
-  &.error {
+  &.error,
+  &:invalid {
     border-color: var(--color-hl-error);
+  }
+
+  &:disabled {
+    color: var(--color-text-dim);
+    background-color: var(--input-disabled-background-color);
+    border-color: var(--input-disabled-border-color);
+    font-style: italic;
+    cursor: not-allowed;
   }
 `
 

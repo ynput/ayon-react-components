@@ -287,4 +287,4 @@ InputColor.propTypes = {
   format: Proptypes.oneOf(['hex', 'float', 'uint8', 'uint16']),
 }
 
-export { InputColor }
+export default InputColor

@@ -65,5 +65,5 @@
   "module": "dist/ayon-react-components.es.js",
   "publishConfig": {
     "access": "public"
-}
+  }
 }
