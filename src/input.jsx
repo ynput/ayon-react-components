@@ -60,7 +60,12 @@ const InputDemo = () => {
           </FormRow>
 
           <FormRow label="Dropdown">
-            <Dropdown options={dropdownOptions} value={dropdownValue} onChange={setDropdownValue} />
+            <Dropdown
+              options={dropdownOptions}
+              value={dropdownValue}
+              onChange={setDropdownValue}
+              widthExpand={true}
+            />
           </FormRow>
           <FormRow>{JSON.stringify(dropdownValue)}</FormRow>
 
@@ -70,6 +75,7 @@ const InputDemo = () => {
               value={multiSelectValue}
               onChange={setMultiselectValue}
               multiSelect={true}
+              widthExpand={true}
             />
           </FormRow>
           <FormRow>{JSON.stringify(multiSelectValue)}</FormRow>
