@@ -12,14 +12,12 @@ import {
   Section,
 } from '/src/components'
 
-const dropdownOptions = [
-  { label: 'Option 1', value: 1, icon: 'visibility' },
-  { label: 'Option 2', value: 2, icon: 'visibility' },
-  { label: 'Option 3', value: 3, icon: 'visibility' },
-  { label: 'Option 4', value: 4, icon: 'visibility' },
-  { label: 'Option 5', value: 5, icon: 'visibility' },
-  { label: 'Option 6', value: 6, icon: 'visibility' },
-]
+// create 1000 items for the dropdown
+const dropdownOptions = Array.from({ length: 1000 }, (_, i) => ({
+  label: `Option ${i + 1}`,
+  value: i + 1,
+  icon: 'visibility',
+}))
 
 const InputDemo = () => {
   // demo for color picker
@@ -65,6 +63,7 @@ const InputDemo = () => {
               value={dropdownValue}
               onChange={setDropdownValue}
               widthExpand={true}
+              search
             />
           </FormRow>
           <FormRow>{JSON.stringify(dropdownValue)}</FormRow>

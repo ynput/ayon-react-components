@@ -269,6 +269,7 @@ const Dropdown = ({
   placeholder,
   emptyMessage,
   isChanged,
+  maxOptionsShown = 25,
 }) => {
   value = useMemo(() => compact(value), [value])
 
@@ -344,7 +345,9 @@ const Dropdown = ({
   if (search && searchForm) {
     // filter out search matches
     options = options.filter((o) =>
-      searchFields.some((key) => o[key]?.toLowerCase()?.includes(searchForm.toLowerCase())),
+      searchFields.some(
+        (key) => o[key] && String(o[key])?.toLowerCase()?.includes(searchForm.toLowerCase()),
+      ),
     )
   }
 
@@ -512,6 +515,12 @@ const Dropdown = ({
     return null
   }, [valueIcon, multiSelect, options])
 
+  // splice to maxOptionsShown or 25 items
+  const showOptions = useMemo(
+    () => (search ? [...options].splice(0, maxOptionsShown) : options),
+    [options, maxOptionsShown],
+  )
+
   return (
     <DropdownStyled
       onKeyDown={handleKeyPress}
@@ -555,7 +564,7 @@ const Dropdown = ({
             </SearchStyled>
           )}
           <OptionsStyled isOpen={isOpen} message={message} ref={optionsRef} style={{ minWidth }}>
-            {options.map((option, i) => (
+            {showOptions.map((option, i) => (
               <ListItemStyled
                 key={option[dataKey]}
                 onClick={(e) => handleChange(e, option[dataKey])}
@@ -606,6 +615,9 @@ Dropdown.propTypes = {
   placeholder: PropTypes.string,
   isChanged: PropTypes.bool,
   isMultiple: PropTypes.bool,
+  onChange: PropTypes.func,
+  minWidth: PropTypes.string,
+  maxOptionsShown: PropTypes.number,
 }
 
 export default Dropdown
