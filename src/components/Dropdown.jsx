@@ -270,6 +270,8 @@ const Dropdown = ({
   emptyMessage,
   isChanged,
   maxOptionsShown = 25,
+  style,
+  className,
 }) => {
   value = useMemo(() => compact(value), [value])
 
@@ -525,6 +527,8 @@ const Dropdown = ({
     <DropdownStyled
       onKeyDown={handleKeyPress}
       onMouseMove={() => usingKeyboard && setUsingKeyboard(false)}
+      style={style}
+      className={className}
     >
       {value && (
         <ButtonStyled ref={valueRef} onClick={handleOpen} disabled={disabled} isChanged={isChanged}>
@@ -618,6 +622,8 @@ Dropdown.propTypes = {
   onChange: PropTypes.func,
   minWidth: PropTypes.string,
   maxOptionsShown: PropTypes.number,
+  style: PropTypes.object,
+  className: PropTypes.string,
 }
 
 export default Dropdown
