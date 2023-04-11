@@ -1,15 +1,13 @@
+import { CSSProperties, FC, InputHTMLAttributes, forwardRef } from 'react'
 import styled from 'styled-components'
 
-const BaseSwitch = ({ style, className, ...props }) => (
-  <div style={style} className={className}>
-    <label className="switch-body">
-      <input type="checkbox" {...props} />
-      <span className="slider"></span>
-    </label>
-  </div>
-)
+// types
+export interface InputSwitchProps extends InputHTMLAttributes<HTMLInputElement> {
+  switchClassName?: string
+  switchStyle?: CSSProperties
+}
 
-const InputSwitch = styled(BaseSwitch)`
+const StyledSwitch = styled.div`
   max-height: var(--base-input-size);
   min-height: var(--base-input-size);
   display: flex;
@@ -65,4 +63,13 @@ const InputSwitch = styled(BaseSwitch)`
   } // switch-body
 `
 
-export default InputSwitch
+export const InputSwitch = forwardRef<HTMLInputElement, InputSwitchProps>(
+  ({ switchStyle, switchClassName, ...props }, ref) => (
+    <StyledSwitch style={switchStyle} className={switchClassName}>
+      <label className="switch-body">
+        <input type="checkbox" {...props} ref={ref} />
+        <span className="slider"></span>
+      </label>
+    </StyledSwitch>
+  ),
+)
