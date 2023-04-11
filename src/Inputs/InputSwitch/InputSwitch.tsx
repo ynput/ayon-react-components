@@ -1,4 +1,4 @@
-import { CSSProperties, FC, InputHTMLAttributes, forwardRef } from 'react'
+import { CSSProperties, InputHTMLAttributes, forwardRef } from 'react'
 import styled from 'styled-components'
 
 // types
