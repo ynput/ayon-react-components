@@ -8,7 +8,7 @@ const meta: Meta<typeof Button> = {
 export default meta
 type Story = StoryObj<typeof Button>
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
     icon: 'search',
     label: 'Search Button',
@@ -19,7 +19,7 @@ export const Primary: Story = {
 
 export const Link: Story = {
   args: {
-    ...Primary.args,
+    ...Default.args,
     label: 'Link',
     link: true,
   },
@@ -28,7 +28,7 @@ export const Link: Story = {
 // icon only
 export const Icon: Story = {
   args: {
-    ...Primary.args,
+    ...Default.args,
     label: undefined,
   },
 }
