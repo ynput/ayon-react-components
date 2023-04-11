@@ -1,0 +1,5529 @@
+:root
+  --surface-a:#1e1e1e
+  --surface-b:#121212
+  --surface-c:rgba(255, 255, 255, 0.03)
+  --surface-d:#383838
+  --surface-e:#1e1e1e
+  --surface-f:#1e1e1e
+  --text-color:rgba(255, 255, 255, 0.87)
+  --text-color-secondary:rgba(255, 255, 255, 0.6)
+  --primary-color:#64b5f6
+  --primary-color-text:#212529
+  --surface-0:#21252b
+  --surface-50:#2a2a2a
+  --surface-100:#414141
+  --surface-200:#595959
+  --surface-300:#717171
+  --surface-400:#898989
+  --surface-500:#a0a0a0
+  --surface-600:#b8b8b8
+  --surface-700:#d0d0d0
+  --surface-800:#e7e7e7
+  --surface-900:#ffffff
+  --gray-50:#e7e7e7
+  --gray-100:#d0d0d0
+  --gray-200:#b8b8b8
+  --gray-300:#a0a0a0
+  --gray-400:#898989
+  --gray-500:#717171
+  --gray-600:#595959
+  --gray-700:#414141
+  --gray-800:#2a2a2a
+  --gray-900:#121212
+  --content-padding:1rem
+  --inline-spacing:0.5rem
+  --border-radius:3px
+  --surface-ground:#121212
+  --surface-section:#121212
+  --surface-card:#1e1e1e
+  --surface-overlay:#1e1e1e
+  --surface-border:#383838
+  --surface-hover:rgba(255, 255, 255, 0.03)
+  --maskbg:rgba(0, 0, 0, 0.4)
+  --focus-ring:0 0 0 1px #93cbf9
+  color-scheme: dark
+
+.p-component
+  font-family: var(--base-font-family) !important
+  font-size: var(--base-font-size) !important
+  font-weight: normal
+
+.p-component-overlay
+  background-color: rgba(0, 0, 0, 0.2)
+  transition-duration: 0.2s
+
+.p-disabled, .p-component:disabled
+  opacity: 0.4
+
+.p-error
+  color: var(--color-hl-error)
+
+.p-text-secondary
+  color: rgba(255, 255, 255, 0.6)
+
+.p-link
+  font-size: var(--base-font-size)
+  font-family: var(--base-font-family)
+  border-radius: 3px
+
+  &:focus
+    outline: 1px solid var(--color-hl-00)
+
+
+.p-inputtext, .p-multiselect, .p-dropdown, .p-password-input, .p-multiselect
+  background-color: var(--color-grey-00)
+  border: 1px solid var(--color-grey-03)
+  border-radius: var(--base-input-border-radius)
+  box-shadow: none !important
+  min-width: 120px
+  min-height: var(--base-input-size)
+  max-height: var(--base-input-size)
+
+  &:enabled, &:not(.p-disabled)
+    &:focus, &.p-focus
+      outline: 1px solid var(--color-hl-00)
+
+
+
+
+.p-dropdown
+  &.p-dropdown-clearable .p-dropdown-label
+    padding-right: 1.5rem
+
+  .p-dropdown-label
+    background: transparent
+    border: 0 none
+
+    &.p-placeholder
+      color: rgba(255, 255, 255, 0.6)
+
+    &:enabled:focus
+      outline: 0 none
+      box-shadow: none
+
+  .p-dropdown-trigger
+    background: transparent
+    color: rgba(255, 255, 255, 0.6)
+    width: 2.357rem
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+
+  .p-dropdown-clear-icon
+    color: rgba(255, 255, 255, 0.6)
+    right: 2.357rem
+
+  &.p-invalid.p-component
+    border-color: var(--color-hl-error)
+
+.p-dropdown-panel
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-dropdown-header
+    padding: 0.5rem 1rem
+    border-bottom: 0 none
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    margin: 0
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-dropdown-filter
+      padding-right: 1.5rem
+      margin-right: -1.5rem
+
+    .p-dropdown-filter-icon
+      right: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+    .p-dropdown-clearable-filter
+      .p-dropdown-filter
+        padding-right: 3rem
+        margin-right: -3rem
+
+      .p-dropdown-filter-clear-icon
+        right: 2rem
+
+  .p-dropdown-items
+    padding: 0.5rem 0
+
+    .p-dropdown-item
+      margin: 0
+      padding: 0.5rem 1rem
+      border: 0 none
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+      transition: box-shadow 0.2s
+      border-radius: 0
+
+      &.p-highlight
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(100, 181, 246, 0.16)
+
+      &:not(.p-highlight):not(.p-disabled):hover
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(255, 255, 255, 0.03)
+
+    .p-dropdown-item-group
+      margin: 0
+      padding: 0.75rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      background: #1e1e1e
+      font-weight: 600
+
+    .p-dropdown-empty-message
+      padding: 0.5rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+
+.p-input-filled .p-dropdown
+  background: #383838
+
+  &:not(.p-disabled)
+    &:hover
+      background-color: #383838
+
+    &.p-focus
+      background-color: #383838
+
+      .p-inputtext
+        background-color: transparent
+
+
+.p-inputnumber.p-invalid.p-component > .p-inputtext
+  border-color: var(--color-hl-error)
+
+.p-inputswitch
+  width: 3rem
+  height: 1.75rem
+
+  .p-inputswitch-slider
+    background: #383838
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+    border-radius: 30px
+
+    &:before
+      background: rgba(255, 255, 255, 0.6)
+      width: 1.25rem
+      height: 1.25rem
+      left: 0.25rem
+      margin-top: -0.625rem
+      border-radius: 50%
+      transition-duration: 0.2s
+
+  &.p-inputswitch-checked .p-inputswitch-slider:before
+    transform: translateX(1.25rem)
+
+  &.p-focus .p-inputswitch-slider
+    outline: 0 none
+    outline-offset: 0
+    box-shadow: 0 0 0 1px #93cbf9
+
+  &:not(.p-disabled):hover .p-inputswitch-slider
+    background: rgba(255, 255, 255, 0.03)
+
+  &.p-inputswitch-checked
+    .p-inputswitch-slider
+      background: #64b5f6
+
+      &:before
+        background: rgba(255, 255, 255, 0.87)
+
+    &:not(.p-disabled):hover .p-inputswitch-slider
+      background: #43a5f4
+
+  &.p-invalid .p-inputswitch-slider
+    border-color: var(--color-hl-error)
+
+.p-inputtext
+  font-family: var(--base-font-family)
+  font-size: var(--base-font-size)
+  color: rgba(255, 255, 255, 0.87)
+  padding: 0.5rem 0.5rem
+  appearance: none
+  border-radius: var(--base-input-border-radius)
+
+  &:enabled
+    &:focus, &.p-focus
+      outline: 0 none
+      outline-offset: 0
+      border-color: #64b5f6
+
+  &.p-invalid.p-component
+    border-color: var(--color-hl-error)
+
+  &.p-inputtext-sm
+    font-size: 0.875rem
+    padding: 0.4375rem 0.4375rem
+
+  &.p-inputtext-lg
+    font-size: 1.25rem
+    padding: 0.625rem 0.625rem
+
+.p-float-label > label
+  left: 0.5rem
+  color: rgba(255, 255, 255, 0.6)
+  transition-duration: 0.2s
+
+  &.p-error
+    color: var(--color-hl-error)
+
+.p-input-icon-left
+  >
+    i:first-of-type, svg:first-of-type, .p-input-prefix
+      left: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+    .p-inputtext
+      padding-left: 2rem
+
+  &.p-float-label > label
+    left: 2rem
+
+.p-input-icon-right >
+  i:last-of-type, svg:last-of-type, .p-input-suffix
+    right: 0.5rem
+    color: rgba(255, 255, 255, 0.6)
+
+  .p-inputtext
+    padding-right: 2rem
+
+\::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder
+  color: rgba(255, 255, 255, 0.6)
+
+.p-input-filled .p-inputtext
+  background-color: #383838
+
+  &:enabled
+    &:hover, &:focus
+      background-color: #383838
+
+.p-inputtext-sm .p-inputtext
+  font-size: 0.875rem
+  padding: 0.4375rem 0.4375rem
+
+.p-inputtext-lg .p-inputtext
+  font-size: 1.25rem
+  padding: 0.625rem 0.625rem
+
+
+.p-multiselect
+  &.p-multiselect-clearable .p-multiselect-label
+    padding-right: 1.5rem
+
+  .p-multiselect-label
+    padding: 0.5rem 0.5rem
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+    &.p-placeholder
+      color: rgba(255, 255, 255, 0.6)
+
+  &.p-multiselect-chip .p-multiselect-token
+    padding: 0.25rem 0.5rem
+    margin-right: 0.5rem
+    background: rgba(100, 181, 246, 0.16)
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 3px
+
+    .p-multiselect-token-icon
+      margin-left: 0.5rem
+
+  .p-multiselect-trigger
+    background: transparent
+    color: rgba(255, 255, 255, 0.6)
+    width: 2.357rem
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+
+  .p-multiselect-clear-icon
+    color: rgba(255, 255, 255, 0.6)
+    right: 2.357rem
+
+  &.p-invalid.p-component
+    border-color: var(--color-hl-error)
+
+.p-inputwrapper-filled.p-multiselect
+  &.p-multiselect-chip .p-multiselect-label
+    padding: 0.25rem 0.5rem
+
+    &.p-multiselect-items-label
+      padding: 0.5rem 0.5rem
+
+  &.p-multiselect-clearable .p-multiselect-label
+    padding-right: 1.5rem
+
+.p-multiselect-panel
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-multiselect-header
+    padding: 0.5rem 1rem
+    border-bottom: 0 none
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    margin: 0
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-multiselect-filter-container
+      margin: 0 0.5rem
+
+      .p-inputtext
+        padding-right: 1.5rem
+
+      .p-multiselect-filter-icon
+        right: 0.5rem
+        color: rgba(255, 255, 255, 0.6)
+
+    .p-multiselect-close
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      &:enabled:hover
+        color: rgba(255, 255, 255, 0.87)
+        border-color: transparent
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 1px solid var(--color-hl-00)
+
+  .p-multiselect-items
+    padding: 0.5rem 0
+
+    .p-multiselect-item
+      margin: 0
+      padding: 0.5rem 1rem
+      border: 0 none
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+      transition: box-shadow 0.2s
+      border-radius: 0
+
+      &.p-highlight
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(100, 181, 246, 0.16)
+
+      &:not(.p-highlight):not(.p-disabled):hover
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+      .p-checkbox
+        margin-right: 0.5rem
+
+    .p-multiselect-item-group
+      margin: 0
+      padding: 0.75rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      background: #1e1e1e
+      font-weight: 600
+
+    .p-multiselect-empty-message
+      padding: 0.5rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+
+.p-input-filled .p-multiselect
+  background: #383838
+
+  &:not(.p-disabled)
+    &:hover, &.p-focus
+      background-color: #383838
+
+.p-password.p-invalid.p-component > .p-inputtext
+  border-color: var(--color-hl-error)
+
+.p-password-panel
+  padding: 1rem
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+  border-radius: 3px
+
+  .p-password-meter
+    margin-bottom: 0.5rem
+    background: #383838
+
+    .p-password-strength
+      &.weak
+        background: #f48fb1
+
+      &.medium
+        background: #ffe082
+
+      &.strong
+        background: #c5e1a5
+
+  .p-password-info
+    &.weak
+      color: #f48fb1
+
+    &.medium
+      color: #ffe082
+
+    &.strong
+      color: #c5e1a5
+
+.p-radiobutton
+  width: 20px
+  height: 20px
+
+  .p-radiobutton-box
+    border: 2px solid #383838
+    background: #121212
+    width: 20px
+    height: 20px
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 50%
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+    &:not(.p-disabled)
+      &:not(.p-highlight):hover
+        border-color: #64b5f6
+
+      &.p-focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+        border-color: #64b5f6
+
+    .p-radiobutton-icon
+      width: 12px
+      height: 12px
+      transition-duration: 0.2s
+      background-color: #212529
+
+    &.p-highlight
+      border-color: #64b5f6
+      background: #64b5f6
+
+      &:not(.p-disabled):hover
+        border-color: #2396f2
+        background: #2396f2
+        color: #212529
+
+  &.p-invalid > .p-radiobutton-box
+    border-color: var(--color-hl-error)
+
+  &:focus
+    outline: 0 none
+
+.p-input-filled .p-radiobutton .p-radiobutton-box
+  background-color: #383838
+
+  &:not(.p-disabled):hover
+    background-color: #383838
+
+  &.p-highlight
+    background: #64b5f6
+
+    &:not(.p-disabled):hover
+      background: #2396f2
+
+.p-rating
+  gap: 0.5rem
+
+  .p-rating-item
+    .p-rating-icon
+      color: rgba(255, 255, 255, 0.87)
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+      font-size: 1.143rem
+
+      &.p-rating-cancel
+        color: #f48fb1
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+    &.p-rating-item-active .p-rating-icon
+      color: #64b5f6
+
+  &:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon
+    color: #64b5f6
+
+    &.p-rating-cancel
+      color: #f48fb1
+
+.p-selectbutton
+  .p-button
+    background: #1e1e1e
+    border: 1px solid #383838
+    color: rgba(255, 255, 255, 0.87)
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+    .p-button-icon-left, .p-button-icon-right
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):not(.p-highlight):hover
+      background: rgba(255, 255, 255, 0.03)
+      border-color: #383838
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-button-icon-left, .p-button-icon-right
+        color: rgba(255, 255, 255, 0.6)
+
+    &.p-highlight
+      background: #64b5f6
+      border-color: #64b5f6
+      color: #212529
+
+      .p-button-icon-left, .p-button-icon-right
+        color: #212529
+
+      &:hover
+        background: #43a5f4
+        border-color: #43a5f4
+        color: #212529
+
+        .p-button-icon-left, .p-button-icon-right
+          color: #212529
+
+  &.p-invalid > .p-button
+    border-color: var(--color-hl-error)
+
+.p-slider
+  background: #383838
+  border: 0 none
+  border-radius: 3px
+
+  &.p-slider-horizontal
+    height: 0.286rem
+
+    .p-slider-handle
+      margin-top: -0.5715rem
+      margin-left: -0.5715rem
+
+  &.p-slider-vertical
+    width: 0.286rem
+
+    .p-slider-handle
+      margin-left: -0.5715rem
+      margin-bottom: -0.5715rem
+
+  .p-slider-handle
+    height: 1.143rem
+    width: 1.143rem
+    background: #383838
+    border: 2px solid #64b5f6
+    border-radius: 50%
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+  .p-slider-range
+    background: #64b5f6
+
+  &:not(.p-disabled) .p-slider-handle:hover
+    background: #64b5f6
+    border-color: #64b5f6
+
+.p-treeselect
+  background: #121212
+  border: 1px solid #383838
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+  border-radius: 3px
+
+  &:not(.p-disabled)
+    &:hover
+      border-color: #64b5f6
+
+    &.p-focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+      border-color: #64b5f6
+
+  .p-treeselect-label
+    padding: 0.5rem 0.5rem
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+    &.p-placeholder
+      color: rgba(255, 255, 255, 0.6)
+
+  &.p-treeselect-chip .p-treeselect-token
+    padding: 0.25rem 0.5rem
+    margin-right: 0.5rem
+    background: #383838
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 16px
+
+  .p-treeselect-trigger
+    background: transparent
+    color: rgba(255, 255, 255, 0.6)
+    width: 2.357rem
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+
+  &.p-invalid.p-component
+    border-color: var(--color-hl-error)
+
+.p-inputwrapper-filled.p-treeselect.p-treeselect-chip .p-treeselect-label
+  padding: 0.25rem 0.5rem
+
+.p-treeselect-panel
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-treeselect-header
+    padding: 0.5rem 1rem
+    border-bottom: 0 none
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    margin: 0
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-treeselect-filter-container
+      margin-right: 0.5rem
+
+      .p-treeselect-filter
+        padding-right: 1.5rem
+
+      .p-treeselect-filter-icon
+        right: 0.5rem
+        color: rgba(255, 255, 255, 0.6)
+
+      &.p-treeselect-clearable-filter
+        .p-treeselect-filter
+          padding-right: 3rem
+
+        .p-treeselect-filter-clear-icon
+          right: 2rem
+
+    .p-treeselect-close
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      &:enabled:hover
+        color: rgba(255, 255, 255, 0.87)
+        border-color: transparent
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+  .p-treeselect-items-wrapper
+    .p-tree
+      border: 0 none
+
+    .p-treeselect-empty-message
+      padding: 0.5rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+
+.p-input-filled .p-treeselect
+  background: #383838
+
+  &:not(.p-disabled)
+    &:hover, &.p-focus
+      background-color: #383838
+
+.p-togglebutton.p-button
+  background: #1e1e1e
+  border: 1px solid #383838
+  color: rgba(255, 255, 255, 0.87)
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+  .p-button-icon-left, .p-button-icon-right
+    color: rgba(255, 255, 255, 0.6)
+
+  &:not(.p-disabled):not(.p-highlight):hover
+    background: rgba(255, 255, 255, 0.03)
+    border-color: #383838
+    color: rgba(255, 255, 255, 0.87)
+
+    .p-button-icon-left, .p-button-icon-right
+      color: rgba(255, 255, 255, 0.6)
+
+  &.p-highlight
+    background: #64b5f6
+    border-color: #64b5f6
+    color: #212529
+
+    .p-button-icon-left, .p-button-icon-right
+      color: #212529
+
+    &:hover
+      background: #43a5f4
+      border-color: #43a5f4
+      color: #212529
+
+      .p-button-icon-left, .p-button-icon-right
+        color: #212529
+
+  &.p-invalid > .p-button
+    border-color: var(--color-hl-error)
+
+.p-button
+  color: var(--color-text)
+  background: var(--color-grey-03)
+  border: 1px solid var(--color-grey-03)
+  padding: 0.5rem 1rem
+  font-size: 1rem
+  border-radius: 3px
+
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: var(--color-grey-04)
+    color: white
+
+  &:focus
+    outline: 1px solid var(--color-hl-00)
+
+  .p-button-icon-left
+    margin-right: 0.5rem
+
+  .p-button-icon-right
+    margin-left: 0.5rem
+
+  .p-button-icon-bottom
+    margin-top: 0.5rem
+
+  .p-button-icon-top
+    margin-bottom: 0.5rem
+
+  .p-badge
+    margin-left: 0.5rem
+    min-width: 1rem
+    height: 1rem
+    line-height: 1rem
+    color: #64b5f6
+    background-color: #212529
+
+  &.p-button-raised
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
+
+  &.p-button-rounded
+    border-radius: 2rem
+
+  &.p-button-icon-only
+    width: 2.357rem
+    padding: 0.5rem 0
+
+    .p-button-icon-left, .p-button-icon-right
+      margin: 0
+
+    &.p-button-rounded
+      border-radius: 50%
+      height: 2.357rem
+
+  &.p-button-sm
+    font-size: 0.875rem
+    padding: 0.4375rem 0.875rem
+
+    .p-button-icon
+      font-size: 0.875rem
+
+  &.p-button-lg
+    font-size: 1.25rem
+    padding: 0.625rem 1.25rem
+
+    .p-button-icon
+      font-size: 1.25rem
+
+  &.p-button-loading-label-only
+    &.p-button-loading-left .p-button-label
+      margin-left: 0.5rem
+
+    &.p-button-loading-right .p-button-label
+      margin-right: 0.5rem
+
+    &.p-button-loading-top .p-button-label
+      margin-top: 0.5rem
+
+    &.p-button-loading-bottom .p-button-label
+      margin-bottom: 0.5rem
+
+    .p-button-loading-icon
+      margin: 0
+
+.p-fluid
+  .p-button
+    width: 100%
+
+  .p-button-icon-only
+    width: 2.357rem
+
+  .p-buttonset
+    display: flex
+
+    .p-button
+      flex: 1
+
+.p-button.p-button-secondary, .p-buttonset.p-button-secondary > .p-button, .p-splitbutton.p-button-secondary > .p-button, .p-fileupload-choose.p-button-secondary
+  color: #ffffff
+  background: #78909c
+  border: 1px solid #78909c
+
+.p-button.p-button-secondary
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #69838f
+    color: #ffffff
+    border-color: #69838f
+
+.p-buttonset.p-button-secondary > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #69838f
+    color: #ffffff
+    border-color: #69838f
+
+.p-splitbutton.p-button-secondary > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #69838f
+    color: #ffffff
+    border-color: #69838f
+
+.p-fileupload-choose.p-button-secondary
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #69838f
+    color: #ffffff
+    border-color: #69838f
+
+.p-button.p-button-secondary
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a1b1ba
+
+.p-buttonset.p-button-secondary > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a1b1ba
+
+.p-splitbutton.p-button-secondary > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a1b1ba
+
+.p-fileupload-choose.p-button-secondary
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a1b1ba
+
+.p-button.p-button-secondary
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #5d747f
+    color: #ffffff
+    border-color: #5d747f
+
+.p-buttonset.p-button-secondary > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #5d747f
+    color: #ffffff
+    border-color: #5d747f
+
+.p-splitbutton.p-button-secondary > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #5d747f
+    color: #ffffff
+    border-color: #5d747f
+
+.p-fileupload-choose.p-button-secondary
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #5d747f
+    color: #ffffff
+    border-color: #5d747f
+
+.p-button.p-button-secondary.p-button-outlined, .p-buttonset.p-button-secondary > .p-button.p-button-outlined, .p-splitbutton.p-button-secondary > .p-button.p-button-outlined, .p-fileupload-choose.p-button-secondary.p-button-outlined
+  background-color: transparent
+  color: #78909c
+  border: 1px solid
+
+.p-button.p-button-secondary.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    color: #78909c
+    border: 1px solid
+
+.p-buttonset.p-button-secondary > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    color: #78909c
+    border: 1px solid
+
+.p-splitbutton.p-button-secondary > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    color: #78909c
+    border: 1px solid
+
+.p-fileupload-choose.p-button-secondary.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    color: #78909c
+    border: 1px solid
+
+.p-button.p-button-secondary.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    color: #78909c
+    border: 1px solid
+
+.p-buttonset.p-button-secondary > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    color: #78909c
+    border: 1px solid
+
+.p-splitbutton.p-button-secondary > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    color: #78909c
+    border: 1px solid
+
+.p-fileupload-choose.p-button-secondary.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    color: #78909c
+    border: 1px solid
+
+.p-button.p-button-secondary.p-button-text, .p-buttonset.p-button-secondary > .p-button.p-button-text, .p-splitbutton.p-button-secondary > .p-button.p-button-text, .p-fileupload-choose.p-button-secondary.p-button-text
+  background-color: transparent
+  color: #78909c
+  border-color: transparent
+
+.p-button.p-button-secondary.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    border-color: transparent
+    color: #78909c
+
+.p-buttonset.p-button-secondary > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    border-color: transparent
+    color: #78909c
+
+.p-splitbutton.p-button-secondary > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    border-color: transparent
+    color: #78909c
+
+.p-fileupload-choose.p-button-secondary.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(120, 144, 156, 0.04)
+    border-color: transparent
+    color: #78909c
+
+.p-button.p-button-secondary.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    border-color: transparent
+    color: #78909c
+
+.p-buttonset.p-button-secondary > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    border-color: transparent
+    color: #78909c
+
+.p-splitbutton.p-button-secondary > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    border-color: transparent
+    color: #78909c
+
+.p-fileupload-choose.p-button-secondary.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(120, 144, 156, 0.16)
+    border-color: transparent
+    color: #78909c
+
+.p-button.p-button-info, .p-buttonset.p-button-info > .p-button, .p-splitbutton.p-button-info > .p-button, .p-fileupload-choose.p-button-info
+  color: #121212
+  background: #81d4fa
+  border: 1px solid #81d4fa
+
+.p-button.p-button-info
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #5dc8f9
+    color: #121212
+    border-color: #5dc8f9
+
+.p-buttonset.p-button-info > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #5dc8f9
+    color: #121212
+    border-color: #5dc8f9
+
+.p-splitbutton.p-button-info > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #5dc8f9
+    color: #121212
+    border-color: #5dc8f9
+
+.p-fileupload-choose.p-button-info
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #5dc8f9
+    color: #121212
+    border-color: #5dc8f9
+
+.p-button.p-button-info
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a7e1fc
+
+.p-buttonset.p-button-info > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a7e1fc
+
+.p-splitbutton.p-button-info > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a7e1fc
+
+.p-fileupload-choose.p-button-info
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #a7e1fc
+
+.p-button.p-button-info
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #38bbf7
+    color: #121212
+    border-color: #38bbf7
+
+.p-buttonset.p-button-info > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #38bbf7
+    color: #121212
+    border-color: #38bbf7
+
+.p-splitbutton.p-button-info > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #38bbf7
+    color: #121212
+    border-color: #38bbf7
+
+.p-fileupload-choose.p-button-info
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #38bbf7
+    color: #121212
+    border-color: #38bbf7
+
+.p-button.p-button-info.p-button-outlined, .p-buttonset.p-button-info > .p-button.p-button-outlined, .p-splitbutton.p-button-info > .p-button.p-button-outlined, .p-fileupload-choose.p-button-info.p-button-outlined
+  background-color: transparent
+  color: #81d4fa
+  border: 1px solid
+
+.p-button.p-button-info.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    color: #81d4fa
+    border: 1px solid
+
+.p-buttonset.p-button-info > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    color: #81d4fa
+    border: 1px solid
+
+.p-splitbutton.p-button-info > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    color: #81d4fa
+    border: 1px solid
+
+.p-fileupload-choose.p-button-info.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    color: #81d4fa
+    border: 1px solid
+
+.p-button.p-button-info.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    color: #81d4fa
+    border: 1px solid
+
+.p-buttonset.p-button-info > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    color: #81d4fa
+    border: 1px solid
+
+.p-splitbutton.p-button-info > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    color: #81d4fa
+    border: 1px solid
+
+.p-fileupload-choose.p-button-info.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    color: #81d4fa
+    border: 1px solid
+
+.p-button.p-button-info.p-button-text, .p-buttonset.p-button-info > .p-button.p-button-text, .p-splitbutton.p-button-info > .p-button.p-button-text, .p-fileupload-choose.p-button-info.p-button-text
+  background-color: transparent
+  color: #81d4fa
+  border-color: transparent
+
+.p-button.p-button-info.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    border-color: transparent
+    color: #81d4fa
+
+.p-buttonset.p-button-info > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    border-color: transparent
+    color: #81d4fa
+
+.p-splitbutton.p-button-info > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    border-color: transparent
+    color: #81d4fa
+
+.p-fileupload-choose.p-button-info.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(129, 212, 250, 0.04)
+    border-color: transparent
+    color: #81d4fa
+
+.p-button.p-button-info.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    border-color: transparent
+    color: #81d4fa
+
+.p-buttonset.p-button-info > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    border-color: transparent
+    color: #81d4fa
+
+.p-splitbutton.p-button-info > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    border-color: transparent
+    color: #81d4fa
+
+.p-fileupload-choose.p-button-info.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(129, 212, 250, 0.16)
+    border-color: transparent
+    color: #81d4fa
+
+.p-button.p-button-success, .p-buttonset.p-button-success > .p-button, .p-splitbutton.p-button-success > .p-button, .p-fileupload-choose.p-button-success
+  color: #121212
+  background: #c5e1a5
+  border: 1px solid #c5e1a5
+
+.p-button.p-button-success
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #b2d788
+    color: #121212
+    border-color: #b2d788
+
+.p-buttonset.p-button-success > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #b2d788
+    color: #121212
+    border-color: #b2d788
+
+.p-splitbutton.p-button-success > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #b2d788
+    color: #121212
+    border-color: #b2d788
+
+.p-fileupload-choose.p-button-success
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #b2d788
+    color: #121212
+    border-color: #b2d788
+
+.p-button.p-button-success
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #d6eac0
+
+.p-buttonset.p-button-success > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #d6eac0
+
+.p-splitbutton.p-button-success > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #d6eac0
+
+.p-fileupload-choose.p-button-success
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #d6eac0
+
+.p-button.p-button-success
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #9fce6b
+    color: #121212
+    border-color: #9fce6b
+
+.p-buttonset.p-button-success > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #9fce6b
+    color: #121212
+    border-color: #9fce6b
+
+.p-splitbutton.p-button-success > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #9fce6b
+    color: #121212
+    border-color: #9fce6b
+
+.p-fileupload-choose.p-button-success
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #9fce6b
+    color: #121212
+    border-color: #9fce6b
+
+.p-button.p-button-success.p-button-outlined, .p-buttonset.p-button-success > .p-button.p-button-outlined, .p-splitbutton.p-button-success > .p-button.p-button-outlined, .p-fileupload-choose.p-button-success.p-button-outlined
+  background-color: transparent
+  color: #c5e1a5
+  border: 1px solid
+
+.p-button.p-button-success.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-buttonset.p-button-success > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-splitbutton.p-button-success > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-fileupload-choose.p-button-success.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-button.p-button-success.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-buttonset.p-button-success > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-splitbutton.p-button-success > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-fileupload-choose.p-button-success.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    color: #c5e1a5
+    border: 1px solid
+
+.p-button.p-button-success.p-button-text, .p-buttonset.p-button-success > .p-button.p-button-text, .p-splitbutton.p-button-success > .p-button.p-button-text, .p-fileupload-choose.p-button-success.p-button-text
+  background-color: transparent
+  color: #c5e1a5
+  border-color: transparent
+
+.p-button.p-button-success.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-buttonset.p-button-success > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-splitbutton.p-button-success > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-fileupload-choose.p-button-success.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(197, 225, 165, 0.04)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-button.p-button-success.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-buttonset.p-button-success > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-splitbutton.p-button-success > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-fileupload-choose.p-button-success.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(197, 225, 165, 0.16)
+    border-color: transparent
+    color: #c5e1a5
+
+.p-button.p-button-warning, .p-buttonset.p-button-warning > .p-button, .p-splitbutton.p-button-warning > .p-button, .p-fileupload-choose.p-button-warning
+  color: #121212
+  background: #ffe082
+  border: 1px solid #ffe082
+
+.p-button.p-button-warning
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #ffd65c
+    color: #121212
+    border-color: #ffd65c
+
+.p-buttonset.p-button-warning > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #ffd65c
+    color: #121212
+    border-color: #ffd65c
+
+.p-splitbutton.p-button-warning > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #ffd65c
+    color: #121212
+    border-color: #ffd65c
+
+.p-fileupload-choose.p-button-warning
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #ffd65c
+    color: #121212
+    border-color: #ffd65c
+
+.p-button.p-button-warning
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ffe9a8
+
+.p-buttonset.p-button-warning > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ffe9a8
+
+.p-splitbutton.p-button-warning > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ffe9a8
+
+.p-fileupload-choose.p-button-warning
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ffe9a8
+
+.p-button.p-button-warning
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ffcd35
+    color: #121212
+    border-color: #ffcd35
+
+.p-buttonset.p-button-warning > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ffcd35
+    color: #121212
+    border-color: #ffcd35
+
+.p-splitbutton.p-button-warning > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ffcd35
+    color: #121212
+    border-color: #ffcd35
+
+.p-fileupload-choose.p-button-warning
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ffcd35
+    color: #121212
+    border-color: #ffcd35
+
+.p-button.p-button-warning.p-button-outlined, .p-buttonset.p-button-warning > .p-button.p-button-outlined, .p-splitbutton.p-button-warning > .p-button.p-button-outlined, .p-fileupload-choose.p-button-warning.p-button-outlined
+  background-color: transparent
+  color: #ffe082
+  border: 1px solid
+
+.p-button.p-button-warning.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    color: #ffe082
+    border: 1px solid
+
+.p-buttonset.p-button-warning > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    color: #ffe082
+    border: 1px solid
+
+.p-splitbutton.p-button-warning > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    color: #ffe082
+    border: 1px solid
+
+.p-fileupload-choose.p-button-warning.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    color: #ffe082
+    border: 1px solid
+
+.p-button.p-button-warning.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    color: #ffe082
+    border: 1px solid
+
+.p-buttonset.p-button-warning > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    color: #ffe082
+    border: 1px solid
+
+.p-splitbutton.p-button-warning > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    color: #ffe082
+    border: 1px solid
+
+.p-fileupload-choose.p-button-warning.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    color: #ffe082
+    border: 1px solid
+
+.p-button.p-button-warning.p-button-text, .p-buttonset.p-button-warning > .p-button.p-button-text, .p-splitbutton.p-button-warning > .p-button.p-button-text, .p-fileupload-choose.p-button-warning.p-button-text
+  background-color: transparent
+  color: #ffe082
+  border-color: transparent
+
+.p-button.p-button-warning.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    border-color: transparent
+    color: #ffe082
+
+.p-buttonset.p-button-warning > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    border-color: transparent
+    color: #ffe082
+
+.p-splitbutton.p-button-warning > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    border-color: transparent
+    color: #ffe082
+
+.p-fileupload-choose.p-button-warning.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(255, 224, 130, 0.04)
+    border-color: transparent
+    color: #ffe082
+
+.p-button.p-button-warning.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    border-color: transparent
+    color: #ffe082
+
+.p-buttonset.p-button-warning > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    border-color: transparent
+    color: #ffe082
+
+.p-splitbutton.p-button-warning > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    border-color: transparent
+    color: #ffe082
+
+.p-fileupload-choose.p-button-warning.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(255, 224, 130, 0.16)
+    border-color: transparent
+    color: #ffe082
+
+.p-button.p-button-help, .p-buttonset.p-button-help > .p-button, .p-splitbutton.p-button-help > .p-button, .p-fileupload-choose.p-button-help
+  color: #121212
+  background: #ce93d8
+  border: 1px solid #ce93d8
+
+.p-button.p-button-help
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #c278ce
+    color: #121212
+    border-color: #c278ce
+
+.p-buttonset.p-button-help > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #c278ce
+    color: #121212
+    border-color: #c278ce
+
+.p-splitbutton.p-button-help > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #c278ce
+    color: #121212
+    border-color: #c278ce
+
+.p-fileupload-choose.p-button-help
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #c278ce
+    color: #121212
+    border-color: #c278ce
+
+.p-button.p-button-help
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ddb3e4
+
+.p-buttonset.p-button-help > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ddb3e4
+
+.p-splitbutton.p-button-help > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ddb3e4
+
+.p-fileupload-choose.p-button-help
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #ddb3e4
+
+.p-button.p-button-help
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #b65ec5
+    color: #121212
+    border-color: #b65ec5
+
+.p-buttonset.p-button-help > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #b65ec5
+    color: #121212
+    border-color: #b65ec5
+
+.p-splitbutton.p-button-help > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #b65ec5
+    color: #121212
+    border-color: #b65ec5
+
+.p-fileupload-choose.p-button-help
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #b65ec5
+    color: #121212
+    border-color: #b65ec5
+
+.p-button.p-button-help.p-button-outlined, .p-buttonset.p-button-help > .p-button.p-button-outlined, .p-splitbutton.p-button-help > .p-button.p-button-outlined, .p-fileupload-choose.p-button-help.p-button-outlined
+  background-color: transparent
+  color: #ce93d8
+  border: 1px solid
+
+.p-button.p-button-help.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    color: #ce93d8
+    border: 1px solid
+
+.p-buttonset.p-button-help > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    color: #ce93d8
+    border: 1px solid
+
+.p-splitbutton.p-button-help > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    color: #ce93d8
+    border: 1px solid
+
+.p-fileupload-choose.p-button-help.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    color: #ce93d8
+    border: 1px solid
+
+.p-button.p-button-help.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    color: #ce93d8
+    border: 1px solid
+
+.p-buttonset.p-button-help > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    color: #ce93d8
+    border: 1px solid
+
+.p-splitbutton.p-button-help > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    color: #ce93d8
+    border: 1px solid
+
+.p-fileupload-choose.p-button-help.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    color: #ce93d8
+    border: 1px solid
+
+.p-button.p-button-help.p-button-text, .p-buttonset.p-button-help > .p-button.p-button-text, .p-splitbutton.p-button-help > .p-button.p-button-text, .p-fileupload-choose.p-button-help.p-button-text
+  background-color: transparent
+  color: #ce93d8
+  border-color: transparent
+
+.p-button.p-button-help.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    border-color: transparent
+    color: #ce93d8
+
+.p-buttonset.p-button-help > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    border-color: transparent
+    color: #ce93d8
+
+.p-splitbutton.p-button-help > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    border-color: transparent
+    color: #ce93d8
+
+.p-fileupload-choose.p-button-help.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(206, 147, 216, 0.04)
+    border-color: transparent
+    color: #ce93d8
+
+.p-button.p-button-help.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    border-color: transparent
+    color: #ce93d8
+
+.p-buttonset.p-button-help > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    border-color: transparent
+    color: #ce93d8
+
+.p-splitbutton.p-button-help > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    border-color: transparent
+    color: #ce93d8
+
+.p-fileupload-choose.p-button-help.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(206, 147, 216, 0.16)
+    border-color: transparent
+    color: #ce93d8
+
+.p-button.p-button-danger, .p-buttonset.p-button-danger > .p-button, .p-splitbutton.p-button-danger > .p-button, .p-fileupload-choose.p-button-danger
+  color: #121212
+  background: #f48fb1
+  border: 1px solid #f48fb1
+
+.p-button.p-button-danger
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #f16c98
+    color: #121212
+    border-color: #f16c98
+
+.p-buttonset.p-button-danger > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #f16c98
+    color: #121212
+    border-color: #f16c98
+
+.p-splitbutton.p-button-danger > .p-button
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #f16c98
+    color: #121212
+    border-color: #f16c98
+
+.p-fileupload-choose.p-button-danger
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: #f16c98
+    color: #121212
+    border-color: #f16c98
+
+.p-button.p-button-danger
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #f7b1c8
+
+.p-buttonset.p-button-danger > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #f7b1c8
+
+.p-splitbutton.p-button-danger > .p-button
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #f7b1c8
+
+.p-fileupload-choose.p-button-danger
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    box-shadow: 0 0 0 1px #f7b1c8
+
+.p-button.p-button-danger
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ed4980
+    color: #121212
+    border-color: #ed4980
+
+.p-buttonset.p-button-danger > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ed4980
+    color: #121212
+    border-color: #ed4980
+
+.p-splitbutton.p-button-danger > .p-button
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ed4980
+    color: #121212
+    border-color: #ed4980
+
+.p-fileupload-choose.p-button-danger
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: #ed4980
+    color: #121212
+    border-color: #ed4980
+
+.p-button.p-button-danger.p-button-outlined, .p-buttonset.p-button-danger > .p-button.p-button-outlined, .p-splitbutton.p-button-danger > .p-button.p-button-outlined, .p-fileupload-choose.p-button-danger.p-button-outlined
+  background-color: transparent
+  color: #f48fb1
+  border: 1px solid
+
+.p-button.p-button-danger.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    color: #f48fb1
+    border: 1px solid
+
+.p-buttonset.p-button-danger > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    color: #f48fb1
+    border: 1px solid
+
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    color: #f48fb1
+    border: 1px solid
+
+.p-fileupload-choose.p-button-danger.p-button-outlined
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    color: #f48fb1
+    border: 1px solid
+
+.p-button.p-button-danger.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    color: #f48fb1
+    border: 1px solid
+
+.p-buttonset.p-button-danger > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    color: #f48fb1
+    border: 1px solid
+
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    color: #f48fb1
+    border: 1px solid
+
+.p-fileupload-choose.p-button-danger.p-button-outlined
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    color: #f48fb1
+    border: 1px solid
+
+.p-button.p-button-danger.p-button-text, .p-buttonset.p-button-danger > .p-button.p-button-text, .p-splitbutton.p-button-danger > .p-button.p-button-text, .p-fileupload-choose.p-button-danger.p-button-text
+  background-color: transparent
+  color: #f48fb1
+  border-color: transparent
+
+.p-button.p-button-danger.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    border-color: transparent
+    color: #f48fb1
+
+.p-buttonset.p-button-danger > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    border-color: transparent
+    color: #f48fb1
+
+.p-splitbutton.p-button-danger > .p-button.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    border-color: transparent
+    color: #f48fb1
+
+.p-fileupload-choose.p-button-danger.p-button-text
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: rgba(244, 143, 177, 0.04)
+    border-color: transparent
+    color: #f48fb1
+
+.p-button.p-button-danger.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    border-color: transparent
+    color: #f48fb1
+
+.p-buttonset.p-button-danger > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    border-color: transparent
+    color: #f48fb1
+
+.p-splitbutton.p-button-danger > .p-button.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    border-color: transparent
+    color: #f48fb1
+
+.p-fileupload-choose.p-button-danger.p-button-text
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: rgba(244, 143, 177, 0.16)
+    border-color: transparent
+    color: #f48fb1
+
+.p-button.p-button-link
+  color: #64b5f6
+  background: transparent
+  border: transparent
+
+  &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+    background: transparent
+    color: #64b5f6
+    border-color: transparent
+
+  &:enabled:hover .p-button-label, &:not(button):not(a):not(.p-disabled):hover .p-button-label
+    text-decoration: underline
+
+  &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
+    background: transparent
+    box-shadow: 0 0 0 1px #93cbf9
+    border-color: transparent
+
+  &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+    background: transparent
+    color: #64b5f6
+    border-color: transparent
+
+.p-splitbutton
+  border-radius: 3px
+
+  &.p-button-outlined
+    > .p-button
+      background-color: transparent
+      color: #64b5f6
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(100, 181, 246, 0.04)
+        color: #64b5f6
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(100, 181, 246, 0.16)
+        color: #64b5f6
+
+    &.p-button-plain > .p-button
+      color: rgba(255, 255, 255, 0.6)
+      border-color: rgba(255, 255, 255, 0.6)
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.6)
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(255, 255, 255, 0.16)
+        color: rgba(255, 255, 255, 0.6)
+
+  &.p-button-text
+    > .p-button
+      background-color: transparent
+      color: #64b5f6
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(100, 181, 246, 0.04)
+        color: #64b5f6
+        border-color: transparent
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(100, 181, 246, 0.16)
+        color: #64b5f6
+        border-color: transparent
+
+    &.p-button-plain > .p-button
+      color: rgba(255, 255, 255, 0.6)
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.6)
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(255, 255, 255, 0.16)
+        color: rgba(255, 255, 255, 0.6)
+
+  &.p-button-raised
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
+
+  &.p-button-rounded
+    border-radius: 2rem
+
+    > .p-button
+      border-radius: 2rem
+
+  &.p-button-sm > .p-button
+    font-size: 0.875rem
+    padding: 0.4375rem 0.875rem
+
+    .p-button-icon
+      font-size: 0.875rem
+
+  &.p-button-lg > .p-button
+    font-size: 1.25rem
+    padding: 0.625rem 1.25rem
+
+    .p-button-icon
+      font-size: 1.25rem
+
+  &.p-button-secondary
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #78909c
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(120, 144, 156, 0.04)
+        color: #78909c
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(120, 144, 156, 0.16)
+        color: #78909c
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #78909c
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(120, 144, 156, 0.04)
+        border-color: transparent
+        color: #78909c
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(120, 144, 156, 0.16)
+        border-color: transparent
+        color: #78909c
+
+  &.p-button-info
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #81d4fa
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(129, 212, 250, 0.04)
+        color: #81d4fa
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(129, 212, 250, 0.16)
+        color: #81d4fa
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #81d4fa
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(129, 212, 250, 0.04)
+        border-color: transparent
+        color: #81d4fa
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(129, 212, 250, 0.16)
+        border-color: transparent
+        color: #81d4fa
+
+  &.p-button-success
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #c5e1a5
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(197, 225, 165, 0.04)
+        color: #c5e1a5
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(197, 225, 165, 0.16)
+        color: #c5e1a5
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #c5e1a5
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(197, 225, 165, 0.04)
+        border-color: transparent
+        color: #c5e1a5
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(197, 225, 165, 0.16)
+        border-color: transparent
+        color: #c5e1a5
+
+  &.p-button-warning
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #ffe082
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(255, 224, 130, 0.04)
+        color: #ffe082
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(255, 224, 130, 0.16)
+        color: #ffe082
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #ffe082
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(255, 224, 130, 0.04)
+        border-color: transparent
+        color: #ffe082
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(255, 224, 130, 0.16)
+        border-color: transparent
+        color: #ffe082
+
+  &.p-button-help
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #ce93d8
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(206, 147, 216, 0.04)
+        color: #ce93d8
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(206, 147, 216, 0.16)
+        color: #ce93d8
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #ce93d8
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(206, 147, 216, 0.04)
+        border-color: transparent
+        color: #ce93d8
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(206, 147, 216, 0.16)
+        border-color: transparent
+        color: #ce93d8
+
+  &.p-button-danger
+    &.p-button-outlined > .p-button
+      background-color: transparent
+      color: #f48fb1
+      border: 1px solid
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(244, 143, 177, 0.04)
+        color: #f48fb1
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(244, 143, 177, 0.16)
+        color: #f48fb1
+
+    &.p-button-text > .p-button
+      background-color: transparent
+      color: #f48fb1
+      border-color: transparent
+
+      &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
+        background: rgba(244, 143, 177, 0.04)
+        border-color: transparent
+        color: #f48fb1
+
+      &:enabled:active, &:not(button):not(a):not(.p-disabled):active
+        background: rgba(244, 143, 177, 0.16)
+        border-color: transparent
+        color: #f48fb1
+
+.p-speeddial-button.p-button.p-button-icon-only
+  width: 4rem
+  height: 4rem
+
+  .p-button-icon
+    font-size: 1.3rem
+
+.p-speeddial-action
+  width: 3rem
+  height: 3rem
+  background: rgba(255, 255, 255, 0.87)
+  color: #121212
+
+  &:hover
+    background: rgba(255, 255, 255, 0.6)
+    color: #121212
+
+.p-speeddial-direction-up .p-speeddial-item
+  margin: 0.25rem
+
+  &:first-child
+    margin-bottom: 0.5rem
+
+.p-speeddial-direction-down .p-speeddial-item
+  margin: 0.25rem
+
+  &:first-child
+    margin-top: 0.5rem
+
+.p-speeddial-direction-left .p-speeddial-item
+  margin: 0 0.25rem
+
+  &:first-child
+    margin-right: 0.5rem
+
+.p-speeddial-direction-right .p-speeddial-item
+  margin: 0 0.25rem
+
+  &:first-child
+    margin-left: 0.5rem
+
+.p-speeddial-circle .p-speeddial-item, .p-speeddial-semi-circle .p-speeddial-item, .p-speeddial-quarter-circle .p-speeddial-item
+  margin: 0
+
+.p-speeddial-circle .p-speeddial-item
+  &:first-child, &:last-child
+    margin: 0
+
+.p-speeddial-semi-circle .p-speeddial-item
+  &:first-child, &:last-child
+    margin: 0
+
+.p-speeddial-quarter-circle .p-speeddial-item
+  &:first-child, &:last-child
+    margin: 0
+
+.p-speeddial-mask
+  background-color: rgba(0, 0, 0, 0.4)
+
+.p-carousel
+  .p-carousel-content
+    .p-carousel-prev, .p-carousel-next
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+      margin: 0.5rem
+
+    .p-carousel-prev:enabled:hover, .p-carousel-next:enabled:hover
+      color: rgba(255, 255, 255, 0.87)
+      border-color: transparent
+      background: rgba(255, 255, 255, 0.03)
+
+    .p-carousel-prev:focus, .p-carousel-next:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+  .p-carousel-indicators
+    padding: 1rem
+
+    .p-carousel-indicator
+      margin-right: 0.5rem
+      margin-bottom: 0.5rem
+
+      button
+        background-color: #383838
+        width: 2rem
+        height: 0.5rem
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+        border-radius: 0
+
+        &:hover
+          background: rgba(255, 255, 255, 0.03)
+
+      &.p-highlight button
+        background: rgba(100, 181, 246, 0.16)
+        color: rgba(255, 255, 255, 0.87)
+
+.p-datatable
+  .p-paginator-top
+    border-width: 1px 0 1px 0
+    border-radius: 0
+
+  .p-paginator-bottom
+    border-width: 0 0 1px 0
+    border-radius: 0
+
+  .p-datatable-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.6)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-datatable-footer
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-datatable-thead > tr > th
+    text-align: left
+    padding: 1rem 1rem
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    transition: box-shadow 0.2s
+
+  .p-datatable-tfoot > tr > td
+    text-align: left
+    padding: 1rem 1rem
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+
+  .p-sortable-column
+    .p-sortable-column-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-left: 0.5rem
+
+    .p-sortable-column-badge
+      border-radius: 50%
+      height: 1.143rem
+      min-width: 1.143rem
+      line-height: 1.143rem
+      color: rgba(255, 255, 255, 0.87)
+      background: rgba(100, 181, 246, 0.16)
+      margin-left: 0.5rem
+
+    &:not(.p-highlight):not(.p-sortable-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-sortable-column-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight
+      background: #1e1e1e
+      color: #64b5f6
+
+      .p-sortable-column-icon
+        color: #64b5f6
+
+      &:not(.p-sortable-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+        color: #64b5f6
+
+        .p-sortable-column-icon
+          color: #64b5f6
+
+    &:focus
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      outline: 0 none
+
+  .p-datatable-tbody > tr
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    transition: box-shadow 0.2s
+
+    > td
+      text-align: left
+      border: 1px solid #383838
+      border-width: 0 0 1px 0
+      padding: 1rem 1rem
+
+      .p-row-toggler, .p-row-editor-init, .p-row-editor-save, .p-row-editor-cancel
+        width: 2rem
+        height: 2rem
+        color: rgba(255, 255, 255, 0.6)
+        border: 0 none
+        background: transparent
+        border-radius: 50%
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      .p-row-toggler:enabled:hover, .p-row-editor-init:enabled:hover, .p-row-editor-save:enabled:hover, .p-row-editor-cancel:enabled:hover
+        color: rgba(255, 255, 255, 0.87)
+        border-color: transparent
+        background: rgba(255, 255, 255, 0.03)
+
+      .p-row-toggler:focus, .p-row-editor-init:focus, .p-row-editor-save:focus, .p-row-editor-cancel:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+      .p-row-editor-save
+        margin-right: 0.5rem
+
+      > .p-column-title
+        font-weight: 600
+
+      &.p-highlight
+        background: rgba(100, 181, 246, 0.16)
+        color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+    &.p-datatable-dragpoint-top > td
+      box-shadow: inset 0 2px 0 0 rgba(100, 181, 246, 0.16)
+
+    &.p-datatable-dragpoint-bottom > td
+      box-shadow: inset 0 -2px 0 0 rgba(100, 181, 246, 0.16)
+
+  &.p-datatable-selectable .p-datatable-tbody > tr.p-selectable-row
+    &:not(.p-highlight):not(.p-datatable-emptymessage):hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0.15rem solid #93cbf9
+      outline-offset: -0.15rem
+
+  &.p-datatable-selectable-cell .p-datatable-tbody > tr.p-selectable-row > td.p-selectable-cell
+    &:not(.p-highlight):hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0.15rem solid #93cbf9
+      outline-offset: -0.15rem
+
+  &.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):not(.p-datatable-emptymessage):hover
+    background: rgba(255, 255, 255, 0.03)
+    color: rgba(255, 255, 255, 0.87)
+
+  .p-column-resizer-helper
+    background: #64b5f6
+
+  .p-datatable-scrollable-header, .p-datatable-scrollable-footer
+    background: #1e1e1e
+
+  &.p-datatable-scrollable > .p-datatable-wrapper >
+    .p-datatable-table >
+      .p-datatable-thead, .p-datatable-tfoot
+        background-color: #1e1e1e
+
+    .p-virtualscroller > .p-datatable-table >
+      .p-datatable-thead, .p-datatable-tfoot
+        background-color: #1e1e1e
+
+  .p-datatable-loading-icon
+    font-size: 2rem
+
+  &.p-datatable-gridlines
+    .p-datatable-header
+      border-width: 1px 1px 0 1px
+
+    .p-datatable-footer
+      border-width: 0 1px 1px 1px
+
+    .p-paginator-top
+      border-width: 0 1px 0 1px
+
+    .p-paginator-bottom
+      border-width: 0 1px 1px 1px
+
+    .p-datatable-thead > tr > th
+      border-width: 1px 1px 1px 1px
+
+    .p-datatable-tbody > tr > td, .p-datatable-tfoot > tr > td
+      border-width: 1px
+
+  &.p-datatable-striped .p-datatable-tbody > tr.p-row-odd
+    background: rgba(255, 255, 255, 0.01)
+
+    &.p-highlight
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-row-toggler
+        color: rgba(255, 255, 255, 0.87)
+
+        &:hover
+          color: rgba(255, 255, 255, 0.87)
+
+    + .p-row-expanded
+      background: rgba(255, 255, 255, 0.01)
+
+  &.p-datatable-sm
+    .p-datatable-header, .p-datatable-thead > tr > th, .p-datatable-tbody > tr > td, .p-datatable-tfoot > tr > td, .p-datatable-footer
+      padding: 0.5rem 0.5rem
+
+  &.p-datatable-lg
+    .p-datatable-header, .p-datatable-thead > tr > th, .p-datatable-tbody > tr > td, .p-datatable-tfoot > tr > td, .p-datatable-footer
+      padding: 1.25rem 1.25rem
+
+.p-datatable-drag-selection-helper
+  background: rgba(100, 181, 246, 0.16)
+
+.p-dataview
+  .p-paginator-top
+    border-width: 1px 0 1px 0
+    border-radius: 0
+
+  .p-paginator-bottom
+    border-width: 0 0 1px 0
+    border-radius: 0
+
+  .p-dataview-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.6)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-dataview-content
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 0 none
+    padding: 0
+
+  &.p-dataview-list .p-dataview-content > .p-grid > div
+    border: solid #383838
+    border-width: 0 0 1px 0
+
+  .p-dataview-footer
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+    border-bottom-left-radius: 3px
+    border-bottom-right-radius: 3px
+
+  .p-dataview-loading-icon
+    font-size: 2rem
+
+.p-datascroller
+  .p-paginator-top
+    border-width: 1px 0 1px 0
+    border-radius: 0
+
+  .p-paginator-bottom
+    border-width: 0 0 1px 0
+    border-radius: 0
+
+  .p-datascroller-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.6)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-datascroller-content
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 0 none
+    padding: 0
+
+  &.p-datascroller-inline .p-datascroller-list > li
+    border: solid #383838
+    border-width: 0 0 1px 0
+
+  .p-datascroller-footer
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+    border-bottom-left-radius: 3px
+    border-bottom-right-radius: 3px
+
+.p-column-filter-row
+  .p-column-filter-menu-button, .p-column-filter-clear-button
+    margin-left: 0.5rem
+
+.p-column-filter-menu-button
+  width: 2rem
+  height: 2rem
+  color: rgba(255, 255, 255, 0.6)
+  border: 0 none
+  background: transparent
+  border-radius: 50%
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+  &:hover
+    color: rgba(255, 255, 255, 0.87)
+    border-color: transparent
+    background: rgba(255, 255, 255, 0.03)
+
+  &.p-column-filter-menu-button-open
+    background: rgba(255, 255, 255, 0.03)
+    color: rgba(255, 255, 255, 0.87)
+
+    &:hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+  &.p-column-filter-menu-button-active
+    background: rgba(100, 181, 246, 0.16)
+    color: rgba(255, 255, 255, 0.87)
+
+    &:hover
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+  &:focus
+    outline: 0 none
+    outline-offset: 0
+    box-shadow: 0 0 0 1px #93cbf9
+
+.p-column-filter-clear-button
+  width: 2rem
+  height: 2rem
+  color: rgba(255, 255, 255, 0.6)
+  border: 0 none
+  background: transparent
+  border-radius: 50%
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+  &:hover
+    color: rgba(255, 255, 255, 0.87)
+    border-color: transparent
+    background: rgba(255, 255, 255, 0.03)
+
+  &:focus
+    outline: 0 none
+    outline-offset: 0
+    box-shadow: 0 0 0 1px #93cbf9
+
+.p-column-filter-overlay
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+  min-width: 12.5rem
+
+  .p-column-filter-row-items
+    padding: 0.5rem 0
+
+    .p-column-filter-row-item
+      margin: 0
+      padding: 0.5rem 1rem
+      border: 0 none
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+      transition: box-shadow 0.2s
+      border-radius: 0
+
+      &.p-highlight
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(100, 181, 246, 0.16)
+
+      &:not(.p-highlight):not(.p-disabled):hover
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+    .p-column-filter-separator
+      border-top: 1px solid #383838
+      margin: 0.25rem 0
+
+.p-column-filter-overlay-menu
+  .p-column-filter-operator
+    padding: 0.5rem 1rem
+    border-bottom: 0 none
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    margin: 0
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+  .p-column-filter-constraint
+    padding: 1rem
+    border-bottom: 1px solid #383838
+
+    .p-column-filter-matchmode-dropdown
+      margin-bottom: 0.5rem
+
+    .p-column-filter-remove-button
+      margin-top: 0.5rem
+
+    &:last-child
+      border-bottom: 0 none
+
+  .p-column-filter-add-rule
+    padding: 0.5rem 1rem
+
+  .p-column-filter-buttonbar
+    padding: 1rem
+
+.fc
+  /* FullCalendar 4
+  /* FullCalendar 5
+
+  &.fc-unthemed
+    .fc-view-container
+      th
+        background: #1e1e1e
+        border: 1px solid #383838
+        color: rgba(255, 255, 255, 0.87)
+
+      td
+        &.fc-widget-content
+          border: 1px solid #383838
+          color: rgba(255, 255, 255, 0.87)
+
+        &.fc-head-container
+          border: 1px solid #383838
+
+      .fc-view
+        background: #1e1e1e
+
+      .fc-row
+        border-right: 1px solid #383838
+
+      .fc-event
+        background: #43a5f4
+        border: 1px solid #43a5f4
+        color: #212529
+
+      .fc-divider
+        background: #1e1e1e
+        border: 1px solid #383838
+
+    .fc-toolbar
+      .fc-button
+        color: #212529
+        background: #64b5f6
+        border: 1px solid #64b5f6
+        font-size: 1rem
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+        border-radius: 3px
+        display: flex
+        align-items: center
+
+        &:enabled
+          &:hover
+            background: #43a5f4
+            color: #212529
+            border-color: #43a5f4
+
+          &:active
+            background: #2396f2
+            color: #212529
+            border-color: #2396f2
+
+            &:focus
+              outline: 0 none
+              outline-offset: 0
+              box-shadow: 0 0 0 1px #93cbf9
+
+        .fc-icon-chevron-left
+          font-family: 'PrimeIcons' !important
+          text-indent: 0
+          font-size: 1rem
+
+          &:before
+            content: '\e900'
+
+        .fc-icon-chevron-right
+          font-family: 'PrimeIcons' !important
+          text-indent: 0
+          font-size: 1rem
+
+          &:before
+            content: '\e901'
+
+        &:focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+
+        &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
+          background: #1e1e1e
+          border: 1px solid #383838
+          color: rgba(255, 255, 255, 0.87)
+          transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+        &.fc-dayGridMonth-button:hover, &.fc-timeGridWeek-button:hover, &.fc-timeGridDay-button:hover
+          background: rgba(255, 255, 255, 0.03)
+          border-color: #383838
+          color: rgba(255, 255, 255, 0.87)
+
+        &.fc-dayGridMonth-button.fc-button-active, &.fc-timeGridWeek-button.fc-button-active, &.fc-timeGridDay-button.fc-button-active
+          background: #64b5f6
+          border-color: #64b5f6
+          color: #212529
+
+        &.fc-dayGridMonth-button.fc-button-active:hover, &.fc-timeGridWeek-button.fc-button-active:hover, &.fc-timeGridDay-button.fc-button-active:hover
+          background: #43a5f4
+          border-color: #43a5f4
+          color: #212529
+
+        &.fc-dayGridMonth-button:focus, &.fc-timeGridWeek-button:focus, &.fc-timeGridDay-button:focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+          z-index: 1
+
+      .fc-button-group .fc-button
+        border-radius: 0
+
+        &:first-child
+          border-top-left-radius: 3px
+          border-bottom-left-radius: 3px
+
+        &:last-child
+          border-top-right-radius: 3px
+          border-bottom-right-radius: 3px
+
+  &.fc-theme-standard
+    .fc-view-harness
+      .fc-scrollgrid
+        border-color: #383838
+
+      th
+        background: #1e1e1e
+        border-color: #383838
+        color: rgba(255, 255, 255, 0.87)
+
+      td
+        color: rgba(255, 255, 255, 0.87)
+        border-color: #383838
+
+      .fc-view
+        background: #1e1e1e
+
+      .fc-popover
+        background: none
+        border: 0 none
+
+        .fc-popover-header
+          border: 1px solid #383838
+          padding: 1rem
+          background: #1e1e1e
+          color: rgba(255, 255, 255, 0.87)
+
+          .fc-popover-close
+            opacity: 1
+            display: flex
+            align-items: center
+            justify-content: center
+            overflow: hidden
+            font-family: 'PrimeIcons' !important
+            font-size: 1rem
+            width: 2rem
+            height: 2rem
+            color: rgba(255, 255, 255, 0.6)
+            border: 0 none
+            background: transparent
+            border-radius: 50%
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+            &:before
+              content: '\e90b'
+
+            &:hover
+              color: rgba(255, 255, 255, 0.87)
+              border-color: transparent
+              background: rgba(255, 255, 255, 0.03)
+
+            &:focus
+              outline: 0 none
+              outline-offset: 0
+              box-shadow: 0 0 0 1px #93cbf9
+
+        .fc-popover-body
+          padding: 1rem
+          border: 1px solid #383838
+          background: #1e1e1e
+          color: rgba(255, 255, 255, 0.87)
+          border-top: 0 none
+
+      .fc-event
+        &.fc-daygrid-block-event
+          color: #212529
+          background: #43a5f4
+          border-color: #43a5f4
+
+          .fc-event-main
+            color: #212529
+
+        &.fc-daygrid-dot-event
+          .fc-daygrid-event-dot
+            background: #43a5f4
+            border-color: #43a5f4
+
+          &:hover
+            background: rgba(255, 255, 255, 0.03)
+            color: rgba(255, 255, 255, 0.87)
+
+      .fc-cell-shaded
+        background: #1e1e1e
+
+    .fc-toolbar
+      .fc-button
+        color: #212529
+        background: #64b5f6
+        border: 1px solid #64b5f6
+        font-size: 1rem
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+        border-radius: 3px
+
+        &:enabled
+          &:hover
+            background: #43a5f4
+            color: #212529
+            border-color: #43a5f4
+
+          &:active
+            background: #2396f2
+            color: #212529
+            border-color: #2396f2
+
+            &:focus
+              outline: 0 none
+              outline-offset: 0
+              box-shadow: 0 0 0 1px #93cbf9
+
+        &:disabled
+          opacity: 0.4
+          color: #212529
+          background: #64b5f6
+          border: 1px solid #64b5f6
+
+        .fc-icon-chevron-left
+          font-family: 'PrimeIcons' !important
+          text-indent: 0
+          font-size: 1rem
+
+          &:before
+            content: '\e900'
+
+        .fc-icon-chevron-right
+          font-family: 'PrimeIcons' !important
+          text-indent: 0
+          font-size: 1rem
+
+          &:before
+            content: '\e901'
+
+        &:focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+
+        &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
+          background: #1e1e1e
+          border: 1px solid #383838
+          color: rgba(255, 255, 255, 0.87)
+          transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+        &.fc-dayGridMonth-button:hover, &.fc-timeGridWeek-button:hover, &.fc-timeGridDay-button:hover
+          background: rgba(255, 255, 255, 0.03)
+          border-color: #383838
+          color: rgba(255, 255, 255, 0.87)
+
+        &.fc-dayGridMonth-button.fc-button-active, &.fc-timeGridWeek-button.fc-button-active, &.fc-timeGridDay-button.fc-button-active
+          background: #64b5f6
+          border-color: #64b5f6
+          color: #212529
+
+        &.fc-dayGridMonth-button.fc-button-active:hover, &.fc-timeGridWeek-button.fc-button-active:hover, &.fc-timeGridDay-button.fc-button-active:hover
+          background: #43a5f4
+          border-color: #43a5f4
+          color: #212529
+
+        &.fc-dayGridMonth-button:not(:disabled):focus, &.fc-timeGridWeek-button:not(:disabled):focus, &.fc-timeGridDay-button:not(:disabled):focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+          z-index: 1
+
+      .fc-button-group .fc-button
+        border-radius: 0
+
+        &:first-child
+          border-top-left-radius: 3px
+          border-bottom-left-radius: 3px
+
+        &:last-child
+          border-top-right-radius: 3px
+          border-bottom-right-radius: 3px
+
+    .fc-highlight
+      color: rgba(255, 255, 255, 0.87)
+      background: rgba(100, 181, 246, 0.16)
+
+.p-orderlist
+  .p-orderlist-controls
+    padding: 1rem
+
+    .p-button
+      margin-bottom: 0.5rem
+
+  .p-orderlist-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    padding: 1rem
+    font-weight: 600
+    border-bottom: 0 none
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+  .p-orderlist-filter-container
+    padding: 1rem
+    background: #1e1e1e
+    border: 1px solid #383838
+    border-bottom: 0 none
+
+    .p-orderlist-filter-input
+      padding-right: 1.5rem
+
+    .p-orderlist-filter-icon
+      right: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+  .p-orderlist-list
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 0.5rem 0
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+    .p-orderlist-item
+      padding: 0.5rem 1rem
+      margin: 0
+      border: 0 none
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+      transition: transform 0.2s, box-shadow 0.2s
+
+      &:not(.p-highlight):hover
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+      &.p-highlight
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(100, 181, 246, 0.16)
+
+  &.p-orderlist-striped .p-orderlist-list .p-orderlist-item:nth-child(even)
+    background: rgba(255, 255, 255, 0.01)
+
+    &:hover
+      background: rgba(255, 255, 255, 0.03)
+
+@media screen and (max-width: 960px)
+  .p-orderlist
+    flex-direction: column
+
+    .p-orderlist-controls
+      padding: 1rem
+      flex-direction: row
+
+      .p-button
+        margin-right: 0.5rem
+        margin-bottom: 0
+
+        &:last-child
+          margin-right: 0
+
+.p-organizationchart
+  .p-organizationchart-node-content
+    &.p-organizationchart-selectable-node:not(.p-highlight):hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-node-toggler i
+        color: rgba(12, 120, 207, 0.16)
+
+  .p-organizationchart-line-down
+    background: #383838
+
+  .p-organizationchart-line-left
+    border-right: 1px solid #383838
+    border-color: #383838
+
+  .p-organizationchart-line-top
+    border-top: 1px solid #383838
+    border-color: #383838
+
+  .p-organizationchart-node-content
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 1rem
+
+    .p-node-toggler
+      background: inherit
+      color: inherit
+      border-radius: 50%
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+.p-paginator
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.6)
+  border: solid #383838
+  border-width: 1px
+  padding: 0.5rem 1rem
+  border-radius: 3px
+
+  .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last
+    background-color: transparent
+    border: 0 none
+    color: rgba(255, 255, 255, 0.6)
+    min-width: 2.286em
+    height: 2.286em
+    margin: 0.143rem
+    transition: box-shadow 0.2s
+    border-radius: 3px
+
+  .p-paginator-first:not(.p-disabled):not(.p-highlight):hover, .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover, .p-paginator-next:not(.p-disabled):not(.p-highlight):hover, .p-paginator-last:not(.p-disabled):not(.p-highlight):hover
+    background: rgba(255, 255, 255, 0.03)
+    border-color: transparent
+    color: rgba(255, 255, 255, 0.87)
+
+  .p-paginator-first
+    border-top-left-radius: 3px
+    border-bottom-left-radius: 3px
+
+  .p-paginator-last
+    border-top-right-radius: 3px
+    border-bottom-right-radius: 3px
+
+  .p-dropdown
+    margin-left: 0.5rem
+    height: 2.286em
+
+    .p-dropdown-label
+      padding-right: 0
+
+  .p-paginator-page-input
+    margin-left: 0.5rem
+    margin-right: 0.5rem
+
+    .p-inputtext
+      max-width: 2.286em
+
+  .p-paginator-current
+    background-color: transparent
+    border: 0 none
+    color: rgba(255, 255, 255, 0.6)
+    min-width: 2.286em
+    height: 2.286em
+    margin: 0.143rem
+    padding: 0 0.5rem
+
+  .p-paginator-pages .p-paginator-page
+    background-color: transparent
+    border: 0 none
+    color: rgba(255, 255, 255, 0.6)
+    min-width: 2.286em
+    height: 2.286em
+    margin: 0.143rem
+    transition: box-shadow 0.2s
+    border-radius: 3px
+
+    &.p-highlight
+      background: rgba(100, 181, 246, 0.16)
+      border-color: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+    &:not(.p-highlight):hover
+      background: rgba(255, 255, 255, 0.03)
+      border-color: transparent
+      color: rgba(255, 255, 255, 0.87)
+
+.p-picklist
+  .p-picklist-buttons
+    padding: 1rem
+
+    .p-button
+      margin-bottom: 0.5rem
+
+  .p-picklist-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    padding: 1rem
+    font-weight: 600
+    border-bottom: 0 none
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+  .p-picklist-filter-container
+    padding: 1rem
+    background: #1e1e1e
+    border: 1px solid #383838
+    border-bottom: 0 none
+
+    .p-picklist-filter-input
+      padding-right: 1.5rem
+
+    .p-picklist-filter-icon
+      right: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+  .p-picklist-list
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 0.5rem 0
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+    .p-picklist-item
+      padding: 0.5rem 1rem
+      margin: 0
+      border: 0 none
+      color: rgba(255, 255, 255, 0.87)
+      background: transparent
+      transition: transform 0.2s, box-shadow 0.2s
+
+      &:not(.p-highlight):hover
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+      &.p-highlight
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(100, 181, 246, 0.16)
+
+@media screen and (max-width: 960px)
+  .p-picklist
+    flex-direction: column
+
+    .p-picklist-buttons
+      padding: 1rem
+      flex-direction: row
+
+      .p-button
+        margin-right: 0.5rem
+        margin-bottom: 0
+
+        &:last-child
+          margin-right: 0
+
+    .p-picklist-transfer-buttons
+      .pi-angle-right:before
+        content: '\e930'
+
+      .pi-angle-double-right:before
+        content: '\e92c'
+
+      .pi-angle-left:before
+        content: '\e933'
+
+      .pi-angle-double-left:before
+        content: '\e92f'
+
+.p-tree
+  border: 1px solid #383838
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  padding: 1rem
+  border-radius: 3px
+
+  .p-tree-container .p-treenode
+    padding: 0.143rem
+
+    .p-treenode-content
+      border-radius: 3px
+      transition: box-shadow 0.2s
+      padding: 0
+
+      .p-tree-toggler
+        margin-right: 0.5rem
+        width: 2rem
+        height: 2rem
+        color: rgba(255, 255, 255, 0.6)
+        border: 0 none
+        background: transparent
+        border-radius: 50%
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+        &:enabled:hover
+          color: rgba(255, 255, 255, 0.87)
+          border-color: transparent
+          background: rgba(255, 255, 255, 0.03)
+
+        &:focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+
+      .p-treenode-icon
+        margin-right: 0.5rem
+        color: rgba(255, 255, 255, 0.6)
+
+      .p-checkbox
+        margin-right: 0.5rem
+
+        .p-indeterminate .p-checkbox-icon
+          color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+      &.p-highlight
+        background: rgba(100, 181, 246, 0.16)
+        color: rgba(255, 255, 255, 0.87)
+
+        .p-tree-toggler, .p-treenode-icon, .p-tree-toggler:hover, .p-treenode-icon:hover
+          color: rgba(255, 255, 255, 0.87)
+
+      &.p-treenode-selectable:not(.p-highlight):hover, &.p-treenode-dragover
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-tree-filter-container
+    margin-bottom: 0.5rem
+
+    .p-tree-filter
+      width: 100%
+      padding-right: 1.5rem
+
+    .p-tree-filter-icon
+      right: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+  .p-treenode-children
+    padding: 0 0 0 1rem
+
+  .p-tree-loading-icon
+    font-size: 2rem
+
+  .p-treenode-droppoint
+    height: 0.5rem
+
+    &.p-treenode-droppoint-active
+      background: rgba(35, 150, 242, 0.16)
+
+.p-treetable
+  .p-paginator-top
+    border-width: 1px 0 1px 0
+    border-radius: 0
+
+  .p-paginator-bottom
+    border-width: 0 0 1px 0
+    border-radius: 0
+
+  .p-treetable-header
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.6)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-treetable-footer
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    padding: 1rem 1rem
+    font-weight: 600
+
+  .p-treetable-thead > tr > th
+    text-align: left
+    padding: 1rem 1rem
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    transition: box-shadow 0.2s
+
+  .p-treetable-tfoot > tr > td
+    text-align: left
+    padding: 1rem 1rem
+    border: 1px solid #383838
+    border-width: 0 0 1px 0
+    font-weight: 600
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+
+  .p-sortable-column
+    outline-color: #93cbf9
+
+    .p-sortable-column-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-left: 0.5rem
+
+    .p-sortable-column-badge
+      border-radius: 50%
+      height: 1.143rem
+      min-width: 1.143rem
+      line-height: 1.143rem
+      color: rgba(255, 255, 255, 0.87)
+      background: rgba(100, 181, 246, 0.16)
+      margin-left: 0.5rem
+
+    &:not(.p-highlight):hover
+      background: rgba(255, 255, 255, 0.03)
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-sortable-column-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight
+      background: #1e1e1e
+      color: #64b5f6
+
+      .p-sortable-column-icon
+        color: #64b5f6
+
+  .p-treetable-tbody > tr
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    transition: box-shadow 0.2s
+
+    > td
+      text-align: left
+      border: 1px solid #383838
+      border-width: 0 0 1px 0
+      padding: 1rem 1rem
+
+      .p-treetable-toggler
+        width: 2rem
+        height: 2rem
+        color: rgba(255, 255, 255, 0.6)
+        border: 0 none
+        background: transparent
+        border-radius: 50%
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+        margin-right: 0.5rem
+
+        &:enabled:hover
+          color: rgba(255, 255, 255, 0.87)
+          border-color: transparent
+          background: rgba(255, 255, 255, 0.03)
+
+        &:focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: 0 0 0 1px #93cbf9
+
+        + .p-checkbox
+          margin-right: 0.5rem
+
+          .p-indeterminate .p-checkbox-icon
+            color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0.15rem solid #93cbf9
+      outline-offset: -0.15rem
+
+    &.p-highlight
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+      .p-treetable-toggler
+        color: rgba(255, 255, 255, 0.87)
+
+        &:hover
+          color: rgba(255, 255, 255, 0.87)
+
+  &.p-treetable-selectable .p-treetable-tbody > tr:not(.p-highlight):hover, &.p-treetable-hoverable-rows .p-treetable-tbody > tr:not(.p-highlight):hover
+    background: rgba(255, 255, 255, 0.03)
+    color: rgba(255, 255, 255, 0.87)
+
+  &.p-treetable-selectable .p-treetable-tbody > tr:not(.p-highlight):hover .p-treetable-toggler, &.p-treetable-hoverable-rows .p-treetable-tbody > tr:not(.p-highlight):hover .p-treetable-toggler
+    color: rgba(255, 255, 255, 0.87)
+
+  .p-column-resizer-helper
+    background: #64b5f6
+
+  .p-treetable-scrollable-header, .p-treetable-scrollable-footer
+    background: #1e1e1e
+
+  .p-treetable-loading-icon
+    font-size: 2rem
+
+  &.p-treetable-gridlines
+    .p-datatable-header
+      border-width: 1px 1px 0 1px
+
+    .p-treetable-footer
+      border-width: 0 1px 1px 1px
+
+    .p-treetable-top
+      border-width: 0 1px 0 1px
+
+    .p-treetable-bottom
+      border-width: 0 1px 1px 1px
+
+    .p-treetable-thead > tr > th, .p-treetable-tbody > tr > td, .p-treetable-tfoot > tr > td
+      border-width: 1px
+
+  &.p-treetable-sm
+    .p-treetable-header
+      padding: 0.875rem 0.875rem
+
+    .p-treetable-thead > tr > th, .p-treetable-tbody > tr > td, .p-treetable-tfoot > tr > td, .p-treetable-footer
+      padding: 0.5rem 0.5rem
+
+  &.p-treetable-lg
+    .p-treetable-header, .p-treetable-thead > tr > th, .p-treetable-tbody > tr > td, .p-treetable-tfoot > tr > td, .p-treetable-footer
+      padding: 1.25rem 1.25rem
+
+.p-timeline
+  .p-timeline-event-marker
+    border: 2px solid #64b5f6
+    border-radius: 50%
+    width: 1rem
+    height: 1rem
+    background-color: #1e1e1e
+
+  .p-timeline-event-connector
+    background-color: #383838
+
+  &.p-timeline-vertical
+    .p-timeline-event-opposite, .p-timeline-event-content
+      padding: 0 1rem
+
+    .p-timeline-event-connector
+      width: 2px
+
+  &.p-timeline-horizontal
+    .p-timeline-event-opposite, .p-timeline-event-content
+      padding: 1rem 0
+
+    .p-timeline-event-connector
+      height: 2px
+
+.p-accordion
+  .p-accordion-header
+    .p-accordion-header-link
+      padding: 1rem
+      border: 1px solid #383838
+      color: rgba(255, 255, 255, 0.87)
+      background: #1e1e1e
+      font-weight: 600
+      border-radius: 3px
+      transition: box-shadow 0.2s
+
+      .p-accordion-toggle-icon
+        margin-right: 0.5rem
+
+    &:not(.p-disabled) .p-accordion-header-link:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+    &:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link
+      background: rgba(255, 255, 255, 0.03)
+      border-color: #383838
+      color: rgba(255, 255, 255, 0.87)
+
+    &:not(.p-disabled).p-highlight
+      .p-accordion-header-link
+        background: #1e1e1e
+        border-color: #383838
+        color: rgba(255, 255, 255, 0.87)
+        border-bottom-right-radius: 0
+        border-bottom-left-radius: 0
+
+      &:hover .p-accordion-header-link
+        border-color: #383838
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-accordion-content
+    padding: 1rem
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border-top: 0
+    border-top-right-radius: 0
+    border-top-left-radius: 0
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+  .p-accordion-tab
+    margin-bottom: 0
+
+    .p-accordion-header .p-accordion-header-link
+      border-radius: 0
+
+    .p-accordion-content
+      border-bottom-right-radius: 0
+      border-bottom-left-radius: 0
+
+    &:not(:first-child) .p-accordion-header
+      .p-accordion-header-link, &:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link, &:not(.p-disabled).p-highlight:hover .p-accordion-header-link
+        border-top: 0 none
+
+    &:first-child .p-accordion-header .p-accordion-header-link
+      border-top-right-radius: 3px
+      border-top-left-radius: 3px
+
+    &:last-child .p-accordion-header:not(.p-highlight)
+      .p-accordion-header-link, .p-accordion-content
+        border-bottom-right-radius: 3px
+        border-bottom-left-radius: 3px
+
+.p-card
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12)
+  border-radius: 3px
+
+  .p-card-body
+    padding: 1rem
+
+  .p-card-title
+    font-size: 1.5rem
+    font-weight: 700
+    margin-bottom: 0.5rem
+
+  .p-card-subtitle
+    font-weight: 700
+    margin-bottom: 0.5rem
+    color: rgba(255, 255, 255, 0.6)
+
+  .p-card-content
+    padding: 1rem 0
+
+  .p-card-footer
+    padding: 1rem 0 0 0
+
+.p-fieldset
+  border: 1px solid #383838
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border-radius: 3px
+
+  .p-fieldset-legend
+    padding: 1rem
+    border: 1px solid #383838
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    font-weight: 600
+    border-radius: 3px
+
+  &.p-fieldset-toggleable .p-fieldset-legend
+    padding: 0
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+    a
+      padding: 1rem
+      color: rgba(255, 255, 255, 0.87)
+      border-radius: 3px
+      transition: box-shadow 0.2s
+
+      .p-fieldset-toggler
+        margin-right: 0.5rem
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+    &:hover
+      background: rgba(255, 255, 255, 0.03)
+      border-color: #383838
+      color: rgba(255, 255, 255, 0.87)
+
+  .p-fieldset-content
+    padding: 1rem
+
+.p-divider
+  .p-divider-content
+    background-color: #1e1e1e
+
+  &.p-divider-horizontal
+    margin: 1rem 0
+    padding: 0 1rem
+
+    &:before
+      border-top: 1px #383838
+
+    .p-divider-content
+      padding: 0 0.5rem
+
+  &.p-divider-vertical
+    margin: 0 1rem
+    padding: 1rem 0
+
+    &:before
+      border-left: 1px #383838
+
+    .p-divider-content
+      padding: 0.5rem 0
+
+.p-panel
+  .p-panel-header
+    border: 1px solid #383838
+    padding: 1rem
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-panel-title
+      font-weight: 600
+
+    .p-panel-header-icon
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      &:enabled:hover
+        color: rgba(255, 255, 255, 0.87)
+        border-color: transparent
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+  &.p-panel-toggleable .p-panel-header
+    padding: 0.5rem 1rem
+
+  .p-panel-content
+    padding: 1rem
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+    border-top: 0 none
+
+  .p-panel-footer
+    padding: 0.5rem 1rem
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border-top: 0 none
+
+.p-splitter
+  border: 1px solid #383838
+  background: #1e1e1e
+  border-radius: 3px
+  color: rgba(255, 255, 255, 0.87)
+
+  .p-splitter-gutter
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-splitter-gutter-handle
+      background: #383838
+
+  .p-splitter-gutter-resizing
+    background: #383838
+
+.p-scrollpanel .p-scrollpanel-bar
+  background: #383838
+  border: 0 none
+
+.p-tabview
+  .p-tabview-nav
+    background: transparent
+    border: 1px solid #383838
+    border-width: 0 0 2px 0
+
+    li
+      margin-right: 0
+
+      .p-tabview-nav-link
+        border: solid #383838
+        border-width: 0 0 2px 0
+        border-color: transparent transparent #383838 transparent
+        background: #1e1e1e
+        color: rgba(255, 255, 255, 0.6)
+        padding: 1rem
+        font-weight: 600
+        border-top-right-radius: 3px
+        border-top-left-radius: 3px
+        transition: box-shadow 0.2s
+        margin: 0 0 -2px 0
+
+        &:not(.p-disabled):focus
+          outline: 0 none
+          outline-offset: 0
+          box-shadow: inset 0 0 0 1px #93cbf9
+
+      &:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link
+        background: #1e1e1e
+        border-color: #64b5f6
+        color: rgba(255, 255, 255, 0.87)
+
+      &.p-highlight .p-tabview-nav-link
+        background: #1e1e1e
+        border-color: #64b5f6
+        color: #64b5f6
+
+  .p-tabview-close
+    margin-left: 0.5rem
+
+  .p-tabview-nav-btn.p-link
+    background: #1e1e1e
+    color: #64b5f6
+    width: 2.357rem
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
+    border-radius: 0
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 1px #93cbf9
+
+  .p-tabview-panels
+    background: #1e1e1e
+    padding: 1rem
+    border: 0 none
+    color: rgba(255, 255, 255, 0.87)
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+.p-toolbar
+  background: #1e1e1e
+  border: 1px solid #383838
+  padding: 1rem
+  border-radius: 3px
+
+  .p-toolbar-separator
+    margin: 0 0.5rem
+
+.p-confirm-popup
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
+
+  .p-confirm-popup-content
+    padding: 1rem
+
+  .p-confirm-popup-footer
+    text-align: right
+    padding: 0 1rem 1rem 1rem
+
+    button
+      margin: 0 0.5rem 0 0
+      width: auto
+
+      &:last-child
+        margin: 0
+
+  &:after
+    border: solid transparent
+    border-color: rgba(30, 30, 30, 0)
+    border-bottom-color: #1e1e1e
+
+  &:before
+    border: solid transparent
+    border-color: rgba(56, 56, 56, 0)
+    border-bottom-color: #383838
+
+  &.p-confirm-popup-flipped
+    &:after
+      border-top-color: #1e1e1e
+
+    &:before
+      border-top-color: #383838
+
+  .p-confirm-popup-icon
+    font-size: 1.5rem
+
+  .p-confirm-popup-message
+    margin-left: 1rem
+
+.p-dialog
+  border-radius: 3px
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
+  border: 1px solid #383838
+
+  .p-dialog-header
+    border-bottom: 0 none
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 1.5rem
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-dialog-title
+      font-weight: 600
+      font-size: 1.25rem
+
+    .p-dialog-header-icon
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+      margin-right: 0.5rem
+
+      &:enabled:hover
+        color: rgba(255, 255, 255, 0.87)
+        border-color: transparent
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+      &:last-child
+        margin-right: 0
+
+  .p-dialog-content
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 0 1.5rem 2rem 1.5rem
+
+    &:last-of-type
+      border-bottom-right-radius: 3px
+      border-bottom-left-radius: 3px
+
+  .p-dialog-footer
+    border-top: 0 none
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    padding: 0 1.5rem 1.5rem 1.5rem
+    text-align: right
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+    button
+      margin: 0 0.5rem 0 0
+      width: auto
+
+  &.p-confirm-dialog
+    .p-confirm-dialog-icon
+      font-size: 2rem
+
+    .p-confirm-dialog-message
+      margin-left: 1rem
+
+.p-overlaypanel
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
+
+  .p-overlaypanel-content
+    padding: 1rem
+
+  .p-overlaypanel-close
+    background: #64b5f6
+    color: #212529
+    width: 2rem
+    height: 2rem
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+    border-radius: 50%
+    position: absolute
+    top: -1rem
+    right: -1rem
+
+    &:enabled:hover
+      background: #43a5f4
+      color: #212529
+
+  &:after
+    border: solid transparent
+    border-color: rgba(30, 30, 30, 0)
+    border-bottom-color: #1e1e1e
+
+  &:before
+    border: solid transparent
+    border-color: rgba(56, 56, 56, 0)
+    border-bottom-color: #353535
+
+  &.p-overlaypanel-flipped
+    &:after
+      border-top-color: #1e1e1e
+
+    &:before
+      border-top-color: #383838
+
+.p-sidebar
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
+
+  .p-sidebar-header
+    padding: 1rem
+
+    .p-sidebar-close, .p-sidebar-icon
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border: 0 none
+      background: transparent
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+    .p-sidebar-close:enabled:hover, .p-sidebar-icon:enabled:hover
+      color: rgba(255, 255, 255, 0.87)
+      border-color: transparent
+      background: rgba(255, 255, 255, 0.03)
+
+    .p-sidebar-close:focus, .p-sidebar-icon:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+    + .p-sidebar-content
+      padding-top: 0
+
+  .p-sidebar-content
+    padding: 1rem
+
+.p-tooltip
+  .p-tooltip-text
+    background: #383838
+    color: rgba(255, 255, 255, 0.87)
+    padding: 0.5rem 0.5rem
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+    border-radius: 3px
+
+  &.p-tooltip-right .p-tooltip-arrow
+    border-right-color: #383838
+
+  &.p-tooltip-left .p-tooltip-arrow
+    border-left-color: #383838
+
+  &.p-tooltip-top .p-tooltip-arrow
+    border-top-color: #383838
+
+  &.p-tooltip-bottom .p-tooltip-arrow
+    border-bottom-color: #383838
+
+.p-fileupload
+  .p-fileupload-buttonbar
+    background: #1e1e1e
+    padding: 1rem
+    border: 1px solid #383838
+    color: rgba(255, 255, 255, 0.87)
+    border-bottom: 0 none
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+    .p-button
+      margin-right: 0.5rem
+
+  .p-fileupload-content
+    background: #1e1e1e
+    padding: 2rem 1rem
+    border: 1px solid #383838
+    color: rgba(255, 255, 255, 0.87)
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+  .p-progressbar
+    height: 0.25rem
+
+  .p-fileupload-row > div
+    padding: 1rem 1rem
+
+  &.p-fileupload-advanced .p-message
+    margin-top: 0
+
+.p-breadcrumb
+  background: #1e1e1e
+  border: 1px solid #383838
+  border-radius: 3px
+  padding: 1rem
+
+  ul li
+    .p-menuitem-link
+      transition: box-shadow 0.2s
+      border-radius: 3px
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+      .p-menuitem-text
+        color: rgba(255, 255, 255, 0.87)
+
+      .p-menuitem-icon
+        color: rgba(255, 255, 255, 0.6)
+
+    &.p-breadcrumb-chevron
+      margin: 0 0.5rem 0 0.5rem
+      color: rgba(255, 255, 255, 0.87)
+
+    &:last-child
+      .p-menuitem-text
+        color: rgba(255, 255, 255, 0.87)
+
+      .p-menuitem-icon
+        color: rgba(255, 255, 255, 0.6)
+
+.p-contextmenu
+  padding: 0.25rem 0
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+  border-radius: 3px
+  width: 12.5rem
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  .p-submenu-list
+    padding: 0.25rem 0
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+    border-radius: 3px
+
+  .p-menuitem.p-menuitem-active > .p-menuitem-link
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+      color: rgba(255, 255, 255, 0.87)
+
+  .p-menu-separator
+    border-top: 1px solid #383838
+    margin: 0.25rem 0
+
+  .p-submenu-icon
+    font-size: 0.875rem
+
+.p-dock
+  .p-dock-list
+    background: rgba(255, 255, 255, 0.1)
+    border: 1px solid rgba(255, 255, 255, 0.2)
+    padding: 0.5rem 0.5rem
+    border-radius: 0.5rem
+
+  .p-dock-item
+    padding: 0.5rem
+
+  .p-dock-action
+    width: 4rem
+    height: 4rem
+
+  &.p-dock-magnification
+    &.p-dock-top
+      .p-dock-item-second-prev, .p-dock-item-second-next
+        margin: 0 0.9rem
+
+    &.p-dock-bottom
+      .p-dock-item-second-prev, .p-dock-item-second-next
+        margin: 0 0.9rem
+
+    &.p-dock-top
+      .p-dock-item-prev, .p-dock-item-next
+        margin: 0 1.3rem
+
+    &.p-dock-bottom
+      .p-dock-item-prev, .p-dock-item-next
+        margin: 0 1.3rem
+
+    &.p-dock-top .p-dock-item-current, &.p-dock-bottom .p-dock-item-current
+      margin: 0 1.5rem
+
+    &.p-dock-left
+      .p-dock-item-second-prev, .p-dock-item-second-next
+        margin: 0.9rem 0
+
+    &.p-dock-right
+      .p-dock-item-second-prev, .p-dock-item-second-next
+        margin: 0.9rem 0
+
+    &.p-dock-left
+      .p-dock-item-prev, .p-dock-item-next
+        margin: 1.3rem 0
+
+    &.p-dock-right
+      .p-dock-item-prev, .p-dock-item-next
+        margin: 1.3rem 0
+
+    &.p-dock-left .p-dock-item-current, &.p-dock-right .p-dock-item-current
+      margin: 1.5rem 0
+
+@media screen and (max-width: 960px)
+  .p-dock
+    &.p-dock-top .p-dock-container, &.p-dock-bottom .p-dock-container
+      overflow-x: auto
+      width: 100%
+
+    &.p-dock-top .p-dock-container .p-dock-list, &.p-dock-bottom .p-dock-container .p-dock-list
+      margin: 0 auto
+
+    &.p-dock-left .p-dock-container, &.p-dock-right .p-dock-container
+      overflow-y: auto
+      height: 100%
+
+    &.p-dock-left .p-dock-container .p-dock-list, &.p-dock-right .p-dock-container .p-dock-list
+      margin: auto 0
+
+    &.p-dock-magnification
+      &.p-dock-top
+        .p-dock-item-second-prev, .p-dock-item-second-next, .p-dock-item-prev, .p-dock-item-next, .p-dock-item-current
+          transform: none
+          margin: 0
+
+      &.p-dock-bottom
+        .p-dock-item-second-prev, .p-dock-item-second-next, .p-dock-item-prev, .p-dock-item-next, .p-dock-item-current
+          transform: none
+          margin: 0
+
+      &.p-dock-left
+        .p-dock-item-second-prev, .p-dock-item-second-next, .p-dock-item-prev, .p-dock-item-next, .p-dock-item-current
+          transform: none
+          margin: 0
+
+      &.p-dock-right
+        .p-dock-item-second-prev, .p-dock-item-second-next, .p-dock-item-prev, .p-dock-item-next, .p-dock-item-current
+          transform: none
+          margin: 0
+
+.p-megamenu
+  padding: 0.5rem
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+
+  .p-megamenu-root-list > .p-menuitem
+    > .p-menuitem-link
+      padding: 0.75rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      border-radius: 3px
+      transition: box-shadow 0.2s
+      user-select: none
+
+      .p-menuitem-text
+        color: rgba(255, 255, 255, 0.87)
+
+      .p-menuitem-icon
+        color: rgba(255, 255, 255, 0.6)
+        margin-right: 0.5rem
+
+      .p-submenu-icon
+        color: rgba(255, 255, 255, 0.6)
+        margin-left: 0.5rem
+
+      &:not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+
+        .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+          color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+    &.p-menuitem-active > .p-menuitem-link
+      background: rgba(255, 255, 255, 0.03)
+
+      &:not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, &:not(.p-disabled):hover .p-menuitem-text, .p-menuitem-icon, &:not(.p-disabled):hover .p-menuitem-icon, .p-submenu-icon, &:not(.p-disabled):hover .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  .p-megamenu-panel
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-megamenu-submenu-header
+    margin: 0
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    font-weight: 600
+    border-top-right-radius: 3px
+    border-top-left-radius: 3px
+
+  .p-megamenu-submenu
+    padding: 0.25rem 0
+    width: 12.5rem
+
+    .p-menu-separator
+      border-top: 1px solid #383838
+      margin: 0.25rem 0
+
+  .p-menuitem.p-menuitem-active > .p-menuitem-link
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+      color: rgba(255, 255, 255, 0.87)
+
+  &.p-megamenu-vertical
+    width: 12.5rem
+    padding: 0.25rem 0
+
+.p-menu
+  padding: 0.25rem 0
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  width: 12.5rem
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  &.p-menu-overlay
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-submenu-header
+    margin: 0
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    background: #1e1e1e
+    font-weight: 600
+    border-top-right-radius: 0
+    border-top-left-radius: 0
+
+  .p-menu-separator
+    border-top: 1px solid #383838
+    margin: 0.25rem 0
+
+.p-menubar
+  padding: 0.5rem
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  .p-menubar-root-list > .p-menuitem
+    > .p-menuitem-link
+      padding: 0.75rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      border-radius: 3px
+      transition: box-shadow 0.2s
+      user-select: none
+
+      .p-menuitem-text
+        color: rgba(255, 255, 255, 0.87)
+
+      .p-menuitem-icon
+        color: rgba(255, 255, 255, 0.6)
+        margin-right: 0.5rem
+
+      .p-submenu-icon
+        color: rgba(255, 255, 255, 0.6)
+        margin-left: 0.5rem
+
+      &:not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+
+        .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+          color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+    &.p-menuitem-active > .p-menuitem-link
+      background: rgba(255, 255, 255, 0.03)
+
+      &:not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, &:not(.p-disabled):hover .p-menuitem-text, .p-menuitem-icon, &:not(.p-disabled):hover .p-menuitem-icon, .p-submenu-icon, &:not(.p-disabled):hover .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-submenu-list
+    padding: 0.25rem 0
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+    width: 12.5rem
+
+    .p-menu-separator
+      border-top: 1px solid #383838
+      margin: 0.25rem 0
+
+    .p-submenu-icon
+      font-size: 0.875rem
+
+  .p-menuitem.p-menuitem-active > .p-menuitem-link
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+      color: rgba(255, 255, 255, 0.87)
+
+@media screen and (max-width: 960px)
+  .p-menubar
+    position: relative
+
+    .p-menubar-button
+      display: flex
+      width: 2rem
+      height: 2rem
+      color: rgba(255, 255, 255, 0.6)
+      border-radius: 50%
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      &:hover
+        color: rgba(255, 255, 255, 0.87)
+        background: rgba(255, 255, 255, 0.03)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+    .p-menubar-root-list
+      position: absolute
+      display: none
+      padding: 0.25rem 0
+      background: #1e1e1e
+      border: 1px solid #383838
+      box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+      width: 100%
+
+      .p-menu-separator
+        border-top: 1px solid #383838
+        margin: 0.25rem 0
+
+      .p-submenu-icon
+        font-size: 0.875rem
+
+      > .p-menuitem
+        width: 100%
+        position: static
+
+        > .p-menuitem-link
+          padding: 0.75rem 1rem
+          color: rgba(255, 255, 255, 0.87)
+          border-radius: 0
+          transition: box-shadow 0.2s
+          user-select: none
+
+          .p-menuitem-text
+            color: rgba(255, 255, 255, 0.87)
+
+          .p-menuitem-icon
+            color: rgba(255, 255, 255, 0.6)
+            margin-right: 0.5rem
+
+          .p-submenu-icon
+            color: rgba(255, 255, 255, 0.6)
+
+          &:not(.p-disabled):hover
+            background: rgba(255, 255, 255, 0.03)
+
+            .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+              color: rgba(255, 255, 255, 0.87)
+
+          &:focus
+            outline: 0 none
+            outline-offset: 0
+            box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+          > .p-submenu-icon
+            margin-left: auto
+            transition: transform 0.2s
+
+        &.p-menuitem-active > .p-menuitem-link > .p-submenu-icon
+          transform: rotate(-180deg)
+
+      .p-submenu-list
+        width: 100%
+        position: static
+        box-shadow: none
+        border: 0 none
+
+        .p-submenu-icon
+          transition: transform 0.2s
+          transform: rotate(90deg)
+
+        .p-menuitem-active > .p-menuitem-link > .p-submenu-icon
+          transform: rotate(-90deg)
+
+      .p-menuitem
+        width: 100%
+        position: static
+
+      ul li
+        a
+          padding-left: 2.25rem
+
+        ul li
+          a
+            padding-left: 3.75rem
+
+          ul li
+            a
+              padding-left: 5.25rem
+
+            ul li
+              a
+                padding-left: 6.75rem
+
+              ul li a
+                padding-left: 8.25rem
+
+    &.p-menubar-mobile-active .p-menubar-root-list
+      display: flex
+      flex-direction: column
+      top: 100%
+      left: 0
+      z-index: 1
+
+.p-panelmenu
+  .p-panelmenu-header
+    > a
+      padding: 1rem
+      border: 1px solid #383838
+      color: rgba(255, 255, 255, 0.87)
+      background: #1e1e1e
+      font-weight: 600
+      border-radius: 3px
+      transition: box-shadow 0.2s
+
+      .p-panelmenu-icon, .p-menuitem-icon
+        margin-right: 0.5rem
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+    &:not(.p-highlight):not(.p-disabled) > a:hover
+      background: rgba(255, 255, 255, 0.03)
+      border-color: #383838
+      color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight
+      margin-bottom: 0
+
+      > a
+        background: #1e1e1e
+        border-color: #383838
+        color: rgba(255, 255, 255, 0.87)
+        border-bottom-right-radius: 0
+        border-bottom-left-radius: 0
+
+      &:not(.p-disabled) > a:hover
+        border-color: #383838
+        background: rgba(255, 255, 255, 0.03)
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-panelmenu-content
+    padding: 0.25rem 0
+    border: 1px solid #383838
+    background: #1e1e1e
+    color: rgba(255, 255, 255, 0.87)
+    border-top: 0
+    border-top-right-radius: 0
+    border-top-left-radius: 0
+    border-bottom-right-radius: 3px
+    border-bottom-left-radius: 3px
+
+    .p-menuitem .p-menuitem-link
+      padding: 0.75rem 1rem
+      color: rgba(255, 255, 255, 0.87)
+      border-radius: 0
+      transition: box-shadow 0.2s
+      user-select: none
+
+      .p-menuitem-text
+        color: rgba(255, 255, 255, 0.87)
+
+      .p-menuitem-icon
+        color: rgba(255, 255, 255, 0.6)
+        margin-right: 0.5rem
+
+      .p-submenu-icon
+        color: rgba(255, 255, 255, 0.6)
+
+      &:not(.p-disabled):hover
+        background: rgba(255, 255, 255, 0.03)
+
+        .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+          color: rgba(255, 255, 255, 0.87)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+      .p-panelmenu-icon
+        margin-right: 0.5rem
+
+    .p-submenu-list:not(.p-panelmenu-root-submenu)
+      padding: 0 0 0 1rem
+
+  .p-panelmenu-panel
+    margin-bottom: 0
+
+    .p-panelmenu-header > a, .p-panelmenu-content
+      border-radius: 0
+
+    &:not(:first-child) .p-panelmenu-header
+      > a, &:not(.p-highlight):not(.p-disabled):hover > a, &:not(.p-disabled).p-highlight:hover > a
+        border-top: 0 none
+
+    &:first-child .p-panelmenu-header > a
+      border-top-right-radius: 3px
+      border-top-left-radius: 3px
+
+    &:last-child
+      .p-panelmenu-header:not(.p-highlight) > a, .p-panelmenu-content
+        border-bottom-right-radius: 3px
+        border-bottom-left-radius: 3px
+
+.p-slidemenu
+  padding: 0.25rem 0
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  width: 12.5rem
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  &.p-slidemenu-overlay
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-slidemenu-list
+    padding: 0.25rem 0
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-slidemenu.p-slidemenu-active > .p-slidemenu-link
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-slidemenu-text, .p-slidemenu-icon
+      color: rgba(255, 255, 255, 0.87)
+
+  .p-slidemenu-separator
+    border-top: 1px solid #383838
+    margin: 0.25rem 0
+
+  .p-slidemenu-icon
+    font-size: 0.875rem
+
+  .p-slidemenu-backward
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+
+.p-steps .p-steps-item
+  .p-menuitem-link
+    background: transparent
+    transition: box-shadow 0.2s
+    border-radius: 3px
+    background: transparent
+
+    .p-steps-number
+      color: rgba(255, 255, 255, 0.87)
+      border: 0 none
+      background: transparent
+      min-width: 2rem
+      height: 2rem
+      line-height: 2rem
+      font-size: 1.143rem
+      z-index: 1
+      border-radius: 50%
+
+    .p-steps-title
+      margin-top: 0.5rem
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+  &.p-highlight
+    .p-steps-number
+      background: rgba(100, 181, 246, 0.16)
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-steps-title
+      font-weight: 600
+      color: rgba(255, 255, 255, 0.87)
+
+  &:before
+    content: ' '
+    border-top: 1px solid #383838
+    width: 100%
+    top: 50%
+    left: 0
+    display: block
+    position: absolute
+    margin-top: -1rem
+
+.p-tabmenu .p-tabmenu-nav
+  background: transparent
+  border: 1px solid #383838
+  border-width: 0 0 2px 0
+
+  .p-tabmenuitem
+    margin-right: 0
+
+    .p-menuitem-link
+      border: solid #383838
+      border-width: 0 0 2px 0
+      border-color: transparent transparent #383838 transparent
+      background: #1e1e1e
+      color: rgba(255, 255, 255, 0.6)
+      padding: 1rem
+      font-weight: 600
+      border-top-right-radius: 3px
+      border-top-left-radius: 3px
+      transition: box-shadow 0.2s
+      margin: 0 0 -2px 0
+      height: calc(100% + 2px)
+
+      .p-menuitem-icon
+        margin-right: 0.5rem
+
+      &:not(.p-disabled):focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: inset 0 0 0 1px #93cbf9
+
+    &:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link
+      background: #1e1e1e
+      border-color: #64b5f6
+      color: rgba(255, 255, 255, 0.87)
+
+    &.p-highlight .p-menuitem-link
+      background: #1e1e1e
+      border-color: #64b5f6
+      color: #64b5f6
+
+.p-tieredmenu
+  padding: 0.25rem 0
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  border-radius: 3px
+  width: 12.5rem
+
+  .p-menuitem-link
+    padding: 0.75rem 1rem
+    color: rgba(255, 255, 255, 0.87)
+    border-radius: 0
+    transition: box-shadow 0.2s
+    user-select: none
+
+    .p-menuitem-text
+      color: rgba(255, 255, 255, 0.87)
+
+    .p-menuitem-icon
+      color: rgba(255, 255, 255, 0.6)
+      margin-right: 0.5rem
+
+    .p-submenu-icon
+      color: rgba(255, 255, 255, 0.6)
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.03)
+
+      .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+        color: rgba(255, 255, 255, 0.87)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: inset 0 0 0 0.15rem #93cbf9
+
+  &.p-tieredmenu-overlay
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-submenu-list
+    padding: 0.25rem 0
+    background: #1e1e1e
+    border: 1px solid #383838
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+
+  .p-menuitem.p-menuitem-active > .p-menuitem-link
+    background: rgba(255, 255, 255, 0.03)
+
+    .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
+      color: rgba(255, 255, 255, 0.87)
+
+  .p-menu-separator
+    border-top: 1px solid #383838
+    margin: 0.25rem 0
+
+  .p-submenu-icon
+    font-size: 0.875rem
+
+.p-inline-message
+  padding: 0.5rem 0.5rem
+  margin: 0
+  border-radius: 3px
+
+  &.p-inline-message-info
+    background: #b3e5fc
+    border: solid #0891cf
+    border-width: 1px
+    color: #044868
+
+    .p-inline-message-icon
+      color: #044868
+
+  &.p-inline-message-success
+    background: #c8e6c9
+    border: solid #439446
+    border-width: 1px
+    color: #224a23
+
+    .p-inline-message-icon
+      color: #224a23
+
+  &.p-inline-message-warn
+    background: #ffecb3
+    border: solid #d9a300
+    border-width: 1px
+    color: #6d5100
+
+    .p-inline-message-icon
+      color: #6d5100
+
+  &.p-inline-message-error
+    background: #ffcdd2
+    border: solid #e60017
+    border-width: 1px
+    color: #73000c
+
+    .p-inline-message-icon
+      color: #73000c
+
+  .p-inline-message-icon
+    font-size: 1rem
+    margin-right: 0.5rem
+
+  .p-inline-message-text
+    font-size: 1rem
+
+  &.p-inline-message-icon-only .p-inline-message-icon
+    margin-right: 0
+
+.p-message
+  margin: 1rem 0
+  border-radius: 3px
+
+  .p-message-wrapper
+    padding: 1rem 1.5rem
+
+  .p-message-close
+    width: 2rem
+    height: 2rem
+    border-radius: 50%
+    background: transparent
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+    &:hover
+      background: rgba(255, 255, 255, 0.3)
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+  &.p-message-info
+    background: #b3e5fc
+    border: solid #0891cf
+    border-width: 0 0 0 6px
+    color: #044868
+
+    .p-message-icon, .p-message-close
+      color: #044868
+
+  &.p-message-success
+    background: #c8e6c9
+    border: solid #439446
+    border-width: 0 0 0 6px
+    color: #224a23
+
+    .p-message-icon, .p-message-close
+      color: #224a23
+
+  &.p-message-warn
+    background: #ffecb3
+    border: solid #d9a300
+    border-width: 0 0 0 6px
+    color: #6d5100
+
+    .p-message-icon, .p-message-close
+      color: #6d5100
+
+  &.p-message-error
+    background: #ffcdd2
+    border: solid #e60017
+    border-width: 0 0 0 6px
+    color: #73000c
+
+    .p-message-icon, .p-message-close
+      color: #73000c
+
+  .p-message-text
+    font-size: 1rem
+    font-weight: 500
+
+  .p-message-icon
+    font-size: 1.5rem
+    margin-right: 0.5rem
+
+.p-toast
+  opacity: 0.9
+
+  .p-toast-message
+    margin: 0 0 1rem 0
+    box-shadow: none
+    border-radius: 3px
+
+    .p-toast-message-content
+      padding: 1rem
+      border-width: 0 0 0 6px
+
+      .p-toast-message-text
+        margin: 0 0 0 1rem
+
+      .p-toast-message-icon
+        font-size: 2rem
+
+      .p-toast-summary
+        font-weight: 700
+
+      .p-toast-detail
+        margin: 0.5rem 0 0 0
+
+    .p-toast-icon-close
+      width: 2rem
+      height: 2rem
+      border-radius: 50%
+      background: transparent
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+      &:hover
+        background: rgba(255, 255, 255, 0.3)
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+    &.p-toast-message-info
+      background: #b3e5fc
+      border: solid #0891cf
+      border-width: 0 0 0 6px
+      color: #044868
+
+      .p-toast-message-icon, .p-toast-icon-close
+        color: #044868
+
+    &.p-toast-message-success
+      background: #c8e6c9
+      border: solid #439446
+      border-width: 0 0 0 6px
+      color: #224a23
+
+      .p-toast-message-icon, .p-toast-icon-close
+        color: #224a23
+
+    &.p-toast-message-warn
+      background: #ffecb3
+      border: solid #d9a300
+      border-width: 0 0 0 6px
+      color: #6d5100
+
+      .p-toast-message-icon, .p-toast-icon-close
+        color: #6d5100
+
+    &.p-toast-message-error
+      background: #ffcdd2
+      border: solid #e60017
+      border-width: 0 0 0 6px
+      color: #73000c
+
+      .p-toast-message-icon, .p-toast-icon-close
+        color: #73000c
+
+.p-galleria
+  .p-galleria-close
+    margin: 0.5rem
+    background: transparent
+    color: #f8f9fa
+    width: 4rem
+    height: 4rem
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+    border-radius: 50%
+
+    .p-galleria-close-icon
+      font-size: 2rem
+
+    &:hover
+      background: rgba(255, 255, 255, 0.1)
+      color: #f8f9fa
+
+  .p-galleria-item-nav
+    background: transparent
+    color: #f8f9fa
+    width: 4rem
+    height: 4rem
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+    border-radius: 3px
+    margin: 0 0.5rem
+
+    .p-galleria-item-prev-icon, .p-galleria-item-next-icon
+      font-size: 2rem
+
+    &:not(.p-disabled):hover
+      background: rgba(255, 255, 255, 0.1)
+      color: #f8f9fa
+
+  .p-galleria-caption
+    background: rgba(0, 0, 0, 0.5)
+    color: #f8f9fa
+    padding: 1rem
+
+  .p-galleria-indicators
+    padding: 1rem
+
+    .p-galleria-indicator
+      button
+        background-color: #383838
+        width: 1rem
+        height: 1rem
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+        border-radius: 50%
+
+        &:hover
+          background: rgba(255, 255, 255, 0.1)
+
+      &.p-highlight button
+        background: rgba(100, 181, 246, 0.16)
+        color: rgba(255, 255, 255, 0.87)
+
+  &.p-galleria-indicators-bottom .p-galleria-indicator, &.p-galleria-indicators-top .p-galleria-indicator
+    margin-right: 0.5rem
+
+  &.p-galleria-indicators-left .p-galleria-indicator, &.p-galleria-indicators-right .p-galleria-indicator
+    margin-bottom: 0.5rem
+
+  &.p-galleria-indicator-onitem .p-galleria-indicators
+    background: rgba(0, 0, 0, 0.5)
+
+    .p-galleria-indicator
+      button
+        background: rgba(255, 255, 255, 0.4)
+
+        &:hover
+          background: rgba(255, 255, 255, 0.6)
+
+      &.p-highlight button
+        background: rgba(100, 181, 246, 0.16)
+        color: rgba(255, 255, 255, 0.87)
+
+  .p-galleria-thumbnail-container
+    background: rgba(0, 0, 0, 0.9)
+    padding: 1rem 0.25rem
+
+    .p-galleria-thumbnail-prev, .p-galleria-thumbnail-next
+      margin: 0.5rem
+      background-color: transparent
+      color: #f8f9fa
+      width: 2rem
+      height: 2rem
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+      border-radius: 50%
+
+    .p-galleria-thumbnail-prev:hover, .p-galleria-thumbnail-next:hover
+      background: rgba(255, 255, 255, 0.1)
+      color: #f8f9fa
+
+    .p-galleria-thumbnail-item-content
+      transition: box-shadow 0.2s
+
+      &:focus
+        outline: 0 none
+        outline-offset: 0
+        box-shadow: 0 0 0 1px #93cbf9
+
+.p-galleria-mask, .p-image-mask
+  --maskbg:rgba(0, 0, 0, 0.9)
+
+.p-image-preview-indicator
+  background-color: transparent
+  color: #f8f9fa
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+.p-image-preview-container:hover > .p-image-preview-indicator
+  background-color: rgba(0, 0, 0, 0.5)
+
+.p-image-toolbar
+  padding: 1rem
+
+.p-image-action.p-link
+  color: #f8f9fa
+  background-color: transparent
+  width: 3rem
+  height: 3rem
+  border-radius: 50%
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+  margin-right: 0.5rem
+
+  &:last-child
+    margin-right: 0
+
+  &:hover
+    color: #f8f9fa
+    background-color: rgba(255, 255, 255, 0.1)
+
+  i
+    font-size: 1.5rem
+
+.p-avatar
+  background-color: #383838
+  border-radius: 3px
+
+  &.p-avatar-lg
+    width: 3rem
+    height: 3rem
+    font-size: 1.5rem
+
+    .p-avatar-icon
+      font-size: 1.5rem
+
+  &.p-avatar-xl
+    width: 4rem
+    height: 4rem
+    font-size: 2rem
+
+    .p-avatar-icon
+      font-size: 2rem
+
+.p-avatar-group .p-avatar
+  border: 2px solid #1e1e1e
+
+.p-chip
+  background-color: #383838
+  color: rgba(255, 255, 255, 0.87)
+  border-radius: 16px
+  padding: 0 0.5rem
+
+  .p-chip-text
+    line-height: 1.5
+    margin-top: 0.25rem
+    margin-bottom: 0.25rem
+
+  .p-chip-icon
+    margin-right: 0.5rem
+
+  img
+    width: 2rem
+    height: 2rem
+    margin-left: -0.5rem
+    margin-right: 0.5rem
+
+  .p-chip-remove-icon
+    border-radius: 3px
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+    margin-left: 0.5rem
+
+    &:focus
+      outline: 0 none
+      outline-offset: 0
+      box-shadow: 0 0 0 1px #93cbf9
+
+.p-scrolltop
+  width: 3rem
+  height: 3rem
+  border-radius: 50%
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
+
+  &.p-link
+    background: rgba(100, 181, 246, 0.16)
+
+    &:hover
+      background: rgba(100, 181, 246, 0.3616)
+
+  .p-scrolltop-icon
+    font-size: 1.5rem
+    color: rgba(255, 255, 255, 0.87)
+
+.p-skeleton
+  background-color: rgba(255, 255, 255, 0.06)
+  border-radius: 3px
+
+  &:after
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0))
+
+.p-tag
+  background: #64b5f6
+  color: #212529
+  font-size: 0.75rem
+  font-weight: 700
+  padding: 0.25rem 0.4rem
+  border-radius: 3px
+
+  &.p-tag-success
+    background-color: #c5e1a5
+    color: #121212
+
+  &.p-tag-info
+    background-color: #81d4fa
+    color: #121212
+
+  &.p-tag-warning
+    background-color: #ffe082
+    color: #121212
+
+  &.p-tag-danger
+    background-color: #f48fb1
+    color: #121212
+
+  .p-tag-icon
+    margin-right: 0.25rem
+    font-size: 0.75rem
+
+.p-inplace .p-inplace-display
+  padding: 0.5rem 0.5rem
+  border-radius: 3px
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
+
+  &:not(.p-disabled):hover
+    background: rgba(255, 255, 255, 0.03)
+    color: rgba(255, 255, 255, 0.87)
+
+  &:focus
+    outline: 0 none
+    outline-offset: 0
+    box-shadow: 0 0 0 1px #93cbf9
+
+.p-progressbar
+  border: 0 none
+  height: 1.5rem
+  background: #383838
+  border-radius: 3px
+
+  .p-progressbar-value
+    border: 0 none
+    margin: 0
+    background: #64b5f6
+
+  .p-progressbar-label
+    color: #212529
+    line-height: 1.5rem
+
+.p-terminal
+  background: #1e1e1e
+  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid #383838
+  padding: 1rem
+
+  .p-terminal-input
+    font-size: var(--base-font-size)
+    font-family: var(--base-font-size)
+
+.p-badge
+  background: #64b5f6
+  color: #212529
+  font-size: 0.75rem
+  font-weight: 700
+  min-width: 1.5rem
+  height: 1.5rem
+  line-height: 1.5rem
+
+  &.p-badge-secondary
+    background-color: #78909c
+    color: #ffffff
+
+  &.p-badge-success
+    background-color: #c5e1a5
+    color: #121212
+
+  &.p-badge-info
+    background-color: #81d4fa
+    color: #121212
+
+  &.p-badge-warning
+    background-color: #ffe082
+    color: #121212
+
+  &.p-badge-danger
+    background-color: #f48fb1
+    color: #121212
+
+  &.p-badge-lg
+    font-size: 1.125rem
+    min-width: 2.25rem
+    height: 2.25rem
+    line-height: 2.25rem
+
+  &.p-badge-xl
+    font-size: 1.5rem
+    min-width: 3rem
+    height: 3rem
+    line-height: 3rem
+
+.p-tag
+  background: #64b5f6
+  color: #212529
+  font-size: 0.75rem
+  font-weight: 700
+  padding: 0.25rem 0.4rem
+  border-radius: 3px
+
+  &.p-tag-success
+    background-color: #c5e1a5
+
+  &.p-tag-info
+    background-color: #81d4fa
+
+  &.p-tag-warning
+    background-color: #ffe082
+
+  &.p-tag-danger
+    background-color: #f48fb1
+
+
+.p-datatable .p-datatable-tbody > tr
+  &.p-datatable-dragpoint-top > td
+    box-shadow: inset 0 2px 0 0 #64b5f6
+
+  &.p-datatable-dragpoint-bottom > td
+    box-shadow: inset 0 -2px 0 0 #64b5f6
