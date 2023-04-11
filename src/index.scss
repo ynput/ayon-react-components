@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,400;0,600;0,800;1,300;1,400&display=swap');
+@import url('https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+//theme
+@import 'primereact/resources/themes/lara-light-indigo/theme.css';
+
+//core
+@import 'primereact/resources/primereact.min.css';
+
+:root {
+  --color-text: #d3d8de;
+  --color-text-dim: #8e9297;
+
+  --color-grey-00: #21252b;
+  --color-grey-01: #2c313a;
+  --color-grey-02: #373d48;
+  --color-grey-03: #434a56;
+  --color-grey-04: #4b5362;
+  --color-grey-05: #576170;
+  --color-grey-06: #6b7685;
+  --color-grey-07: #99a3b2;
+  --color-grey-08: #d3d8de;
+  --color-grey-09: #f0f2f5;
+
+  --color-hl-00: #47b7da;
+  --color-hl-01: #fb9c15;
+  --color-hl-changed: #106aa2;
+  --color-hl-studio: #56a06f;
+  --color-hl-project: #e67300;
+  --color-hl-error: #ff4422;
+  --color-icon: #c1d8e9;
+
+  --color-row-hl: rgba(71, 184, 218, 0.2);
+  --color-row-hl-hover: rgba(71, 184, 218, 0.3);
+
+  --base-input-size: 30px;
+  --base-input-border-radius: 3px;
+  --base-gap-small: 4px;
+  --base-gap-medium: 6px;
+  --base-gap-large: 8px;
+
+  --base-font-family: 'Nunito Sans', sans-serif;
+  --base-font-size: 13px;
+
+  --button-background: var(--color-grey-03);
+  --button-background-hover: var(--color-grey-04);
+
+  --panel-background: var(--color-grey-00);
+  --panel-border-radius: 5px;
+
+  --input-disabled-background-color: #282c34;
+  --input-disabled-border-color: #353b45;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: var(--base-font-family);
+  font-size: var(--base-font-size);
+}
+html {
+  color: var(--color-text);
+  background-color: var(--color-grey-01);
+}
+.material-symbols-outlined {
+  color: var(--color-icon);
+  font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 200, 'opsz' 20;
+}
+
+::-webkit-scrollbar {
+  width: 20px;
+  height: 20px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-grey-03);
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-grey-04);
+}

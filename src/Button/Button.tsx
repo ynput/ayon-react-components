@@ -1,22 +1,20 @@
-import styled from 'styled-components'
+import { ButtonHTMLAttributes, FC } from 'react'
+import styled, { css } from 'styled-components'
 
-const BaseButton = ({ label, icon, className, onClick, disabled, tooltip, style }) => {
-  const iconElement = icon && <span className="material-symbols-outlined">{icon}</span>
-
-  return (
-    <button
-      className={className}
-      onClick={onClick}
-      title={tooltip}
-      disabled={disabled}
-      style={style}
-    >
-      {iconElement} {label}
-    </button>
-  )
+// TYPES
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  label?: string
+  icon?: string
+  className?: string
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
+  disabled?: boolean
+  tooltip?: string
+  style?: React.CSSProperties
+  link?: boolean
 }
 
-const Button = styled(BaseButton)`
+// STYLES
+const ButtonStyled = styled.button<ButtonProps>`
   color: var(--color-text);
   background: var(--button-background);
   min-height: var(--base-input-size);
@@ -104,22 +102,51 @@ const Button = styled(BaseButton)`
   // and should be square.
   ${(props) =>
     !props.label &&
-    `
-    min-width: var(--base-input-size);
-    max-width: var(--base-input-size);
-  `}
+    css`
+      min-width: var(--base-input-size);
+      max-width: var(--base-input-size);
+    `}
+
+  /* if button is link */
+  ${(props) =>
+    props.link &&
+    css`
+      display: inline-block;
+      border: 0;
+      background: none;
+      color: var(--color-hl-00);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    `}
 `
 
-const LinkButton = styled(BaseButton)`
-  display: inline-block;
-  border: 0;
-  background: none;
-  color: var(--color-hl-00);
-  cursor: pointer;
+export const Button: FC<ButtonProps> = ({
+  label,
+  icon,
+  className,
+  onClick,
+  disabled,
+  tooltip,
+  style,
+  link,
+  ...props
+}) => {
+  const iconElement = icon && <span className="material-symbols-outlined">{icon}</span>
 
-  &:hover {
-    text-decoration: underline;
-  }
-`
-
-export { Button, LinkButton }
+  return (
+    <ButtonStyled
+      className={className}
+      onClick={onClick}
+      title={tooltip}
+      disabled={disabled}
+      style={style}
+      link={link}
+      {...props}
+    >
+      {iconElement} {label}
+    </ButtonStyled>
+  )
+}

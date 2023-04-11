@@ -8,9 +8,9 @@ import int8ToHex from '../../helpers/int8ToHex'
 import floatToInt8 from '../../helpers/floatToInt8'
 import toHexColor from '../../helpers/toHexColor'
 import validateHexColor from '../../helpers/validateHexColor'
-import ColorPickerPreview from '../button/colorPickerPreview'
+import ColorPickerPreview from '../ColorPicker/colorPickerPreview'
 import floatToInt16 from '../../helpers/floatToInt16'
-import { Button } from '../button'
+import { Button } from '../../Button/Button'
 
 const ColorInputs = styled.div`
   display: flex;

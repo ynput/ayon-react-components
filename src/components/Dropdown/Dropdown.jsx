@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import styled, { css, keyframes } from 'styled-components'
-import { InputText } from './input'
+import { InputText } from '../input'
 import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 
@@ -530,6 +530,7 @@ const Dropdown = ({
       style={style}
       className={className}
     >
+      ß
       {value && (
         <ButtonStyled ref={valueRef} onClick={handleOpen} disabled={disabled} isChanged={isChanged}>
           {valueTemplate ? (
