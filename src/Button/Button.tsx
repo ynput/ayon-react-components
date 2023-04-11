@@ -5,11 +5,7 @@ import styled, { css } from 'styled-components'
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string
   icon?: string
-  className?: string
-  onClick?: React.MouseEventHandler<HTMLButtonElement>
-  disabled?: boolean
   tooltip?: string
-  style?: React.CSSProperties
   link?: boolean
 }
 
@@ -100,16 +96,16 @@ const ButtonStyled = styled.button<ButtonProps>`
 
   // Without a label, button is considered an icon button
   // and should be square.
-  ${(props) =>
-    !props.label &&
+  ${({ label }) =>
+    label &&
     css`
       min-width: var(--base-input-size);
       max-width: var(--base-input-size);
     `}
 
   /* if button is link */
-  ${(props) =>
-    props.link &&
+  ${({ link }) =>
+    link &&
     css`
       display: inline-block;
       border: 0;
@@ -123,30 +119,12 @@ const ButtonStyled = styled.button<ButtonProps>`
     `}
 `
 
-export const Button: FC<ButtonProps> = ({
-  label,
-  icon,
-  className,
-  onClick,
-  disabled,
-  tooltip,
-  style,
-  link,
-  ...props
-}) => {
+export const Button: FC<ButtonProps> = ({ label, icon, tooltip, link, ...props }) => {
   const iconElement = icon && <span className="material-symbols-outlined">{icon}</span>
 
   return (
-    <ButtonStyled
-      className={className}
-      onClick={onClick}
-      title={tooltip}
-      disabled={disabled}
-      style={style}
-      link={link}
-      {...props}
-    >
-      {iconElement} {label}
+    <ButtonStyled title={tooltip} link={link} {...props}>
+      {!link && iconElement} {label}
     </ButtonStyled>
   )
 }
