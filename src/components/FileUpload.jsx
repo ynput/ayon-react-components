@@ -165,19 +165,25 @@ const FileUpload = ({
     inputRef.current.click()
   }
 
+  const onFileRemove = (event, idx) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (idx === -1) {
+      setFiles(null)
+      inputRef.current.value = null
+    } else {
+      const newFiles = [...files]
+      newFiles.splice(idx, 1)
+      setFiles(newFiles)
+    }
+  }
+
   const formContents = useMemo(() => {
     if (files?.length > showMaxFiles) {
       return (
         <>
           <span>{files.length} files selected</span>
-          <button
-            onClick={() => {
-              setFiles(null)
-              inputRef.current.value = null
-            }}
-          >
-            clear
-          </button>
+          <button onClick={(e) => onFileRemove(e, -1)}>clear</button>
         </>
       )
     } else if (files?.length) {
@@ -186,15 +192,7 @@ const FileUpload = ({
           {files.map((file, idx) => (
             <li key={idx}>
               {file.name}
-              <button
-                onClick={() => {
-                  const newFiles = [...files]
-                  newFiles.splice(idx, 1)
-                  setFiles(newFiles)
-                }}
-              >
-                x
-              </button>
+              <button onClick={(e) => onFileRemove(e, idx)}>x</button>
             </li>
           ))}
         </FileList>
