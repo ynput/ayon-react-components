@@ -1,5 +1,10 @@
 // export all components here
 
+// import styles to be included
+import './styles/theme.sass'
+import './styles/prime.scss'
+import './styles/index.scss'
+
 // BUTTONS
 export { Button } from './Button'
 

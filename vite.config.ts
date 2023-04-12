@@ -9,14 +9,14 @@ export default defineConfig((configEnv) => ({
   plugins: [
     react(),
     linterPlugin({
-      include: ['./src}/**/*.{js,jsx}'],
+      include: ['./src}/**/*.{ts,tsx}'],
       linters: [new EsLinter({ configEnv })],
     }),
   ],
 
   build: {
     lib: {
-      entry: resolve('src', 'components/index.js'),
+      entry: resolve('src', 'index.tsx'),
       name: 'AyonReactComponents',
       formats: ['es', 'umd'],
       fileName: (format) => `ayon-react-components.${format}.js`,
@@ -28,10 +28,8 @@ export default defineConfig((configEnv) => ({
           react: 'React',
           'react-dom': 'ReactDOM',
           'styled-components': 'styled',
-        }
-      }
+        },
+      },
     },
   },
-
-
 }))
