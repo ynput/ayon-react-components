@@ -90,11 +90,9 @@ const FileList = styled.ul`
   }
 `
 
-type SetFilesCallback = (files: File[]) => void
-
 export interface FileUploadProps extends React.HTMLAttributes<HTMLFormElement> {
   files: File[]
-  setFiles: SetFilesCallback | ((files: File[]) => File[])
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>
   mode?: 'single' | 'multiple' | 'sequence'
   validExtensions?: string[]
   showMaxFiles?: number
@@ -192,7 +190,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             <button
               onClick={() => {
                 setFiles([])
-                if (inputRef.current) inputRef.current.value = null
+                if (inputRef.current) inputRef.current.value = ''
               }}
             >
               clear
