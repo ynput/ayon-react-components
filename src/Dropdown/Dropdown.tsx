@@ -300,6 +300,7 @@ export interface DropdownProps {
   className?: string
   widthExpand?: boolean
   searchFields?: string[]
+  minSelected?: number
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -332,6 +333,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       maxOptionsShown = 25,
       style,
       className,
+      minSelected = 0,
     },
     ref,
   ) => {
@@ -468,7 +470,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       } else {
         // add/remove from selected
         if (newSelected.includes(value)) {
-          if (newSelected.length > 1) {
+          if (newSelected.length > minSelected) {
             // remove
             newSelected.splice(newSelected.indexOf(value), 1)
           }
