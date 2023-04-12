@@ -182,19 +182,25 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       inputRef.current?.click()
     }
 
+    const onFileRemove = (event: React.MouseEvent<HTMLButtonElement>, idx: number) => {
+      event.preventDefault()
+      event.stopPropagation()
+      if (idx === -1) {
+        setFiles([])
+        if (inputRef.current) inputRef.current.value = ''
+      } else {
+        const newFiles = [...files]
+        newFiles.splice(idx, 1)
+        setFiles(newFiles)
+      }
+    }
+
     const formContents = useMemo(() => {
       if (files?.length > showMaxFiles) {
         return (
           <>
             <span>{files.length} files selected</span>
-            <button
-              onClick={() => {
-                setFiles([])
-                if (inputRef.current) inputRef.current.value = ''
-              }}
-            >
-              clear
-            </button>
+            <button onClick={(e) => onFileRemove(e, -1)}>clear</button>
           </>
         )
       } else if (files?.length) {
@@ -203,15 +209,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             {files.map((file, idx) => (
               <li key={idx}>
                 {file.name}
-                <button
-                  onClick={() => {
-                    const newFiles = [...files]
-                    newFiles.splice(idx, 1)
-                    setFiles(newFiles)
-                  }}
-                >
-                  x
-                </button>
+                <button onClick={(e) => onFileRemove(e, idx)}>x</button>
               </li>
             ))}
           </FileList>
