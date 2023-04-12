@@ -1,8 +1,12 @@
 {
   "name": "ayon-react-components-test",
   "private": false,
-  "version": "0.1.91",
+  "version": "0.1.92",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ynput/ayon-react-components.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "rollup -c --bundleConfigAsCjs",
