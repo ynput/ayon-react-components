@@ -1,8 +1,8 @@
 import type { Preview } from '@storybook/react'
 // import global styles
-import '../src/primereact/theme.sass'
-import '../src/primereact/index.scss'
-import '../src/index.scss'
+import '../src/styles/theme.sass'
+import '../src/styles/prime.scss'
+import '../src/styles/index.scss'
 
 const preview: Preview = {
   parameters: {

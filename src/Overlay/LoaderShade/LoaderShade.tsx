@@ -50,7 +50,7 @@ export interface LoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   message?: string
 }
 
-export const Loader = forwardRef<HTMLDivElement, LoaderProps>(({ message, ...props }, ref) => {
+export const LoaderShade = forwardRef<HTMLDivElement, LoaderProps>(({ message, ...props }, ref) => {
   return (
     <ShadeStyled {...props} ref={ref}>
       <LoaderStyled />

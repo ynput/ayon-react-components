@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Loader } from '.'
+import { LoaderShade } from '.'
 
-const meta: Meta<typeof Loader> = {
-  component: Loader,
+const meta: Meta<typeof LoaderShade> = {
+  component: LoaderShade,
 }
 
 export default meta
 
-type Story = StoryObj<typeof Loader>
+type Story = StoryObj<typeof LoaderShade>
 
 export const Default: Story = {
   args: {
