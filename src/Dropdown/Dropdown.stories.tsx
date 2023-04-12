@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Dropdown, DropdownProps } from './Dropdown'
 import { useState } from 'react'
+import { Button } from '../Button'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -54,22 +55,49 @@ export const Icons: Story = {
 
 // custom item and option renderers
 // TODO: fix this!
-// export const CustomRenderers: Story = {
-//   args: {
-//     options: options.map((option) => ({ ...option, icon: option.value })),
-//     multiSelect: true,
-//     itemTemplate: (value) => (
-//       <div style={{ display: 'flex', alignItems: 'center' }}>
-//         <span style={{ marginRight: '10px' }}>{value}</span>
-//         <span>{value}</span>
-//       </div>
-//     ),
-//     valueTemplate: (option) => (
-//       <div style={{ display: 'flex', alignItems: 'center' }}>
-//         <span style={{ marginRight: '10px' }}>{option.icon}</span>
-//         <span>{option.keyword}</span>
-//       </div>
-//     ),
-//   },
-//   render: Template,
-// }
+export const CustomTemplates: Story = {
+  args: {
+    value: [options[0].value, options[1].value],
+    options: options.map((option) => ({ ...option, icon: option.value })),
+    multiSelect: true,
+    widthExpand: true,
+    listStyle: { backgroundColor: 'black' },
+    valueTemplate: (value) => (
+      <div
+        style={{
+          background: 'orange',
+          borderRadius: 3,
+          padding: 10,
+          display: 'flex',
+        }}
+      >
+        {value?.map((v) => (
+          <Button
+            label={v.toString()}
+            icon={v.toString()}
+            style={{
+              marginLeft: 4,
+              backgroundColor: 'unset',
+              color: 'black',
+            }}
+            iconStyle={{ color: 'black' }}
+          />
+        ))}
+      </div>
+    ),
+    itemTemplate: (option, isActive, isSelected) => (
+      <div
+        style={{
+          background: isActive && isSelected ? 'orange' : isSelected ? '#029cfd' : '#292c2e',
+          borderRadius: 3,
+          margin: 4,
+          padding: 10,
+        }}
+      >
+        {isSelected ? '✓' : ' '}
+        {option?.value}
+      </div>
+    ),
+  },
+  render: Template,
+}

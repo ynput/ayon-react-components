@@ -272,6 +272,7 @@ export interface DropdownProps {
   message?: string
   itemStyle?: CSSProperties
   valueStyle?: CSSProperties
+  listStyle?: CSSProperties
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
@@ -280,7 +281,7 @@ export interface DropdownProps {
   dataLabel?: string
   options: Array<any>
   itemTemplate?: (
-    { icon, label }: { icon: string; label: string },
+    { icon, label, value }: { icon: string; label: string; value: string },
     isActive: boolean,
     isSelected: boolean,
   ) => React.ReactNode
@@ -307,6 +308,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       value = [],
       valueTemplate,
       valueStyle,
+      listStyle,
       dataKey = 'value',
       dataLabel = 'label',
       options = [],
@@ -466,8 +468,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       } else {
         // add/remove from selected
         if (newSelected.includes(value)) {
-          // remove
-          newSelected.splice(newSelected.indexOf(value), 1)
+          if (newSelected.length > 1) {
+            // remove
+            newSelected.splice(newSelected.indexOf(value), 1)
+          }
         } else {
           // add
           newSelected.push(value)
@@ -641,7 +645,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                 />
               </SearchStyled>
             )}
-            <OptionsStyled message={message || ''} ref={optionsRef} style={{ minWidth }}>
+            <OptionsStyled
+              message={message || ''}
+              ref={optionsRef}
+              style={{ minWidth, ...listStyle }}
+            >
               {showOptions.map((option, i) => (
                 <ListItemStyled
                   key={option[dataKey]}
