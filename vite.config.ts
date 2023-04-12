@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dts from 'vite-plugin-dts'
 
 import { resolve } from 'node:path'
 import EsLint from 'vite-plugin-linter'
@@ -12,6 +13,7 @@ export default defineConfig((configEnv) => ({
       include: ['./src}/**/*.{ts,tsx}'],
       linters: [new EsLinter({ configEnv })],
     }),
+    dts(),
   ],
 
   build: {

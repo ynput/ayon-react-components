@@ -1,10 +1,5 @@
 // export all components here
 
-// import styles to be included
-import './styles/theme.sass'
-import './styles/prime.scss'
-import './styles/index.scss'
-
 // BUTTONS
 export { Button } from './Button'
 
@@ -55,3 +50,6 @@ export { Panel } from './Panels/Panel'
 export { ScrollPanel } from './Panels/ScrollPanel'
 // tablePanel
 export { TablePanel } from './Panels/TablePanel'
+
+// import styles to be included
+import './index.sass'
