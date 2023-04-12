@@ -1,6 +1,7 @@
+import { forwardRef } from 'react'
 import styled from 'styled-components'
 
-const Loader = styled.div`
+const LoaderStyled = styled.div`
   --loader-size: 40px;
   display: inline-block;
   width: 80px;
@@ -26,7 +27,7 @@ const Loader = styled.div`
   }
 `
 
-const Shade = styled.div`
+const ShadeStyled = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -45,13 +46,15 @@ const Shade = styled.div`
   }
 `
 
-const LoaderShade = ({ className, style, message }) => {
-  return (
-    <Shade className={className} style={style}>
-      <Loader />
-      <div className="message">{message}</div>
-    </Shade>
-  )
+export interface LoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  message?: string
 }
 
-export { Shade, LoaderShade }
+export const Loader = forwardRef<HTMLDivElement, LoaderProps>(({ message, ...props }, ref) => {
+  return (
+    <ShadeStyled {...props} ref={ref}>
+      <LoaderStyled />
+      <div className="message">{message}</div>
+    </ShadeStyled>
+  )
+})
