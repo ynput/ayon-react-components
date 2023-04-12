@@ -60,7 +60,7 @@ const formatsConfig = {
 
 export interface InputColorProps {
   value: string | number[]
-  onChange: (value: string | number[]) => void
+  onChange: (event: { target: { value: string | number[] } }) => void
   alpha?: boolean
   format?: 'hex' | 'float' | 'uint8' | 'uint16'
   className?: string
@@ -72,8 +72,8 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
   ({ value, onChange, alpha, format = 'hex', className, style }, ref) => {
     const isHex = format === 'hex'
 
-    let initValue
-    let initAlpha
+    let initValue: string | number[]
+    let initAlpha: number = 1
 
     if (isHex) {
       initValue = value
@@ -86,7 +86,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
       if (value.length < 8) initAlpha = 1
       initValue = initValue.slice(0, 7)
     } else {
-      initValue = [...value]
+      initValue = [...(value as number[])]
       // validate value is in correct format
       if (!Array.isArray(value)) initValue = [0, 0, 0]
 
@@ -100,8 +100,8 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
     }
 
     // use local state and then update global state once dialog closes
-    const [localValue, setLocalValue] = useState(initValue)
-    const [localAlpha, setLocalAlpha] = useState(initAlpha)
+    const [localValue, setLocalValue] = useState<string | number[]>(initValue)
+    const [localAlpha, setLocalAlpha] = useState<number>(initAlpha)
     const [dialogOpen, setDialogOpen] = useState(false)
 
     useEffect(() => {
@@ -113,7 +113,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
     // set channel inputs
     const channels = ['r', 'g', 'b']
 
-    const handleOnChange = (e) => {
+    const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault()
       const { id, value: targetValue } = e.target
 
@@ -122,26 +122,31 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
         newValue = targetValue
       } else {
         // create copy of current value
-        newValue = [...localValue]
+        newValue = [...(localValue as number[])]
         // replace new colour value in array
-        newValue.splice(channels.indexOf(id), 1, targetValue)
+        newValue.splice(channels.indexOf(id), 1, targetValue as any)
       }
       // update state
       setLocalValue(newValue)
     }
 
-    const handleColorInputOnChange = (e) => {
+    const handleColorInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault()
       // handles the native color input on change (always a hex string)
-      const value = e.target.value
+      const value = e.target?.value
+
       // if format is hex no conversion required
       if (isHex) return setLocalValue(value)
 
-      // convert to floats
-      const floats = value
-        .slice(1, 7)
-        .match(/.{1,2}/g)
-        .map((v) => hexToFloat(v))
+      let floats: number[] = []
+      if (value) {
+        // convert to floats
+        const matches = value.slice(1, 7).match(/.{1,2}/g)
+
+        if (matches) {
+          floats = matches.map((v) => hexToFloat(v))
+        }
+      }
 
       if (format === 'float') return setLocalValue(floats)
 
@@ -164,10 +169,10 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
         newState = localValue
         // validate hex string
         newState = validateHexColor(newState, initValue)
-      } else {
+      } else if (Array.isArray(localValue)) {
         newState = [...localValue]
         // validate all numbers
-        newState = newState.map((v, i) => (isNaN(v) || v === '' ? initValue[i] : parseFloat(v)))
+        newState = newState.map((v, i) => (isNaN(v) ? initValue[i] : parseFloat(v.toString())))
       }
       console.log(localValue)
 
@@ -177,9 +182,9 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
       // add alphas back to value
       if (alpha) {
         // validate alpha is number
-        let newAlpha = localAlpha === '' || isNaN(localAlpha) ? initAlpha : localAlpha
+        let newAlpha = localAlpha && isNaN(localAlpha) ? initAlpha : localAlpha
         // clamp alpha
-        newAlpha = Math.min(Math.max(parseFloat(newAlpha), 0), 1)
+        newAlpha = Math.min(Math.max(newAlpha || 1, 0), 1)
 
         // update local state
         setLocalAlpha(newAlpha)
@@ -193,7 +198,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
       }
 
       // create an event object to return
-      const event = { target: { value: newState } }
+      const event = { target: { value: newState as string | number[] } }
       // update global state
       onChange(event)
     }
@@ -209,10 +214,12 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
 
     const DialogTitle = `Colour Picker (${format.charAt(0).toUpperCase() + format.slice(1)})`
 
-    const hex = isHex ? localValue : toHexColor(localValue, format)
+    const hex: string = isHex
+      ? (localValue as string)
+      : (toHexColor(localValue as number[], format) as string)
     // add alpha is required
     let previewBG = hex
-    if (alpha) previewBG = hex + (localAlpha > 0 ? int8ToHex(floatToInt8(localAlpha)) : '00')
+    if (alpha) previewBG = hex + (localAlpha || 0 > 0 ? int8ToHex(floatToInt8(localAlpha)) : '00')
 
     // check if dialog is actually required
     const useDialog = alpha || ['uint16', 'float'].includes(format)
@@ -238,7 +245,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                 <label htmlFor={'hex'}>HEX</label>
                 <InputText
                   id="hex"
-                  value={localValue}
+                  value={localValue as string}
                   onChange={handleOnChange}
                   name="hex"
                   maxLength={7}
@@ -260,7 +267,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                       value={v}
                       step={formatsConfig[format].step}
                       onChange={handleOnChange}
-                      placeholder={formatsConfig[format].placeholder}
+                      placeholder={formatsConfig[format].placeholder?.toString()}
                       required
                       onKeyDown={(e) => e.key === 'Enter' && handleConfirmDialog()}
                     />
@@ -277,10 +284,10 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                   max={1}
                   value={localAlpha}
                   step={0.01}
-                  onChange={(e) => setLocalAlpha(e.target.value)}
-                  placeholder={0.5}
+                  onChange={(e) => setLocalAlpha(parseFloat(e.target.value))}
+                  placeholder={'0.5'}
                   required
-                  onKeyPress={(e) => e.charCode === 13 && handleConfirmDialog()}
+                  onKeyDown={(e) => e.key === 'Enter' && handleConfirmDialog()}
                 />
               </div>
             )}

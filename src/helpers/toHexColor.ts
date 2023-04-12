@@ -1,5 +1,5 @@
 // conversions for different formats to HEX color format
-const toHexColor = (value = [], format) => {
+const toHexColor = (value: number[] = [], format: string) => {
   const formats = ['float', 'uint8', 'uint16']
 
   // return error if format is not supported
