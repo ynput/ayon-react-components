@@ -1,4 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite'
+
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
@@ -22,9 +23,7 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
-  core: {
-    builder: '@storybook/builder-vite',
-  },
+  core: {},
   typescript: {
     reactDocgen: 'react-docgen-typescript',
   },

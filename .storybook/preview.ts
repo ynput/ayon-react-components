@@ -2,6 +2,7 @@ import type { Preview } from '@storybook/react'
 // import global styles
 import '../src/index.sass'
 import { themes } from '@storybook/theming'
+import AyonTheme from './AyonTheme'
 
 const preview: Preview = {
   parameters: {
@@ -13,7 +14,7 @@ const preview: Preview = {
       },
     },
     docs: {
-      theme: themes.dark,
+      // theme: themes.dark,
     },
   },
 }
