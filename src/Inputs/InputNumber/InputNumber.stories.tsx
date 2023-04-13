@@ -3,6 +3,7 @@ import { InputNumber } from '.'
 
 const meta: Meta<typeof InputNumber> = {
   component: InputNumber,
+  tags: ['autodocs'],
 }
 
 export default meta

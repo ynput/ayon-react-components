@@ -3,6 +3,7 @@ import { InputSwitch } from '.'
 
 const meta: Meta<typeof InputSwitch> = {
   component: InputSwitch,
+  tags: ['autodocs'],
 }
 
 export default meta

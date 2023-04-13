@@ -3,6 +3,7 @@ import { Toolbar } from '.'
 
 const meta: Meta<typeof Toolbar> = {
   component: Toolbar,
+  tags: ['autodocs'],
 }
 
 export default meta

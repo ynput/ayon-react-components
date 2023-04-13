@@ -3,6 +3,7 @@ import { InputPassword } from '.'
 
 const meta: Meta<typeof InputPassword> = {
   component: InputPassword,
+  tags: ['autodocs'],
 }
 
 export default meta

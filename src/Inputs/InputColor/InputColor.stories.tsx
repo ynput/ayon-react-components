@@ -3,6 +3,7 @@ import { InputColor } from './InputColor'
 
 const meta: Meta<typeof InputColor> = {
   component: InputColor,
+  tags: ['autodocs'],
 }
 
 export default meta

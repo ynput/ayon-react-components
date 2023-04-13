@@ -3,6 +3,7 @@ import { Spacer } from '.'
 
 const meta: Meta<typeof Spacer> = {
   component: Spacer,
+  tags: ['autodocs'],
 }
 
 export default meta

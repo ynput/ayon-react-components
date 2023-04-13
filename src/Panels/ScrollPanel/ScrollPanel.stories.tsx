@@ -3,6 +3,7 @@ import { ScrollPanel } from '.'
 
 const meta: Meta<typeof ScrollPanel> = {
   component: ScrollPanel,
+  tags: ['autodocs'],
 }
 
 export default meta

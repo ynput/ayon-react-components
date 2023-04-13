@@ -5,6 +5,7 @@ import { InputText } from '../../Inputs/InputText'
 
 const meta: Meta<typeof FormLayout> = {
   component: FormLayout,
+  tags: ['autodocs'],
 }
 
 export default meta

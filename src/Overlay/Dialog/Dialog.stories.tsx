@@ -3,6 +3,7 @@ import { Dialog } from '.'
 
 const meta: Meta<typeof Dialog> = {
   component: Dialog,
+  tags: ['autodocs'],
 }
 
 export default meta

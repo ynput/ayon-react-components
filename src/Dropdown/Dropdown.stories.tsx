@@ -5,6 +5,7 @@ import { Button } from '../Button'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
+  tags: ['autodocs'],
 }
 
 export default meta

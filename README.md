@@ -21,3 +21,11 @@ This is an open source project. We welcome contributions.
 ☎️ Want to know even more about AYON? Get in contact.
 
 🙋 Need some support or want something custom? Take a look at our services.
+
+## Get Started with Storybook
+
+Run locally: `yarn storybook`
+
+build: `yarn build-storybook`
+
+build-package: `yarn build`

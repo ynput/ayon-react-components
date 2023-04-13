@@ -3,6 +3,7 @@ import { LoaderShade } from '.'
 
 const meta: Meta<typeof LoaderShade> = {
   component: LoaderShade,
+  tags: ['autodocs'],
 }
 
 export default meta

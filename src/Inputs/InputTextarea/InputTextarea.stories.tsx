@@ -3,6 +3,7 @@ import { InputTextarea } from '.'
 
 const meta: Meta<typeof InputTextarea> = {
   component: InputTextarea,
+  tags: ['autodocs'],
 }
 
 export default meta

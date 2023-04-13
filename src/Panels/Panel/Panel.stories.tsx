@@ -3,6 +3,7 @@ import { Panel } from '.'
 
 const meta: Meta<typeof Panel> = {
   component: Panel,
+  tags: ['autodocs'],
 }
 
 export default meta

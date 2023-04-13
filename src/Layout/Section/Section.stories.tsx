@@ -3,6 +3,7 @@ import { Section } from '.'
 
 const meta: Meta<typeof Section> = {
   component: Section,
+  tags: ['autodocs'],
 }
 
 export default meta

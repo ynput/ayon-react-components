@@ -3,6 +3,7 @@ import { TablePanel } from '.'
 
 const meta: Meta<typeof TablePanel> = {
   component: TablePanel,
+  tags: ['autodocs'],
 }
 
 export default meta
