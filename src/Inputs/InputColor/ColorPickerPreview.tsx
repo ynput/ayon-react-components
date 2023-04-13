@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, FocusEvent } from 'react'
+import { ChangeEvent, FC, FocusEvent, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 // types
@@ -68,35 +68,31 @@ const ColorButton = styled.button`
   }
 `
 
-const ColorPickerPreview: FC<ColorPickerPreviewProps> = ({
-  onClick,
-  onChange,
-  backgroundColor,
-  value,
-  onBlur,
-}) => {
-  return (
-    <Wrapper>
-      <Input
-        type="color"
-        disabled={!onChange}
-        tabIndex={!onChange ? -1 : 0}
-        onChange={onChange && onChange}
-        value={value}
-        onBlur={onBlur}
-      />
-      <Checkerboard />
-      <ColorButton
-        style={{
-          backgroundColor: backgroundColor,
-          pointerEvents: onClick ? 'auto' : 'none',
-        }}
-        disabled={!onClick}
-        tabIndex={!onClick ? -1 : 0}
-        onClick={onClick}
-      />
-    </Wrapper>
-  )
-}
+const ColorPickerPreview = forwardRef<HTMLDivElement, ColorPickerPreviewProps>(
+  ({ onClick, onChange, backgroundColor, value, onBlur }, ref) => {
+    return (
+      <Wrapper ref={ref}>
+        <Input
+          type="color"
+          disabled={!onChange}
+          tabIndex={!onChange ? -1 : 0}
+          onChange={onChange && onChange}
+          value={value}
+          onBlur={onBlur}
+        />
+        <Checkerboard />
+        <ColorButton
+          style={{
+            backgroundColor: backgroundColor,
+            pointerEvents: onClick ? 'auto' : 'none',
+          }}
+          disabled={!onClick}
+          tabIndex={!onClick ? -1 : 0}
+          onClick={onClick}
+        />
+      </Wrapper>
+    )
+  },
+)
 
 export default ColorPickerPreview

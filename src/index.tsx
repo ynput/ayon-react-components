@@ -53,3 +53,4 @@ export { TablePanel } from './Panels/TablePanel'
 
 // import styles to be included
 import './index.sass'
+import 'primereact/resources/primereact.min.css'

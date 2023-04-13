@@ -1,5 +1,6 @@
 import type { Preview } from '@storybook/react'
 // import global styles
+import 'primereact/resources/primereact.min.css'
 import '../src/index.sass'
 import AyonTheme from './AyonTheme'
 

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 import { Dialog } from 'primereact/dialog'
-import { HTMLAttributes, forwardRef, useEffect, useState } from 'react'
+import { HTMLAttributes, forwardRef, useEffect, useRef, useState } from 'react'
 import hexToFloat from '../../helpers/hexToFloat'
 import int8ToHex from '../../helpers/int8ToHex'
 import floatToInt8 from '../../helpers/floatToInt8'
@@ -74,6 +74,8 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
 
     let initValue: string | number[]
     let initAlpha: number = 1
+
+    const previewRef = useRef(null)
 
     if (isHex) {
       initValue = value
@@ -232,6 +234,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
           value={hex}
           onChange={!useDialog ? handleColorInputOnChange : undefined}
           onBlur={() => !useDialog && handleConfirmDialog()}
+          ref={previewRef}
         />
         <Dialog header={DialogTitle} onHide={handleCancelDialog} visible={dialogOpen}>
           <ColorInputs>
