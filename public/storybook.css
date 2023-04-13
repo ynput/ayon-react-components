@@ -1,5 +1,10 @@
 iframe {
-  background-color: unset !important;
+  background-color: #21252b !important;
+}
+
+body {
+  transition: none !important;
+  background: #21252b !important;
 }
 
 .sidebar-container {

@@ -9,12 +9,16 @@ const preview: Preview = {
     actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
-        color: /(background|color)$/i,
+        // color: /(background|color)$/i,
         date: /Date$/,
       },
     },
     docs: {
       theme: AyonTheme,
+    },
+    backgrounds: {
+      default: 'AYON',
+      values: [{ name: 'AYON', value: '#2c313a' }],
     },
   },
 }

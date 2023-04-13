@@ -31,6 +31,16 @@ const Template = (args: DropdownProps) => {
   return <Dropdown {...args} value={value} onChange={setValue} options={args.options || options} />
 }
 
+// icons and multi select
+export const Icons: Story = {
+  args: {
+    options: options.map((option) => ({ ...option, icon: option.value })),
+    multiSelect: true,
+    minSelected: 1,
+  },
+  render: Template,
+}
+
 // simple dropdown with three items
 export const Basic: Story = {
   render: Template,
@@ -41,15 +51,6 @@ export const Search: Story = {
   args: {
     searchFields: ['value', 'keyword'],
     search: true,
-  },
-  render: Template,
-}
-
-// icons and multi select
-export const Icons: Story = {
-  args: {
-    options: options.map((option) => ({ ...option, icon: option.value })),
-    multiSelect: true,
   },
   render: Template,
 }
