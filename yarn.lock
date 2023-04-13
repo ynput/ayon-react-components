@@ -2900,7 +2900,7 @@
     telejson "^7.0.3"
     ts-dedent "^2.0.0"
 
-"@storybook/manager-api@7.0.4":
+"@storybook/manager-api@7.0.4", "@storybook/manager-api@^7.0.4":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/manager-api/-/manager-api-7.0.4.tgz#5179df7ae7c9bd8437f8335546f0f3de3bf6a096"
   integrity sha512-kydmycU7EdlngXRL+9rmNQ6WE4VsbW9TvSeuzfmZ1RVbbl1yF3jpwU/9xK23I4ci4jWk6xilAJgs7FkPBVCeJQ==
@@ -3159,7 +3159,7 @@
     "@storybook/global" "^5.0.0"
     memoizerific "^1.11.3"
 
-"@storybook/theming@7.0.4":
+"@storybook/theming@7.0.4", "@storybook/theming@^7.0.4":
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/@storybook/theming/-/theming-7.0.4.tgz#7e44124eb591728309f83c6e02e1b4902ca2d603"
   integrity sha512-BahlmB86Q9wlvUT9Otx7vmJ7IAiytCBYyx5uLY3Ypt4JHyh5dT8UI8u4uowor9QW20YdfwPSIdaJwF1qzVuWNg==
