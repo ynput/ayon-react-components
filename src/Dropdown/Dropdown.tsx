@@ -363,6 +363,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // REFS
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
+    const searchRef = useRef<HTMLInputElement>(null)
 
     // USE EFFECTS
     // sets the correct position and height
@@ -596,6 +597,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       [options, maxOptionsShown],
     )
 
+    const hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
+
     return (
       <DropdownStyled
         onKeyDown={handleKeyPress}
@@ -644,6 +647,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   onChange={(e) => setSearchForm(e.target.value)}
                   autoFocus
                   tabIndex={0}
+                  ref={searchRef}
                 />
               </SearchStyled>
             )}
@@ -675,6 +679,17 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   )}
                 </ListItemStyled>
               ))}
+              {!!hiddenLength && (
+                <ListItemStyled
+                  onClick={() => searchRef.current?.focus()}
+                  focused={false}
+                  usingKeyboard={false}
+                >
+                  <DefaultItemStyled isSelected={false}>
+                    <span>{`Search ${hiddenLength} more...`}</span>
+                  </DefaultItemStyled>
+                </ListItemStyled>
+              )}
             </OptionsStyled>
           </ContainerStyled>
         )}
