@@ -1,5 +1,6 @@
 import { KeyboardEvent, MouseEvent, forwardRef, useMemo } from 'react'
 import styled from 'styled-components'
+import { Button } from '../../Button'
 
 const Shade = styled.div`
   position: fixed;
@@ -18,7 +19,7 @@ const Shade = styled.div`
 
 const DialogWindow = styled.div`
   background-color: var(--color-grey-01);
-  border-radius: 12px;
+  border-radius: var(--border-radius);
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -43,10 +44,12 @@ const BaseDialogEdge = styled.div`
 const DialogHeader = styled(BaseDialogEdge)`
   font-weight: bold;
   border-bottom: 1px solid var(--color-surface-04);
+  padding: 16px 0;
 `
 
 const DialogFooter = styled(BaseDialogEdge)`
   border-top: 1px solid var(--color-surface-04);
+  padding: 16px 0;
 `
 
 const DialogBody = styled.div`
@@ -56,21 +59,26 @@ const DialogBody = styled.div`
   flex-grow: 1;
 `
 
-export interface DialogProps {
+const ButtonStyled = styled(Button)`
+  position: absolute;
+  top: 8px;
+  right: 8px;
+`
+
+export interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   onHide?: () => void
   header?: React.ReactNode
   footer?: React.ReactNode
   children?: React.ReactNode
-  style?: React.CSSProperties
-  className?: string
   headerStyle?: React.CSSProperties
   bodyStyle?: React.CSSProperties
   footerStyle?: React.CSSProperties
+  visible?: boolean
 }
 
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   (
-    { onHide, header, footer, children, style, className, headerStyle, bodyStyle, footerStyle },
+    { onHide, header, footer, children, headerStyle, bodyStyle, footerStyle, visible, ...props },
     ref,
   ) => {
     const headerComp = useMemo(() => {
@@ -94,9 +102,12 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
       if (event.key === 'Escape' && onHide) onHide()
     }
 
+    if (!visible) return null
+
     return (
       <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown} ref={ref}>
-        <DialogWindow className={className} style={style} onKeyDown={onKeyDown} tabIndex={-1}>
+        <DialogWindow {...props} onKeyDown={onKeyDown} tabIndex={-1}>
+          <ButtonStyled icon="close" autoFocus onClick={onHide} />
           {headerComp}
           <DialogBody style={bodyStyle}>{children}</DialogBody>
           {footerComp}

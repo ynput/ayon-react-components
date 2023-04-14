@@ -65,7 +65,7 @@ const StyledSwitch = styled.div`
 
 export const InputSwitch = forwardRef<HTMLInputElement, InputSwitchProps>(
   ({ switchStyle, switchClassName, ...props }, ref) => (
-    <StyledSwitch style={switchStyle} className={switchClassName}>
+    <StyledSwitch style={switchStyle} className={`${switchClassName} ${props.className}`}>
       <label className="switch-body">
         <input type="checkbox" {...props} ref={ref} />
         <span className="slider"></span>

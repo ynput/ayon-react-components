@@ -1,6 +1,4 @@
 import styled from 'styled-components'
-
-import { Dialog } from 'primereact/dialog'
 import { HTMLAttributes, forwardRef, useEffect, useRef, useState } from 'react'
 import hexToFloat from '../../helpers/hexToFloat'
 import int8ToHex from '../../helpers/int8ToHex'
@@ -13,6 +11,7 @@ import { Button } from '../../Button/Button'
 import { InputNumber } from '../InputNumber'
 import { InputText } from '../InputText'
 import ColorPickerPreview from './ColorPickerPreview'
+import { Dialog } from '../../Overlay/Dialog'
 
 const ColorInputs = styled.div`
   display: flex;

@@ -1,5 +1,6 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
+import { Icon, IconType } from '../Icon'
 
 // STYLES
 const ButtonStyled = styled.button<ButtonProps>`
@@ -114,7 +115,7 @@ const ButtonStyled = styled.button<ButtonProps>`
 // TYPES
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string
-  icon?: string
+  icon?: IconType
   tooltip?: string
   link?: boolean
   disabled?: boolean
@@ -123,15 +124,9 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ label, icon, tooltip, link, iconStyle, ...props }, ref) => {
-    const iconElement = icon && (
-      <span className="material-symbols-outlined" style={iconStyle}>
-        {icon}
-      </span>
-    )
-
     return (
       <ButtonStyled title={tooltip} link={link} {...props} ref={ref}>
-        {!link && iconElement} {label}
+        {!link && icon && <Icon icon={icon} />} {label} {props.children}
       </ButtonStyled>
     )
   },
