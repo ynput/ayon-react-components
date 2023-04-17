@@ -4,7 +4,8 @@ import styled from 'styled-components'
 const StyledRow = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  align-items: center;
+  gap: 8px;
 
   .label {
     min-width: 120px;
