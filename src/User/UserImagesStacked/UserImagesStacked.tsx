@@ -20,10 +20,11 @@ export interface UserImagesStackedProps extends React.HTMLAttributes<HTMLDivElem
   size?: number
   gap?: number
   max?: number
+  userStyle?: React.CSSProperties
 }
 
 export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedProps>(
-  ({ users = [], size = 30, gap = -1, max = 5, ...props }) => {
+  ({ users = [], size = 30, gap = -1, max = 5, userStyle, ...props }, ref) => {
     const length = users.length
     // limit to 5 users
     users = users.slice(0, max)
@@ -34,13 +35,13 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
     }
 
     return (
-      <StackedStyled gap={(gap * 30) / 2} {...props}>
+      <StackedStyled gap={(gap * 30) / 2} {...props} ref={ref}>
         {users.map((user, i) => (
           <UserImage
             src={user.avatarUrl}
             key={i}
             fullName={user.fullName || ''}
-            style={{ zIndex: -i }}
+            style={{ zIndex: -i, ...userStyle }}
             highlight={user.self}
             size={size}
           />

@@ -280,11 +280,7 @@ export interface DropdownProps {
   dataKey?: string
   dataLabel?: string
   options: Array<any>
-  itemTemplate?: (
-    { icon, label, value }: { icon: string; label: string; value: string },
-    isActive: boolean,
-    isSelected: boolean,
-  ) => React.ReactNode
+  itemTemplate?: (option: any, isActive: boolean, isSelected: boolean) => React.ReactNode
   align?: 'left' | 'right'
   multiSelect?: boolean
   search?: boolean

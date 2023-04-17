@@ -41,6 +41,8 @@ export const UserImage = forwardRef<HTMLDivElement, UserImageProps>(
   ({ src, fullName, size = 30, highlight, ...props }, ref) => {
     const fontSize = Math.round((13 / 30) * size)
 
+    console.log(size)
+
     const initials = fullName
       ?.split(' ')
       .map((w) => w[0]?.toUpperCase())
