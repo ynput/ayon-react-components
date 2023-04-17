@@ -13,6 +13,7 @@ const ScrollPanelStyled = styled(PanelStyled)`
   flex-direction: column;
   overflow-y: scroll;
   gap: var(--base-gap-medium);
+  backvround-color: transparent;
 `
 
 export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {
