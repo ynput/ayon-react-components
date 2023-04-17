@@ -1,5 +1,5 @@
 import { KeyboardEvent, MouseEvent, forwardRef, useMemo } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Button } from '../../Button'
 
 const Shade = styled.div`
@@ -17,7 +17,7 @@ const Shade = styled.div`
   cursor: pointer;
 `
 
-const DialogWindow = styled.div`
+const DialogWindow = styled.div<{ noHeader: boolean }>`
   background-color: var(--color-grey-01);
   border-radius: var(--border-radius);
   display: flex;
@@ -33,6 +33,14 @@ const DialogWindow = styled.div`
   :focus {
     outline: none;
   }
+
+  /* add padding to top if no header */
+
+  ${({ noHeader }) =>
+    noHeader &&
+    css`
+      padding-top: 46px;
+    `}
 `
 
 const BaseDialogEdge = styled.div`
@@ -106,7 +114,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
 
     return (
       <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown} ref={ref}>
-        <DialogWindow {...props} onKeyDown={onKeyDown} tabIndex={-1}>
+        <DialogWindow {...props} onKeyDown={onKeyDown} tabIndex={-1} noHeader={!headerComp}>
           <ButtonStyled icon="close" autoFocus onClick={onHide} />
           {headerComp}
           <DialogBody style={bodyStyle}>{children}</DialogBody>
