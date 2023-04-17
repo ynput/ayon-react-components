@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { OverflowField, OverflowFieldProps } from '.'
+import { OverflowField } from '.'
 import { Panel } from '../../Panels/Panel'
 
 const meta: Meta<typeof OverflowField> = {
