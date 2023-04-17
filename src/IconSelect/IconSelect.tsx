@@ -52,7 +52,7 @@ const IconTemplate = ({ value, valueTemplate, isActive, isSelected }: IconTempla
   return (
     <IconStyled valueTemplate={valueTemplate} isActive={isSelected}>
       {value.map((icon) => (
-        <Icon key={icon} icon={icon} />
+        <Icon key={icon} icon={icon as IconType} />
       ))}
       {value.length < 2 && <span>{value}</span>}
     </IconStyled>
