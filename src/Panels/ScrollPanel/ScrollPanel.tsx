@@ -3,17 +3,17 @@ import styled from 'styled-components'
 import { PanelStyled } from '../Panel'
 
 const ScrollPanelStyled = styled(PanelStyled)`
-  padding: 0;
-  padding: 12px;
+  position: absolute;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
   gap: var(--base-gap-medium);
-  backvround-color: transparent;
+  background-color: transparent;
 `
 
 export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {
