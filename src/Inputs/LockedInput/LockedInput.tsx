@@ -74,8 +74,6 @@ export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
       onCancel && onCancel()
     }
 
-    console.log(editing)
-
     return (
       <UsernameStyled key={label} ref={ref} {...props}>
         <InputText
