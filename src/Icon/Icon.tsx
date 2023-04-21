@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import iconSet from './icons.json'
 
-export type IconType = keyof typeof iconSet
+export type IconType = keyof typeof iconSet | string
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {

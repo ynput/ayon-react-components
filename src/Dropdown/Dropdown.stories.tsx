@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Dropdown, DropdownProps } from '.'
 import { useState } from 'react'
 import { Button } from '../Button'
+import { IconType } from '../Icon'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -37,6 +38,7 @@ export const Icons: Story = {
     options: options.map((option) => ({ ...option, icon: option.value })),
     multiSelect: true,
     minSelected: 1,
+    widthExpand: true,
   },
   render: Template,
 }

@@ -125,7 +125,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
         // create copy of current value
         newValue = [...(localValue as number[])]
         // replace new colour value in array
-        newValue.splice(channels.indexOf(id), 1, targetValue as any)
+        newValue.splice(channels.indexOf(id), 1, parseFloat(targetValue))
       }
       // update state
       setLocalValue(newValue)
