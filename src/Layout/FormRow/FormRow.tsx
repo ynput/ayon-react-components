@@ -19,6 +19,9 @@ const StyledRow = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: left;
+    overflow: hidden;
+    padding: 1px;
+    margin: -1px;
 
     .colorpick-eyedropper-input-trigger {
       display: none;
@@ -28,14 +31,18 @@ const StyledRow = styled.div`
 
 export interface FormRowProps extends HTMLAttributes<HTMLDivElement> {
   label: string
+  fieldStyle: React.CSSProperties
+  labelStyle: React.CSSProperties
 }
 
 export const FormRow = forwardRef<HTMLDivElement, FormRowProps>(
-  ({ label, children, ...props }, ref) => {
+  ({ label, children, fieldStyle, labelStyle, ...props }, ref) => {
     return (
       <StyledRow {...props} ref={ref}>
         <div className="label">{label}</div>
-        <div className="field">{children}</div>
+        <div className="field" style={fieldStyle}>
+          {children}
+        </div>
       </StyledRow>
     )
   },
