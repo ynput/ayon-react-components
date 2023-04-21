@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { InputText } from '../InputText'
 import { Button } from '../../Button'
@@ -73,6 +73,13 @@ export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
       setEditingValue(value)
       onCancel && onCancel()
     }
+
+    // watch disabled and close editing
+    useEffect(() => {
+      if (disabled && editing) {
+        setEditing(false)
+      }
+    }, [disabled, editing])
 
     return (
       <UsernameStyled key={label} ref={ref} {...props}>

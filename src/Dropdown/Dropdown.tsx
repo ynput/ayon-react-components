@@ -194,7 +194,7 @@ const DefaultItemStyled = styled.span<{
   gap: 8px;
   align-items: center;
   height: 30px;
-  padding: 0 4px;
+  padding: 0 8px;
 
   ${({ isSelected }) =>
     isSelected &&
@@ -203,17 +203,14 @@ const DefaultItemStyled = styled.span<{
     `}
 `
 
-const DefaultValueStyled = styled.div<{
-  isMultiple: boolean
-}>`
+const DefaultValueStyled = styled.div`
   border: 1px solid var(--color-grey-03);
   border-radius: var(--border-radius);
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 4px;
-  padding-right: 8px;
+  padding: 4px 8px;
   gap: 8px;
 
   white-space: nowrap;
@@ -224,17 +221,6 @@ const DefaultValueStyled = styled.div<{
     left: -1px;
     position: relative;
   }
-
-  ${({ isMultiple }) =>
-    isMultiple &&
-    css`
-      ::before {
-        content: 'Multiple ( ';
-      }
-      ::after {
-        content: ' )';
-      }
-    `}
 `
 
 const SearchStyled = styled.div`
@@ -617,8 +603,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             {valueTemplate ? (
               valueTemplate(value)
             ) : (
-              <DefaultValueStyled style={valueStyle} isMultiple={!!isMultiple}>
-                <span className="material-symbols-outlined">{displayIcon}</span>
+              <DefaultValueStyled style={valueStyle}>
+                {isMultiple && <span>{`Multiple (`}</span>}
+                {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
                 <span>
                   {disabled && placeholder
                     ? placeholder
@@ -626,6 +613,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     ? labels.join(', ')
                     : emptyMessage}
                 </span>
+                {isMultiple && <span>{`)`}</span>}
                 <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
               </DefaultValueStyled>
             )}

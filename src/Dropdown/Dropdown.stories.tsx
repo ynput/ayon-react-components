@@ -2,7 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Dropdown, DropdownProps } from '.'
 import { useState } from 'react'
 import { Button } from '../Button'
-import { IconType } from '../Icon'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -53,6 +52,17 @@ export const Search: Story = {
   args: {
     searchFields: ['value', 'keyword'],
     search: true,
+  },
+  render: Template,
+}
+
+export const Multiple: Story = {
+  args: {
+    isMultiple: true,
+    value: [options[0].value, options[1].value],
+    widthExpand: true,
+    multiSelect: true,
+    minSelected: 2,
   },
   render: Template,
 }
