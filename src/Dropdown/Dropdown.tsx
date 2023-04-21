@@ -5,6 +5,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../Inputs/InputText'
+import { Icon, IconType } from '../Icon'
 
 // background acts as a blocker
 const BackdropStyled = styled.div`
@@ -86,6 +87,7 @@ const ContainerStyled = styled.form<{
   height: ${({ height }) => `${height}px`};
   width: auto;
   display: inline-block;
+  height: min-content;
 
   position: fixed;
   z-index: 60;
@@ -297,6 +299,7 @@ export interface DropdownProps {
   widthExpand?: boolean
   searchFields?: string[]
   minSelected?: number
+  dropIcon?: IconType
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -330,6 +333,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       style,
       className,
       minSelected = 0,
+      dropIcon = 'expand_more',
     },
     ref,
   ) => {
@@ -622,6 +626,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     ? labels.join(', ')
                     : emptyMessage}
                 </span>
+                <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
               </DefaultValueStyled>
             )}
           </ButtonStyled>
