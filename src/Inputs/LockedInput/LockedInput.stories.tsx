@@ -62,3 +62,47 @@ export const OpenDialog: Story = {
     )
   },
 }
+
+export const Disabled: Story = {
+  render: () => {
+    const names = ['bob', 'joe', 'jane']
+    const [selected, setSelected] = useState(['bob'])
+
+    const handleButtonClick = (name: string) => {
+      // add or remove name from selected
+      if (selected.includes(name)) {
+        setSelected(selected.filter((n) => n !== name))
+      } else {
+        setSelected([...selected, name])
+      }
+    }
+
+    return (
+      <div
+        style={{
+          maxWidth: 200,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          {names.map((name) => (
+            <Button
+              key={name}
+              label={name}
+              onClick={() => handleButtonClick(name)}
+              style={{
+                outline: selected.includes(name) ? '1px solid green' : 'none',
+              }}
+            />
+          ))}
+        </div>
+        <LockedInput value={selected.join(', ')} disabled={selected.length > 1} />
+      </div>
+    )
+  },
+}
