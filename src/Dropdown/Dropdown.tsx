@@ -624,10 +624,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [options, value, dataKey, dataLabel])
 
     const displayIcon = useMemo(() => {
-      if (!value.length) return null
+      if (!value.length || valueTemplate === 'tags') return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
-      if (options.length) return options[0].icon
+      if (options.length && !editable) return options[0].icon
       return null
     }, [valueIcon, multiSelect, options])
 
@@ -727,9 +727,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     )
                   ) : (
                     <DefaultItemStyled isSelected={selected.includes(option[dataKey])}>
-                      {option.icon && (
-                        <span className="material-symbols-outlined">{option.icon}</span>
-                      )}
+                      {option.icon && <Icon icon={option.icon} />}
                       <span>{option[dataLabel] || option[dataKey]}</span>
                     </DefaultItemStyled>
                   )}
