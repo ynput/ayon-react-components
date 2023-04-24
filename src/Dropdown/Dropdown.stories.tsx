@@ -23,12 +23,34 @@ const options = [
   { value: 'add_circle_outline', keyword: 'empty_plus' },
   { value: 'add_shopping_cart', keyword: 'cart' },
   { value: 'alarm', keyword: 'clock' },
+  { value: 'alarm_add', keyword: 'clock_plus' },
+  { value: 'alarm_off', keyword: 'clock_off' },
+  { value: 'alarm_on', keyword: 'clock_on' },
 ]
 
 const Template = (args: DropdownProps) => {
   const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
 
-  return <Dropdown {...args} value={value} onChange={setValue} options={args.options || options} />
+  const handleClear = () => {
+    args.onClear?.()
+    // if minSelected is set, we need to set the value to the minSelected
+    const newValue = args.minSelected ? options.slice(0, args.minSelected).map((o) => o.value) : []
+    setValue(newValue)
+  }
+
+  return (
+    <Dropdown
+      {...args}
+      value={value}
+      onChange={setValue}
+      options={args.options || options}
+      onClear={args.onClear ? handleClear : undefined}
+      widthExpand
+      style={{
+        width: 250,
+      }}
+    />
+  )
 }
 
 // icons and multi select
@@ -47,11 +69,24 @@ export const Basic: Story = {
   render: Template,
 }
 
+// simple dropdown with three items
+export const Tags: Story = {
+  render: Template,
+  args: {
+    valueTemplate: 'tags',
+    multiSelect: true,
+    editable: true,
+  },
+}
+
 // simple dropdown with 1000 items and search
 export const Search: Story = {
   args: {
     searchFields: ['value', 'keyword'],
     search: true,
+    onClear: () => console.log('clear'),
+    placeholder: 'Selected an Icon...',
+    value: [],
   },
   render: Template,
 }
@@ -63,6 +98,7 @@ export const Multiple: Story = {
     widthExpand: true,
     multiSelect: true,
     minSelected: 2,
+    onClear: () => console.log('clear'),
   },
   render: Template,
 }

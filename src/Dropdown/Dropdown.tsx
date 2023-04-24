@@ -6,6 +6,8 @@ import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../Inputs/InputText'
 import { Icon, IconType } from '../Icon'
+import DefaultValueTemplate from './DefaultValueTemplate'
+import TagsValueTemplate from './TagsValueTemplate'
 
 // background acts as a blocker
 const BackdropStyled = styled.div`
@@ -131,6 +133,7 @@ const ContainerStyled = styled.form<{
 
 const OptionsStyled = styled.ul<{
   message: string
+  search: boolean
 }>`
   width: auto;
   list-style-type: none;
@@ -144,9 +147,11 @@ const OptionsStyled = styled.ul<{
   outline: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
   z-index: 20;
-  border-radius: ${({ message }) =>
-    message ? '0 0 var(--border-radius) var(--border-radius)' : 'var(--border-radius)'};
+  border-radius: ${({ message, search }) =>
+    message || search ? '0 0 var(--border-radius) var(--border-radius)' : 'var(--border-radius)'};
   overflow: clip;
+
+  position: relative;
 
   transition: max-height 0.15s;
 
@@ -203,26 +208,6 @@ const DefaultItemStyled = styled.span<{
     `}
 `
 
-const DefaultValueStyled = styled.div`
-  border: 1px solid var(--color-grey-03);
-  border-radius: var(--border-radius);
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 4px 8px;
-  gap: 8px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  & > * {
-    left: -1px;
-    position: relative;
-  }
-`
-
 const SearchStyled = styled.div`
   /* put to top of list */
   order: -2;
@@ -233,7 +218,7 @@ const SearchStyled = styled.div`
   /* search icon */
   span {
     position: absolute;
-    left: 4px;
+    left: 8px;
     top: 50%;
     translate: 0 -50%;
     z-index: 10;
@@ -245,7 +230,7 @@ const SearchStyled = styled.div`
     position: relative;
     left: -1px;
     height: 100%;
-    text-indent: 24px;
+    text-indent: 35px;
 
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 
@@ -264,7 +249,7 @@ export interface DropdownProps {
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
-  valueTemplate?: (value?: (string | number)[]) => React.ReactNode
+  valueTemplate?: ((value?: (string | number)[]) => React.ReactNode) | 'tags'
   dataKey?: string
   dataLabel?: string
   options: Array<any>
@@ -286,6 +271,8 @@ export interface DropdownProps {
   searchFields?: string[]
   minSelected?: number
   dropIcon?: IconType
+  onClear?: () => void
+  editable?: boolean
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -312,7 +299,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       multiSelect,
       isMultiple,
       search,
-      placeholder,
+      placeholder = 'Select an option...',
       emptyMessage,
       isChanged,
       maxOptionsShown = 25,
@@ -320,6 +307,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       className,
       minSelected = 0,
       dropIcon = 'expand_more',
+      onClear,
+      editable,
     },
     ref,
   ) => {
@@ -360,7 +349,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
         const optionsRec = optionsRef.current.getBoundingClientRect()
         const optionsWidth = optionsRec.width
-        const optionsheight = optionsRec.height
+        const optionsHeight = optionsRec.height
 
         let x = valueRec.x
         let y = valueRec.y
@@ -370,8 +359,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         // check it's not vertically off screen
-        if (optionsheight + y + 20 > window.innerHeight) {
-          y = window.innerHeight - optionsheight - 20
+        if (optionsHeight + y + 20 > window.innerHeight) {
+          y = window.innerHeight - optionsHeight - 20
         }
 
         // first set position
@@ -393,14 +382,43 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // keyboard support
     useEffect(() => {
       // focus element
-      if (usingKeyboard && activeIndex) {
-        const childNode = optionsRef.current?.childNodes[activeIndex] as HTMLLIElement
+      if (usingKeyboard) {
+        const childNode = optionsRef.current?.childNodes[activeIndex || 0] as HTMLLIElement
         // scroll
-        childNode?.scrollIntoView()
+        const parentHeight = optionsRef.current?.getBoundingClientRect().height || 0
+
+        const childNodeRect = childNode?.getBoundingClientRect()
+        const parentRect = optionsRef.current?.getBoundingClientRect()
+
+        const childTop = childNodeRect?.top - (parentRect?.top || 0)
+        const childBottom = childNodeRect?.bottom - (parentRect?.top || 0)
+
+        if (childBottom > parentHeight) {
+          // scroll down
+          optionsRef.current?.scrollTo(
+            0,
+            optionsRef.current?.scrollTop + (childBottom - parentHeight),
+          )
+        } else if (childTop < 0) {
+          // scroll up
+          optionsRef.current?.scrollTo(0, optionsRef.current?.scrollTop + childTop)
+        }
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
 
-    if (search && searchForm) {
+    // if editable, merge current search into showOptions
+    options = useMemo(() => {
+      // add in any values that are not in options
+      const selectedNotInOptions = value.filter((s) => !options.some((o) => o[dataKey] === s))
+      const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
+        [dataKey]: s,
+        [dataLabel]: s,
+      }))
+
+      return [...selectedNotInOptionsItems, ...options]
+    }, [value, options])
+
+    if ((search || editable) && searchForm) {
       // filter out search matches
       options = options.filter((o) =>
         searchFields.some(
@@ -414,6 +432,19 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       () => [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
     )
+
+    // if editable, merge current search into showOptions
+    options = useMemo(() => {
+      if (editable) {
+        const searchItem = {
+          [dataKey]: searchForm,
+          [dataLabel]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
+          icon: 'add',
+        }
+
+        return [searchItem, ...options]
+      } else return options
+    }, [editable, searchForm, options])
 
     // HANDLERS
 
@@ -444,35 +475,49 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onChange && onChange(changeValue)
       //   reset selected
       setSelected([])
+
+      // focus on value
+      valueRef.current?.focus()
     }
 
-    const handleChange = (value: string | number, e?: React.MouseEvent<HTMLLIElement>): void => {
+    const handleChange = (
+      value: string | number,
+      index: number,
+      e?: React.MouseEvent<HTMLLIElement>,
+    ): void => {
       e?.stopPropagation()
 
       let newSelected = [...selected]
+
+      const addingNew = editable && index === 0
 
       if (!multiSelect) {
         // replace current value with new one
         newSelected = [value]
       } else {
-        // add/remove from selected
-        if (newSelected.includes(value)) {
-          if (newSelected.length > minSelected) {
-            // remove
-            newSelected.splice(newSelected.indexOf(value), 1)
+        if (!addingNew || searchForm) {
+          // add/remove from selected
+          if (newSelected.includes(value)) {
+            if (newSelected.length > minSelected) {
+              // remove
+              newSelected.splice(newSelected.indexOf(value), 1)
+            }
+          } else {
+            // add
+            newSelected.push(value)
           }
-        } else {
-          // add
-          newSelected.push(value)
         }
       }
       // update state
       setSelected(newSelected)
       // if not multi, close
-      if (!multiSelect) handleClose(undefined, newSelected)
+      if (!multiSelect || (addingNew && searchForm)) handleClose(undefined, newSelected)
     }
 
     const handleOpen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+      // check if onClear was clicked
+      if ((e.target as HTMLDivElement).id === 'clear') return
+
       if (disabled) return
       e.stopPropagation()
       setIsOpen(true)
@@ -486,7 +531,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
       // NAVIGATE DOWN
       if (e.code === 'ArrowDown') {
-        if (activeIndex === null || activeIndex >= options.length - 1) {
+        let length = options.length
+        if (activeIndex === null || activeIndex >= length - 1) {
           // got to top
           setActiveIndex(0)
         } else {
@@ -496,8 +542,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
 
       // NAVIGATE UP
-      if (e.code === 'ArrowUp') {
-        if (!activeIndex || activeIndex <= 0) {
+      if (e.code === 'ArrowUp' && activeIndex !== null) {
+        if (activeIndex === 0) {
           // go to bottom
           setActiveIndex(options.length - 1)
         } else {
@@ -508,7 +554,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       let selectedValue
 
-      if (activeIndex && options[activeIndex] && options[activeIndex][dataKey]) {
+      if (activeIndex !== null && options[activeIndex] && options[activeIndex][dataKey]) {
         selectedValue = options[activeIndex][dataKey]
       }
 
@@ -528,19 +574,27 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         e.preventDefault()
 
         // open
-        if (!isOpen) return setIsOpen(true)
+        if (!isOpen) {
+          // check not clear button
+          if ((e.target as HTMLDivElement).id === 'clear') return onChange && onChange([])
+          return setIsOpen(true)
+        }
 
         if (multiSelect) {
-          handleChange(selectedValue)
+          handleChange(selectedValue, activeIndex || 0)
 
           // nothing selected and only one option
-          if (options.length === 1) {
+          if (options.length === 1 || (options.length === 2 && editable)) {
             handleClose(undefined, [...selected, options[0][dataKey]])
           }
         } else {
           // only one option and no keyboard
-          if (options.length === 1) {
+          if (options.length === 1 && !editable) {
             selectedValue = options[0][dataKey]
+          }
+
+          if (editable && searchForm) {
+            selectedValue = searchForm
           }
 
           handleClose(undefined, [selectedValue])
@@ -570,20 +624,37 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [options, value, dataKey, dataLabel])
 
     const displayIcon = useMemo(() => {
-      if (!value.length) return null
+      if (!value.length || valueTemplate === 'tags') return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
-      if (options.length) return options[0].icon
+      if (options.length) return options[editable ? 1 : 0].icon
       return null
     }, [valueIcon, multiSelect, options])
 
     // splice to maxOptionsShown or 25 items
-    const showOptions = useMemo(
-      () => (search ? [...options].splice(0, maxOptionsShown) : options),
+    let showOptions = useMemo(
+      () => (search || editable ? [...options].splice(0, maxOptionsShown) : options),
       [options, maxOptionsShown],
     )
 
-    const hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
+    let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
+
+    const DefaultValueTemplateProps = {
+      value,
+      isMultiple,
+      dropIcon,
+      displayIcon,
+      onClear: value.length > minSelected ? onClear : undefined,
+      style: valueStyle,
+      placeholder,
+    }
+
+    // filter out valueTemplate
+    const valueTemplateNode = useMemo(() => {
+      if (typeof valueTemplate === 'function') return valueTemplate
+      if (valueTemplate === 'tags')
+        return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
+    }, [valueTemplate, value])
 
     return (
       <DropdownStyled
@@ -600,22 +671,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             disabled={disabled}
             isChanged={!!isChanged}
           >
-            {valueTemplate ? (
-              valueTemplate(value)
+            {valueTemplateNode ? (
+              valueTemplateNode(value)
             ) : (
-              <DefaultValueStyled style={valueStyle}>
-                {isMultiple && <span>{`Multiple (`}</span>}
-                {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
-                <span>
-                  {disabled && placeholder
-                    ? placeholder
-                    : labels.length
-                    ? labels.join(', ')
-                    : emptyMessage}
-                </span>
-                {isMultiple && <span>{`)`}</span>}
-                <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
-              </DefaultValueStyled>
+              <DefaultValueTemplate {...DefaultValueTemplateProps}>
+                {disabled && placeholder
+                  ? placeholder
+                  : labels.length
+                  ? labels.join(', ')
+                  : emptyMessage}
+              </DefaultValueTemplate>
             )}
           </ButtonStyled>
         )}
@@ -628,27 +693,29 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             startAnimation={startAnimation}
             onSubmit={handleSearchSubmit}
           >
-            {search && (
+            {(search || editable) && (
               <SearchStyled>
-                <span className="material-symbols-outlined">search</span>
+                <Icon icon={'search'} />
                 <InputText
                   value={searchForm}
                   onChange={(e) => setSearchForm(e.target.value)}
                   autoFocus
                   tabIndex={0}
                   ref={searchRef}
+                  onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
                 />
               </SearchStyled>
             )}
             <OptionsStyled
               message={message || ''}
+              search={!!search || !!editable}
               ref={optionsRef}
               style={{ minWidth, ...listStyle }}
             >
               {showOptions.map((option, i) => (
                 <ListItemStyled
-                  key={option[dataKey]}
-                  onClick={(e) => handleChange(option[dataKey], e)}
+                  key={`${option[dataKey]}-${i}`}
+                  onClick={(e) => handleChange(option[dataKey], i, e)}
                   focused={usingKeyboard && activeIndex === i}
                   usingKeyboard={usingKeyboard}
                 >
@@ -660,9 +727,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     )
                   ) : (
                     <DefaultItemStyled isSelected={selected.includes(option[dataKey])}>
-                      {option.icon && (
-                        <span className="material-symbols-outlined">{option.icon}</span>
-                      )}
+                      {option.icon && <Icon icon={option.icon} />}
                       <span>{option[dataLabel] || option[dataKey]}</span>
                     </DefaultItemStyled>
                   )}
