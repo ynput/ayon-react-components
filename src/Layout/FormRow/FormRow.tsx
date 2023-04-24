@@ -31,8 +31,8 @@ const StyledRow = styled.div`
 
 export interface FormRowProps extends HTMLAttributes<HTMLDivElement> {
   label: string
-  fieldStyle: React.CSSProperties
-  labelStyle: React.CSSProperties
+  fieldStyle?: React.CSSProperties
+  labelStyle?: React.CSSProperties
 }
 
 export const FormRow = forwardRef<HTMLDivElement, FormRowProps>(
