@@ -66,6 +66,15 @@ export const Basic: Story = {
   render: Template,
 }
 
+// simple dropdown with three items
+export const Tags: Story = {
+  render: Template,
+  args: {
+    valueTemplate: 'tags',
+    multiSelect: true,
+  },
+}
+
 // simple dropdown with 1000 items and search
 export const Search: Story = {
   args: {

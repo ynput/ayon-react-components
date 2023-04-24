@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import { FC } from 'react'
 import styled from 'styled-components'
 import { Icon } from '../Icon'
 import { DropdownProps } from './Dropdown'
@@ -40,8 +40,9 @@ const ContentStyled = styled.div`
 export interface DefaultValueTemplateProps
   extends Pick<DropdownProps, 'value' | 'isMultiple' | 'dropIcon' | 'onClear' | 'placeholder'> {
   displayIcon: string
-  children?: React.ReactNode
   style?: React.CSSProperties
+  children?: React.ReactNode
+  valueStyle?: React.CSSProperties
 }
 
 const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
@@ -52,6 +53,7 @@ const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   onClear,
   children,
   style,
+  valueStyle,
   placeholder = 'Select an option...',
 }) => {
   const noValue = !value.length
@@ -71,7 +73,7 @@ const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
           <ContentStyled>
             {isMultiple && <span>{`Multiple (`}</span>}
             {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
-            <ValueStyled>{children}</ValueStyled>
+            <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
           {onClear && <Icon icon="clear" onClick={onClear} id="clear" />}

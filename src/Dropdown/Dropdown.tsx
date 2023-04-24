@@ -5,8 +5,9 @@ import styled, { css, keyframes } from 'styled-components'
 import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../Inputs/InputText'
-import { Icon, IconType } from '../Icon'
+import { IconType } from '../Icon'
 import DefaultValueTemplate from './DefaultValueTemplate'
+import TagsValueTemplate from './TagsValueTemplate'
 
 // background acts as a blocker
 const BackdropStyled = styled.div`
@@ -328,6 +329,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       minSelected = 0,
       dropIcon = 'expand_more',
       onClear,
+      ...props
     },
     ref,
   ) => {
@@ -596,11 +598,22 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     const hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
 
+    const DefaultValueTemplateProps = {
+      value,
+      isMultiple,
+      dropIcon,
+      displayIcon,
+      onClear: value.length > minSelected ? onClear : undefined,
+      style: valueStyle,
+      placeholder,
+    }
+
     // filter out valueTemplate
     const valueTemplateNode = useMemo(() => {
       if (typeof valueTemplate === 'function') return valueTemplate
-      if (valueTemplate === 'tags') return null
-    }, [valueTemplate])
+      if (valueTemplate === 'tags')
+        return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
+    }, [valueTemplate, value])
 
     return (
       <DropdownStyled
@@ -620,15 +633,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             {valueTemplateNode ? (
               valueTemplateNode(value)
             ) : (
-              <DefaultValueTemplate
-                value={value}
-                isMultiple={isMultiple}
-                dropIcon={dropIcon}
-                displayIcon={displayIcon}
-                onClear={value.length > minSelected ? onClear : undefined}
-                style={valueStyle}
-                placeholder={placeholder}
-              >
+              <DefaultValueTemplate {...DefaultValueTemplateProps}>
                 {disabled && placeholder
                   ? placeholder
                   : labels.length
