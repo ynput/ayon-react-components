@@ -223,6 +223,11 @@ const DefaultValueStyled = styled.div`
   }
 `
 
+const StyledValue = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const SearchStyled = styled.div`
   /* put to top of list */
   order: -2;
@@ -606,13 +611,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               <DefaultValueStyled style={valueStyle}>
                 {isMultiple && <span>{`Multiple (`}</span>}
                 {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
-                <span>
+                <StyledValue>
                   {disabled && placeholder
                     ? placeholder
                     : labels.length
                     ? labels.join(', ')
                     : emptyMessage}
-                </span>
+                </StyledValue>
                 {isMultiple && <span>{`)`}</span>}
                 <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
               </DefaultValueStyled>
