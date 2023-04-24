@@ -6,6 +6,7 @@ import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../Inputs/InputText'
 import { Icon, IconType } from '../Icon'
+import DefaultValueTemplate from './DefaultValueTemplate'
 
 // background acts as a blocker
 const BackdropStyled = styled.div`
@@ -269,7 +270,7 @@ export interface DropdownProps {
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
-  valueTemplate?: (value?: (string | number)[]) => React.ReactNode
+  valueTemplate?: ((value?: (string | number)[]) => React.ReactNode) | 'tags'
   dataKey?: string
   dataLabel?: string
   options: Array<any>
@@ -291,7 +292,7 @@ export interface DropdownProps {
   searchFields?: string[]
   minSelected?: number
   dropIcon?: IconType
-  onClear: () => void
+  onClear?: () => void
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -318,7 +319,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       multiSelect,
       isMultiple,
       search,
-      placeholder,
+      placeholder = 'Select an option...',
       emptyMessage,
       isChanged,
       maxOptionsShown = 25,
@@ -595,6 +596,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     const hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
 
+    // filter out valueTemplate
+    const valueTemplateNode = useMemo(() => {
+      if (typeof valueTemplate === 'function') return valueTemplate
+      if (valueTemplate === 'tags') return null
+    }, [valueTemplate])
+
     return (
       <DropdownStyled
         onKeyDown={handleKeyPress}
@@ -610,23 +617,24 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             disabled={disabled}
             isChanged={!!isChanged}
           >
-            {valueTemplate ? (
-              valueTemplate(value)
+            {valueTemplateNode ? (
+              valueTemplateNode(value)
             ) : (
-              <DefaultValueStyled style={valueStyle}>
-                {isMultiple && <span>{`Multiple (`}</span>}
-                {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
-                <StyledValue>
-                  {disabled && placeholder
-                    ? placeholder
-                    : labels.length
-                    ? labels.join(', ')
-                    : emptyMessage}
-                </StyledValue>
-                {isMultiple && <span>{`)`}</span>}
-                {onClear && !!value.length && <Icon icon="clear" onClick={onClear} id="clear" />}
-                <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
-              </DefaultValueStyled>
+              <DefaultValueTemplate
+                value={value}
+                isMultiple={isMultiple}
+                dropIcon={dropIcon}
+                displayIcon={displayIcon}
+                onClear={value.length > minSelected ? onClear : undefined}
+                style={valueStyle}
+                placeholder={placeholder}
+              >
+                {disabled && placeholder
+                  ? placeholder
+                  : labels.length
+                  ? labels.join(', ')
+                  : emptyMessage}
+              </DefaultValueTemplate>
             )}
           </ButtonStyled>
         )}

@@ -30,7 +30,9 @@ const Template = (args: DropdownProps) => {
 
   const handleClear = () => {
     args.onClear?.()
-    setValue([])
+    // if minSelected is set, we need to set the value to the minSelected
+    const newValue = args.minSelected ? options.slice(0, args.minSelected).map((o) => o.value) : []
+    setValue(newValue)
   }
 
   return (
@@ -39,7 +41,11 @@ const Template = (args: DropdownProps) => {
       value={value}
       onChange={setValue}
       options={args.options || options}
-      onClear={!!args.onClear && handleClear}
+      onClear={args.onClear ? handleClear : undefined}
+      widthExpand
+      style={{
+        width: 250,
+      }}
     />
   )
 }
@@ -65,6 +71,9 @@ export const Search: Story = {
   args: {
     searchFields: ['value', 'keyword'],
     search: true,
+    onClear: () => console.log('clear'),
+    placeholder: 'Selected an Icon...',
+    value: [],
   },
   render: Template,
 }
