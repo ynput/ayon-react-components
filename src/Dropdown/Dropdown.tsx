@@ -627,7 +627,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (!value.length || valueTemplate === 'tags') return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
-      if (options.length && !editable) return options[0].icon
+      if (options.length) return options[editable ? 1 : 0].icon
       return null
     }, [valueIcon, multiSelect, options])
 
