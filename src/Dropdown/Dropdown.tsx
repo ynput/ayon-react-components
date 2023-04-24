@@ -291,6 +291,7 @@ export interface DropdownProps {
   searchFields?: string[]
   minSelected?: number
   dropIcon?: IconType
+  onClear: () => void
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -325,6 +326,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       className,
       minSelected = 0,
       dropIcon = 'expand_more',
+      onClear,
     },
     ref,
   ) => {
@@ -478,6 +480,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const handleOpen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+      // check if onClear was clicked
+      if ((e.target as HTMLDivElement).id === 'clear') return
+
       if (disabled) return
       e.stopPropagation()
       setIsOpen(true)
@@ -619,6 +624,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     : emptyMessage}
                 </StyledValue>
                 {isMultiple && <span>{`)`}</span>}
+                {onClear && !!value.length && <Icon icon="clear" onClick={onClear} id="clear" />}
                 <Icon icon={dropIcon} style={{ marginLeft: 'auto' }} />
               </DefaultValueStyled>
             )}

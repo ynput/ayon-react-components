@@ -28,7 +28,20 @@ const options = [
 const Template = (args: DropdownProps) => {
   const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
 
-  return <Dropdown {...args} value={value} onChange={setValue} options={args.options || options} />
+  const handleClear = () => {
+    args.onClear?.()
+    setValue([])
+  }
+
+  return (
+    <Dropdown
+      {...args}
+      value={value}
+      onChange={setValue}
+      options={args.options || options}
+      onClear={!!args.onClear && handleClear}
+    />
+  )
 }
 
 // icons and multi select
@@ -63,6 +76,7 @@ export const Multiple: Story = {
     widthExpand: true,
     multiSelect: true,
     minSelected: 2,
+    onClear: () => console.log('clear'),
   },
   render: Template,
 }
