@@ -23,6 +23,9 @@ const options = [
   { value: 'add_circle_outline', keyword: 'empty_plus' },
   { value: 'add_shopping_cart', keyword: 'cart' },
   { value: 'alarm', keyword: 'clock' },
+  { value: 'alarm_add', keyword: 'clock_plus' },
+  { value: 'alarm_off', keyword: 'clock_off' },
+  { value: 'alarm_on', keyword: 'clock_on' },
 ]
 
 const Template = (args: DropdownProps) => {
@@ -72,6 +75,7 @@ export const Tags: Story = {
   args: {
     valueTemplate: 'tags',
     multiSelect: true,
+    editable: true,
   },
 }
 

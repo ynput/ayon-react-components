@@ -30,7 +30,7 @@ const ValueStyled = styled.span`
 
 const ContentStyled = styled.div`
   overflow: hidden;
-  gap: 4px;
+  gap: 8px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -76,7 +76,7 @@ const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
-          {onClear && <Icon icon="clear" onClick={onClear} id="clear" />}
+          {onClear && <Icon icon="clear" onClick={onClear} id="clear" tabIndex={0} />}
         </>
       )}
 
