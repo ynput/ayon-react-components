@@ -12,7 +12,11 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export const Icon = forwardRef<HTMLSpanElement, IconProps>((props, ref) => {
   return (
-    <span ref={ref} {...props} className={`material-symbols-outlined ${props.className}`}>
+    <span
+      ref={ref}
+      {...props}
+      className={`material-symbols-outlined icon ${props.className || ''}`}
+    >
       {props.icon}
     </span>
   )
