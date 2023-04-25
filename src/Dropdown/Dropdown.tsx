@@ -309,7 +309,7 @@ export interface DropdownProps {
   value: Array<string | number>
   valueTemplate?: ((value?: (string | number)[]) => React.ReactNode) | 'tags'
   dataKey?: string
-  dataLabel?: string
+  labelKey?: string
   options: Array<any>
   itemTemplate?: (option: any, isActive: boolean, isSelected: boolean) => React.ReactNode
   align?: 'left' | 'right'
@@ -342,7 +342,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueStyle,
       listStyle,
       dataKey = 'value',
-      dataLabel = 'label',
+      labelKey = 'label',
       options = [],
       itemTemplate,
       itemStyle,
@@ -474,8 +474,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       // add in any values that are not in options
       const selectedNotInOptions = value.filter((s) => !options.some((o) => o[dataKey] === s))
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
+        [labelKey]: s,
         [dataKey]: s,
-        [dataLabel]: s,
       }))
 
       return [...selectedNotInOptionsItems, ...options]
@@ -500,8 +500,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     options = useMemo(() => {
       if (editable) {
         const searchItem = {
+          [labelKey]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
           [dataKey]: searchForm,
-          [dataLabel]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
           icon: 'add',
         }
 
@@ -682,11 +682,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       let result: any[] = []
       options.forEach((o) => {
         if (value.includes(o[dataKey])) {
-          result.push(o[dataLabel] || o[dataKey])
+          result.push(o[labelKey] || o[dataKey])
         }
       })
       return result
-    }, [options, value, dataKey, dataLabel])
+    }, [options, value, dataKey, labelKey])
 
     const displayIcon = useMemo(() => {
       if (!value.length || valueTemplate === 'tags') return null
@@ -803,7 +803,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   ) : (
                     <DefaultItemStyled isSelected={selected.includes(option[dataKey])}>
                       {option.icon && <Icon icon={option.icon} />}
-                      <span>{option[dataLabel] || option[dataKey]}</span>
+                      <span>{option[labelKey] || option[dataKey]}</span>
                     </DefaultItemStyled>
                   )}
                 </ListItemStyled>
