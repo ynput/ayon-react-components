@@ -60,6 +60,7 @@ export const Icons: Story = {
     multiSelect: true,
     minSelected: 1,
     widthExpand: true,
+    maxHeight: 180,
   },
   render: Template,
 }

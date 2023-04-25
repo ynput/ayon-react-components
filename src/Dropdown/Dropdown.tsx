@@ -17,19 +17,9 @@ const BackdropStyled = styled.div`
   z-index: 11;
 `
 
-const dropdownMenuAnimation = keyframes`
-  0% {
-    transform: scale(.95);
-    opacity: .6;
-}
-100% {
-    transform: scale(1);
-    opacity: 1;
-}
-`
-
 const ButtonStyled = styled.button<{
   isChanged: boolean
+  isOpen: boolean
 }>`
   /* remove defaults */
   background: none;
@@ -39,8 +29,17 @@ const ButtonStyled = styled.button<{
   font: inherit;
   cursor: pointer;
   &:not(:focus) {
-    outline: inherit;
+    border: inherit;
   }
+
+  /* if isOpen and :focus-visible remove outline */
+  ${({ isOpen }: { isOpen: boolean }) =>
+    isOpen &&
+    css`
+      &:focus-visible {
+        outline: none;
+      }
+    `}
 
   &:hover {
     background-color: var(--color-grey-02);
@@ -81,8 +80,8 @@ const DropdownStyled = styled.div`
 const ContainerStyled = styled.form<{
   isOpen: boolean
   height?: number
-  startAnimation: boolean
   message: string
+  startAnimation: boolean
 }>`
   width: 100%;
   position: relative;
@@ -94,18 +93,14 @@ const ContainerStyled = styled.form<{
   position: fixed;
   z-index: 60;
 
-  transform-origin: top;
-
-  ${({ startAnimation }) =>
-    startAnimation
-      ? css`
-          animation: ${dropdownMenuAnimation} 0.03s ease-in forwards;
-        `
-      : css`
-          opacity: 0;
-        `}
-
   /* position: fixed; */
+
+  /* hide when startAnimation false */
+  ${({ startAnimation }) =>
+    !startAnimation &&
+    css`
+      opacity: 0;
+    `}
 
   /* show warning when changing multiple entities */
   ${({ isOpen, message }) =>
@@ -125,15 +120,29 @@ const ContainerStyled = styled.form<{
         padding: 4px 0;
         right: 0;
         left: 0;
-        outline: 1px solid #383838;
+        border: 1px solid #383838;
         justify-content: center;
       }
     `}
 `
 
+const dropdownMenuAnimation = (end: number) => keyframes`
+  0% {
+    max-height: 0;
+    opacity: 0;
+}
+100% {
+    max-height: ${end}px;
+    opacity: 1;
+}
+`
+
 const OptionsStyled = styled.ul<{
   message: string
   search: boolean
+  startAnimation: boolean
+  animationHeight: number
+  maxHeight: number
 }>`
   width: auto;
   list-style-type: none;
@@ -144,7 +153,7 @@ const OptionsStyled = styled.ul<{
 
   margin: 0px;
   /* same border used as primereact dropdowns */
-  outline: 1px solid var(--color-grey-03);
+  border: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
   z-index: 20;
   border-radius: ${({ message, search }) =>
@@ -153,10 +162,27 @@ const OptionsStyled = styled.ul<{
 
   position: relative;
 
-  transition: max-height 0.15s;
+  /* fixes focus outline being cutoff for first item */
+  padding-top: 1px;
+  margin-top: -1px;
 
-  /* scrolling */
-  max-height: 300px;
+  /* move first child up by 1px to line up with list item (as it has no bottom border) */
+  li:first-child {
+    margin-top: -1px;
+  }
+
+  /* play animation on startAnimation */
+  ${({ startAnimation, animationHeight, maxHeight }) =>
+    startAnimation
+      ? css`
+          animation: ${dropdownMenuAnimation(animationHeight)} 0.17s ease-in-out forwards;
+          max-height: ${maxHeight}px;
+        `
+      : css`
+          opacity: 0;
+          max-height: ${maxHeight}px;
+        `}
+
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
@@ -164,9 +190,21 @@ const OptionsStyled = styled.ul<{
   }
 `
 
+const slideDown = keyframes`
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+100% {
+    transform: translateY(0);
+    opacity: 1;
+}
+`
+
 const ListItemStyled = styled.li<{
   focused: boolean
   usingKeyboard: boolean
+  startAnimation: boolean
 }>`
   cursor: pointer;
 
@@ -188,7 +226,15 @@ const ListItemStyled = styled.li<{
       & > * {
         outline: solid #93cbf9 1px;
         outline-offset: -1px;
+        border-radius: var(--border-radius);
       }
+    `}
+
+  /* start animation, slide down 100% height */
+      ${({ startAnimation }) =>
+    startAnimation &&
+    css`
+      animation: ${slideDown} 0.17s ease-in-out forwards;
     `}
 `
 
@@ -216,27 +262,39 @@ const SearchStyled = styled.div`
   width: 100%;
 
   /* search icon */
-  span {
+  .icon {
     position: absolute;
     left: 8px;
     top: 50%;
     translate: 0 -50%;
     z-index: 10;
+    z-index: 40;
   }
 
   /* input */
   input {
-    width: calc(100% + 2px);
+    width: 100%;
     position: relative;
-    left: -1px;
     height: 100%;
     text-indent: 35px;
 
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 
     &:focus {
-      outline: unset;
+      /* outline: unset;
+      border: 1px solid var(--color-hl-00); */
+      outline-offset: -1px;
+      z-index: 30;
     }
+
+    opacity: 0;
+    /* startAnimation transition opacity 0 to 1 */
+    ${({ startAnimation }: { startAnimation: boolean }) =>
+      startAnimation &&
+      css`
+        transition: opacity 0.05;
+        opacity: 1;
+      `}
   }
 `
 
@@ -273,6 +331,7 @@ export interface DropdownProps {
   dropIcon?: IconType
   onClear?: () => void
   editable?: boolean
+  maxHeight?: number
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -309,6 +368,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       dropIcon = 'expand_more',
       onClear,
       editable,
+      maxHeight = 300,
     },
     ref,
   ) => {
@@ -324,8 +384,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const [pos, setPos] = useState<{
       x: number | null
       y: number | null
-    }>({ x: null, y: null })
+    }>({ x: 0, y: 0 })
     const [startAnimation, setStartAnimation] = useState(false)
+    const [startAnimationFinished, setStartAnimationFinished] = useState(false)
+    const [optionsHeight, setOptionsHeight] = useState(0)
     const [minWidth, setMinWidth] = useState(0)
     // search
     const [searchForm, setSearchForm] = useState('')
@@ -369,6 +431,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
         // then start animation
         setStartAnimation(true)
+        setOptionsHeight(optionsHeight)
       } else {
         setStartAnimation(false)
       }
@@ -393,15 +456,15 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         const childTop = childNodeRect?.top - (parentRect?.top || 0)
         const childBottom = childNodeRect?.bottom - (parentRect?.top || 0)
 
-        if (childBottom > parentHeight) {
+        if (childBottom > parentHeight + 1) {
           // scroll down
           optionsRef.current?.scrollTo(
             0,
             optionsRef.current?.scrollTop + (childBottom - parentHeight),
           )
-        } else if (childTop < 0) {
+        } else if (childTop - 1 < 0) {
           // scroll up
-          optionsRef.current?.scrollTo(0, optionsRef.current?.scrollTop + childTop)
+          optionsRef.current?.scrollTo(0, optionsRef.current?.scrollTop + childTop - 1)
         }
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
@@ -459,6 +522,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // close dropdown
       setIsOpen(false)
+      // reset animation
+      setStartAnimationFinished(false)
 
       // reset keyboard
       setActiveIndex(null)
@@ -647,6 +712,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onClear: value.length > minSelected ? onClear : undefined,
       style: valueStyle,
       placeholder,
+      isOpen,
     }
 
     // filter out valueTemplate
@@ -670,6 +736,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             onClick={handleOpen}
             disabled={disabled}
             isChanged={!!isChanged}
+            isOpen={isOpen}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value)
@@ -690,11 +757,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             style={{ left: pos?.x || 0, top: pos?.y || 0, ...itemStyle }}
             message={message || ''}
             isOpen={true}
-            startAnimation={startAnimation}
             onSubmit={handleSearchSubmit}
+            startAnimation={startAnimation}
           >
             {(search || editable) && (
-              <SearchStyled>
+              <SearchStyled startAnimation={startAnimation}>
                 <Icon icon={'search'} />
                 <InputText
                   value={searchForm}
@@ -711,6 +778,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               search={!!search || !!editable}
               ref={optionsRef}
               style={{ minWidth, ...listStyle }}
+              startAnimation={startAnimation}
+              animationHeight={optionsHeight}
+              maxHeight={maxHeight}
+              onAnimationEnd={() => setStartAnimationFinished(true)}
             >
               {showOptions.map((option, i) => (
                 <ListItemStyled
@@ -718,6 +789,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   onClick={(e) => handleChange(option[dataKey], i, e)}
                   focused={usingKeyboard && activeIndex === i}
                   usingKeyboard={usingKeyboard}
+                  startAnimation={
+                    startAnimation && !startAnimationFinished && (search || editable || i !== 0)
+                  }
+                  tabIndex={0}
                 >
                   {itemTemplate ? (
                     itemTemplate(
@@ -738,6 +813,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   onClick={() => searchRef.current?.focus()}
                   focused={false}
                   usingKeyboard={false}
+                  startAnimation={startAnimation}
                 >
                   <DefaultItemStyled isSelected={false}>
                     <span>{`Search ${hiddenLength} more...`}</span>

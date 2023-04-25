@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Icon } from '../Icon'
 import { DropdownProps } from './Dropdown'
 
@@ -10,7 +10,7 @@ const DefaultValueStyled = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 4px 8px;
+  padding: 0 8px;
   gap: 8px;
 
   white-space: nowrap;
@@ -18,8 +18,18 @@ const DefaultValueStyled = styled.div`
   text-overflow: ellipsis;
 
   & > * {
-    left: -1px;
     position: relative;
+  }
+
+  .icon.control {
+    transition: transform 0.15s;
+    /* scale and opacity goes to 0 when open  */
+    ${({ isOpen }: { isOpen: boolean }) =>
+      isOpen &&
+      css`
+        transform: scale(0.5);
+        opacity: 0.5;
+      `}
   }
 `
 
@@ -43,6 +53,7 @@ export interface DefaultValueTemplateProps
   style?: React.CSSProperties
   children?: React.ReactNode
   valueStyle?: React.CSSProperties
+  isOpen?: boolean
 }
 
 const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
@@ -55,11 +66,12 @@ const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   style,
   valueStyle,
   placeholder = 'Select an option...',
+  isOpen,
 }) => {
   const noValue = !value.length
 
   return (
-    <DefaultValueStyled style={style}>
+    <DefaultValueStyled style={style} isOpen={!!isOpen}>
       {noValue ? (
         <>
           {!value.length && (
@@ -72,15 +84,17 @@ const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         <>
           <ContentStyled>
             {isMultiple && <span>{`Multiple (`}</span>}
-            {displayIcon && <span className="material-symbols-outlined">{displayIcon}</span>}
+            {displayIcon && <Icon icon={displayIcon} />}
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
-          {onClear && <Icon icon="clear" onClick={onClear} id="clear" tabIndex={0} />}
+          {onClear && (
+            <Icon icon="clear" onClick={onClear} id="clear" className="control" tabIndex={0} />
+          )}
         </>
       )}
 
-      <Icon icon={dropIcon} />
+      <Icon icon={dropIcon} className="control" />
     </DefaultValueStyled>
   )
 }
