@@ -646,7 +646,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         if (multiSelect) {
-          handleChange(selectedValue, activeIndex || 0)
+          !editable && handleChange(selectedValue, activeIndex || 0)
 
           // nothing selected and only one option
           if (options.length === 1 || (options.length === 2 && editable)) {
