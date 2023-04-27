@@ -238,7 +238,7 @@ const ListItemStyled = styled.li<{
     `}
 `
 
-const DefaultItemStyled = styled.span<{
+export const DefaultItemStyled = styled.span<{
   isSelected: boolean
 }>`
   display: flex;
@@ -311,7 +311,12 @@ export interface DropdownProps {
   dataKey?: string
   labelKey?: string
   options: Array<any>
-  itemTemplate?: (option: any, isActive: boolean, isSelected: boolean) => React.ReactNode
+  itemTemplate?: (
+    option: any,
+    isActive: boolean,
+    isSelected: boolean,
+    index: number,
+  ) => React.ReactNode
   align?: 'left' | 'right'
   multiSelect?: boolean
   search?: boolean
@@ -807,11 +812,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                       option,
                       value.includes(option[dataKey]),
                       selected.includes(option[dataKey]),
+                      i,
                     )
                   ) : (
                     <DefaultItemStyled
                       isSelected={selected.includes(option[dataKey])}
-                      className="option-child"
+                      className={`option-child ${
+                        value.includes(option[dataKey]) ? 'selected' : ''
+                      } ${value.includes(option[dataKey]) ? 'active' : ''}}`}
                     >
                       {option.icon && <Icon icon={option.icon} />}
                       <span>{option[labelKey] || option[dataKey]}</span>

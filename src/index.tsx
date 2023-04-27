@@ -7,6 +7,8 @@ export { AssigneeField } from './AssigneeSelect/AssigneeField'
 // export { AssigneeDropdownTemplate } from './AssigneeSelect/AssigneeDropdownTemplate'
 // assigneeSelect
 export { AssigneeSelect } from './AssigneeSelect/AssigneeSelect'
+// tagsSelect
+export { TagsSelect } from './TagsSelect'
 
 // BUTTONS
 export { Button } from './Button'
