@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import DefaultValueTemplate, { DefaultValueTemplateProps } from './DefaultValueTemplate'
+import { DefaultValueTemplateProps, DefaultValueTemplate } from '.'
 import styled from 'styled-components'
 
 const TagStyled = styled.span`
