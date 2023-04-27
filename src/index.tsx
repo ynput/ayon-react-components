@@ -41,6 +41,8 @@ export { InputSwitch } from './Inputs/InputSwitch'
 export { InputPassword } from './Inputs/InputPassword'
 // LockedInput
 export { LockedInput } from './Inputs/LockedInput'
+// date
+export { InputDate } from './Inputs/InputDate'
 
 // LAYOUT
 // divider
