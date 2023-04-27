@@ -503,6 +503,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           [labelKey]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
           [dataKey]: searchForm,
           icon: 'add',
+          className: 'add-new',
         }
 
         return [searchItem, ...options]
@@ -766,7 +767,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             startAnimation={startAnimation}
           >
             {(search || editable) && (
-              <SearchStyled startAnimation={startAnimation}>
+              <SearchStyled startAnimation={startAnimation} className="search">
                 <Icon icon={'search'} />
                 <InputText
                   value={searchForm}
@@ -787,6 +788,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               animationHeight={optionsHeight}
               maxHeight={maxHeight}
               onAnimationEnd={() => setStartAnimationFinished(true)}
+              className="options"
             >
               {showOptions.map((option, i) => (
                 <ListItemStyled
@@ -798,6 +800,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     startAnimation && !startAnimationFinished && (search || editable || i !== 0)
                   }
                   tabIndex={0}
+                  className="option"
                 >
                   {itemTemplate ? (
                     itemTemplate(
@@ -806,7 +809,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                       selected.includes(option[dataKey]),
                     )
                   ) : (
-                    <DefaultItemStyled isSelected={selected.includes(option[dataKey])}>
+                    <DefaultItemStyled
+                      isSelected={selected.includes(option[dataKey])}
+                      className="option-child"
+                    >
                       {option.icon && <Icon icon={option.icon} />}
                       <span>{option[labelKey] || option[dataKey]}</span>
                     </DefaultItemStyled>
@@ -819,8 +825,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   focused={false}
                   usingKeyboard={false}
                   startAnimation={startAnimation}
+                  className="option"
                 >
-                  <DefaultItemStyled isSelected={false}>
+                  <DefaultItemStyled isSelected={false} className="option-child hidden">
                     <span>{`Search ${hiddenLength} more...`}</span>
                   </DefaultItemStyled>
                 </ListItemStyled>
