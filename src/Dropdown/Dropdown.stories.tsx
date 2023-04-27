@@ -38,11 +38,16 @@ const Template = (args: DropdownProps) => {
     setValue(newValue)
   }
 
+  const handleChange = (v: (string | number)[]) => {
+    console.log(v)
+    setValue(v)
+  }
+
   return (
     <Dropdown
       {...args}
       value={value}
-      onChange={setValue}
+      onChange={handleChange}
       options={args.options || options}
       onClear={args.onClear ? handleClear : undefined}
       widthExpand

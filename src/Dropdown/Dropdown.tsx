@@ -6,7 +6,7 @@ import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../Inputs/InputText'
 import { Icon, IconType } from '../Icon'
-import DefaultValueTemplate from './DefaultValueTemplate'
+import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 
 // background acts as a blocker
@@ -595,7 +595,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // KEY BOARD CONTROL
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
       // NAVIGATE DOWN
-      if (e.code === 'ArrowDown') {
+      if (e.code === 'ArrowDown' || e.code === 'ArrowRight') {
         let length = options.length
         if (activeIndex === null || activeIndex >= length - 1) {
           // got to top
@@ -607,7 +607,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
 
       // NAVIGATE UP
-      if (e.code === 'ArrowUp' && activeIndex !== null) {
+      if ((e.code === 'ArrowUp' || e.code === 'ArrowLeft') && activeIndex !== null) {
         if (activeIndex === 0) {
           // go to bottom
           setActiveIndex(options.length - 1)
@@ -623,7 +623,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         selectedValue = options[activeIndex][dataKey]
       }
 
-      if (e.code === 'ArrowDown' || e.code === 'ArrowUp') {
+      if (
+        e.code === 'ArrowDown' ||
+        e.code === 'ArrowUp' ||
+        e.code === 'ArrowLeft' ||
+        e.code === 'ArrowRight'
+      ) {
         e.preventDefault()
         if (isOpen) {
           if (!usingKeyboard) setUsingKeyboard(true)
@@ -646,7 +651,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         if (multiSelect) {
-          !editable && handleChange(selectedValue, activeIndex || 0)
+          selectedValue && handleChange(selectedValue, activeIndex || 0)
 
           // nothing selected and only one option
           if (options.length === 1 || (options.length === 2 && editable)) {
