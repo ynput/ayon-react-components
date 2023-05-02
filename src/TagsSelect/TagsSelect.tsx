@@ -50,6 +50,7 @@ export interface TagsSelectProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   tagsOrder?: TagsOrderType
   editor?: boolean
   align?: 'left' | 'right'
+  styleDropdown?: React.CSSProperties
 }
 
 export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
@@ -63,6 +64,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
       tagsOrder,
       editor,
       align,
+      styleDropdown,
       ...props
     },
     ref,
@@ -112,6 +114,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
         ref={ref}
         editable
         align={align}
+        style={styleDropdown}
       />
     )
   },
