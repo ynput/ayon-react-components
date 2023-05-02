@@ -8,7 +8,7 @@ import { Icon } from '../Icon'
 const StyledDropdown = styled(Dropdown)`
   .options {
     flex-direction: row;
-    max-width: 300px;
+    width: ${({ width }: { width?: number }) => (width ? `${width}px` : '100%')};
     flex-wrap: wrap;
     gap: 4px;
     padding: 4px;
@@ -51,6 +51,7 @@ export interface TagsSelectProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   editor?: boolean
   align?: 'left' | 'right'
   styleDropdown?: React.CSSProperties
+  width?: number
 }
 
 export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
@@ -65,6 +66,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
       editor,
       align,
       styleDropdown,
+      width = 300,
       ...props
     },
     ref,
@@ -115,6 +117,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
         editable
         align={align}
         style={styleDropdown}
+        width={width}
       />
     )
   },
