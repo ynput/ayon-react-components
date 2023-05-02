@@ -1,5 +1,5 @@
 import { DefaultItemStyled, Dropdown } from '../Dropdown'
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { TagsSelectValueTemplate } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
 import styled from 'styled-components'
@@ -57,7 +57,7 @@ export interface TagsSelectProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
   (
     {
-      value = [],
+      value: inputValue = [],
       onChange,
       widthExpand = true,
       disabled,
@@ -85,6 +85,13 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
       }
       return tagsArray
     }, [tags, tagsOrder])
+
+    const [value, setValue] = useState<string[]>([])
+
+    // set input value
+    useEffect(() => {
+      setValue(inputValue)
+    }, [inputValue])
 
     return (
       <StyledDropdown
