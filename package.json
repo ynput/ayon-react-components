@@ -101,18 +101,15 @@
     "dist"
   ],
   "exports": {
-    ".": {
-      "import": "./dist/ayon-react-components.es.js"
-    },
     "./dist/style.css": {
       "import": "./dist/style.css",
       "require": "./dist/style.css"
     }
   },
-  "main": "dist/ayon-react-components.umd.js",
-  "module": "dist/ayon-react-components.es.js",
+  "main": "./dist/ayon-react-components.umd.js",
+  "module": "./dist/ayon-react-components.es.js",
   "publishConfig": {
     "access": "public"
   },
-  "types": "dist/index.d.ts"
+  "types": "./dist/index.d.ts"
 }
