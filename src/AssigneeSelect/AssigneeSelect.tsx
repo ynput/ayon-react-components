@@ -43,7 +43,7 @@ export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
         align={align}
         multiSelect
         search
-        searchFields={['name', 'fullName']}
+        searchFields={['name', 'fullName', 'email']}
         ref={ref}
       />
     )
