@@ -41,6 +41,8 @@ const ButtonStyled = styled.button<{
       }
     `}
 
+  background-color: var(--color-grey-03);
+
   &:hover {
     background-color: var(--color-grey-02);
   }
