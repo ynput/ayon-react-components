@@ -21,12 +21,12 @@ const TitleStyled = styled.span`
   position: relative;
 
   /* when tooltip not null */
-  ${({ tooltip }: { tooltip?: string }) =>
-    tooltip &&
+  ${({ $tooltip }: { $tooltip?: string }) =>
+    $tooltip &&
     css`
-      /* show tooltip on hover as ::after */
+      /* show $tooltip on hover as ::after */
       &:hover::after {
-        content: '${tooltip}';
+        content: '${$tooltip}';
         display: block;
         position: absolute;
         top: -38px; /* adjust as needed */
@@ -54,7 +54,7 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
   ({ name, value, tooltip, onCopy, ...props }, ref) => {
     return (
       <AttributeTableRow ref={ref} {...props}>
-        <TitleStyled tooltip={tooltip}>{name}</TitleStyled>
+        <TitleStyled $tooltip={tooltip}>{name}</TitleStyled>
         {value ? <OverflowField value={value} onClick={onCopy} /> : '-'}
       </AttributeTableRow>
     )

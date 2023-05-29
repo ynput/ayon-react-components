@@ -101,7 +101,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <DefaultItemStyled
-            isSelected={isSelected}
+            $isSelected={isSelected}
             className="option-child"
             style={{
               color: tag.color,

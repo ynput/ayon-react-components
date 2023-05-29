@@ -18,8 +18,8 @@ const BackdropStyled = styled.div`
 `
 
 const ButtonStyled = styled.button<{
-  isChanged: boolean
-  isOpen: boolean
+  $isChanged: boolean
+  $isOpen: boolean
 }>`
   /* remove defaults */
   background: none;
@@ -33,8 +33,8 @@ const ButtonStyled = styled.button<{
   }
 
   /* if isOpen and :focus-visible remove outline */
-  ${({ isOpen }: { isOpen: boolean }) =>
-    isOpen &&
+  ${({ $isOpen }: { $isOpen: boolean }) =>
+    $isOpen &&
     css`
       &:focus-visible {
         outline: none;
@@ -47,8 +47,8 @@ const ButtonStyled = styled.button<{
 
   border-radius: var(--border-radius);
 
-  ${({ isChanged }) =>
-    isChanged &&
+  ${({ $isChanged }) =>
+    $isChanged &&
     css`
       background-color: var(--color-row-hl);
     `}
@@ -78,14 +78,14 @@ const DropdownStyled = styled.div`
 `
 
 const ContainerStyled = styled.form<{
-  isOpen: boolean
-  height?: number
-  message: string
-  startAnimation: boolean
+  $isOpen: boolean
+  $height?: number
+  $message: string
+  $startAnimation: boolean
 }>`
   width: 100%;
   position: relative;
-  height: ${({ height }) => `${height}px`};
+  height: ${({ $height }) => `${$height}px`};
   width: auto;
   display: inline-block;
   height: min-content;
@@ -96,19 +96,19 @@ const ContainerStyled = styled.form<{
   /* position: fixed; */
 
   /* hide when startAnimation false */
-  ${({ startAnimation }) =>
-    !startAnimation &&
+  ${({ $startAnimation }) =>
+    !$startAnimation &&
     css`
       opacity: 0;
     `}
 
   /* show warning when changing multiple entities */
-  ${({ isOpen, message }) =>
-    isOpen &&
-    message &&
+  ${({ $isOpen, $message }) =>
+    $isOpen &&
+    $message &&
     css`
       &::before {
-        content: '${message}';
+        content: '${$message}';
         top: 0;
         translate: 0 -100%;
         position: absolute;
@@ -138,11 +138,11 @@ const dropdownMenuAnimation = (end: number) => keyframes`
 `
 
 const OptionsStyled = styled.ul<{
-  message: string
-  search: boolean
-  startAnimation: boolean
-  animationHeight: number
-  maxHeight: number
+  $message: string
+  $search: boolean
+  $startAnimation: boolean
+  $animationHeight: number
+  $maxHeight: number
 }>`
   width: auto;
   list-style-type: none;
@@ -156,8 +156,8 @@ const OptionsStyled = styled.ul<{
   border: 1px solid var(--color-grey-03);
   background-color: var(--color-grey-00);
   z-index: 20;
-  border-radius: ${({ message, search }) =>
-    message || search ? '0 0 var(--border-radius) var(--border-radius)' : 'var(--border-radius)'};
+  border-radius: ${({ $message, $search }) =>
+    $message || $search ? '0 0 var(--border-radius) var(--border-radius)' : 'var(--border-radius)'};
   overflow: clip;
 
   position: relative;
@@ -171,16 +171,16 @@ const OptionsStyled = styled.ul<{
     margin-top: -1px;
   }
 
-  /* play animation on startAnimation */
-  ${({ startAnimation, animationHeight, maxHeight }) =>
-    startAnimation
+  /* play animation on $startAnimation */
+  ${({ $startAnimation, $animationHeight, $maxHeight }) =>
+    $startAnimation
       ? css`
-          animation: ${dropdownMenuAnimation(animationHeight)} 0.17s ease-in-out forwards;
-          max-height: ${maxHeight}px;
+          animation: ${dropdownMenuAnimation($animationHeight)} 0.17s ease-in-out forwards;
+          max-height: ${$maxHeight}px;
         `
       : css`
           opacity: 0;
-          max-height: ${maxHeight}px;
+          max-height: ${$maxHeight}px;
         `}
 
   overflow-y: scroll;
@@ -202,24 +202,24 @@ const slideDown = keyframes`
 `
 
 const ListItemStyled = styled.li<{
-  focused: boolean
-  usingKeyboard: boolean
-  startAnimation: boolean
+  $focused: boolean
+  $usingKeyboard: boolean
+  $startAnimation: boolean
 }>`
   cursor: pointer;
 
-  ${({ usingKeyboard }) =>
-    !usingKeyboard &&
+  ${({ $usingKeyboard }) =>
+    !$usingKeyboard &&
     css`
       &:hover {
         background-color: var(--color-grey-02);
       }
     `}
 
-  /* focused */
+  /* $focused */
   outline-offset: -1px;
-  ${({ focused }) =>
-    focused &&
+  ${({ $focused }) =>
+    $focused &&
     css`
       background-color: var(--color-grey-02);
 
@@ -231,15 +231,15 @@ const ListItemStyled = styled.li<{
     `}
 
   /* start animation, slide down 100% height */
-      ${({ startAnimation }) =>
-    startAnimation &&
+      ${({ $startAnimation }) =>
+    $startAnimation &&
     css`
       animation: ${slideDown} 0.17s ease-in-out forwards;
     `}
 `
 
 export const DefaultItemStyled = styled.span<{
-  isSelected: boolean
+  $isSelected: boolean
 }>`
   display: flex;
   gap: 8px;
@@ -247,8 +247,8 @@ export const DefaultItemStyled = styled.span<{
   height: 30px;
   padding: 0 8px;
 
-  ${({ isSelected }) =>
-    isSelected &&
+  ${({ $isSelected }) =>
+    $isSelected &&
     css`
       background-color: var(--color-row-hl);
     `}
@@ -288,9 +288,9 @@ const SearchStyled = styled.div`
     }
 
     opacity: 0;
-    /* startAnimation transition opacity 0 to 1 */
-    ${({ startAnimation }: { startAnimation: boolean }) =>
-      startAnimation &&
+    /* $startAnimation transition opacity 0 to 1 */
+    ${({ $startAnimation }: { $startAnimation: boolean }) =>
+      $startAnimation &&
       css`
         transition: opacity 0.05;
         opacity: 1;
@@ -746,8 +746,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             ref={valueRef}
             onClick={handleOpen}
             disabled={disabled}
-            isChanged={!!isChanged}
-            isOpen={isOpen}
+            $isChanged={!!isChanged}
+            $isOpen={isOpen}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value)
@@ -766,13 +766,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         {isOpen && options && (
           <ContainerStyled
             style={{ left: pos?.x || 0, top: pos?.y || 0, ...itemStyle }}
-            message={message || ''}
-            isOpen={true}
+            $message={message || ''}
+            $isOpen={true}
             onSubmit={handleSearchSubmit}
-            startAnimation={startAnimation}
+            $startAnimation={startAnimation}
           >
             {(search || editable) && (
-              <SearchStyled startAnimation={startAnimation} className="search">
+              <SearchStyled $startAnimation={startAnimation} className="search">
                 <Icon icon={'search'} />
                 <InputText
                   value={searchForm}
@@ -785,13 +785,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               </SearchStyled>
             )}
             <OptionsStyled
-              message={message || ''}
-              search={!!search || !!editable}
+              $message={message || ''}
+              $search={!!search || !!editable}
               ref={optionsRef}
               style={{ minWidth, ...listStyle }}
-              startAnimation={startAnimation}
-              animationHeight={optionsHeight}
-              maxHeight={maxHeight}
+              $startAnimation={startAnimation}
+              $animationHeight={optionsHeight}
+              $maxHeight={maxHeight}
               onAnimationEnd={() => setStartAnimationFinished(true)}
               className="options"
             >
@@ -799,9 +799,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                 <ListItemStyled
                   key={`${option[dataKey]}-${i}`}
                   onClick={(e) => handleChange(option[dataKey], i, e)}
-                  focused={usingKeyboard && activeIndex === i}
-                  usingKeyboard={usingKeyboard}
-                  startAnimation={
+                  $focused={usingKeyboard && activeIndex === i}
+                  $usingKeyboard={usingKeyboard}
+                  $startAnimation={
                     startAnimation && !startAnimationFinished && (search || editable || i !== 0)
                   }
                   tabIndex={0}
@@ -816,7 +816,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     )
                   ) : (
                     <DefaultItemStyled
-                      isSelected={selected.includes(option[dataKey])}
+                      $isSelected={selected.includes(option[dataKey])}
                       className={`option-child ${
                         value.includes(option[dataKey]) ? 'selected' : ''
                       } ${value.includes(option[dataKey]) ? 'active' : ''}}`}
@@ -830,12 +830,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               {!!hiddenLength && (
                 <ListItemStyled
                   onClick={() => searchRef.current?.focus()}
-                  focused={false}
-                  usingKeyboard={false}
-                  startAnimation={startAnimation}
+                  $focused={false}
+                  $usingKeyboard={false}
+                  $startAnimation={startAnimation}
                   className="option"
                 >
-                  <DefaultItemStyled isSelected={false} className="option-child hidden">
+                  <DefaultItemStyled $isSelected={false} className="option-child hidden">
                     <span>{`Search ${hiddenLength} more...`}</span>
                   </DefaultItemStyled>
                 </ListItemStyled>
