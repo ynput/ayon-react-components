@@ -41,8 +41,6 @@ const ButtonStyled = styled.button<{
       }
     `}
 
-  background-color: var(--color-grey-03);
-
   &:hover {
     background-color: var(--color-grey-02);
   }
@@ -139,7 +137,7 @@ const dropdownMenuAnimation = (end: number) => keyframes`
 }
 `
 
-const OptionsStyled = styled.ul<{
+export const OptionsStyled = styled.ul<{
   $message: string
   $search: boolean
   $startAnimation: boolean
@@ -203,7 +201,7 @@ const slideDown = keyframes`
 }
 `
 
-const ListItemStyled = styled.li<{
+export const ListItemStyled = styled.li<{
   $focused: boolean
   $usingKeyboard: boolean
   $startAnimation: boolean
@@ -726,6 +724,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       style: valueStyle,
       placeholder,
       isOpen,
+      setStartAnimationFinished,
     }
 
     // filter out valueTemplate
@@ -822,6 +821,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                       className={`option-child ${
                         value.includes(option[dataKey]) ? 'selected' : ''
                       } ${value.includes(option[dataKey]) ? 'active' : ''}}`}
+                      style={itemStyle}
                     >
                       {option.icon && <Icon icon={option.icon} />}
                       <span>{option[labelKey] || option[dataKey]}</span>
