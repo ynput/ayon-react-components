@@ -13,6 +13,7 @@ const DefaultValueStyled = styled.div`
   justify-content: flex-start;
   padding: 0 8px;
   gap: 8px;
+  cursor: pointer;
 
   white-space: nowrap;
   overflow: hidden;
@@ -28,8 +29,13 @@ const DefaultValueStyled = styled.div`
     ${({ isOpen }: { isOpen: boolean }) =>
       isOpen &&
       css`
-        transform: scale(0.5);
-        opacity: 0.5;
+        &:not(#clear) {
+          transform: rotate(180deg);
+        }
+        &#clear {
+          opacity: 0;
+          transform: scale(0);
+        }
       `}
   }
 `

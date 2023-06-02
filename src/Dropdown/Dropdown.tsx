@@ -31,6 +31,8 @@ const ButtonStyled = styled.button<{
   &:not(:focus) {
     border: inherit;
   }
+  z-index: 12;
+  position: relative;
 
   /* if isOpen and :focus-visible remove outline */
   ${({ $isOpen }: { $isOpen: boolean }) =>
@@ -206,16 +208,21 @@ export const ListItemStyled = styled.li<{
   $focused: boolean
   $usingKeyboard: boolean
   $startAnimation: boolean
+  $disabled?: boolean
 }>`
   cursor: pointer;
 
-  ${({ $usingKeyboard }) =>
+  ${({ $usingKeyboard, $disabled }) =>
     !$usingKeyboard &&
-    css`
-      &:hover {
-        background-color: var(--color-grey-02);
-      }
-    `}
+    (!$disabled
+      ? css`
+          &:hover {
+            background-color: var(--color-grey-02);
+          }
+        `
+      : css`
+          cursor: not-allowed;
+        `)}
 
   /* $focused */
   outline-offset: -1px;
@@ -338,6 +345,8 @@ export interface DropdownProps {
   onClear?: () => void
   editable?: boolean
   maxHeight?: number
+  disableReorder?: boolean
+  disabledValues?: (string | number)[]
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -375,6 +384,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onClear,
       editable,
       maxHeight = 300,
+      disableReorder,
+      disabledValues = [],
     },
     ref,
   ) => {
@@ -495,9 +506,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       )
     }
 
-    // reorder options to put active at the top
+    // reorder options to put active at the top (if not disabled)
     options = useMemo(
-      () => [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
+      () =>
+        disableReorder
+          ? options
+          : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
     )
 
@@ -591,7 +605,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       if (disabled) return
       e.stopPropagation()
-      setIsOpen(true)
+      setIsOpen(!isOpen)
 
       onOpen && onOpen()
     }
@@ -804,7 +818,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               {showOptions.map((option, i) => (
                 <ListItemStyled
                   key={`${option[dataKey]}-${i}`}
-                  onClick={(e) => handleChange(option[dataKey], i, e)}
+                  onClick={(e) =>
+                    !disabledValues.includes(option[dataKey]) && handleChange(option[dataKey], i, e)
+                  }
                   $focused={usingKeyboard && activeIndex === i}
                   $usingKeyboard={usingKeyboard}
                   $startAnimation={
@@ -812,6 +828,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   }
                   tabIndex={0}
                   className="option"
+                  $disabled={disabledValues.includes(option[dataKey])}
                 >
                   {itemTemplate ? (
                     itemTemplate(
