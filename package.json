@@ -1,7 +1,7 @@
 {
   "name": "@ynput/ayon-react-components",
   "private": false,
-  "version": "0.3.13",
+  "version": "0.3.14",
   "type": "module",
   "repository": {
     "type": "git",
@@ -113,6 +113,7 @@
   },
   "main": "/dist/ayon-react-components.umd.js",
   "module": "/dist/ayon-react-components.es.js",
+  "types": "/dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   }
