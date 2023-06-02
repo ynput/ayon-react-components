@@ -142,7 +142,7 @@ export const OptionsStyled = styled.ul<{
   $search: boolean
   $startAnimation: boolean
   $animationHeight: number
-  $maxHeight: number
+  $maxHeight?: number
 }>`
   width: auto;
   list-style-type: none;
@@ -173,7 +173,8 @@ export const OptionsStyled = styled.ul<{
 
   /* play animation on $startAnimation */
   ${({ $startAnimation, $animationHeight, $maxHeight }) =>
-    $startAnimation
+    $maxHeight &&
+    ($startAnimation
       ? css`
           animation: ${dropdownMenuAnimation($animationHeight)} 0.17s ease-in-out forwards;
           max-height: ${$maxHeight}px;
@@ -181,7 +182,7 @@ export const OptionsStyled = styled.ul<{
       : css`
           opacity: 0;
           max-height: ${$maxHeight}px;
-        `}
+        `)}
 
   overflow-y: scroll;
 

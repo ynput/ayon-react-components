@@ -50,8 +50,8 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
   startAnimationFinished,
   setStartAnimationFinished,
   showOptions,
-  dataKey,
-  labelKey,
+  dataKey = 'value',
+  labelKey = 'label',
   itemTemplate,
   value,
   selected,
@@ -73,36 +73,43 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
       onAnimationEnd={() => setStartAnimationFinished(true)}
       className="options"
     >
-      {showOptions.map((option, i) => (
-        <ListItemStyled
-          key={`${option[dataKey]}-${i}`}
-          onClick={(e) => handleChange(option[dataKey], i, e)}
-          $focused={usingKeyboard && activeIndex === i}
-          $usingKeyboard={usingKeyboard}
-          $startAnimation={
-            startAnimation && !startAnimationFinished && (search || editable || i !== 0)
-          }
-          tabIndex={0}
-          className="option"
-        >
-          {itemTemplate ? (
-            itemTemplate(
-              option,
-              value.includes(option[dataKey]),
-              selected.includes(option[dataKey]),
-              i,
-            )
-          ) : (
-            <DefaultItemStyled
-              $isSelected={selected.includes(option[dataKey])}
-              className="option-child"
-            >
-              {option.icon && <Icon icon={option.icon} />}
-              <span>{option[labelKey] || option[dataKey]}</span>
-            </DefaultItemStyled>
-          )}
-        </ListItemStyled>
-      ))}
+      {showOptions.map(
+        (
+          option: {
+            [x: string]: string
+          },
+          i: number,
+        ) => (
+          <ListItemStyled
+            key={`${option[dataKey]}-${i}`}
+            onClick={(e) => handleChange(option[dataKey], i, e)}
+            $focused={usingKeyboard && activeIndex === i}
+            $usingKeyboard={usingKeyboard}
+            $startAnimation={
+              startAnimation && !startAnimationFinished && (search || editable || i !== 0)
+            }
+            tabIndex={0}
+            className="option"
+          >
+            {itemTemplate ? (
+              itemTemplate(
+                option,
+                value.includes(option[dataKey]),
+                selected.includes(option[dataKey]),
+                i,
+              )
+            ) : (
+              <DefaultItemStyled
+                $isSelected={selected.includes(option[dataKey])}
+                className="option-child"
+              >
+                {option.icon && <Icon icon={option.icon} />}
+                <span>{option[labelKey] || option[dataKey]}</span>
+              </DefaultItemStyled>
+            )}
+          </ListItemStyled>
+        ),
+      )}
       {!!hiddenLength && (
         <ListItemStyled
           onClick={() => searchRef.current?.focus()}
