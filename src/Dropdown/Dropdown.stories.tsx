@@ -53,6 +53,7 @@ const Template = (args: DropdownProps) => {
       widthExpand
       style={{
         width: 250,
+        ...args.style,
       }}
     />
   )
@@ -104,7 +105,11 @@ export const Multiple: Story = {
     widthExpand: true,
     multiSelect: true,
     minSelected: 2,
+    align: 'right',
     onClear: () => console.log('clear'),
+    style: {
+      width: 'unset',
+    },
   },
   render: Template,
 }
@@ -118,6 +123,9 @@ export const CustomTemplates: Story = {
     multiSelect: true,
     widthExpand: true,
     listStyle: { backgroundColor: 'black' },
+    style: {
+      width: 'unset',
+    },
     valueTemplate: (value) => (
       <div
         style={{
@@ -125,6 +133,7 @@ export const CustomTemplates: Story = {
           borderRadius: 3,
           padding: 10,
           display: 'flex',
+          width: '100%',
         }}
       >
         {value?.map((v) => (

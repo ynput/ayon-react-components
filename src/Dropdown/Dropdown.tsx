@@ -388,9 +388,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const [isOpen, setIsOpen] = useState(false)
     // Style states
     const [pos, setPos] = useState<{
-      x: number | null
+      left?: number | null
+      right?: number | null
       y: number | null
-    }>({ x: 0, y: 0 })
+    }>({ left: null, right: null, y: 0 })
     const [startAnimation, setStartAnimation] = useState(false)
     const [startAnimationFinished, setStartAnimationFinished] = useState(false)
     const [optionsHeight, setOptionsHeight] = useState(0)
@@ -408,6 +409,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const optionsRef = useRef<HTMLUListElement>(null)
     const searchRef = useRef<HTMLInputElement>(null)
 
+    // const [optionsWidth, setOptionsWidth] = useState<null | number>(null)
+
     // USE EFFECTS
     // sets the correct position and height
     useEffect(() => {
@@ -416,23 +419,19 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         const valueWidth = valueRec.width
 
         const optionsRec = optionsRef.current.getBoundingClientRect()
-        const optionsWidth = optionsRec.width
         const optionsHeight = optionsRec.height
 
-        let x = valueRec.x
-        let y = valueRec.y
+        const left = valueRec.x
+        const right = window.innerWidth - valueRec.x - valueWidth
+        const y = valueRec.y
 
         if (align === 'right') {
-          x = x + valueWidth - optionsWidth
+          setPos({ y, right, left: null })
+        } else {
+          // first set position
+          setPos({ left, y, right: null })
         }
 
-        // check it's not vertically off screen
-        if (optionsHeight + y + 20 > window.innerHeight) {
-          y = window.innerHeight - optionsHeight - 20
-        }
-
-        // first set position
-        setPos({ x, y })
         if (widthExpand) setMinWidth(valueWidth)
 
         // then start animation
@@ -767,7 +766,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         {isOpen && <BackdropStyled onClick={handleClose} />}
         {isOpen && options && (
           <ContainerStyled
-            style={{ left: pos?.x || 0, top: pos?.y || 0, ...itemStyle }}
+            style={{
+              left: pos?.left || 'unset',
+              right: pos?.right || 'unset',
+              top: pos?.y || 'unsey',
+              ...itemStyle,
+            }}
             $message={message || ''}
             $isOpen={true}
             onSubmit={handleSearchSubmit}
