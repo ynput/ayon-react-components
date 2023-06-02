@@ -3,7 +3,12 @@ import styled, { css } from 'styled-components'
 import { Dropdown, DropdownProps } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../Icon'
 
-const IconStyled = styled.div<Pick<IconTemplateProps, 'valueTemplate' | 'isActive'>>`
+interface IconStyledProps {
+  $valueTemplate?: boolean
+  $isActive?: boolean
+}
+
+const IconStyled = styled.div<IconStyledProps>`
   display: flex;
   align-items: center;
   /* justify-content: center; */
@@ -20,8 +25,8 @@ const IconStyled = styled.div<Pick<IconTemplateProps, 'valueTemplate' | 'isActiv
   }
 
   /* valueTemplate */
-  ${({ valueTemplate }) =>
-    valueTemplate
+  ${({ $valueTemplate }) =>
+    $valueTemplate
       ? css`
           color: var(--color-text);
           border: 1px solid var(--color-grey-03);
@@ -34,8 +39,8 @@ const IconStyled = styled.div<Pick<IconTemplateProps, 'valueTemplate' | 'isActiv
         `}
 
   /* isActive */
-    ${({ isActive }) =>
-    isActive &&
+    ${({ $isActive }) =>
+    $isActive &&
     css`
       background: rgba(100, 181, 246, 0.16);
     `}
@@ -50,7 +55,7 @@ export interface IconTemplateProps {
 
 const IconTemplate = ({ value, valueTemplate, isActive, isSelected }: IconTemplateProps) => {
   return (
-    <IconStyled valueTemplate={valueTemplate} isActive={isSelected}>
+    <IconStyled $valueTemplate={valueTemplate} $isActive={isSelected}>
       {value.map((icon) => (
         <Icon key={icon} icon={icon as IconType} />
       ))}

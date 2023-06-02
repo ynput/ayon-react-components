@@ -7,7 +7,7 @@ const StackedStyled = styled.div`
   display: flex;
   z-index: 10;
   & > * + * {
-    margin-left: ${({ gap }: { gap: number }) => `${gap}px`};
+    margin-left: ${({ $gap }: { $gap: number }) => `${$gap}px`};
   }
 `
 
@@ -35,7 +35,7 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
     }
 
     return (
-      <StackedStyled gap={(gap * 30) / 2} {...props} ref={ref}>
+      <StackedStyled $gap={(gap * 30) / 2} {...props} ref={ref}>
         {users.map((user, i) => (
           <UserImage
             src={user.avatarUrl}

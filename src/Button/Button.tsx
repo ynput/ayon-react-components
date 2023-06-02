@@ -3,7 +3,10 @@ import styled, { css } from 'styled-components'
 import { Icon, IconType } from '../Icon'
 
 // STYLES
-const ButtonStyled = styled.button<ButtonProps>`
+const ButtonStyled = styled.button<{
+  $link?: boolean
+  label?: string
+}>`
   color: var(--color-text);
   background: var(--button-background);
   min-height: var(--base-input-size);
@@ -97,8 +100,8 @@ const ButtonStyled = styled.button<ButtonProps>`
     `}
 
   /* if button is link */
-  ${({ link }) =>
-    link &&
+  ${({ $link }) =>
+    $link &&
     css`
       display: inline-block;
       border: 0;
@@ -125,7 +128,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ label, icon, tooltip, link, iconStyle, ...props }, ref) => {
     return (
-      <ButtonStyled title={tooltip} link={link} {...props} ref={ref}>
+      <ButtonStyled title={tooltip} $link={link} {...props} ref={ref}>
         {!link && icon && <Icon icon={icon} />} {label} {props.children}
       </ButtonStyled>
     )

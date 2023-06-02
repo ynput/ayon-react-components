@@ -14,7 +14,7 @@ export { TagsSelect } from './TagsSelect'
 export { Button } from './Button'
 
 // dropdown
-export { Dropdown } from './Dropdown'
+export { Dropdown, DefaultValueTemplate, DefaultItemTemplate } from './Dropdown'
 
 // FileUpload
 export { FileUpload } from './FileUpload'

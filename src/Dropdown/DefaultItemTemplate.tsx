@@ -1,7 +1,7 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
 import { Icon } from '../Icon'
-import { DropdownProps } from './Dropdown'
+import { DefaultItemStyled, DropdownProps, ListItemStyled, OptionsStyled } from './Dropdown'
 
 export interface DefaultItemTemplateProps
   extends Pick<
@@ -22,6 +22,19 @@ export interface DefaultItemTemplateProps
   valueStyle?: React.CSSProperties
   isOpen?: boolean
   className?: string
+  selected?: any
+  usingKeyboard?: any
+  activeIndex?: any
+  searchRef?: any
+  hiddenLength?: any
+  handleChange?: any
+  optionsRef?: any
+  minWidth?: any
+  startAnimation?: any
+  optionsHeight?: any
+  startAnimationFinished?: any
+  showOptions?: any
+  setStartAnimationFinished?: any
 }
 
 export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
@@ -35,6 +48,7 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
   optionsHeight,
   maxHeight,
   startAnimationFinished,
+  setStartAnimationFinished,
   showOptions,
   dataKey,
   labelKey,
@@ -49,13 +63,13 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
 }) => {
   return (
     <OptionsStyled
-      message={message || ''}
-      search={!!search || !!editable}
+      $message={message || ''}
+      $search={!!search || !!editable}
       ref={optionsRef}
       style={{ minWidth, ...listStyle }}
-      startAnimation={startAnimation}
-      animationHeight={optionsHeight}
-      maxHeight={maxHeight}
+      $startAnimation={startAnimation}
+      $animationHeight={optionsHeight}
+      $maxHeight={maxHeight}
       onAnimationEnd={() => setStartAnimationFinished(true)}
       className="options"
     >
@@ -63,9 +77,9 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
         <ListItemStyled
           key={`${option[dataKey]}-${i}`}
           onClick={(e) => handleChange(option[dataKey], i, e)}
-          focused={usingKeyboard && activeIndex === i}
-          usingKeyboard={usingKeyboard}
-          startAnimation={
+          $focused={usingKeyboard && activeIndex === i}
+          $usingKeyboard={usingKeyboard}
+          $startAnimation={
             startAnimation && !startAnimationFinished && (search || editable || i !== 0)
           }
           tabIndex={0}
@@ -76,10 +90,11 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
               option,
               value.includes(option[dataKey]),
               selected.includes(option[dataKey]),
+              i,
             )
           ) : (
             <DefaultItemStyled
-              isSelected={selected.includes(option[dataKey])}
+              $isSelected={selected.includes(option[dataKey])}
               className="option-child"
             >
               {option.icon && <Icon icon={option.icon} />}
@@ -91,12 +106,12 @@ export const DefaultItemTemplate: FC<DefaultItemTemplateProps> = ({
       {!!hiddenLength && (
         <ListItemStyled
           onClick={() => searchRef.current?.focus()}
-          focused={false}
-          usingKeyboard={false}
-          startAnimation={startAnimation}
+          $focused={false}
+          $usingKeyboard={false}
+          $startAnimation={startAnimation}
           className="option"
         >
-          <DefaultItemStyled isSelected={false} className="option-child hidden">
+          <DefaultItemStyled $isSelected={false} className="option-child hidden">
             <span>{`Search ${hiddenLength} more...`}</span>
           </DefaultItemStyled>
         </ListItemStyled>

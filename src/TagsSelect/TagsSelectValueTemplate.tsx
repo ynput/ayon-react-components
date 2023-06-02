@@ -12,6 +12,10 @@ const TagStyled = styled.span`
 const DefaultValueTemplateStyled = styled(DefaultValueTemplate)`
   padding: 0 4px;
 
+  &:hover {
+    background-color: var(--color-grey-02);
+  }
+
   ${({ editor }: { editor?: boolean }) =>
     !editor &&
     css`

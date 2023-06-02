@@ -23,8 +23,8 @@ const CircleImage = styled.div`
   }
 
   /* if highlight true make border green */
-  ${({ highlight }: { highlight?: boolean }) =>
-    highlight &&
+  ${({ $highlight }: { $highlight?: boolean }) =>
+    $highlight &&
     css`
       border-color: var(--toastify-color-success);
     `}
@@ -50,7 +50,7 @@ export const UserImage = forwardRef<HTMLDivElement, UserImageProps>(
     return (
       <CircleImage
         style={{ width: size, maxHeight: size, minHeight: size, ...props.style }}
-        highlight={highlight}
+        $highlight={highlight}
         ref={ref}
         {...props}
       >
