@@ -555,7 +555,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       setSearchForm('')
 
       // check for difs
-      if (isEqual(changeValue, value)) return
+      if (isEqual(changeValue, value) && !isMultiple) return
       // commit changes
       onChange && onChange(changeValue)
       //   reset selected
@@ -783,7 +783,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             style={{
               left: pos?.left || 'unset',
               right: pos?.right || 'unset',
-              top: pos?.y || 'unsey',
+              top: pos?.y || 'unset',
               ...itemStyle,
             }}
             $message={message || ''}
