@@ -434,7 +434,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        const y = valueRec.y
+        let y = valueRec.y
+
+        // check it's not vertically off screen
+        if (optionsHeight + y + 20 > window.innerHeight) {
+          y = window.innerHeight - optionsHeight - 20
+        }
 
         if (align === 'right') {
           setPos({ y, right, left: null })
@@ -444,6 +449,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         if (widthExpand) setMinWidth(valueWidth)
+
+        console.log(optionsHeight)
 
         // then start animation
         setStartAnimation(true)
