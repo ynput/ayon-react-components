@@ -111,9 +111,9 @@
       "require": "./dist/style.css"
     }
   },
-  "main": "/dist/ayon-react-components.umd.js",
-  "module": "/dist/ayon-react-components.es.js",
-  "types": "/dist/index.d.ts",
+  "main": "dist/ayon-react-components.umd.js",
+  "module": "dist/ayon-react-components.es.js",
+  "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   }
