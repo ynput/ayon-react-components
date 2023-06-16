@@ -100,7 +100,7 @@ export const IconSelect = forwardRef<HTMLDivElement, IconSelectProps>(
       <Dropdown
         value={value}
         multiSelect={multiSelect}
-        valueTemplate={() => <IconTemplate value={value} valueTemplate />}
+        valueTemplate={(v) => <IconTemplate value={v || []} valueTemplate />}
         options={dropdownOptions}
         itemTemplate={({ value }, isActive, isSelected) => (
           <IconTemplate value={[value]} isActive={isActive} isSelected={isSelected} />

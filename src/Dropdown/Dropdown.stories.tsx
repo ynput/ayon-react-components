@@ -32,7 +32,6 @@ const Template = (args: DropdownProps) => {
   const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
 
   const handleClear = () => {
-    args.onClear?.()
     // if minSelected is set, we need to set the value to the minSelected
     const newValue = args.minSelected ? options.slice(0, args.minSelected).map((o) => o.value) : []
     setValue(newValue)
@@ -49,7 +48,7 @@ const Template = (args: DropdownProps) => {
       value={value}
       onChange={handleChange}
       options={args.options || options}
-      onClear={args.onClear ? handleClear : undefined}
+      onClear={handleClear}
       widthExpand
       style={{
         width: 250,

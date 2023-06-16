@@ -428,13 +428,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (isOpen && valueRef.current && optionsRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
         const valueWidth = valueRec.width
+        const valueHeight = valueRec.height
 
         const optionsRec = optionsRef.current.getBoundingClientRect()
         const optionsHeight = optionsRec.height
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        let y = valueRec.y
+        let y = valueRec.y + valueHeight
 
         // check it's not vertically off screen
         if (optionsHeight + y + 20 > window.innerHeight) {
@@ -600,15 +601,31 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           }
         }
       }
+      // update temp value
       // update state
       setSelected(newSelected)
       // if not multi, close
       if (!multiSelect || (addingNew && searchForm)) handleClose(undefined, newSelected)
     }
 
+    const handleClear = () => {
+      console.log('clearing')
+      if (!onClear) return
+      if (value.length > minSelected) {
+        setSelected([])
+        onClear()
+        setIsOpen(false)
+      }
+    }
+
     const handleOpen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+      console.log('click')
       // check if onClear was clicked
-      if ((e.target as HTMLDivElement).id === 'clear') return
+      if ((e.target as HTMLDivElement).id === 'clear') return handleClear()
+
+      if (isOpen) {
+        return handleClose()
+      }
 
       if (disabled) return
       e.stopPropagation()
@@ -711,14 +728,15 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const labels = useMemo(() => {
+      const values = isOpen ? selected : value
       let result: any[] = []
       options.forEach((o) => {
-        if (value.includes(o[dataKey])) {
+        if (values.includes(o[dataKey])) {
           result.push(o[labelKey] || o[dataKey])
         }
       })
       return result
-    }, [options, value, dataKey, labelKey])
+    }, [options, value, dataKey, labelKey, selected, isOpen])
 
     const displayIcon = useMemo(() => {
       if (!value.length || valueTemplate === 'tags') return null
@@ -737,11 +755,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
 
     const DefaultValueTemplateProps = {
-      value,
+      value: isOpen ? selected : value,
       isMultiple,
       dropIcon,
       displayIcon,
-      onClear: value.length > minSelected ? onClear : undefined,
+      onClear: onClear ? handleClear : undefined,
       style: valueStyle,
       placeholder,
       isOpen,
@@ -753,7 +771,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
         return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
-    }, [valueTemplate, value])
+    }, [valueTemplate, value, isOpen, onClear, selected])
 
     return (
       <DropdownStyled
@@ -772,7 +790,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
           >
             {valueTemplateNode ? (
-              valueTemplateNode(value)
+              valueTemplateNode(isOpen ? selected : value)
             ) : (
               <DefaultValueTemplate {...DefaultValueTemplateProps}>
                 {disabled && placeholder

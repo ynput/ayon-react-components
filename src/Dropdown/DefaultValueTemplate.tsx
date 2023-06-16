@@ -32,10 +32,6 @@ const DefaultValueStyled = styled.div`
         &:not(#clear) {
           transform: rotate(180deg);
         }
-        &#clear {
-          opacity: 0;
-          transform: scale(0);
-        }
       `}
   }
 `

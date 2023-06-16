@@ -64,7 +64,7 @@ const VersionSelect: FC<VersionSelectProps> = forwardRef(
         onChange={(v) => onChange(v.map((v) => v.toString()))}
         valueStyle={{ minWidth: 100, ...props.valueStyle }}
         listStyle={{ ...props.listStyle }}
-        itemStyle={{ translate: '0 30px', ...props.itemStyle }}
+        itemStyle={{ ...props.itemStyle }}
         widthExpand
         disableReorder
         disabledValues={disabledVersions}
