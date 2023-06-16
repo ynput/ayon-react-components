@@ -451,7 +451,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
         if (widthExpand) setMinWidth(valueWidth)
 
-        console.log(optionsHeight)
+        // console.log(optionsHeight)
 
         // then start animation
         setStartAnimation(true)
@@ -609,7 +609,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const handleClear = () => {
-      console.log('clearing')
+      // console.log('clearing')
       if (!onClear) return
       if (value.length > minSelected) {
         setSelected([])
@@ -619,7 +619,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const handleOpen = (e: React.MouseEvent<HTMLButtonElement>): void => {
-      console.log('click')
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') return handleClear()
 
