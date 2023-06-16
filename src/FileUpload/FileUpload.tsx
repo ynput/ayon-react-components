@@ -122,7 +122,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     const multiple = mode === 'multiple' || mode === 'sequence'
 
     // handles the drag events
-    const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleDrag = (e: React.DragEvent<HTMLDivElement> | React.DragEvent<HTMLFormElement>) => {
       e.preventDefault()
       e.stopPropagation()
       if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -229,7 +229,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     return (
       <UploadForm
-        // onDragEnter={handleDrag}
+        onDragEnter={handleDrag}
         onSubmit={(e) => e.preventDefault()}
         style={style}
         className={className}
