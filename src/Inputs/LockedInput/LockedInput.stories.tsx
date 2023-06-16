@@ -20,6 +20,11 @@ export const Default: Story = {
     placeholder: 'Username...',
     onEdit: undefined,
   },
+  render: (args) => {
+    const [value, setValue] = useState(args.value)
+
+    return <LockedInput {...args} value={value} onSubmit={setValue} />
+  },
 }
 
 // FIX: broken state

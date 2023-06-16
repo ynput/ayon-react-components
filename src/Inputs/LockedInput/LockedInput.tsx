@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { InputText } from '../InputText'
 import { Button } from '../../Button'
 import { IconType } from '../../Icon'
 
-const UsernameStyled = styled.div`
+const UsernameStyled = styled.form`
   display: flex;
   flex-direction: row;
   gap: 4px;
@@ -14,8 +14,22 @@ const UsernameStyled = styled.div`
   }
 `
 
+const StyledInputText = styled(InputText)<{ $open: boolean }>`
+  ${({ $open }) =>
+    !$open &&
+    css`
+      cursor: pointer;
+      background-color: var(--button-background);
+      font-style: normal;
+
+      &:hover {
+        background-color: var(--button-background-hover);
+      }
+    `}
+`
+
 export interface LockedInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLDivElement>, 'onSubmit'> {
+  extends Omit<React.InputHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
   value: string
   onSubmit?: (value: string) => void
   onEdit?: () => void
@@ -29,7 +43,7 @@ export interface LockedInputProps
   type?: React.HTMLInputTypeAttribute
 }
 
-export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
+export const LockedInput = forwardRef<HTMLFormElement, LockedInputProps>(
   (
     {
       value,
@@ -55,7 +69,11 @@ export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
       setEditing(true)
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = (
+      e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
+    ) => {
+      console.log(editingValue)
+      e?.preventDefault()
       setEditing(false)
       onSubmit && onSubmit(editingValue)
     }
@@ -69,6 +87,7 @@ export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
     }
 
     const handleCancel = () => {
+      console.log('cancel')
       setEditing(false)
       setEditingValue(value)
       onCancel && onCancel()
@@ -82,22 +101,24 @@ export const LockedInput = forwardRef<HTMLDivElement, LockedInputProps>(
     }, [disabled, editing])
 
     return (
-      <UsernameStyled key={label} ref={ref} {...props}>
-        <InputText
+      <UsernameStyled key={label} ref={ref} {...props} onSubmit={handleSubmit}>
+        <StyledInputText
           value={editing ? editingValue : value}
-          disabled={!editing}
+          readOnly={!editing}
           onChange={handleChange}
           type={type}
+          onClick={onEdit || handleOpen}
+          $open={editing}
         />
         {!disabled &&
           (editing ? (
             <>
+              {!fullUnlock && <Button icon="done" onClick={handleSubmit} label={saveLabel} />}
               <Button
                 icon={fullUnlock ? 'lock' : 'cancel'}
                 onClick={handleCancel}
                 label={cancelLabel}
               />
-              {!fullUnlock && <Button icon="done" onClick={handleSubmit} label={saveLabel} />}
             </>
           ) : (
             <Button icon={editIcon} onClick={onEdit || handleOpen} />
