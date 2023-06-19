@@ -792,7 +792,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               valueTemplateNode(isOpen ? selected : value)
             ) : (
               <DefaultValueTemplate {...DefaultValueTemplateProps}>
-                {disabled && placeholder
+                {!labels.length && disabled && placeholder
                   ? placeholder
                   : labels.length
                   ? labels.join(', ')
