@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect } from 'react'
+import { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import styled, { css, keyframes } from 'styled-components'
@@ -9,13 +9,27 @@ import { Icon, IconType } from '../Icon'
 import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 
-// background acts as a blocker
-const BackdropStyled = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: unset;
-  z-index: 11;
-`
+/**
+ * Hook that alerts clicks outside of the passed ref
+ */
+function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void): void {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event: MouseEvent): void {
+      if (refs.every((ref) => ref.current && !ref.current.contains(event.target as Node))) {
+        callback && callback()
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [refs, callback])
+}
 
 const ButtonStyled = styled.button<{
   $isChanged: boolean
@@ -573,12 +587,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueRef.current?.focus()
     }
 
+    const formRef = useRef<HTMLFormElement>(null)
+    useOutsideAlerter([formRef, valueRef], handleClose)
+
     const handleChange = (
       value: string | number,
       index: number,
       e?: React.MouseEvent<HTMLLIElement>,
     ): void => {
       e?.stopPropagation()
+      e?.preventDefault()
 
       let newSelected = [...selected]
 
@@ -609,9 +627,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const handleClear = () => {
-      // console.log('clearing')
       if (!onClear) return
-      if (value.length > minSelected) {
+
+      if (selected.length > minSelected) {
         setSelected([])
         onClear()
         setIsOpen(false)
@@ -632,6 +650,15 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       onOpen && onOpen()
     }
+
+    // const handleBlur = (e: React.FocusEvent<HTMLFormElement>): void => {
+    //   console.log(e.currentTarget, e.relatedTarget)
+    //   // check if target is outside of the form
+    //   if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+    //     console.log('outside')
+    //     handleClose()
+    //   }
+    // }
 
     const handleSearchSubmit = (e: React.MouseEvent<HTMLFormElement>): void => {}
 
@@ -770,7 +797,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
         return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
-    }, [valueTemplate, value, isOpen, onClear, selected])
+    }, [valueTemplate, value, isOpen, onClear, selected, handleClear, isMultiple, dropIcon])
 
     return (
       <DropdownStyled
@@ -801,7 +828,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             )}
           </ButtonStyled>
         )}
-        {isOpen && <BackdropStyled onClick={handleClose} />}
         {isOpen && options && (
           <ContainerStyled
             style={{
@@ -814,6 +840,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={true}
             onSubmit={handleSearchSubmit}
             $startAnimation={startAnimation}
+            ref={formRef}
           >
             {(search || editable) && (
               <SearchStyled $startAnimation={startAnimation} className="search">
