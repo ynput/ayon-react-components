@@ -429,6 +429,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
 
+    const [maxShown, setMaxShown] = useState(maxOptionsShown)
+
+    useEffect(() => {
+      if (maxOptionsShown !== maxShown) {
+        setMaxShown(maxOptionsShown)
+      }
+    }, [maxOptionsShown])
+
     // REFS
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
@@ -651,15 +659,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onOpen && onOpen()
     }
 
-    // const handleBlur = (e: React.FocusEvent<HTMLFormElement>): void => {
-    //   console.log(e.currentTarget, e.relatedTarget)
-    //   // check if target is outside of the form
-    //   if (!e.currentTarget.contains(e.relatedTarget as Node)) {
-    //     console.log('outside')
-    //     handleClose()
-    //   }
-    // }
-
     const handleSearchSubmit = (e: React.MouseEvent<HTMLFormElement>): void => {}
 
     // KEY BOARD CONTROL
@@ -753,6 +752,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
     }
 
+    const handleShowMore = () => {
+      setMaxShown(maxShown + 50)
+    }
+
     const labels = useMemo(() => {
       const values = isOpen ? selected : value
       let result: any[] = []
@@ -774,8 +777,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     // splice to maxOptionsShown or 25 items
     let showOptions = useMemo(
-      () => (search || editable ? [...options].splice(0, maxOptionsShown) : options),
-      [options, maxOptionsShown],
+      () => (search || editable ? [...options].splice(0, maxShown) : options),
+      [options, maxShown],
     )
 
     let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
@@ -904,14 +907,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               ))}
               {!!hiddenLength && (
                 <ListItemStyled
-                  onClick={() => searchRef.current?.focus()}
+                  onClick={handleShowMore}
                   $focused={false}
                   $usingKeyboard={false}
                   $startAnimation={startAnimation}
                   className="option"
                 >
                   <DefaultItemStyled $isSelected={false} className="option-child hidden">
-                    <span>{`Search ${hiddenLength} more...`}</span>
+                    <span>{`Show ${50} more...`}</span>
                   </DefaultItemStyled>
                 </ListItemStyled>
               )}
