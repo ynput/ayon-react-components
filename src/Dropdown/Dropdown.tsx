@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect } from 'react'
+import { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import styled, { css, keyframes } from 'styled-components'
@@ -9,13 +9,27 @@ import { Icon, IconType } from '../Icon'
 import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 
-// background acts as a blocker
-const BackdropStyled = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: unset;
-  z-index: 11;
-`
+/**
+ * Hook that alerts clicks outside of the passed ref
+ */
+function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void): void {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event: MouseEvent): void {
+      if (refs.every((ref) => ref.current && !ref.current.contains(event.target as Node))) {
+        callback && callback()
+      }
+    }
+    // Bind the event listener
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [refs, callback])
+}
 
 const ButtonStyled = styled.button<{
   $isChanged: boolean
@@ -415,6 +429,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
 
+    const [maxShown, setMaxShown] = useState(maxOptionsShown)
+
+    useEffect(() => {
+      if (maxOptionsShown !== maxShown) {
+        setMaxShown(maxOptionsShown)
+      }
+    }, [maxOptionsShown])
+
     // REFS
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
@@ -573,12 +595,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueRef.current?.focus()
     }
 
+    const formRef = useRef<HTMLFormElement>(null)
+    useOutsideAlerter([formRef, valueRef], handleClose)
+
     const handleChange = (
       value: string | number,
       index: number,
       e?: React.MouseEvent<HTMLLIElement>,
     ): void => {
       e?.stopPropagation()
+      e?.preventDefault()
 
       let newSelected = [...selected]
 
@@ -609,9 +635,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const handleClear = () => {
-      // console.log('clearing')
       if (!onClear) return
-      if (value.length > minSelected) {
+
+      if (selected.length > minSelected) {
         setSelected([])
         onClear()
         setIsOpen(false)
@@ -726,6 +752,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
     }
 
+    const handleShowMore = () => {
+      setMaxShown(maxShown + 50)
+    }
+
     const labels = useMemo(() => {
       const values = isOpen ? selected : value
       let result: any[] = []
@@ -747,8 +777,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     // splice to maxOptionsShown or 25 items
     let showOptions = useMemo(
-      () => (search || editable ? [...options].splice(0, maxOptionsShown) : options),
-      [options, maxOptionsShown],
+      () => (search || editable ? [...options].splice(0, maxShown) : options),
+      [options, maxShown],
     )
 
     let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
@@ -770,7 +800,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
         return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
-    }, [valueTemplate, value, isOpen, onClear, selected])
+    }, [valueTemplate, value, isOpen, onClear, selected, handleClear, isMultiple, dropIcon])
 
     return (
       <DropdownStyled
@@ -801,7 +831,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             )}
           </ButtonStyled>
         )}
-        {isOpen && <BackdropStyled onClick={handleClose} />}
         {isOpen && options && (
           <ContainerStyled
             style={{
@@ -814,6 +843,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={true}
             onSubmit={handleSearchSubmit}
             $startAnimation={startAnimation}
+            ref={formRef}
           >
             {(search || editable) && (
               <SearchStyled $startAnimation={startAnimation} className="search">
@@ -877,14 +907,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               ))}
               {!!hiddenLength && (
                 <ListItemStyled
-                  onClick={() => searchRef.current?.focus()}
+                  onClick={handleShowMore}
                   $focused={false}
                   $usingKeyboard={false}
                   $startAnimation={startAnimation}
                   className="option"
                 >
                   <DefaultItemStyled $isSelected={false} className="option-child hidden">
-                    <span>{`Search ${hiddenLength} more...`}</span>
+                    <span>{`Show ${50} more...`}</span>
                   </DefaultItemStyled>
                 </ListItemStyled>
               )}

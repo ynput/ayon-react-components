@@ -168,6 +168,6 @@ $background-color: var(--color-grey-01);
   left: 40px !important;
 }
 
-// .react-datepicker {
-//   background-color: green;
-// }
+.react-datepicker {
+  z-index: 200;
+}
