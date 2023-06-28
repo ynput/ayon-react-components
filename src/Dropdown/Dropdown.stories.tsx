@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Dropdown, DropdownProps } from '.'
 import { useState } from 'react'
 import { Button } from '../Button'
+import { IconType } from '../Icon'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -12,7 +13,7 @@ export default meta
 
 type Story = StoryObj<typeof Dropdown>
 
-const options = [
+const options: { value: IconType; keyword: string }[] = [
   { value: 'favorite', keyword: 'like' },
   { value: 'search', keyword: 'find' },
   { value: 'settings', keyword: 'configuration' },
@@ -20,7 +21,6 @@ const options = [
   { value: 'account_circle', keyword: 'user' },
   { value: 'add', keyword: 'create' },
   { value: 'add_circle', keyword: 'plus' },
-  { value: 'add_circle_outline', keyword: 'empty_plus' },
   { value: 'add_shopping_cart', keyword: 'cart' },
   { value: 'alarm', keyword: 'clock' },
   { value: 'alarm_add', keyword: 'clock_plus' },
@@ -138,7 +138,7 @@ export const CustomTemplates: Story = {
         {value?.map((v) => (
           <Button
             label={v.toString()}
-            icon={v.toString()}
+            icon={v as IconType}
             style={{
               marginLeft: 4,
               backgroundColor: 'unset',
