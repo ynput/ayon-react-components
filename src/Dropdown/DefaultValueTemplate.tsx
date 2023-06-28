@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { Icon } from '../Icon'
+import { Icon, IconType } from '../Icon'
 import { DropdownProps } from './Dropdown'
 
 const DefaultValueStyled = styled.div`
@@ -89,12 +89,12 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         <>
           <ContentStyled>
             {isMultiple && <span>{`Multiple (`}</span>}
-            {displayIcon && <Icon icon={displayIcon} />}
+            {displayIcon && <Icon icon={displayIcon as IconType} />}
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
           {onClear && (
-            <Icon icon="clear" onClick={onClear} id="clear" className="control" tabIndex={0} />
+            <Icon icon={'close'} onClick={onClear} id="clear" className="control" tabIndex={0} />
           )}
         </>
       )}

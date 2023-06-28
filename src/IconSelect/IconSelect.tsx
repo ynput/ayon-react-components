@@ -113,6 +113,7 @@ export const IconSelect = forwardRef<HTMLDivElement, IconSelectProps>(
         {...props}
         maxOptionsShown={Math.max(props.maxOptionsShown || 25, featured.length)}
         minSelected={1}
+        widthExpand={false}
       />
     )
   },

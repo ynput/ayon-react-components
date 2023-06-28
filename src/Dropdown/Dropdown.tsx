@@ -382,7 +382,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onClose,
       onChange,
       onOpen,
-      widthExpand,
+      widthExpand = true,
       align = 'left',
       multiSelect,
       isMultiple,
