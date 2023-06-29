@@ -570,6 +570,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const handleClose = (
       e?: React.MouseEvent<HTMLDivElement>,
       changeValue?: (string | number)[],
+      outside?: boolean,
     ): void => {
       // changeValue is used on single select
       changeValue = changeValue || selected
@@ -591,7 +592,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       setSearchForm('')
 
       // check for difs
-      if (isEqual(changeValue, value) && !isMultiple) return
+      if ((isEqual(changeValue, value) || outside) && !isMultiple) return
       // commit changes
       onChange && onChange(changeValue)
       //   reset selected
@@ -602,7 +603,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const formRef = useRef<HTMLFormElement>(null)
-    useOutsideAlerter([formRef, valueRef], handleClose)
+    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const handleChange = (
       value: string | number,
