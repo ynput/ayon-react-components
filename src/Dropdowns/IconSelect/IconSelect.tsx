@@ -1,7 +1,7 @@
 import { forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Dropdown, DropdownProps } from '../Dropdown'
-import { Icon, IconType, iconSet } from '../Icon'
+import { Icon, IconType, iconSet } from '../../Icon'
 
 interface IconStyledProps {
   $valueTemplate?: boolean

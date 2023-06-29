@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { UserImagesStacked } from '../User/UserImagesStacked'
+import { UserImagesStacked } from '../../User/UserImagesStacked'
 import { forwardRef } from 'react'
 
 const FieldStyled = styled.div<{

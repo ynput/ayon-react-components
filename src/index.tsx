@@ -2,19 +2,23 @@
 
 // ASSIGNEE
 // assigneeField
-export { AssigneeField } from './AssigneeSelect/AssigneeField'
+export { AssigneeField } from './Dropdowns/AssigneeSelect/AssigneeField'
 // assigneeDropdownTemplate
 // export { AssigneeDropdownTemplate } from './AssigneeSelect/AssigneeDropdownTemplate'
 // assigneeSelect
-export { AssigneeSelect } from './AssigneeSelect/AssigneeSelect'
+export { AssigneeSelect } from './Dropdowns/AssigneeSelect/AssigneeSelect'
 // tagsSelect
-export { TagsSelect } from './TagsSelect'
+export { TagsSelect } from './Dropdowns/TagsSelect'
+// iconSelect
+export { IconSelect } from './Dropdowns/IconSelect'
+// versionSelect
+export { VersionSelect } from './Dropdowns/VersionSelect'
 
 // BUTTONS
 export { Button } from './Button'
 
 // dropdown
-export { Dropdown, DefaultValueTemplate } from './Dropdown'
+export { Dropdown, DefaultValueTemplate } from './Dropdowns/Dropdown'
 
 // FileUpload
 export { FileUpload } from './FileUpload'
@@ -22,9 +26,6 @@ export { FileUpload } from './FileUpload'
 // ICONS
 // icon
 export { Icon } from './Icon'
-
-// iconSelect
-export { IconSelect } from './IconSelect'
 
 // INPUT
 // text

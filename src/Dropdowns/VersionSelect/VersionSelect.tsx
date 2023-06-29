@@ -28,7 +28,7 @@ export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'val
   onChange: (value: string[]) => void
 }
 
-const VersionSelect: FC<VersionSelectProps> = forwardRef(
+export const VersionSelect: FC<VersionSelectProps> = forwardRef(
   ({ value, versions, onChange, ...props }, ref: Ref<HTMLDivElement>) => {
     // we need to find the intersection of all versions
     const intersection = useMemo(
@@ -82,5 +82,3 @@ const VersionSelect: FC<VersionSelectProps> = forwardRef(
     )
   },
 )
-
-export default VersionSelect

@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { Icon, IconType } from '../Icon'
+import { Icon, IconType } from '../../Icon'
 import { DropdownProps } from './Dropdown'
 
 const DefaultValueStyled = styled.div`

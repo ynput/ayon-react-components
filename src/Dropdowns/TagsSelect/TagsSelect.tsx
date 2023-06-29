@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { TagsSelectValueTemplate } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
 import styled from 'styled-components'
-import { Icon } from '../Icon'
+import { Icon } from '../../Icon'
 
 const StyledDropdown = styled(Dropdown)`
   .options {
