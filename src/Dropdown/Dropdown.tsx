@@ -329,7 +329,13 @@ export interface DropdownProps {
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
-  valueTemplate?: ((value?: (string | number)[]) => React.ReactNode) | 'tags'
+  valueTemplate?:
+    | ((
+        value: (string | number)[],
+        selected: (string | number)[],
+        isOpen: boolean,
+      ) => React.ReactNode)
+    | 'tags'
   dataKey?: string
   labelKey?: string
   options: Array<any>
@@ -819,7 +825,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
           >
             {valueTemplateNode ? (
-              valueTemplateNode(isOpen ? selected : value)
+              valueTemplateNode(value, selected, isOpen)
             ) : (
               <DefaultValueTemplate {...DefaultValueTemplateProps}>
                 {!labels.length && disabled && placeholder
