@@ -96,8 +96,13 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
     return (
       <StyledDropdown
         value={value}
-        valueTemplate={(v) => (
-          <TagsSelectValueTemplate value={v || []} {...props} tags={tags} editor={editor} />
+        valueTemplate={(v, s, o) => (
+          <TagsSelectValueTemplate
+            value={(o ? s : v) || []}
+            {...props}
+            tags={tags}
+            editor={editor}
+          />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <DefaultItemStyled
