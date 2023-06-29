@@ -633,6 +633,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           }
         }
       }
+
+      if (addingNew) {
+        // focus on search
+        searchRef.current?.focus()
+      }
+
       // update temp value
       // update state
       setSelected(newSelected)
