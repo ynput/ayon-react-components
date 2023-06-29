@@ -3,7 +3,7 @@ import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { TagsSelectValueTemplate } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
 import styled from 'styled-components'
-import { Icon } from '../Icon'
+import { Icon } from '../../Icon'
 
 const StyledDropdown = styled(Dropdown)`
   .options {
@@ -96,8 +96,13 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
     return (
       <StyledDropdown
         value={value}
-        valueTemplate={(v) => (
-          <TagsSelectValueTemplate value={v || []} {...props} tags={tags} editor={editor} />
+        valueTemplate={(v, s, o) => (
+          <TagsSelectValueTemplate
+            value={(o ? s : v) || []}
+            {...props}
+            tags={tags}
+            editor={editor}
+          />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <DefaultItemStyled

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { UserImage } from '../User/UserImage'
+import { UserImage } from '../../User/UserImage'
 
 const RowStyled = styled.span`
   cursor: pointer;

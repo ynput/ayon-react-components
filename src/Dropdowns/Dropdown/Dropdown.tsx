@@ -4,8 +4,8 @@ import { useRef } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
-import { InputText } from '../Inputs/InputText'
-import { Icon, IconType } from '../Icon'
+import { InputText } from '../../Inputs/InputText'
+import { Icon, IconType } from '../../Icon'
 import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 
@@ -329,7 +329,13 @@ export interface DropdownProps {
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
-  valueTemplate?: ((value?: (string | number)[]) => React.ReactNode) | 'tags'
+  valueTemplate?:
+    | ((
+        value: (string | number)[],
+        selected: (string | number)[],
+        isOpen: boolean,
+      ) => React.ReactNode)
+    | 'tags'
   dataKey?: string
   labelKey?: string
   options: Array<any>
@@ -564,6 +570,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const handleClose = (
       e?: React.MouseEvent<HTMLDivElement>,
       changeValue?: (string | number)[],
+      outside?: boolean,
     ): void => {
       // changeValue is used on single select
       changeValue = changeValue || selected
@@ -585,7 +592,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       setSearchForm('')
 
       // check for difs
-      if (isEqual(changeValue, value) && !isMultiple) return
+      if ((isEqual(changeValue, value) || outside) && !isMultiple) return
       // commit changes
       onChange && onChange(changeValue)
       //   reset selected
@@ -596,7 +603,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }
 
     const formRef = useRef<HTMLFormElement>(null)
-    useOutsideAlerter([formRef, valueRef], handleClose)
+    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const handleChange = (
       value: string | number,
@@ -627,6 +634,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
           }
         }
       }
+
+      if (addingNew) {
+        // focus on search
+        searchRef.current?.focus()
+      }
+
       // update temp value
       // update state
       setSelected(newSelected)
@@ -819,7 +832,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
           >
             {valueTemplateNode ? (
-              valueTemplateNode(isOpen ? selected : value)
+              valueTemplateNode(value, selected, isOpen)
             ) : (
               <DefaultValueTemplate {...DefaultValueTemplateProps}>
                 {!labels.length && disabled && placeholder

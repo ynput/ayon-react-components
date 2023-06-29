@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Dropdown, DropdownProps } from '.'
 import { useState } from 'react'
-import { Button } from '../Button'
-import { IconType } from '../Icon'
+import { Button } from '../../Button'
+import { IconType } from '../../Icon'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,

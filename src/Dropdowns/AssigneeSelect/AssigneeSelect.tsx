@@ -31,7 +31,14 @@ export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
     return (
       <Dropdown
         value={value}
-        valueTemplate={() => <AssigneeField value={assignedUsers} {...props} />}
+        valueTemplate={(value, selected, isOpen) => (
+          <AssigneeField
+            value={
+              isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
+            }
+            {...props}
+          />
+        )}
         options={options}
         dataKey={'name'}
         disabled={disabled}

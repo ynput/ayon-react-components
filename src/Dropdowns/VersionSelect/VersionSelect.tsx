@@ -2,7 +2,7 @@ import { FC, useMemo, forwardRef, Ref } from 'react'
 import { Dropdown, DropdownProps } from '../Dropdown'
 import styled, { css } from 'styled-components'
 
-const StyledItem = styled.div<{ $disabled: boolean }>`
+const StyledItem = styled.div<{ $disabled: boolean; $isSelected: boolean }>`
   height: 30px;
   display: flex;
   align-items: center;
@@ -14,6 +14,12 @@ const StyledItem = styled.div<{ $disabled: boolean }>`
     css`
       opacity: 0.5;
     `}
+
+  ${({ $isSelected }) =>
+    $isSelected &&
+    css`
+      background: var(--color-row-hl);
+    `}
 `
 
 export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'value' | 'onChange'> {
@@ -22,7 +28,7 @@ export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'val
   onChange: (value: string[]) => void
 }
 
-const VersionSelect: FC<VersionSelectProps> = forwardRef(
+export const VersionSelect: FC<VersionSelectProps> = forwardRef(
   ({ value, versions, onChange, ...props }, ref: Ref<HTMLDivElement>) => {
     // we need to find the intersection of all versions
     const intersection = useMemo(
@@ -58,8 +64,11 @@ const VersionSelect: FC<VersionSelectProps> = forwardRef(
           value: version,
           label: version,
         }))}
-        itemTemplate={({ value }) => (
-          <StyledItem $disabled={!intersection.includes(value)}>{`${value}`}</StyledItem>
+        itemTemplate={({ value }, isActive, isSelected) => (
+          <StyledItem
+            $disabled={!intersection.includes(value)}
+            $isSelected={versions.length < 2 && isSelected}
+          >{`${value}`}</StyledItem>
         )}
         onChange={(v) => onChange(v.map((v) => v.toString()))}
         valueStyle={{ minWidth: 100, ...props.valueStyle }}
@@ -73,5 +82,3 @@ const VersionSelect: FC<VersionSelectProps> = forwardRef(
     )
   },
 )
-
-export default VersionSelect

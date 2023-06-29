@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
-import VersionSelect, { VersionSelectProps } from './VersionSelect'
-import { Button } from '../Button'
+import { VersionSelectProps, VersionSelect } from './VersionSelect'
+import { Button } from '../../Button'
 
 const meta: Meta<typeof VersionSelect> = {
   component: VersionSelect,
@@ -25,10 +25,7 @@ const Template = ({ value: initValue, versions }: VersionSelectProps) => {
 
 export const Default: Story = {
   args: {
-    versions: [
-      ['v001', 'v002', 'v003', 'v010'],
-      ['v001', 'v002', 'v010', 'v003', 'v005'],
-    ],
+    versions: [['v001', 'v002', 'v003', 'v010']],
     value: ['v001'],
   },
   render: Template,
@@ -37,6 +34,7 @@ export const Default: Story = {
 export const Multiple: Story = {
   args: {
     ...Default.args,
+    versions: [...(Default?.args?.versions || []), ['v001', 'v002', 'v010', 'v003', 'v005']],
     value: ['v002', 'v005'],
   },
   render: Template,

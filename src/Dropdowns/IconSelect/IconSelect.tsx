@@ -1,7 +1,7 @@
 import { forwardRef, useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { Dropdown, DropdownProps } from '../Dropdown'
-import { Icon, IconType, iconSet } from '../Icon'
+import { Icon, IconType, iconSet } from '../../Icon'
 
 interface IconStyledProps {
   $valueTemplate?: boolean
@@ -100,7 +100,7 @@ export const IconSelect = forwardRef<HTMLDivElement, IconSelectProps>(
       <Dropdown
         value={value}
         multiSelect={multiSelect}
-        valueTemplate={(v) => <IconTemplate value={v || []} valueTemplate />}
+        valueTemplate={(v, s, o) => <IconTemplate value={(o ? s : v) || []} valueTemplate />}
         options={dropdownOptions}
         itemTemplate={({ value }, isActive, isSelected) => (
           <IconTemplate value={[value]} isActive={isActive} isSelected={isSelected} />
