@@ -42,6 +42,7 @@ const ButtonStyled = styled.button<{
   padding: 0;
   font: inherit;
   cursor: pointer;
+  background-color: var(--color-grey-01);
   &:not(:focus) {
     border: inherit;
   }
@@ -66,7 +67,16 @@ const ButtonStyled = styled.button<{
   ${({ $isChanged }) =>
     $isChanged &&
     css`
-      background-color: var(--color-row-hl);
+      background-color: var(--color-hl-00);
+      color: black;
+      .icon {
+        color: black;
+      }
+
+      :hover {
+        filter: brightness(1.15);
+        background-color: var(--color-hl-00);
+      }
     `}
 
   ${({ disabled }) =>
@@ -75,6 +85,10 @@ const ButtonStyled = styled.button<{
       background-color: var(--input-disabled-background-color) !important;
       color: var(--color-text-dim);
       font-style: italic;
+
+      .icon {
+        opacity: 0.3;
+      }
     `}
 `
 
@@ -372,7 +386,7 @@ export interface DropdownProps {
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
   (
     {
-      value = [],
+      value: initialValue = [],
       valueTemplate,
       valueStyle,
       listStyle,
@@ -409,7 +423,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     },
     ref,
   ) => {
-    value = useMemo(() => compact(value), [value])
+    const [value, setValue] = useState<(string | number)[]>([])
+
+    useEffect(() => {
+      setValue(compact(initialValue))
+    }, [initialValue])
+
+    // value = useMemo(() => compact(value), [value])
 
     // if there are multiple but multiSelect is false
     if (!multiSelect && value.length > 1) {
@@ -591,8 +611,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       // reset search
       setSearchForm('')
 
-      // check for difs
-      if ((isEqual(changeValue, value) || outside) && !isMultiple) return
+      // check if value has changed
+      const isSame = isEqual(changeValue, value)
+
+      if (isSame) {
+        // if not isMultiple,
+        if (!isMultiple) return
+
+        if (outside) return
+      }
+
       // commit changes
       onChange && onChange(changeValue)
       //   reset selected

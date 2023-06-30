@@ -1,11 +1,9 @@
 import styled, { css } from 'styled-components'
 import { UserImagesStacked } from '../../User/UserImagesStacked'
 import { forwardRef } from 'react'
+import { Icon } from '../../Icon'
 
-const FieldStyled = styled.div<{
-  disabled?: boolean
-  isMultiple?: boolean
-}>`
+const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   position: relative;
   padding: 4px;
   border-radius: 4px;
@@ -32,7 +30,7 @@ const FieldStyled = styled.div<{
         color: var(--color-text-dim);
       }
       img {
-        opacity: 0.75;
+        opacity: 0.5;
       }
       background-color: var(--input-disabled-background-color);
     `}
@@ -108,9 +106,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
             </>
           ) : (
             <>
-              {emptyIcon && !isMultiple && (
-                <span className="material-symbols-outlined">add_circle</span>
-              )}
+              {emptyIcon && !isMultiple && <Icon icon="add_circle" />}
               {emptyMessage && <span>{emptyMessage}</span>}
             </>
           )

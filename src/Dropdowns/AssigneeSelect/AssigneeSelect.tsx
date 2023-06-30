@@ -36,6 +36,7 @@ export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
             value={
               isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
             }
+            disabled={disabled}
             {...props}
           />
         )}

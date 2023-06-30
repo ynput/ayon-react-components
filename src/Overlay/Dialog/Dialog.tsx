@@ -1,6 +1,16 @@
 import { KeyboardEvent, MouseEvent, forwardRef, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../../Button'
+
+// fade in animation keyframes
+const fadeInAnimation = keyframes`
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+`
 
 const Shade = styled.div`
   position: fixed;
@@ -15,6 +25,21 @@ const Shade = styled.div`
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 500;
   cursor: pointer;
+
+  /* fade in animation */
+  animation: ${fadeInAnimation} 0.13s ease-in-out;
+`
+
+// opening up animation keyframes
+const openAnimation = keyframes`
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 `
 
 const DialogWindow = styled.div<{ $noHeader: boolean }>`
@@ -33,6 +58,9 @@ const DialogWindow = styled.div<{ $noHeader: boolean }>`
   :focus {
     outline: none;
   }
+
+  /* open animation */
+  animation: ${openAnimation} 0.13s ease-in-out;
 
   /* add padding to top if no header */
 
@@ -63,6 +91,7 @@ const DialogFooter = styled(BaseDialogEdge)`
 const DialogBody = styled.div`
   display: flex;
   flex-direction: column;
+  overflow: auto;
 
   flex-grow: 1;
 `

@@ -5,7 +5,6 @@ import { DropdownProps } from './Dropdown'
 
 const DefaultValueStyled = styled.div`
   border: 1px solid var(--color-grey-03);
-  background-color: var(--color-grey-01);
   border-radius: var(--border-radius);
   height: 100%;
   display: flex;
