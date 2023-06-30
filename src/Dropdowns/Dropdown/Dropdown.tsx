@@ -382,7 +382,7 @@ export interface DropdownProps {
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
   (
     {
-      value = [],
+      value: initialValue = [],
       valueTemplate,
       valueStyle,
       listStyle,
@@ -419,7 +419,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     },
     ref,
   ) => {
-    value = useMemo(() => compact(value), [value])
+    const [value, setValue] = useState<(string | number)[]>([])
+
+    useEffect(() => {
+      setValue(compact(initialValue))
+    }, [initialValue])
+
+    // value = useMemo(() => compact(value), [value])
 
     // if there are multiple but multiSelect is false
     if (!multiSelect && value.length > 1) {
@@ -601,8 +607,16 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       // reset search
       setSearchForm('')
 
-      // check for difs
-      if ((isEqual(changeValue, value) || outside) && !isMultiple) return
+      // check if value has changed
+      const isSame = isEqual(changeValue, value)
+
+      if (isSame) {
+        // if not isMultiple,
+        if (!isMultiple) return
+
+        if (outside) return
+      }
+
       // commit changes
       onChange && onChange(changeValue)
       //   reset selected
