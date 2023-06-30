@@ -85,6 +85,10 @@ const ButtonStyled = styled.button<{
       background-color: var(--input-disabled-background-color) !important;
       color: var(--color-text-dim);
       font-style: italic;
+
+      .icon {
+        opacity: 0.3;
+      }
     `}
 `
 
