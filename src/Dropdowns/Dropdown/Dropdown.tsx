@@ -42,6 +42,7 @@ const ButtonStyled = styled.button<{
   padding: 0;
   font: inherit;
   cursor: pointer;
+  background-color: var(--color-grey-01);
   &:not(:focus) {
     border: inherit;
   }
@@ -66,7 +67,16 @@ const ButtonStyled = styled.button<{
   ${({ $isChanged }) =>
     $isChanged &&
     css`
-      background-color: var(--color-row-hl);
+      background-color: var(--color-hl-00);
+      color: black;
+      .icon {
+        color: black;
+      }
+
+      :hover {
+        filter: brightness(1.15);
+        background-color: var(--color-hl-00);
+      }
     `}
 
   ${({ disabled }) =>
