@@ -1,9 +1,8 @@
-import { AssigneeField, AssigneeDropdownTemplate } from '.'
-import { Dropdown } from '../Dropdown'
+import { AssigneeField, AssigneeDropdownTemplate, AssigneeFieldProps } from '.'
+import { Dropdown, DropdownProps } from '../Dropdown'
 import { forwardRef, useMemo } from 'react'
 
-export interface AssigneeSelectProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'emptyMessage'> {
   value: string[]
   options: {
     name: string
@@ -16,28 +15,64 @@ export interface AssigneeSelectProps
   disabled?: boolean
   align?: 'left' | 'right'
   isMultiple?: boolean
+  placeholder?: string
+  emptyIcon?: AssigneeFieldProps['emptyIcon']
+  emptyMessage?: AssigneeFieldProps['emptyMessage']
+  size?: AssigneeFieldProps['size']
+  assigneeProps?: AssigneeFieldProps
+  onAssigneeFieldClick?: AssigneeFieldProps['onClick']
 }
 
 export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
-  ({ value = [], options = [], onChange, widthExpand, disabled, editor, align, ...props }, ref) => {
+  (
+    {
+      value = [],
+      options = [],
+      onChange,
+      widthExpand,
+      disabled,
+      editor,
+      align,
+      isMultiple,
+      placeholder,
+      emptyIcon,
+      emptyMessage: assigneeEmptyMessage,
+      size,
+      assigneeProps,
+      onAssigneeFieldClick,
+      ...props
+    },
+    ref,
+  ) => {
     // useMemo assignedUsers Objects
     const assignedUsers = useMemo(
       () => options.filter((option) => value.includes(option.name)),
       [value, options],
     )
 
-    if (!editor) return <AssigneeField value={assignedUsers} {...props} />
+    const assigneeFieldProps = {
+      value: assignedUsers,
+      disabled,
+      isMultiple,
+      placeholder,
+      emptyIcon,
+      onClick: onAssigneeFieldClick,
+      emptyMessage: assigneeEmptyMessage,
+      size,
+      ...assigneeProps,
+    }
+
+    if (!editor) return <AssigneeField {...assigneeFieldProps} />
 
     return (
       <Dropdown
         value={value}
         valueTemplate={(value, selected, isOpen) => (
           <AssigneeField
+            {...assigneeFieldProps}
             value={
               isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
             }
-            disabled={disabled}
-            {...props}
           />
         )}
         options={options}
@@ -53,6 +88,7 @@ export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
         search
         searchFields={['name', 'fullName', 'email']}
         ref={ref}
+        {...props}
       />
     )
   },
