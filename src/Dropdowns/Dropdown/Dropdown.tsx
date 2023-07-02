@@ -373,6 +373,10 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   maxOptionsShown?: number
   style?: CSSProperties
   className?: string
+  buttonClassName?: string
+  itemClassName?: string
+  valueClassName?: string
+  listClassName?: string
   widthExpand?: boolean
   searchFields?: string[]
   minSelected?: number
@@ -416,6 +420,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       maxOptionsShown = 25,
       style,
       className,
+      buttonClassName,
+      itemClassName,
+      valueClassName,
+      listClassName,
       minSelected = 0,
       dropIcon = 'expand_more',
       onClear,
@@ -839,6 +847,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       placeholder,
       isOpen,
       setStartAnimationFinished,
+      className: valueClassName,
     }
 
     // filter out valueTemplate
@@ -865,6 +874,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isChanged={!!isChanged}
             $isOpen={isOpen}
             style={buttonStyle}
+            className={`button ${buttonClassName}`}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
@@ -915,7 +925,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               $animationHeight={optionsHeight}
               $maxHeight={maxHeight}
               onAnimationEnd={() => setStartAnimationFinished(true)}
-              className="options"
+              className={'options'}
             >
               {showOptions.map((option, i) => (
                 <ListItemStyled
@@ -929,7 +939,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                     startAnimation && !startAnimationFinished && (search || editable || i !== 0)
                   }
                   tabIndex={0}
-                  className="option"
+                  className={`option ${listClassName}`}
                   $disabled={disabledValues.includes(option[dataKey])}
                 >
                   {itemTemplate ? (
@@ -944,7 +954,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                       $isSelected={selected.includes(option[dataKey])}
                       className={`option-child ${
                         value.includes(option[dataKey]) ? 'selected' : ''
-                      } ${value.includes(option[dataKey]) ? 'active' : ''}}`}
+                      } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
                       style={itemStyle}
                     >
                       {option.icon && <Icon icon={option.icon} />}
