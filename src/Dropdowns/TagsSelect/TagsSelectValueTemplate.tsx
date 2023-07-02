@@ -28,7 +28,7 @@ const DefaultValueTemplateStyled = styled(DefaultValueTemplate)`
     `}
 `
 
-interface TagsSelectValueTemplateProps extends Omit<DefaultValueTemplateProps, 'children'> {
+export interface TagsSelectValueTemplateProps extends Omit<DefaultValueTemplateProps, 'children'> {
   tags: TagsType
   editor?: boolean
 }
