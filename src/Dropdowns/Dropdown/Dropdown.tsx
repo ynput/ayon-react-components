@@ -42,7 +42,7 @@ const ButtonStyled = styled.button<{
   padding: 0;
   font: inherit;
   cursor: pointer;
-  background-color: var(--color-grey-01);
+  background-color: var(--color-grey-00);
   &:not(:focus) {
     border: inherit;
   }
@@ -335,11 +335,12 @@ const SearchStyled = styled.div`
 `
 
 // types
-export interface DropdownProps {
+export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
   itemStyle?: CSSProperties
   valueStyle?: CSSProperties
   listStyle?: CSSProperties
+  buttonStyle?: CSSProperties
   onOpen?: () => void
   onClose?: () => void
   value: Array<string | number>
@@ -381,6 +382,7 @@ export interface DropdownProps {
   maxHeight?: number
   disableReorder?: boolean
   disabledValues?: (string | number)[]
+  listInline?: boolean
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -395,6 +397,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       options = [],
       itemTemplate,
       itemStyle,
+      buttonStyle,
       searchFields = ['value'],
       valueIcon,
       message,
@@ -420,6 +423,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       maxHeight = 300,
       disableReorder,
       disabledValues = [],
+      listInline = false,
+      ...props
     },
     ref,
   ) => {
@@ -483,7 +488,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        let y = valueRec.y + valueHeight
+        let y = valueRec.y + (listInline ? 0 : valueHeight)
 
         // check it's not vertically off screen
         if (optionsHeight + y + 20 > window.innerHeight) {
@@ -848,8 +853,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         onKeyDown={handleKeyPress}
         onMouseMove={() => usingKeyboard && setUsingKeyboard(false)}
         style={style}
-        className={className}
+        className={`dropdown ${className}`}
         ref={ref}
+        {...props}
       >
         {value && (
           <ButtonStyled
@@ -858,6 +864,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             disabled={disabled}
             $isChanged={!!isChanged}
             $isOpen={isOpen}
+            style={buttonStyle}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
