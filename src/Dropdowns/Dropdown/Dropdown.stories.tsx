@@ -54,7 +54,6 @@ const Template = (args: DropdownProps) => {
         width: 250,
         ...args.style,
       }}
-      disabled
     />
   )
 }

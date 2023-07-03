@@ -1,6 +1,6 @@
-import { DefaultItemStyled, Dropdown } from '../Dropdown'
+import { DefaultItemStyled, Dropdown, DropdownProps } from '../Dropdown'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
-import { TagsSelectValueTemplate } from './TagsSelectValueTemplate'
+import { TagsSelectValueTemplate, TagsSelectValueTemplateProps } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
 import styled from 'styled-components'
 import { Icon } from '../../Icon'
@@ -35,7 +35,7 @@ const StyledDropdown = styled(Dropdown)`
   }
 `
 
-export interface TagsSelectProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   value: string[]
   options: {
     name: string
@@ -52,6 +52,7 @@ export interface TagsSelectProps extends Omit<React.HTMLAttributes<HTMLDivElemen
   align?: 'left' | 'right'
   styleDropdown?: React.CSSProperties
   width?: number
+  valueProps?: TagsSelectValueTemplateProps
 }
 
 export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
@@ -67,6 +68,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
       align,
       styleDropdown,
       width = 300,
+      valueProps,
       ...props
     },
     ref,
@@ -95,11 +97,12 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
 
     return (
       <StyledDropdown
+        {...props}
         value={value}
         valueTemplate={(v, s, o) => (
           <TagsSelectValueTemplate
             value={(o ? s : v) || []}
-            {...props}
+            {...valueProps}
             tags={tags}
             editor={editor}
           />
