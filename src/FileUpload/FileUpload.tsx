@@ -1,36 +1,64 @@
 import { useState, useRef, useMemo, forwardRef } from 'react'
 import styled from 'styled-components'
+import { Button } from '../Button'
+import { Icon } from '../Icon'
 
 const UploadForm = styled.form`
-  height: 200px;
-  width: 300px;
-  text-align: center;
+  min-height: 200px;
+  min-width: 300px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .upload-button {
+    position: relative;
+    overflow: hidden;
+
+    * > span {
+      cursor: pointer;
+    }
+  }
 
   input {
-    display: none;
+    position: absolute;
+    inset: 0px;
+    opacity: 0;
+
+    &::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0px;
+      cursor: pointer;
+    }
+  }
+
+  .files {
+    flex: 1;
+    position: relative;
   }
 
   label {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+    position: absolute;
+    inset: 0;
+
     border-width: 2px;
     border-radius: 1rem;
     border-style: dashed;
     border-color: #6b7685;
-    background-color: transparent;
 
     &.drag-active {
       background-color: rgba(0, 0, 0, 0.1);
     }
-  }
-
-  span {
-    font-size: 1.2rem;
   }
 
   small {
@@ -38,16 +66,17 @@ const UploadForm = styled.form`
     font-size: 0.8rem;
   }
 
-  button {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    color: #3182ce;
-    font-weight: 600;
-    font-size: 1rem;
+  .drop-here {
+    position: absolute;
+    inset: 0;
 
-    &:hover {
-      text-decoration: underline;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .icon {
+      font-size: 3rem;
     }
   }
 
@@ -56,10 +85,7 @@ const UploadForm = styled.form`
     width: 100%;
     height: 100%;
     border-radius: 1rem;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
+    inset: 0;
   }
 `
 
@@ -103,7 +129,7 @@ const extractSequence = (string: string): [string, number] | [] => {
   return [prefix, sequenceNumber]
 }
 
-interface CustomFile {
+export interface CustomFile {
   sequenceId: string | null
   sequenceNumber: number | null
   file: File
@@ -339,6 +365,11 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
     }
 
+    const fileOrFiles = useMemo(
+      () => (allowMultiple || allowSequence ? 'files' : 'file'),
+      [allowMultiple, allowSequence],
+    )
+
     return (
       <UploadForm
         onDragEnter={handleDrag}
@@ -347,31 +378,43 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         {...props}
       >
         <div className="header">
-          <h1>Upload your files</h1>
+          <h1>Files</h1>
+          <Button icon="upload_file" className="upload-button">
+            <span>Upload {fileOrFiles}</span>
+            <input
+              ref={inputRef}
+              type="file"
+              id="input-file-upload"
+              multiple={allowMultiple || allowSequence}
+              onChange={handleChange}
+            />
+          </Button>
         </div>
-        <input
-          ref={inputRef}
-          type="file"
-          id="input-file-upload"
-          multiple={allowMultiple || allowSequence}
-          onChange={handleChange}
-        />
 
-        <label
-          id="label-file-upload"
-          htmlFor="input-file-upload"
-          className={dragActive ? 'drag-active' : ''}
-        ></label>
-
-        {dragActive && (
-          <div
-            id="drag-file-element"
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
+        <div className="files">
+          <label
+            id="label-file-upload"
+            htmlFor="input-file-upload"
+            className={dragActive ? 'drag-active' : ''}
           />
-        )}
+
+          {!files.length && (
+            <div className="drop-here">
+              <Icon icon="upload_file" />
+              <h3>Drop {fileOrFiles} here</h3>
+            </div>
+          )}
+
+          {dragActive && (
+            <div
+              id="drag-file-element"
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            />
+          )}
+        </div>
       </UploadForm>
     )
   },
