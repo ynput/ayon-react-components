@@ -12,16 +12,19 @@ export default meta
 
 type Story = StoryObj<typeof FileUpload>
 
-const Template = () => {
+const Template = (args: { allowMultiple?: boolean; allowSequence?: boolean }) => {
   const [files, setFiles] = useState<CustomFile[]>([])
 
-  return (
-    <Panel style={{ maxWidth: 400 }}>
-      <FileUpload files={files} setFiles={setFiles} />
-    </Panel>
-  )
+  return <FileUpload files={files} setFiles={setFiles} {...args} />
 }
 
-export const Default: Story = {
+export const Single: Story = {
+  render: Template,
+}
+export const MultipleSeq: Story = {
+  args: {
+    allowMultiple: true,
+    allowSequence: true,
+  },
   render: Template,
 }
