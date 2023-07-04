@@ -153,7 +153,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     }
 
     const handleFiles = (newFiles: FileList) => {
-      const acceptedFiles: CustomFile[] = []
+      if (!newFiles.length) return
+
+      let acceptedFiles: CustomFile[] = []
 
       // split files into sequences and single files
       const sequences: {
@@ -175,8 +177,14 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           // skip this file
           continue
         }
-        // check if it is part of an image sequence
 
+        // check we can even have sequences
+        if (!allowSequence) {
+          acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
+          continue
+        }
+
+        // check if it is part of an image sequence
         const seqMatch = extractSequence(fileName)
 
         if (!seqMatch.length) {
@@ -220,6 +228,28 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         foundSequence.counts = counts
       }
 
+      // if we don't allow multiple and don't allow sequences, only accept the first file
+      if (!allowMultiple && !allowSequence) {
+        console.log('only one file allowed')
+        setErrorMessage('Only one file allowed')
+        if (acceptedFiles.length > 1) {
+          // return first file
+          setFiles([acceptedFiles[0]])
+          return
+        } else if (acceptedFiles.length === 1) {
+          // return first file from first sequence
+          const firstSequence = Object.values(sequences)[0]
+          if (firstSequence && firstSequence.files.length) {
+            setFiles([{ ...firstSequence.files[0], sequenceId: null }])
+            return
+          } else {
+            // return no files
+            setFiles([])
+            return
+          }
+        }
+      }
+
       // for each sequence
       for (const [id, { files, counts }] of Object.entries(sequences)) {
         if (files.length < 2) {
@@ -249,14 +279,21 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
         sequenceId += idExtension
 
-        // add the sequence to the accepted files
-        acceptedFiles.push(
-          ...sortedFiles.map(({ file, sequenceNumber }) => ({
-            file,
-            sequenceNumber,
-            sequenceId: sequenceId,
-          })),
-        )
+        const seqFiles = sortedFiles.map(({ file, sequenceNumber }) => ({
+          file,
+          sequenceNumber,
+          sequenceId: sequenceId,
+        }))
+
+        //if we allow sequences but don't allow multiple, only accept the first sequence, remove accepted files
+        // return to prevent adding more sequences
+        if (!allowMultiple && allowSequence) {
+          acceptedFiles = seqFiles
+          break
+        } else {
+          // add the sequence to the accepted files
+          acceptedFiles.push(...seqFiles)
+        }
       }
 
       console.log(acceptedFiles)
