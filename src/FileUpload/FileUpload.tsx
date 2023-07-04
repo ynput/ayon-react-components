@@ -2,6 +2,9 @@ import { useState, useRef, useMemo, forwardRef } from 'react'
 import styled from 'styled-components'
 import { Button } from '../Button'
 import { Icon } from '../Icon'
+import { FileCard } from '../FileCard'
+import { Spacer } from '../Layout/Spacer'
+import { SaveButton } from '../SaveButton'
 
 const UploadForm = styled.form`
   min-height: 200px;
@@ -9,11 +12,16 @@ const UploadForm = styled.form`
   position: relative;
   display: flex;
   flex-direction: column;
+  gap: 4px;
 
   .header {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+    h2 {
+      margin: 0;
+    }
   }
 
   .upload-button {
@@ -45,6 +53,8 @@ const UploadForm = styled.form`
   .files {
     flex: 1;
     position: relative;
+    background-color: var(--panel-background);
+    border-radius: 1rem;
   }
 
   label {
@@ -58,6 +68,7 @@ const UploadForm = styled.form`
 
     &.drag-active {
       background-color: rgba(0, 0, 0, 0.1);
+      z-index: 100;
     }
   }
 
@@ -74,6 +85,7 @@ const UploadForm = styled.form`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    user-select: none;
 
     .icon {
       font-size: 3rem;
@@ -86,34 +98,27 @@ const UploadForm = styled.form`
     height: 100%;
     border-radius: 1rem;
     inset: 0;
+    z-index: 25;
   }
 `
 
-const FileList = styled.ul`
+const StyledList = styled.ul`
   list-style: none;
-  padding: 10%;
+  padding: 16px;
   margin: 0;
-  font-size: 0.8rem;
-  overflow-y: auto;
-  width: 100%;
 
-  li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  position: relative;
+  z-index: 50;
 
-    button {
-      background-color: transparent;
-      border: none;
-      color: #e53e3e;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  overflow: auto;
+`
+
+const StyledSaveButton = styled(SaveButton)`
+  margin-top: 4px;
 `
 
 const extractSequence = (string: string): [string, number] | [] => {
@@ -147,6 +152,8 @@ export interface FileUploadProps extends React.HTMLAttributes<HTMLFormElement> {
   allowMultiple?: boolean
   allowSequence?: boolean
   validExtensions?: string[]
+  confirmLabel?: string
+  hideSaveButton?: boolean
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -157,6 +164,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       allowMultiple = false,
       allowSequence = false,
       validExtensions = [],
+      confirmLabel,
+      hideSaveButton = false,
       ...props
     },
     ref,
@@ -347,28 +356,42 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
     }
 
-    // triggers the input when the button is clicked
-    const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      inputRef.current?.click()
+    const onFileRemove = (key: string) => {
+      // remove files from state
+      const newFiles = files.filter((file) =>
+        file.sequenceId ? file.sequenceId !== key : file.file.name !== key,
+      )
+
+      setFiles(newFiles)
     }
 
-    const onFileRemove = (event: React.MouseEvent<HTMLButtonElement>, idx: number) => {
-      event.preventDefault()
-      event.stopPropagation()
-      if (idx === -1) {
-        setFiles([])
-        if (inputRef.current) inputRef.current.value = ''
-      } else {
-        const newFiles = [...files]
-        newFiles.splice(idx, 1)
-        setFiles(newFiles)
-      }
+    // for every file that key matches the sequenceId, remove sequenceId and sequenceNumber
+    const onSeqSplit = (key: string) => {
+      const newFiles = files.map((file) =>
+        file.sequenceId === key ? { ...file, sequenceId: null, sequenceNumber: null } : file,
+      )
+
+      setFiles(newFiles)
     }
 
     const fileOrFiles = useMemo(
       () => (allowMultiple || allowSequence ? 'files' : 'file'),
       [allowMultiple, allowSequence],
     )
+
+    // group together files with the same sequenceId
+    const groupedFiles = useMemo(() => {
+      const groupedFiles: { [key: string]: CustomFile[] } = {}
+      for (const file of files) {
+        if (!file.sequenceId) {
+          groupedFiles[file.file.name] = [file]
+        } else {
+          if (!groupedFiles[file.sequenceId]) groupedFiles[file.sequenceId] = []
+          groupedFiles[file.sequenceId].push(file)
+        }
+      }
+      return groupedFiles
+    }, [files])
 
     return (
       <UploadForm
@@ -378,9 +401,16 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         {...props}
       >
         <div className="header">
-          <h1>Files</h1>
+          <h2>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h2>
+          <Spacer />
+          <Button
+            icon="delete"
+            onClick={() => setFiles([])}
+            label="Clear all"
+            disabled={!files.length}
+          />
           <Button icon="upload_file" className="upload-button">
-            <span>Upload {fileOrFiles}</span>
+            <span>Add {fileOrFiles}</span>
             <input
               ref={inputRef}
               type="file"
@@ -398,6 +428,21 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             className={dragActive ? 'drag-active' : ''}
           />
 
+          <StyledList>
+            {Object.entries(groupedFiles).map(([key, files], idx) => (
+              <li key={key}>
+                <FileCard
+                  title={key}
+                  type={files.length > 1 ? 'sequence' : files[0].file.type}
+                  size={files.reduce((acc, file) => acc + file.file.size, 0)}
+                  length={files.length}
+                  onRemove={() => onFileRemove(key)}
+                  onSplit={() => onSeqSplit(key)}
+                />
+              </li>
+            ))}
+          </StyledList>
+
           {!files.length && (
             <div className="drop-here">
               <Icon icon="upload_file" />
@@ -408,13 +453,22 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           {dragActive && (
             <div
               id="drag-file-element"
+              onDrop={handleDrop}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
               onDragOver={handleDrag}
-              onDrop={handleDrop}
+              style={{
+                zIndex: 200,
+              }}
             />
           )}
         </div>
+        {!hideSaveButton && (
+          <StyledSaveButton
+            active={!!files.length}
+            label={confirmLabel || 'Upload ' + fileOrFiles}
+          />
+        )}
       </UploadForm>
     )
   },
