@@ -16,12 +16,14 @@ export { VersionSelect } from './Dropdowns/VersionSelect'
 
 // BUTTONS
 export { Button } from './Button'
+export { SaveButton } from './SaveButton'
 
 // dropdown
 export { Dropdown, DefaultValueTemplate } from './Dropdowns/Dropdown'
 
 // FileUpload
 export { FileUpload } from './FileUpload'
+export { FileCard } from './FileCard'
 
 // ICONS
 // icon
