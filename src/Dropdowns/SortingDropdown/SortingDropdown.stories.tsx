@@ -17,33 +17,33 @@ const Template = ({ value: initialValue, ...props }: SortingDropdownProps) => {
   return <SortingDropdown {...props} value={value} onChange={setValue} />
 }
 
+const options: SortCardType[] = [
+  {
+    id: 'shot',
+    label: 'Shot',
+  },
+  {
+    id: 'dueDate',
+    label: 'Due date',
+  },
+  {
+    id: 'status',
+    label: 'Status',
+  },
+  {
+    id: 'assignee',
+    label: 'Assignee',
+  },
+  {
+    id: 'project',
+    label: 'Project',
+  },
+]
+
 export const SortBy: Story = {
   args: {
-    value: [
-      {
-        id: 'shot',
-        label: 'Shot',
-        sortOrder: true,
-      },
-    ],
-    options: [
-      {
-        id: 'shot',
-        label: 'Shot',
-      },
-      {
-        id: 'dueDate',
-        label: 'Due date',
-      },
-      {
-        id: 'status',
-        label: 'Status',
-      },
-      {
-        id: 'assignee',
-        label: 'Assignee',
-      },
-    ],
+    value: [options[0]],
+    options,
   },
   render: Template,
 }
@@ -51,31 +51,8 @@ export const SortBy: Story = {
 export const GroupBy: Story = {
   args: {
     title: 'Group by',
-    value: [
-      {
-        id: 'project',
-        label: 'Project',
-        sortOrder: true,
-      },
-    ],
-    options: [
-      {
-        id: 'shot',
-        label: 'Shot',
-      },
-      {
-        id: 'dueDate',
-        label: 'Due date',
-      },
-      {
-        id: 'status',
-        label: 'Status',
-      },
-      {
-        id: 'assignee',
-        label: 'Assignee',
-      },
-    ],
+    value: [options[4]],
+    options,
   },
   render: Template,
 }
