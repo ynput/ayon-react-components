@@ -17,12 +17,44 @@ const Template = ({ value: initialValue, ...props }: SortingDropdownProps) => {
   return <SortingDropdown {...props} value={value} onChange={setValue} />
 }
 
-export const Default: Story = {
+export const SortBy: Story = {
   args: {
     value: [
       {
         id: 'shot',
         label: 'Shot',
+        sortOrder: true,
+      },
+    ],
+    options: [
+      {
+        id: 'shot',
+        label: 'Shot',
+      },
+      {
+        id: 'dueDate',
+        label: 'Due date',
+      },
+      {
+        id: 'status',
+        label: 'Status',
+      },
+      {
+        id: 'assignee',
+        label: 'Assignee',
+      },
+    ],
+  },
+  render: Template,
+}
+
+export const GroupBy: Story = {
+  args: {
+    title: 'Group by',
+    value: [
+      {
+        id: 'project',
+        label: 'Project',
         sortOrder: true,
       },
     ],

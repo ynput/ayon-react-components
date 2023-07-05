@@ -13,9 +13,15 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
   value: SortCardType[]
   options: SortCardType[]
   onChange: (value: SortCardType[]) => void
+  title: string
 }
 
-export const SortingDropdown: FC<SortingDropdownProps> = ({ value, options, onChange }) => {
+export const SortingDropdown: FC<SortingDropdownProps> = ({
+  value,
+  options,
+  onChange,
+  title = 'Sort by',
+}) => {
   const [cardHovering, setCardHovering] = useState(false)
 
   const handleChange = (v: DropdownProps['value']) => {
@@ -83,7 +89,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({ value, options, onCh
           isOpen={isOpen}
           childrenCustom={
             <>
-              <span>Sort by</span>
+              <span>{title}</span>
               {selected.map((v) => {
                 const id = v.toString()
                 // find the sort card in options
