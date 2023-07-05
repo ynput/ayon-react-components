@@ -107,6 +107,22 @@ const UploadForm = styled.form`
     inset: 0;
     z-index: 25;
   }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    .error {
+      color: var(--color-hl-error);
+      display: block;
+
+      &::after {
+        content: ':';
+        opacity: 0;
+      }
+    }
+  }
 `
 
 const StyledList = styled.ul`
@@ -122,12 +138,6 @@ const StyledList = styled.ul`
   gap: 2px;
 
   overflow: auto;
-`
-
-const StyledSaveButton = styled(SaveButton)`
-  margin-top: 4px;
-  max-width: fit-content;
-  margin-left: auto;
 `
 
 const extractSequence = (string: string): [string, number] | [] => {
@@ -182,8 +192,17 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     // Valid modes: single, multiple, sequence
 
     const [dragActive, setDragActive] = useState(false)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const inputRef = useRef<HTMLInputElement | null>(null)
+
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+    // every time errorMessage changes, clear it after 3 seconds
+    useMemo(() => {
+      if (errorMessage) {
+        const timeout = setTimeout(() => setErrorMessage(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [errorMessage])
 
     // handles the drag events
     const handleDrag = (e: React.DragEvent<HTMLDivElement> | React.DragEvent<HTMLFormElement>) => {
@@ -198,6 +217,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     const handleFiles = (newFiles: FileList) => {
       if (!newFiles.length) return
+
+      // if we don't allow multiple, remove all files
+      if (!allowMultiple) setFiles([])
 
       let acceptedFiles: CustomFile[] = []
 
@@ -281,19 +303,24 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
       // if we don't allow multiple and don't allow sequences, only accept the first file
       if (!allowMultiple && !allowSequence) {
-        console.log('only one file allowed')
-        setErrorMessage('Only one file allowed')
         if (acceptedFiles.length > 1) {
+          console.log('only one file allowed')
+          setErrorMessage('Only 1 file allowed')
           // return first file
           setFiles([acceptedFiles[0]])
           return
-        } else if (acceptedFiles.length === 1) {
+        } else if (Object.values(sequences).length) {
+          if (Object.values(sequences).length > 1) {
+            console.log('only one sequence allowed')
+            setErrorMessage('Only 1 sequence allowed')
+          }
           // return first file from first sequence
           const firstSequence = Object.values(sequences)[0]
           if (firstSequence && firstSequence.files.length) {
             setFiles([{ ...firstSequence.files[0], sequenceId: null }])
             return
           } else {
+            setErrorMessage('No files found')
             // return no files
             setFiles([])
             return
@@ -301,12 +328,24 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         }
       }
 
+      // if we don't allowMultiple but do allow sequences, remove all but first accepted file
+      if (!allowMultiple && acceptedFiles.length > 1) {
+        setErrorMessage('Only 1 file allowed')
+        // splice out all accepted files after the first
+        acceptedFiles.splice(1, acceptedFiles.length - 1)
+      }
+
       // for each sequence
       for (const [id, { files, counts }] of Object.entries(sequences)) {
         if (files.length < 2) {
           // if there is only one file in the sequence, add it to the accepted files
           acceptedFiles.push({ ...files[0], sequenceId: null, sequenceNumber: null })
-          continue
+          if (!allowMultiple && allowSequence) {
+            setErrorMessage('Only 1 file allowed')
+            break
+          } else {
+            continue
+          }
         }
 
         // sort the files by filename
@@ -339,7 +378,12 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         //if we allow sequences but don't allow multiple, only accept the first sequence, remove accepted files
         // return to prevent adding more sequences
         if (!allowMultiple && allowSequence) {
-          acceptedFiles = seqFiles
+          if (Object.entries(sequences).length > 1) {
+            setErrorMessage('Only 1 sequence allowed')
+          }
+          // use splice to remove all files and only add this sequence
+          acceptedFiles.splice(0, acceptedFiles.length, ...seqFiles)
+
           break
         } else {
           // add the sequence to the accepted files
@@ -347,9 +391,6 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         }
       }
 
-      console.log(acceptedFiles)
-
-      setErrorMessage(null)
       if (!acceptedFiles.length) return
       else setFiles((files) => files.concat(acceptedFiles))
     }
@@ -399,6 +440,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     const groupedFiles = useMemo(() => {
       const groupedFiles: { [key: string]: CustomFile[] } = {}
       for (const file of files) {
+        if (!file) continue
         if (!file.sequenceId) {
           groupedFiles[file.file.name] = [file]
         } else {
@@ -455,6 +497,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                     length={files.length}
                     onRemove={() => onFileRemove(key)}
                     onSplit={() => onSeqSplit(key)}
+                    splitDisabled={files.length < 2 || !allowMultiple}
                   />
                 </li>
               ))}
@@ -481,12 +524,20 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             />
           )}
         </div>
-        {!hideSaveButton && (
-          <StyledSaveButton
-            active={!!files.length}
-            label={confirmLabel || 'Upload ' + fileOrFiles}
-          />
-        )}
+        <footer>
+          <div>
+            <span className="allowed">
+              Allowed:
+              {allowMultiple ? ' Multiple,' : ' Single,'}
+              {allowSequence && ' Sequence,'}
+              {validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}
+            </span>
+            <span className="error">{errorMessage}</span>
+          </div>
+          {!hideSaveButton && (
+            <SaveButton active={!!files.length} label={confirmLabel || 'Upload ' + fileOrFiles} />
+          )}
+        </footer>
       </UploadForm>
     )
   },
