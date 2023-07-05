@@ -1,8 +1,9 @@
 import { FC } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Icon, IconType } from '../Icon'
 import { Button } from '../Button'
 import { Spacer } from '../Layout/Spacer'
+import getShimmerStyles from '../helpers/getShimmerStyles'
 
 const getFileSizeString = (size: number) => {
   // get file size in kb, mb, gb
@@ -25,7 +26,7 @@ const getFileSizeString = (size: number) => {
   return `${size} B`
 }
 
-const StyledFileCard = styled.div`
+const StyledFileCard = styled.div<{ $isFetching: boolean }>`
   background-color: var(--color-grey-01);
   display: flex;
   border-radius: 4px;
@@ -33,6 +34,7 @@ const StyledFileCard = styled.div`
   align-items: center;
   cursor: pointer;
   gap: 4px;
+  position: relative;
 
   :hover {
     background-color: var(--color-grey-02);
@@ -56,6 +58,23 @@ const StyledFileCard = styled.div`
   .icon {
     font-size: 24px;
   }
+
+  ${({ $isFetching }) =>
+    $isFetching &&
+    css`
+      user-select: none;
+      pointer-events: none;
+
+      & > * {
+        opacity: 0.5;
+      }
+
+      ${getShimmerStyles(undefined, undefined, {
+        // random number between 0.2 and 1.5
+        delay: Math.random() * (1.5 - 0.2) + 0.2,
+        speed: 1,
+      })}
+    `}
 `
 
 const StyledButton = styled(Button)`
@@ -86,7 +105,7 @@ const fileIcons: {
   model: '3d_rotation',
 }
 
-export interface FileCardProps {
+export interface FileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
   type: string
   onRemove: () => void
@@ -94,6 +113,7 @@ export interface FileCardProps {
   size: number
   length: number
   splitDisabled: boolean
+  isFetching?: boolean
 }
 
 export const FileCard: FC<FileCardProps> = ({
@@ -104,13 +124,15 @@ export const FileCard: FC<FileCardProps> = ({
   size,
   length,
   splitDisabled,
+  isFetching = false,
+  ...props
 }) => {
   const typeIcon =
     (Object.entries(fileIcons).find(([key]) => type.includes(key))?.[1] as IconType) ??
     'insert_drive_file'
 
   return (
-    <StyledFileCard>
+    <StyledFileCard $isFetching={isFetching} {...props}>
       <Icon icon={typeIcon} />
       <span className="title">{title}</span>
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
@@ -124,9 +146,10 @@ export const FileCard: FC<FileCardProps> = ({
           userSelect: splitDisabled ? 'none' : 'auto',
           pointerEvents: splitDisabled ? 'none' : 'auto',
         }}
+        disabled={splitDisabled || isFetching}
       />
 
-      <StyledButton icon="close" onClick={onRemove} />
+      <StyledButton icon="close" onClick={onRemove} disabled={isFetching} />
     </StyledFileCard>
   )
 }

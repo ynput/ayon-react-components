@@ -1,9 +1,9 @@
 import React, { forwardRef, Ref } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Button, ButtonProps } from '../Button'
 import { IconType } from '../Icon'
 
-const spin = css`
+const spin = keyframes`
   from {
     transform: rotate(0deg);
   }
@@ -43,6 +43,15 @@ const StyledSaveButton = styled(Button)<StyledSaveButtonProps>`
       &:hover {
         background-color: #76cbe8;
       }
+
+      ${$saving &&
+      css`
+        opacity: 0.8;
+        user-select: none;
+        &:hover {
+          background-color: var(--color-hl-00);
+        }
+      `}
     `}
 `
 
