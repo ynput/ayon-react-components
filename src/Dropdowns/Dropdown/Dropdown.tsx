@@ -380,6 +380,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   widthExpand?: boolean
   searchFields?: string[]
   minSelected?: number
+  maxSelected?: number
   dropIcon?: IconType
   onClear?: () => void
   editable?: boolean
@@ -426,6 +427,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueClassName,
       listClassName,
       minSelected = 0,
+      maxSelected,
       dropIcon = 'expand_more',
       onClear,
       editable,
@@ -672,8 +674,20 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               newSelected.splice(newSelected.indexOf(value), 1)
             }
           } else {
-            // add
-            newSelected.push(value)
+            if (maxSelected && maxSelected > 0) {
+              if (maxSelected === 1) {
+                // replace
+                newSelected = [value]
+              }
+              // check if max selected
+              if (newSelected.length > maxSelected) {
+                // do nothing
+                return
+              }
+            } else {
+              // add
+              newSelected.push(value)
+            }
           }
         }
       }
@@ -687,7 +701,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       // update state
       setSelected(newSelected)
       // if not multi, close
-      if (!multiSelect || (addingNew && searchForm)) handleClose(undefined, newSelected)
+      if (!multiSelect || (addingNew && searchForm) || maxSelected === 1)
+        handleClose(undefined, newSelected)
     }
 
     const handleClear = () => {
