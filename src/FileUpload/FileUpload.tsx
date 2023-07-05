@@ -222,6 +222,13 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           continue
         }
 
+        // check if file already exists
+        if (files.find((f) => f.file.name === fileName)) {
+          setErrorMessage(`File already exists: ${fileName}`)
+          // skip this file
+          continue
+        }
+
         // check we can even have sequences
         if (!allowSequence) {
           acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
