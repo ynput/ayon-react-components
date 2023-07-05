@@ -71,6 +71,15 @@ export const SingleSeqExtensions: Story = {
   render: Template,
 }
 
+export const MultipleNoSeq: Story = {
+  args: {
+    allowMultiple: true,
+    allowSequence: false,
+    validExtensions: ['jpg'],
+  },
+  render: Template,
+}
+
 export const CustomSave: Story = {
   args: {
     allowMultiple: true,
