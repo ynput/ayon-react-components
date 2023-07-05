@@ -15,7 +15,11 @@ type Story = StoryObj<typeof FileUpload>
 const Template = (args: { allowMultiple?: boolean; allowSequence?: boolean }) => {
   const [files, setFiles] = useState<CustomFile[]>([])
 
-  return <FileUpload files={files} setFiles={setFiles} {...args} />
+  return (
+    <Panel style={{ maxWidth: 700, height: 300 }}>
+      <FileUpload files={files} setFiles={setFiles} {...args} />
+    </Panel>
+  )
 }
 
 export const Single: Story = {
