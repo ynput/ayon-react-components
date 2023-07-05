@@ -53,6 +53,7 @@ export const GroupBy: Story = {
     title: 'Group by',
     value: [options[4]],
     options,
+    maxSelected: 1,
   },
   render: Template,
 }

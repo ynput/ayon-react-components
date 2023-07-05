@@ -21,6 +21,8 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
   options,
   onChange,
   title = 'Sort by',
+  multiSelect = true,
+  ...props
 }) => {
   const [cardHovering, setCardHovering] = useState(false)
 
@@ -72,12 +74,13 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
 
   return (
     <Dropdown
+      {...props}
       disableOpen={cardHovering && !!value.length}
       value={value.map(({ id }) => id)}
       options={options}
       onChange={handleChange}
       dataKey="id"
-      multiSelect
+      multiSelect={multiSelect}
       widthExpand
       buttonStyle={{
         backgroundColor: !!value.length ? 'var(--color-grey-00)' : undefined,
