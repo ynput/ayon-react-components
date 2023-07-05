@@ -44,11 +44,13 @@ const StyledFileCard = styled.div`
 
   .length {
     opacity: 0.5;
+    white-space: nowrap;
   }
 
   .size {
     opacity: 0.5;
-    margin-right: 8px;
+    margin: 0 4px;
+    white-space: nowrap;
   }
 
   .icon {
@@ -91,14 +93,18 @@ export interface FileCardProps {
   onSplit: () => void
   size: number
   length: number
+  splitDisabled: boolean
 }
 
-export const FileCard: FC<FileCardProps> = ({ title, type, onRemove, onSplit, size, length }) => {
-  // const icon = FileIcon[type]
-
-  console.log(type)
-
-  const isSeq = type === 'sequence'
+export const FileCard: FC<FileCardProps> = ({
+  title,
+  type,
+  onRemove,
+  onSplit,
+  size,
+  length,
+  splitDisabled,
+}) => {
   const typeIcon =
     (Object.entries(fileIcons).find(([key]) => type.includes(key))?.[1] as IconType) ??
     'insert_drive_file'
@@ -110,16 +116,16 @@ export const FileCard: FC<FileCardProps> = ({ title, type, onRemove, onSplit, si
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
       <Spacer />
       <span className="size">{getFileSizeString(size)}</span>
-
       <StyledButton
         icon="vertical_split"
         onClick={onSplit}
         style={{
-          visibility: isSeq ? 'visible' : 'hidden',
-          userSelect: isSeq ? 'auto' : 'none',
-          pointerEvents: isSeq ? 'auto' : 'none',
+          visibility: splitDisabled ? 'hidden' : 'visible',
+          userSelect: splitDisabled ? 'none' : 'auto',
+          pointerEvents: splitDisabled ? 'none' : 'auto',
         }}
       />
+
       <StyledButton icon="close" onClick={onRemove} />
     </StyledFileCard>
   )
