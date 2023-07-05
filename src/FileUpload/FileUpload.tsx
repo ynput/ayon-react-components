@@ -423,7 +423,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
         // max counts 3
         // otherwise, use [start...end]
-        if (counts.length > 3) {
+        if (counts.length > 2) {
           sequenceId += `[${counts[0][0]}--${counts[counts.length - 1][1]}]`
         } else {
           sequenceId += counts
