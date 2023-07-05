@@ -1,2 +1,0 @@
-import{r as t,j as a}from"./jsx-runtime.be8e9395.js";import{S as o}from"./styles.38d859eb.js";const e=t.exports.forwardRef((r,p)=>a(o,{type:"number",ref:p,...r}));e.displayName="InputNumber";try{e.displayName="InputNumber",e.__docgenInfo={description:"",displayName:"InputNumber",props:{}}}catch{}try{InputNumber.displayName="InputNumber",InputNumber.__docgenInfo={description:"",displayName:"InputNumber",props:{}}}catch{}export{e as I};
-//# sourceMappingURL=index.2a750c04.js.map
