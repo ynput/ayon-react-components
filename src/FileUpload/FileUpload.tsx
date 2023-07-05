@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, forwardRef } from 'react'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../Button'
 import { Icon } from '../Icon'
 import { FileCard } from '../FileCard'
@@ -113,19 +113,38 @@ const UploadForm = styled.form`
     justify-content: space-between;
     align-items: flex-end;
 
+    .success,
     .error {
-      color: var(--color-hl-error);
       display: block;
-
       &::after {
         content: ':';
         opacity: 0;
       }
     }
+
+    .success {
+      color: var(--color-hl-00);
+    }
+
+    .error {
+      color: var(--color-hl-error);
+    }
   }
 `
 
-const StyledList = styled.ul`
+// fade out and scale down
+const successAnimation = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+`
+
+const StyledList = styled.ul<{ $isSuccess: boolean }>`
   list-style: none;
   padding: 16px;
   margin: 0;
@@ -138,6 +157,12 @@ const StyledList = styled.ul`
   gap: 2px;
 
   overflow: auto;
+
+  ${({ $isSuccess }) =>
+    $isSuccess &&
+    css`
+      animation: ${successAnimation} 0.3s ease forwards;
+    `}
 `
 
 const extractSequence = (string: string): [string, number] | [] => {
@@ -165,14 +190,20 @@ export interface CustomFile {
 // - formProps renamed to props
 // - CustomFile interface added
 
-export interface FileUploadProps extends React.HTMLAttributes<HTMLFormElement> {
+type FormProps = Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'>
+export interface FileUploadProps extends FormProps {
   files: CustomFile[]
   setFiles: React.Dispatch<React.SetStateAction<CustomFile[]>>
   allowMultiple?: boolean
   allowSequence?: boolean
   validExtensions?: string[]
   confirmLabel?: string
-  hideSaveButton?: boolean
+  saveButton?: React.ReactNode
+  onSubmit?: (files: CustomFile[]) => void
+  isFetching?: boolean
+  isSuccess?: boolean
+  successMessage?: string
+  isError?: boolean
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -184,17 +215,40 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       allowSequence = false,
       validExtensions = [],
       confirmLabel,
-      hideSaveButton = false,
+      saveButton,
+      onSubmit,
+      isFetching,
+      successMessage = 'Upload successful',
+      isSuccess,
+      isError,
       ...props
     },
     ref,
   ) => {
     // Valid modes: single, multiple, sequence
 
+    // this is mainly used for the success out animation
+    const [localFilesState, setLocalFilesState] = useState<CustomFile[]>([])
+
+    // every time files changes, update localFilesState, unless isSuccess
+    useMemo(() => {
+      if (isSuccess) return
+      setLocalFilesState(files)
+    }, [files, isSuccess])
+
     const [dragActive, setDragActive] = useState(false)
     const inputRef = useRef<HTMLInputElement | null>(null)
-
+    const [successMessageOpen, setSuccessMessageOpen] = useState<string | null>()
     const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+    // every time successMessage changes or isSuccess, clear it after 3 seconds
+    useMemo(() => {
+      if (successMessage && isSuccess) {
+        setSuccessMessageOpen(successMessage)
+        const timeout = setTimeout(() => setSuccessMessageOpen(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [successMessage, isSuccess])
 
     // every time errorMessage changes, clear it after 3 seconds
     useMemo(() => {
@@ -203,6 +257,16 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         return () => clearTimeout(timeout)
       }
     }, [errorMessage])
+
+    // if we are fetching, set dragActive to false
+    useMemo(() => {
+      if (isFetching) setDragActive(false)
+    }, [isFetching])
+
+    // if isError, set errorMessage
+    useMemo(() => {
+      if (isError) setErrorMessage('Upload failed: try again')
+    }, [isError])
 
     // handles the drag events
     const handleDrag = (e: React.DragEvent<HTMLDivElement> | React.DragEvent<HTMLFormElement>) => {
@@ -436,10 +500,16 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       [allowMultiple, allowSequence],
     )
 
+    // we do this so that we can show the success out animation temporarily
+    const filesToGroup = useMemo(() => {
+      if (!isSuccess || !localFilesState.length) return files
+      else return localFilesState
+    }, [files, isSuccess, localFilesState])
+
     // group together files with the same sequenceId
     const groupedFiles = useMemo(() => {
       const groupedFiles: { [key: string]: CustomFile[] } = {}
-      for (const file of files) {
+      for (const file of filesToGroup) {
         if (!file) continue
         if (!file.sequenceId) {
           groupedFiles[file.file.name] = [file]
@@ -449,7 +519,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         }
       }
       return groupedFiles
-    }, [files])
+    }, [filesToGroup])
 
     return (
       <UploadForm
@@ -465,9 +535,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             icon="delete"
             onClick={() => setFiles([])}
             label="Clear all"
-            disabled={!files.length}
+            disabled={!files.length || isFetching}
           />
-          <Button icon="upload_file" className="upload-button">
+          <Button icon="upload_file" className="upload-button" disabled={isFetching}>
             <span>Add {fileOrFiles}</span>
             <input
               ref={inputRef}
@@ -475,6 +545,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
               id="input-file-upload"
               multiple={allowMultiple || allowSequence}
               onChange={handleChange}
+              disabled={isFetching}
             />
           </Button>
         </div>
@@ -487,7 +558,10 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           />
 
           <div className="scroll-container">
-            <StyledList>
+            <StyledList
+              $isSuccess={!!isSuccess && !!localFilesState.length}
+              onAnimationEnd={() => setLocalFilesState([])}
+            >
               {Object.entries(groupedFiles).map(([key, files], idx) => (
                 <li key={key}>
                   <FileCard
@@ -498,13 +572,14 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                     onRemove={() => onFileRemove(key)}
                     onSplit={() => onSeqSplit(key)}
                     splitDisabled={files.length < 2 || !allowMultiple}
+                    isFetching={isFetching}
                   />
                 </li>
               ))}
             </StyledList>
           </div>
 
-          {!files.length && (
+          {!filesToGroup.length && (
             <div className="drop-here">
               <Icon icon="upload_file" />
               <h3>Drop {fileOrFiles} here</h3>
@@ -532,10 +607,19 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
               {allowSequence && ' Sequence,'}
               {validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}
             </span>
-            <span className="error">{errorMessage}</span>
+            <span className={successMessageOpen ? 'success' : 'error'}>
+              {successMessageOpen ? successMessageOpen : errorMessage}
+            </span>
           </div>
-          {!hideSaveButton && (
-            <SaveButton active={!!files.length} label={confirmLabel || 'Upload ' + fileOrFiles} />
+          {!saveButton && onSubmit ? (
+            <SaveButton
+              active={!!files.length}
+              saving={isFetching}
+              label={confirmLabel || 'Upload ' + fileOrFiles}
+              onClick={() => onSubmit(files)}
+            />
+          ) : (
+            saveButton
           )}
         </footer>
       </UploadForm>
