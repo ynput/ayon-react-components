@@ -7,8 +7,10 @@ import { Spacer } from '../Layout/Spacer'
 import { SaveButton } from '../SaveButton'
 
 const UploadForm = styled.form`
-  min-height: 200px;
+  min-height: 160px;
   min-width: 300px;
+  height: 100%;
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -55,16 +57,21 @@ const UploadForm = styled.form`
     position: relative;
     background-color: var(--panel-background);
     border-radius: 1rem;
+
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #6b7685;
+  }
+
+  .scroll-container {
+    overflow: auto;
+    position: absolute;
+    inset: 0;
   }
 
   label {
     position: absolute;
     inset: 0;
-
-    border-width: 2px;
-    border-radius: 1rem;
-    border-style: dashed;
-    border-color: #6b7685;
 
     &.drag-active {
       background-color: rgba(0, 0, 0, 0.1);
@@ -119,6 +126,8 @@ const StyledList = styled.ul`
 
 const StyledSaveButton = styled(SaveButton)`
   margin-top: 4px;
+  max-width: fit-content;
+  margin-left: auto;
 `
 
 const extractSequence = (string: string): [string, number] | [] => {
@@ -428,20 +437,22 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             className={dragActive ? 'drag-active' : ''}
           />
 
-          <StyledList>
-            {Object.entries(groupedFiles).map(([key, files], idx) => (
-              <li key={key}>
-                <FileCard
-                  title={key}
-                  type={files.length > 1 ? 'sequence' : files[0].file.type}
-                  size={files.reduce((acc, file) => acc + file.file.size, 0)}
-                  length={files.length}
-                  onRemove={() => onFileRemove(key)}
-                  onSplit={() => onSeqSplit(key)}
-                />
-              </li>
-            ))}
-          </StyledList>
+          <div className="scroll-container">
+            <StyledList>
+              {Object.entries(groupedFiles).map(([key, files], idx) => (
+                <li key={key}>
+                  <FileCard
+                    title={key}
+                    type={files.length > 1 ? 'sequence' : files[0].file.type}
+                    size={files.reduce((acc, file) => acc + file.file.size, 0)}
+                    length={files.length}
+                    onRemove={() => onFileRemove(key)}
+                    onSplit={() => onSeqSplit(key)}
+                  />
+                </li>
+              ))}
+            </StyledList>
+          </div>
 
           {!files.length && (
             <div className="drop-here">
