@@ -387,6 +387,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   disableReorder?: boolean
   disabledValues?: (string | number)[]
   listInline?: boolean
+  disableOpen?: boolean
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -432,6 +433,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       disableReorder,
       disabledValues = [],
       listInline = false,
+      disableOpen = false,
       ...props
     },
     ref,
@@ -705,6 +707,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (isOpen) {
         return handleClose()
       }
+
+      if (disableOpen) return
 
       if (disabled) return
       e.stopPropagation()
