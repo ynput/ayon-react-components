@@ -84,4 +84,4 @@ export { UserImage } from './User/UserImage'
 export { UserImagesStacked } from './User/UserImagesStacked'
 
 // import styles to be included
-import './index.sass'
+import './index.scss'
