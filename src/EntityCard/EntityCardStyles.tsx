@@ -3,10 +3,20 @@ import { EntityCardProps } from './EntityCard'
 
 interface StyledEntityCardProps {
   $isActive: boolean
+  $isSecondary?: boolean
   $variant?: EntityCardProps['variant']
 }
 
 export const StyledEntityCard = styled.div<StyledEntityCardProps>`
+  --selection-color: var(--selected-blue);
+
+  /* if $isSecondary, use secondary color */
+  ${({ $isSecondary }) =>
+    $isSecondary &&
+    css`
+      --selection-color: var(--selected-green);
+    `}
+
   /* layout */
   display: flex;
   flex-direction: column;
@@ -39,7 +49,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       /* set backgrounds */
       &,
       &:hover {
-        background-color: var(--card-selected);
+        background-color: var(--selection-color);
       }
 
       /* description stays open */
@@ -53,7 +63,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       ${$variant === 'basic' &&
       css`
         ${StyledTitle} {
-          background-color: var(--card-selected);
+          background-color: var(--selection-color);
         }
       `}
     `}

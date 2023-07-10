@@ -78,8 +78,9 @@ export const Default: Story = {
     imageUrl: 'https://picsum.photos/225/127',
     imageAlt: 'random image',
     icon: 'visibility',
-    iconColor: 'FF982E',
+    iconColor: '#FF982E',
     variant: 'full',
+    isSecondary: false,
   },
   render: Template,
 }

@@ -35,6 +35,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   iconColor?: string
   notification?: NotificationType
   isActive: boolean
+  isSecondary?: boolean
   isLoading: boolean
   isSuccess: boolean
   isError: boolean
@@ -55,6 +56,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       iconColor,
       notification,
       isActive,
+      isSecondary,
       isLoading,
       isSuccess,
       isError,
@@ -72,7 +74,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideTitles = variant === 'thumbnail'
 
     return (
-      <StyledEntityCard {...props} ref={ref} $isActive={isActive} $variant={variant}>
+      <StyledEntityCard
+        {...props}
+        ref={ref}
+        $isActive={isActive}
+        $variant={variant}
+        $isSecondary={isSecondary}
+      >
         <StyledThumbnail>
           <StyledRow>
             {/* top left */}
@@ -85,7 +93,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* top right icon */}
             {icon && !hideIcons && (
               <StyledTitle className="card">
-                <Icon icon={icon} color={iconColor} />
+                <Icon icon={icon} style={{ color: iconColor }} />
               </StyledTitle>
             )}
           </StyledRow>
