@@ -85,5 +85,9 @@ export { UserImage } from './User/UserImage'
 // userImagesStacked
 export { UserImagesStacked } from './User/UserImagesStacked'
 
+// ENTITY
+// entityCard
+export { EntityCard } from './EntityCard'
+
 // import styles to be included
 import './index.scss'
