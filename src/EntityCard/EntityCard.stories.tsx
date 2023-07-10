@@ -26,7 +26,9 @@ https://picsum.photos/${width}/${height}
   return randomImage
 }
 
-const fakeData = {
+interface DataProps extends EntityCardProps {}
+
+const initData: DataProps = {
   title: 'Lighting',
   titleIcon: 'lightbulb',
   subTitle: 'sc0120sh0130',
@@ -42,7 +44,20 @@ const Template = (props: EntityCardProps) => {
   const [isError, setIsError] = useState(false)
   const [isActive, setIsActive] = useState(false)
 
-  const simulateLoading = (isSuccess: boolean, isError: boolean) => {
+  const getFakeData = (isImage: boolean) => {
+    const newData: DataProps = {}
+    for (const key in initData) {
+      if (key === 'imageUrl' && !isImage) {
+        newData[key as keyof DataProps] = ''
+      } else {
+        newData[key as keyof DataProps] = props[key as keyof DataProps]
+      }
+    }
+
+    return newData
+  }
+
+  const simulateLoading = (isSuccess: boolean, isError: boolean, duration = 1000) => {
     // reset state
     setIsLoading(true)
     setIsError(false)
@@ -51,22 +66,14 @@ const Template = (props: EntityCardProps) => {
     // fake loading
     const timeout = setTimeout(() => {
       setIsLoading(false)
-      let newData = {}
-      if (isSuccess) {
-        newData = fakeData
-      } else {
-        newData = {
-          ...fakeData,
-          imageUrl: '',
-        }
-      }
+      let newData = getFakeData(isSuccess)
 
       if (isError) {
         newData = {}
       }
       setData(newData)
       setIsError(isError)
-    }, 1000)
+    }, duration)
 
     return timeout
   }
@@ -79,6 +86,13 @@ const Template = (props: EntityCardProps) => {
       timeout && clearTimeout(timeout)
     }
   }, [])
+
+  //   when the user changes the props
+  useEffect(() => {
+    if (isLoading) return
+    const newData = getFakeData(true)
+    setData(newData)
+  }, [props])
 
   return (
     <Panel>
@@ -111,6 +125,7 @@ export const Default: Story = {
     variant: 'full',
     isSecondary: false,
     notification: undefined,
+    ...initData,
   },
   render: Template,
 }

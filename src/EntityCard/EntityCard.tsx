@@ -42,10 +42,10 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   icon?: IconType
   iconColor?: string
   notification?: NotificationType
-  isActive: boolean
+  isActive?: boolean
   isSecondary?: boolean
-  isLoading: boolean
-  isError: boolean
+  isLoading?: boolean
+  isError?: boolean
   disabled?: boolean
   variant?: 'thumbnail' | 'basic' | 'full'
 }
@@ -62,10 +62,10 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       icon,
       iconColor,
       notification,
-      isActive,
-      isSecondary,
-      isLoading,
-      isError,
+      isActive = false,
+      isSecondary = false,
+      isLoading = false,
+      isError = false,
       disabled,
       variant = 'full',
       ...props
