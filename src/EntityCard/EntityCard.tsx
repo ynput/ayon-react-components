@@ -123,7 +123,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom right icon */}
             {notificationIcon && !hideIcons && (
               <StyledTitle className="notification">
-                <Icon icon={notificationIcon?.icon} color={notificationIcon?.color} />
+                <Icon icon={notificationIcon?.icon} style={{ color: notificationIcon?.color }} />
               </StyledTitle>
             )}
           </StyledRow>

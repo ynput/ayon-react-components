@@ -51,12 +51,18 @@ const Template = (props: EntityCardProps) => {
     // fake loading
     const timeout = setTimeout(() => {
       setIsLoading(false)
-      let newData = { ...fakeData }
-      if (!isSuccess) {
+      let newData = {}
+      if (isSuccess) {
+        newData = fakeData
+      } else {
         newData = {
-          ...newData,
+          ...fakeData,
           imageUrl: '',
         }
+      }
+
+      if (isError) {
+        newData = {}
       }
       setData(newData)
       setIsError(isError)
@@ -73,8 +79,6 @@ const Template = (props: EntityCardProps) => {
       timeout && clearTimeout(timeout)
     }
   }, [])
-
-  console.log(data)
 
   return (
     <Panel>
@@ -106,6 +110,7 @@ export const Default: Story = {
   args: {
     variant: 'full',
     isSecondary: false,
+    notification: undefined,
   },
   render: Template,
 }

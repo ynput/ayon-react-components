@@ -108,7 +108,8 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
             opacity: 0.7;
             min-width: 50%;
 
-            &.status {
+            &.status,
+            &.notification {
               min-width: 28px;
             }
             /* hide all text and icons */
@@ -136,7 +137,23 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         ${({ $isError }) =>
     $isError &&
     css`
-      background-color: var(--color-hl-error);
+      &,
+      &:hover {
+        background-color: var(--color-hl-error);
+      }
+
+      .row > span {
+        min-width: 50%;
+
+        & > * {
+          display: none;
+        }
+
+        &.status,
+        &.notification {
+          min-width: 28px;
+        }
+      }
     `}
 `
 
