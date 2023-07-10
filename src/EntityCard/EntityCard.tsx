@@ -72,7 +72,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideTitles = variant === 'thumbnail'
 
     return (
-      <StyledEntityCard {...props} ref={ref} $isActive={isActive}>
+      <StyledEntityCard {...props} ref={ref} $isActive={isActive} $variant={variant}>
         <StyledThumbnail>
           <StyledRow>
             {/* top left */}

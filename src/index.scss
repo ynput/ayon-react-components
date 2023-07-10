@@ -27,6 +27,8 @@
   --color-hl-error: #ff4422;
   --color-icon: #c1d8e9;
 
+  --selected: #0e5f81;
+
   --color-row-hl: rgba(71, 184, 218, 0.2);
   --color-row-hl-hover: rgba(71, 184, 218, 0.3);
 
@@ -48,6 +50,8 @@
   --panel-border-radius: 4px;
 
   --card-background: var(--color-grey-01);
+  --card-hover: var(--color-grey-03);
+  --card-selected: var(--selected);
   --card-border-radius-s: 4px;
   --card-border-radius-m: 6px;
   --card-border-radius-l: 8px;

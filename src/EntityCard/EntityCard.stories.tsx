@@ -62,6 +62,7 @@ const Template = (props: EntityCardProps) => {
           isActive,
         }}
         style={{ width: 225 }}
+        onClick={() => setIsActive(!isActive)}
         {...props}
       />
     </Panel>

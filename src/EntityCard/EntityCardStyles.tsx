@@ -1,7 +1,9 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { EntityCardProps } from './EntityCard'
 
 interface StyledEntityCardProps {
   $isActive: boolean
+  $variant?: EntityCardProps['variant']
 }
 
 export const StyledEntityCard = styled.div<StyledEntityCardProps>`
@@ -27,8 +29,34 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   background-color: var(--card-background);
 
   &:hover {
-    background-color: var(--button-background);
+    background-color: var(--card-hover);
   }
+
+  /* when active, set background color */
+  ${({ $isActive, $variant }) =>
+    $isActive &&
+    css`
+      /* set backgrounds */
+      &,
+      &:hover {
+        background-color: var(--card-selected);
+      }
+
+      /* description stays open */
+      .description {
+        grid-template-rows: 1fr;
+        padding-top: 2px;
+        transition-delay: 0;
+      }
+
+      /* when variant = 'basic' titles are blue */
+      ${$variant === 'basic' &&
+      css`
+        ${StyledTitle} {
+          background-color: var(--card-selected);
+        }
+      `}
+    `}
 `
 export const StyledThumbnail = styled.div`
   display: flex;
@@ -74,12 +102,14 @@ export const StyledDescription = styled.div`
   /* use the 1 row grid animation trick */
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 200ms ease-in-out;
+  transition: grid-template-rows 150ms, padding 150ms;
 
   /* when hovering set to 1fr */
+  /* also when $isActive but that's set in StyledEntityCard */
   ${StyledEntityCard}:hover & {
     grid-template-rows: 1fr;
-    transition-delay: 200ms;
+    transition-delay: 100ms;
+    padding-top: 2px;
   }
 
   span {
