@@ -222,6 +222,7 @@ export const StyledRow = styled.div`
   justify-content: space-between;
   width: 100%;
   z-index: 100;
+  gap: 4px;
 `
 
 // little tags inside the thumbnail
@@ -230,11 +231,25 @@ export const StyledTitle = styled.span`
   padding: 4px;
   align-items: center;
   min-height: 28px;
+  overflow: hidden;
+
+  span:not(.icon) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: right;
+    direction: rtl;
+  }
 
   border-radius: var(--card-border-radius-m);
   background-color: var(--card-background, #2c313a);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
+
+  &.status,
+  &.description {
+    min-width: 28px;
+  }
 
   .icon {
     font-size: 20px;
@@ -251,11 +266,13 @@ export const StyledDescription = styled.div`
   display: grid;
   grid-template-rows: 0fr;
   transition: grid-template-rows var(--hover-transition), padding var(--hover-transition);
+  max-height: 42%;
 
   span {
     word-break: break-all;
     font-size: 12px;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 `
 
