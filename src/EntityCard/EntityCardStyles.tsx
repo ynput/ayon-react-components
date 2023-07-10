@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { EntityCardProps } from './EntityCard'
 import getShimmerStyles from '../helpers/getShimmerStyles'
+import { Icon } from '../Icon'
 
 interface StyledEntityCardProps {
   $isActive: boolean
@@ -51,7 +52,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
     /* hover to show description */
     .description {
       grid-template-rows: 1fr;
-      transition-delay: 100ms;
+      /* transition-delay: 100ms; */
       padding-top: 2px;
     }
   }
@@ -60,7 +61,6 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   ${({ $isActive, $variant }) =>
     $isActive &&
     css`
-      pointer-events: none;
       /* set backgrounds */
       &,
       &:hover {
@@ -83,19 +83,17 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       `}
     `}
 
-  .thumbnail {
-    ${getShimmerStyles('var(--card-hover)', 'var(--color-grey-04)', {
-      opacity: 1,
-    })}
+  ${getShimmerStyles('var(--color-grey-02)', 'var(--color-grey-03)', {
+    opacity: 1,
+  })}
 
-    ::after {
-      transition: opacity var(--loading-transition);
-    }
+    &::after {
+    transition: opacity var(--loading-transition);
+  }
 
-    /* transition text/icons opacity for loading */
-    .row > span > * {
-      transition: opacity var(--loading-transition);
-    }
+  /* transition text/icons opacity for loading */
+  .row > span > * {
+    transition: opacity var(--loading-transition);
   }
 
   /* set opacity to 0 when not loading */
@@ -103,13 +101,21 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
     $isLoading
       ? css`
           /* LOADING ACTIVE */
+          pointer-events: none;
           /* title card loading styles */
           .row > span {
             /* change color of cards */
-            opacity: 0.5;
+            opacity: 0.7;
+            min-width: 50%;
+
+            &.status {
+              min-width: 28px;
+            }
             /* hide all text and icons */
             & > * {
               opacity: 0;
+              user-select: none;
+              pointer-events: none;
             }
           }
 
@@ -121,24 +127,61 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         `
       : css`
           /* LOADING FINISHED */
-          .thumbnail::after {
+          &::after {
             opacity: 0;
           }
         `}
+
+  /* ERROR */
+        ${({ $isError }) =>
+    $isError &&
+    css`
+      background-color: var(--color-hl-error);
+    `}
 `
-export const StyledThumbnail = styled.div`
-  /* position: relative; */
+
+interface StyledThumbnailProps {
+  $isImageLoading: boolean
+  $isImageValid: boolean
+}
+
+// THUMBNAIL
+export const StyledThumbnail = styled.div<StyledThumbnailProps>`
+  position: relative;
   display: flex;
   padding: 2px;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
-  align-items: flex-start;
+  align-items: center;
   flex: 1 0 0;
   align-self: stretch;
 
   border-radius: var(--card-border-radius-m);
-  background-color: var(--button-background);
+  background-color: var(--color-grey-00);
+
+  /* image styles */
+  background-size: cover;
+  background-position: center;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background-color: var(--button-background);
+    transition: opacity var(--loading-transition);
+    /* sometime the image takes a bit to show */
+    transition-delay: 100ms;
+  }
+
+  ${({ $isImageLoading }) =>
+    $isImageLoading &&
+    css`
+      &::after {
+        opacity: 1;
+      }
+    `}
 `
 
 // for the header and footer inside the thumbnail
@@ -168,6 +211,7 @@ export const StyledTitle = styled.span`
 
   &.subtitle {
     padding: 4px 6px;
+    font-weight: bold;
   }
 `
 
@@ -182,4 +226,14 @@ export const StyledDescription = styled.div`
     font-size: 12px;
     overflow: hidden;
   }
+`
+
+export const NoImageIcon = styled(Icon)`
+  position: absolute;
+  /* center */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  color: var(--card-hover);
 `

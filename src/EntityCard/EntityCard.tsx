@@ -1,6 +1,14 @@
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
-import { StyledDescription, StyledEntityCard, StyledRow, StyledThumbnail, StyledTitle } from '.'
+import {
+  NoImageIcon,
+  StyledDescription,
+  StyledEntityCard,
+  StyledRow,
+  StyledThumbnail,
+  StyledTitle,
+} from '.'
+import useImageLoading from '../helpers/useImageLoading'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -25,11 +33,11 @@ const notifications: {
 }
 
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string
-  titleIcon: IconType
-  subtitle: string
-  description: string
-  imageUrl: string
+  title?: string
+  titleIcon?: IconType
+  subTitle?: string
+  description?: string
+  imageUrl?: string
   imageAlt?: string
   icon?: IconType
   iconColor?: string
@@ -37,7 +45,6 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isActive: boolean
   isSecondary?: boolean
   isLoading: boolean
-  isSuccess: boolean
   isError: boolean
   disabled?: boolean
   variant?: 'thumbnail' | 'basic' | 'full'
@@ -46,9 +53,9 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
   (
     {
-      title,
+      title = '',
       titleIcon,
-      subtitle,
+      subTitle,
       description,
       imageUrl,
       imageAlt,
@@ -58,7 +65,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isActive,
       isSecondary,
       isLoading,
-      isSuccess,
       isError,
       disabled,
       variant = 'full',
@@ -73,6 +79,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideDescription = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
+    const [isImageLoading, isImageValid] = useImageLoading(imageUrl, isLoading)
+
     return (
       <StyledEntityCard
         {...props}
@@ -81,10 +89,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $variant={variant}
         $isSecondary={isSecondary}
         $isLoading={isLoading}
-        $isSuccess={isSuccess}
         $isError={isError}
       >
-        <StyledThumbnail className="thumbnail">
+        <StyledThumbnail
+          className="thumbnail"
+          style={{ backgroundImage: `url(${imageUrl})` }}
+          $isImageLoading={isImageLoading}
+          $isImageValid={isImageValid}
+        >
           <StyledRow className="row">
             {/* top left */}
             {!hideTitles && (
@@ -94,17 +106,18 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </StyledTitle>
             )}
             {/* top right icon */}
-            {icon && !hideIcons && (
-              <StyledTitle className="card">
-                <Icon icon={icon} style={{ color: iconColor }} />
+            {!hideIcons && (
+              <StyledTitle className="status">
+                {icon && <Icon icon={icon} style={{ color: iconColor }} />}
               </StyledTitle>
             )}
           </StyledRow>
+          {!isImageLoading && !isImageValid && <NoImageIcon icon="image" className="no-image" />}
           <StyledRow className="row">
             {/* bottom left */}
             {!hideTitles && (
-              <StyledTitle className="subtitle">
-                <span>{subtitle}</span>
+              <StyledTitle className="subTitle">
+                <span>{subTitle}</span>
               </StyledTitle>
             )}
             {/* bottom right icon */}

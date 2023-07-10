@@ -15,33 +15,66 @@ export default meta
 
 type Story = StoryObj<typeof EntityCard>
 
+const getRandomImage = () => {
+  // random width between 200 and 1000
+  const width = Math.floor(Math.random() * 800) + 200
+  const height = Math.floor(Math.random() * 800) + 200
+  const randomImage = `
+https://picsum.photos/${width}/${height}
+`
+
+  return randomImage
+}
+
+const fakeData = {
+  title: 'Lighting',
+  titleIcon: 'lightbulb',
+  subTitle: 'sc0120sh0130',
+  description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
+  imageUrl: getRandomImage(),
+  icon: 'visibility',
+  iconColor: '#FF982E',
+}
+
 const Template = (props: EntityCardProps) => {
+  const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const [isSuccess, setIsSuccess] = useState(false)
   const [isError, setIsError] = useState(false)
   const [isActive, setIsActive] = useState(false)
 
   const simulateLoading = (isSuccess: boolean, isError: boolean) => {
+    // reset state
     setIsLoading(true)
     setIsError(false)
-    setIsSuccess(false)
+    setData({})
+
+    // fake loading
     const timeout = setTimeout(() => {
       setIsLoading(false)
+      let newData = { ...fakeData }
+      if (!isSuccess) {
+        newData = {
+          ...newData,
+          imageUrl: '',
+        }
+      }
+      setData(newData)
       setIsError(isError)
-      setIsSuccess(isSuccess)
     }, 1000)
 
     return timeout
   }
 
-  //   useEffect(() => {
-  //     const timeout = simulateLoading(true, false)
+  useEffect(() => {
+    const timeout = simulateLoading(true, false)
 
-  //     // clear timeout
-  //     return () => {
-  //       timeout && clearTimeout(timeout)
-  //     }
-  //   }, [])
+    // clear timeout
+    return () => {
+      timeout && clearTimeout(timeout)
+    }
+  }, [])
+
+  console.log(data)
 
   return (
     <Panel>
@@ -57,13 +90,13 @@ const Template = (props: EntityCardProps) => {
       <EntityCard
         {...{
           isLoading,
-          isSuccess,
           isError,
           isActive,
         }}
         style={{ width: 225 }}
         onClick={() => setIsActive(!isActive)}
         {...props}
+        {...data}
       />
     </Panel>
   )
@@ -71,14 +104,6 @@ const Template = (props: EntityCardProps) => {
 
 export const Default: Story = {
   args: {
-    title: 'Lighting',
-    titleIcon: 'lightbulb',
-    subtitle: 'sc0120sh0130',
-    description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
-    imageUrl: 'https://picsum.photos/225/127',
-    imageAlt: 'random image',
-    icon: 'visibility',
-    iconColor: '#FF982E',
     variant: 'full',
     isSecondary: false,
   },
