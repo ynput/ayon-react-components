@@ -175,7 +175,7 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
   align-self: stretch;
 
   border-radius: var(--card-border-radius-m);
-  background-color: var(--color-grey-00);
+  background-color: var(--card-hover);
 
   /* image styles */
   background-size: cover;
@@ -252,5 +252,5 @@ export const NoImageIcon = styled(Icon)`
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 32px;
-  color: var(--card-hover);
+  color: var(--card-background);
 `
