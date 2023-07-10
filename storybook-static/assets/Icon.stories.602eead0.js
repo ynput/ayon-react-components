@@ -1,4 +1,0 @@
-import{I as c}from"./index.b8ae8ae1.js";import{T as n}from"./index.145a14dd.js";import{j as r}from"./jsx-runtime.be8e9395.js";import"./styled-components.browser.esm.5ef351f6.js";import"./_commonjsHelpers.712cc82f.js";const u={component:c,tags:["autodocs"]},i=["content_copy","add_circle","image","folder","category","live_tv","smart_toy","movie","theaters","task_alt","palette","language","brush","ev_shadow","construction","imagesearch_roller","scene","directions_run","fireplace","highlight","video_stable","layers","gesture","switch_video"],l=()=>r(n,{children:i.map(o=>r(c,{icon:o},o))}),e={render:l};var t,s,a;e.parameters={...e.parameters,docs:{...(t=e.parameters)==null?void 0:t.docs,source:{originalSource:`{
-  render: All
-}`,...(a=(s=e.parameters)==null?void 0:s.docs)==null?void 0:a.source}}};const h=["Icons"];export{e as Icons,h as __namedExportsOrder,u as default};
-//# sourceMappingURL=Icon.stories.602eead0.js.map

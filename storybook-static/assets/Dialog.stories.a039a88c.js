@@ -1,4 +1,0 @@
-import{D as i}from"./index.bc2f837d.js";import{r as l,a as c,F as m,j as r}from"./jsx-runtime.be8e9395.js";import{B as p}from"./index.11db2722.js";import"./styled-components.browser.esm.5ef351f6.js";import"./_commonjsHelpers.712cc82f.js";import"./index.b8ae8ae1.js";const _={component:i,tags:["autodocs"]},d=()=>{const[n,o]=l.exports.useState(!0);return c(m,{children:[r(p,{onClick:()=>o(!0),icon:"open_in_full",children:"Show Dialog"}),r(i,{onHide:()=>o(!1),visible:n,header:"Dialog Header",footer:"Dialog Footer",children:r("span",{children:"Hello, This is a Dialog!"})})]})},e={render:()=>d()};var a,t,s;e.parameters={...e.parameters,docs:{...(a=e.parameters)==null?void 0:a.docs,source:{originalSource:`{
-  render: () => Template()
-}`,...(s=(t=e.parameters)==null?void 0:t.docs)==null?void 0:s.source}}};const j=["Default"];export{e as Default,j as __namedExportsOrder,_ as default};
-//# sourceMappingURL=Dialog.stories.a039a88c.js.map

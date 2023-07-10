@@ -57,6 +57,7 @@ export interface DefaultValueTemplateProps
   valueStyle?: React.CSSProperties
   isOpen?: boolean
   className?: string
+  childrenCustom?: React.ReactNode
 }
 
 export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
@@ -71,6 +72,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   placeholder = 'Select an option...',
   isOpen,
   className,
+  childrenCustom,
 }) => {
   const noValue = !value.length
 
@@ -97,7 +99,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
           )}
         </>
       )}
-
+      {childrenCustom}
       <Icon icon={dropIcon} className="control" />
     </DefaultValueStyled>
   )

@@ -1,2 +1,0 @@
-import{r,j as a}from"./jsx-runtime.be8e9395.js";import{S as o}from"./styles.38d859eb.js";const e=r.exports.forwardRef((t,p)=>a(o,{type:"text",ref:p,...t}));e.displayName="InputText";try{e.displayName="InputText",e.__docgenInfo={description:"",displayName:"InputText",props:{}}}catch{}try{InputText.displayName="InputText",InputText.__docgenInfo={description:"",displayName:"InputText",props:{}}}catch{}export{e as I};
-//# sourceMappingURL=index.1a493964.js.map

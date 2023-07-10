@@ -1,0 +1,132 @@
+import { FC, useState } from 'react'
+import { DefaultValueTemplate, Dropdown, DropdownProps } from '../Dropdown'
+import SortCard from './SortCard'
+
+export type SortCardType = {
+  id: string
+  label: string
+  // the direction of the sort, true for ascending, false for descending
+  sortOrder?: boolean
+}
+
+export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onChange'> {
+  value: SortCardType[]
+  options: SortCardType[]
+  onChange: (value: SortCardType[]) => void
+  title: string
+}
+
+export const SortingDropdown: FC<SortingDropdownProps> = ({
+  value,
+  options,
+  onChange,
+  title = 'Sort by',
+  multiSelect = true,
+  ...props
+}) => {
+  const [cardHovering, setCardHovering] = useState(false)
+
+  const handleChange = (v: DropdownProps['value']) => {
+    // for each value, find in value, if not found, find in options and add sortOrder
+    const newValues = v.map((id) => {
+      const idx = value.findIndex((v) => v.id === id)
+      if (idx === -1) {
+        const option = options.find((o) => o.id === id)
+
+        if (!option) throw new Error(`SortingDropdown: option with id ${id} not found`)
+
+        return {
+          id: option.id,
+          label: option?.label ?? '',
+          sortOrder: true,
+        }
+      } else {
+        return value[idx]
+      }
+    })
+
+    onChange(newValues)
+  }
+
+  const handleSortChange = (id: string, e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e?.stopPropagation()
+    // check if e is the remove button (id=remove)
+    if (e?.currentTarget.id === 'remove') {
+      e.preventDefault()
+      return
+    }
+
+    // find the value in value
+    const idx = value.findIndex((v) => v.id === id)
+    if (idx === -1) throw new Error(`SortingDropdown: value with id ${id} not found`)
+    const newValues = [...value]
+    // flip sort order
+    newValues[idx].sortOrder = !newValues[idx].sortOrder
+    // set the new value
+    onChange(newValues)
+  }
+
+  const handleRemove = (id: string) => {
+    // remove id from value
+    const newValues = value.filter((v) => v.id !== id)
+    onChange(newValues)
+  }
+
+  return (
+    <Dropdown
+      {...props}
+      disableOpen={cardHovering && !!value.length}
+      value={value.map(({ id }) => id)}
+      options={options}
+      onChange={handleChange}
+      dataKey="id"
+      multiSelect={multiSelect}
+      widthExpand
+      buttonStyle={{
+        backgroundColor: !!value.length ? 'var(--color-grey-00)' : undefined,
+      }}
+      valueTemplate={(values, selected, isOpen) => (
+        <DefaultValueTemplate
+          value={[]}
+          placeholder=""
+          isOpen={isOpen}
+          childrenCustom={
+            <>
+              <span>{title}</span>
+              {selected.map((v) => {
+                const id = v.toString()
+                // find the sort card in options
+                const sortValue = value.find((o) => o.id === id) || options.find((o) => o.id === id)
+                if (!sortValue) return ''
+
+                return (
+                  <SortCard
+                    key={id}
+                    {...sortValue}
+                    disabled={isOpen}
+                    sortOrder={sortValue?.sortOrder ?? true}
+                    onMouseEnter={() => !isOpen && setCardHovering(true)}
+                    onMouseLeave={() => setCardHovering(false)}
+                    onClick={(e) => !isOpen && handleSortChange(id, e)}
+                    onRemove={() => !isOpen && handleRemove(id)}
+                    onKeyDown={(e) => {
+                      if (isOpen) return
+                      e.stopPropagation()
+                      if (e.key === 'Enter') {
+                        if ((e.target as HTMLDivElement).id !== 'remove') {
+                          handleSortChange(id)
+                        } else {
+                          handleRemove(id)
+                        }
+                      }
+                    }}
+                  />
+                )
+              })}
+            </>
+          }
+        />
+      )}
+    />
+  )
+}
