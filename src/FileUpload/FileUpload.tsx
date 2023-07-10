@@ -1,36 +1,82 @@
 import { useState, useRef, useMemo, forwardRef } from 'react'
-import styled from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+import { Button } from '../Button'
+import { Icon } from '../Icon'
+import { FileCard } from '../FileCard'
+import { Spacer } from '../Layout/Spacer'
+import { SaveButton } from '../SaveButton'
 
 const UploadForm = styled.form`
-  height: 200px;
-  width: 300px;
-  text-align: center;
+  min-height: 160px;
+  min-width: 300px;
+  height: 100%;
+  width: 100%;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 
-  input {
-    display: none;
-  }
-
-  label {
-    height: 100%;
+  .header {
+    width: 100%;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    border-width: 2px;
-    border-radius: 1rem;
-    border-style: dashed;
-    border-color: #6b7685;
-    background-color: transparent;
-
-    &.drag-active {
-      background-color: rgba(0, 0, 0, 0.1);
+    gap: 4px;
+    h2 {
+      margin: 0;
     }
   }
 
-  span {
-    font-size: 1.2rem;
+  .upload-button {
+    position: relative;
+    overflow: hidden;
+
+    * > span {
+      cursor: pointer;
+    }
+  }
+
+  input {
+    position: absolute;
+    inset: 0px;
+    opacity: 0;
+
+    &::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0px;
+      cursor: pointer;
+    }
+  }
+
+  .files {
+    flex: 1;
+    position: relative;
+    background-color: var(--panel-background);
+    border-radius: 1rem;
+
+    border-width: 2px;
+    border-style: dashed;
+    border-color: #6b7685;
+  }
+
+  .scroll-container {
+    overflow: auto;
+    position: absolute;
+    inset: 0;
+  }
+
+  label {
+    position: absolute;
+    inset: 0;
+
+    &.drag-active {
+      background-color: rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
   }
 
   small {
@@ -38,16 +84,18 @@ const UploadForm = styled.form`
     font-size: 0.8rem;
   }
 
-  button {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    color: #3182ce;
-    font-weight: 600;
-    font-size: 1rem;
+  .drop-here {
+    position: absolute;
+    inset: 0;
 
-    &:hover {
-      text-decoration: underline;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+
+    .icon {
+      font-size: 3rem;
     }
   }
 
@@ -56,48 +104,106 @@ const UploadForm = styled.form`
     width: 100%;
     height: 100%;
     border-radius: 1rem;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
+    inset: 0;
+    z-index: 25;
   }
-`
 
-const FileList = styled.ul`
-  list-style: none;
-  padding: 10%;
-  margin: 0;
-  font-size: 0.8rem;
-  overflow-y: auto;
-  width: 100%;
-
-  li {
+  footer {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: flex-end;
 
-    button {
-      background-color: transparent;
-      border: none;
-      color: #e53e3e;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
+    .success,
+    .error {
+      display: block;
+      &::after {
+        content: ':';
+        opacity: 0;
       }
+    }
+
+    .success {
+      color: var(--color-hl-00);
+    }
+
+    .error {
+      color: var(--color-hl-error);
     }
   }
 `
 
-export interface FileUploadProps extends React.HTMLAttributes<HTMLFormElement> {
-  files: File[]
-  setFiles: React.Dispatch<React.SetStateAction<File[]>>
-  mode?: 'single' | 'multiple' | 'sequence'
+// fade out and scale down
+const successAnimation = keyframes`
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+`
+
+const StyledList = styled.ul<{ $isSuccess: boolean }>`
+  list-style: none;
+  padding: 16px;
+  margin: 0;
+
+  position: relative;
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  overflow: auto;
+
+  ${({ $isSuccess }) =>
+    $isSuccess &&
+    css`
+      animation: ${successAnimation} 0.3s ease forwards;
+    `}
+`
+
+const extractSequence = (string: string): [string, number] | [] => {
+  // first remove the extension
+
+  const matches = string.match(/\d+/g) // Extracts all sequences of digits from the string
+  if (!matches) return []
+
+  const lastMatch = matches[matches.length - 1] // Gets the last match, which is the sequence number
+  const prefix = string.slice(0, string.lastIndexOf(lastMatch)) // Gets the prefix of the string, which is the part before the sequence number
+
+  const sequenceNumber = parseInt(lastMatch, 10) // Parses the sequence number into an integer
+  return [prefix, sequenceNumber]
+}
+
+export interface CustomFile {
+  sequenceId: string | null
+  sequenceNumber: number | null
+  file: File
+}
+
+// BREAKING CHANGES
+// - mode: single, multiple, sequence replaced with allowMultiple, allowSequence
+// - showMaxFiles: removed
+// - formProps renamed to props
+// - CustomFile interface added
+
+type FormProps = Omit<React.HTMLAttributes<HTMLFormElement>, 'onSubmit'>
+export interface FileUploadProps extends FormProps {
+  files: CustomFile[]
+  setFiles: React.Dispatch<React.SetStateAction<CustomFile[]>>
+  allowMultiple?: boolean
+  allowSequence?: boolean
   validExtensions?: string[]
-  showMaxFiles?: number
-  style?: React.CSSProperties
-  className?: string
+  confirmLabel?: string
+  saveButton?: React.ReactNode
+  onSubmit?: (files: CustomFile[]) => void
+  isFetching?: boolean
+  isSuccess?: boolean
+  successMessage?: string
+  isError?: boolean
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -105,21 +211,62 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     {
       files,
       setFiles,
-      mode = 'single',
-      validExtensions,
-      showMaxFiles = 4,
-      style,
-      className,
-      ...formProps
+      allowMultiple = false,
+      allowSequence = false,
+      validExtensions = [],
+      confirmLabel,
+      saveButton,
+      onSubmit,
+      isFetching,
+      successMessage = 'Upload successful',
+      isSuccess,
+      isError,
+      ...props
     },
     ref,
   ) => {
     // Valid modes: single, multiple, sequence
 
+    // this is mainly used for the success out animation
+    const [localFilesState, setLocalFilesState] = useState<CustomFile[]>([])
+
+    // every time files changes, update localFilesState, unless isSuccess
+    useMemo(() => {
+      if (isSuccess) return
+      setLocalFilesState(files)
+    }, [files, isSuccess])
+
     const [dragActive, setDragActive] = useState(false)
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
     const inputRef = useRef<HTMLInputElement | null>(null)
-    const multiple = mode === 'multiple' || mode === 'sequence'
+    const [successMessageOpen, setSuccessMessageOpen] = useState<string | null>()
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+    // every time successMessage changes or isSuccess, clear it after 3 seconds
+    useMemo(() => {
+      if (successMessage && isSuccess) {
+        setSuccessMessageOpen(successMessage)
+        const timeout = setTimeout(() => setSuccessMessageOpen(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [successMessage, isSuccess])
+
+    // every time errorMessage changes, clear it after 3 seconds
+    useMemo(() => {
+      if (errorMessage) {
+        const timeout = setTimeout(() => setErrorMessage(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [errorMessage])
+
+    // if we are fetching, set dragActive to false
+    useMemo(() => {
+      if (isFetching) setDragActive(false)
+    }, [isFetching])
+
+    // if isError, set errorMessage
+    useMemo(() => {
+      if (isError) setErrorMessage('Upload failed: try again')
+    }, [isError])
 
     // handles the drag events
     const handleDrag = (e: React.DragEvent<HTMLDivElement> | React.DragEvent<HTMLFormElement>) => {
@@ -133,30 +280,186 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     }
 
     const handleFiles = (newFiles: FileList) => {
-      const acceptedFiles: File[] = []
+      if (!newFiles.length) return
 
+      // if we don't allow multiple, remove all files
+      if (!allowMultiple) setFiles([])
+
+      let acceptedFiles: CustomFile[] = []
+
+      // split files into sequences and single files
+      const sequences: {
+        [key: string]: {
+          files: {
+            sequenceNumber: number
+            file: File
+          }[]
+          counts: [number | null, number | null][]
+        }
+      } = {}
+
+      // for each file in the list
       for (const file of newFiles) {
-        if (validExtensions) {
-          const extension = file.name.split('.').pop()
-          if (!extension || !validExtensions.includes(extension)) {
-            setErrorMessage(`Invalid file type: ${extension}`)
+        const fileName = file.name
+        const extension = fileName.split('.').pop()
+        if (!extension || (!validExtensions.includes(extension) && validExtensions.length)) {
+          setErrorMessage(`Invalid file type: ${extension}`)
+          // skip this file
+          continue
+        }
+
+        // check if file already exists
+        if (files.find((f) => f.file.name === fileName)) {
+          setErrorMessage(`File already exists: ${fileName}`)
+          // skip this file
+          continue
+        }
+
+        // check we can even have sequences
+        if (!allowSequence) {
+          acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
+          continue
+        }
+
+        // check if it is part of an image sequence
+        const seqMatch = extractSequence(fileName)
+
+        if (!seqMatch.length) {
+          acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
+          continue
+        }
+
+        // if it is, add it to the sequence
+        const [prefix, sequenceNumber] = seqMatch
+        // if the sequence doesn't exist, create it
+        const sequenceId = prefix + '.' + extension
+
+        if (!sequences[sequenceId]) sequences[sequenceId] = { files: [], counts: [] }
+        const foundSequence = sequences[sequenceId]
+
+        // add the file to the sequence
+        foundSequence.files.push({ file, sequenceNumber })
+
+        // get last count
+        // if there is no last count, add the first count
+        // if the last count is not the current count - 1 (next), push the current count
+        // if the last count is the current count - 1, update the last count to the current count
+        // if the last count is the current count, do nothing
+        const counts = [...foundSequence.counts]
+        const lastCount = counts[counts.length - 1]
+        if (lastCount === undefined) {
+          // console.log('no count', counts)
+          // If there is no last count, add the first count
+          counts.push([sequenceNumber, sequenceNumber])
+        } else if (lastCount[1] !== sequenceNumber - 1) {
+          // console.log('not next', counts)
+          // If the last count is not the current count - 1 (next), push the current count
+          counts.push([sequenceNumber, sequenceNumber])
+        } else {
+          // console.log('next', counts)
+          // If the last count is the current count - 1, update the last count to the current count
+          counts[counts.length - 1] = [lastCount[0], sequenceNumber]
+        }
+
+        // update counts
+        foundSequence.counts = counts
+      }
+
+      // if we don't allow multiple and don't allow sequences, only accept the first file
+      if (!allowMultiple && !allowSequence) {
+        if (acceptedFiles.length > 1) {
+          console.log('only one file allowed')
+          setErrorMessage('Only 1 file allowed')
+          // return first file
+          setFiles([acceptedFiles[0]])
+          return
+        } else if (Object.values(sequences).length) {
+          if (Object.values(sequences).length > 1) {
+            console.log('only one sequence allowed')
+            setErrorMessage('Only 1 sequence allowed')
+          }
+          // return first file from first sequence
+          const firstSequence = Object.values(sequences)[0]
+          if (firstSequence && firstSequence.files.length) {
+            setFiles([{ ...firstSequence.files[0], sequenceId: null }])
+            return
+          } else {
+            setErrorMessage('No files found')
+            // return no files
+            setFiles([])
             return
           }
         }
+      }
 
-        if (mode === 'sequence') {
-          // TODO: Handle sequence validation
+      // if we don't allowMultiple but do allow sequences, remove all but first accepted file
+      if (!allowMultiple && acceptedFiles.length > 1) {
+        setErrorMessage('Only 1 file allowed')
+        // splice out all accepted files after the first
+        acceptedFiles.splice(1, acceptedFiles.length - 1)
+      }
+
+      // for each sequence
+      for (const [id, { files, counts }] of Object.entries(sequences)) {
+        if (files.length < 2) {
+          // if there is only one file in the sequence, add it to the accepted files
+          acceptedFiles.push({ ...files[0], sequenceId: null, sequenceNumber: null })
+          if (!allowMultiple && allowSequence) {
+            setErrorMessage('Only 1 file allowed')
+            break
+          } else {
+            continue
+          }
         }
 
-        acceptedFiles.push(file)
-        if (!multiple) {
+        // sort the files by filename
+        const sortedFiles = files.sort()
+        // create sequence Id from id and counts
+        const idPrefix = id.slice(0, id.lastIndexOf('.'))
+        const idExtension = id.slice(id.lastIndexOf('.'))
+
+        // filename[0001-0005][0008-0009].jpg
+        let sequenceId = idPrefix
+
+        // max counts 3
+        // otherwise, use [start...end]
+        if (counts.length > 3) {
+          sequenceId += `[${counts[0][0]}--${counts[counts.length - 1][1]}]`
+        } else {
+          sequenceId +=
+            '[' +
+            counts
+              .map((count) => (count[0] === count[1] ? `${count[0]}` : `${count[0]}-${count[1]}`))
+              .join(', ') +
+            ']'
+        }
+
+        sequenceId += idExtension
+
+        const seqFiles = sortedFiles.map(({ file, sequenceNumber }) => ({
+          file,
+          sequenceNumber,
+          sequenceId: sequenceId,
+        }))
+
+        //if we allow sequences but don't allow multiple, only accept the first sequence, remove accepted files
+        // return to prevent adding more sequences
+        if (!allowMultiple && allowSequence) {
+          if (Object.entries(sequences).length > 1) {
+            setErrorMessage('Only 1 sequence allowed')
+          }
+          // use splice to remove all files and only add this sequence
+          acceptedFiles.splice(0, acceptedFiles.length, ...seqFiles)
+
           break
+        } else {
+          // add the sequence to the accepted files
+          acceptedFiles.push(...seqFiles)
         }
       }
-      setErrorMessage(null)
-      if (!acceptedFiles) return
-      if (mode === 'single') setFiles([acceptedFiles[0]])
-      else setFiles((files) => [...(files || []), ...acceptedFiles])
+
+      if (!acceptedFiles.length) return
+      else setFiles((files) => files.concat(acceptedFiles))
     }
 
     // triggers when file is dropped
@@ -177,90 +480,151 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
     }
 
-    // triggers the input when the button is clicked
-    const onButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      inputRef.current?.click()
+    const onFileRemove = (key: string) => {
+      // remove files from state
+      const newFiles = files.filter((file) =>
+        file.sequenceId ? file.sequenceId !== key : file.file.name !== key,
+      )
+
+      setFiles(newFiles)
     }
 
-    const onFileRemove = (event: React.MouseEvent<HTMLButtonElement>, idx: number) => {
-      event.preventDefault()
-      event.stopPropagation()
-      if (idx === -1) {
-        setFiles([])
-        if (inputRef.current) inputRef.current.value = ''
-      } else {
-        const newFiles = [...files]
-        newFiles.splice(idx, 1)
-        setFiles(newFiles)
-      }
+    // for every file that key matches the sequenceId, remove sequenceId and sequenceNumber
+    const onSeqSplit = (key: string) => {
+      const newFiles = files.map((file) =>
+        file.sequenceId === key ? { ...file, sequenceId: null, sequenceNumber: null } : file,
+      )
+
+      setFiles(newFiles)
     }
 
-    const formContents = useMemo(() => {
-      if (files?.length > showMaxFiles) {
-        return (
-          <>
-            <span>{files.length} files selected</span>
-            <button onClick={(e) => onFileRemove(e, -1)}>clear</button>
-          </>
-        )
-      } else if (files?.length) {
-        return (
-          <FileList>
-            {files.map((file, idx) => (
-              <li key={idx}>
-                {file.name}
-                <button onClick={(e) => onFileRemove(e, idx)}>x</button>
-              </li>
-            ))}
-          </FileList>
-        )
-      } else {
-        return (
-          <>
-            <span>Drag and drop your file here or</span>
-            <button className="upload-button" onClick={onButtonClick}>
-              upload a file
-            </button>
-            <small>{errorMessage}</small>
-          </>
-        )
+    const fileOrFiles = useMemo(
+      () => (allowMultiple || allowSequence ? 'files' : 'file'),
+      [allowMultiple, allowSequence],
+    )
+
+    // we do this so that we can show the success out animation temporarily
+    const filesToGroup = useMemo(() => {
+      if (!isSuccess || !localFilesState.length) return files
+      else return localFilesState
+    }, [files, isSuccess, localFilesState])
+
+    // group together files with the same sequenceId
+    const groupedFiles = useMemo(() => {
+      const groupedFiles: { [key: string]: CustomFile[] } = {}
+      for (const file of filesToGroup) {
+        if (!file) continue
+        if (!file.sequenceId) {
+          groupedFiles[file.file.name] = [file]
+        } else {
+          if (!groupedFiles[file.sequenceId]) groupedFiles[file.sequenceId] = []
+          groupedFiles[file.sequenceId].push(file)
+        }
       }
-    }, [files, errorMessage])
+      return groupedFiles
+    }, [filesToGroup])
 
     return (
       <UploadForm
         onDragEnter={handleDrag}
         onSubmit={(e) => e.preventDefault()}
-        style={style}
-        className={className}
         ref={ref}
-        {...formProps}
+        {...props}
       >
-        <input
-          ref={inputRef}
-          type="file"
-          id="input-file-upload"
-          multiple={multiple}
-          onChange={handleChange}
-        />
-
-        <label
-          id="label-file-upload"
-          htmlFor="input-file-upload"
-          className={dragActive ? 'drag-active' : ''}
-        >
-          {formContents}
-        </label>
-
-        {dragActive && (
-          <div
-            id="drag-file-element"
-            onDragEnter={handleDrag}
-            onDragLeave={handleDrag}
-            onDragOver={handleDrag}
-            onDrop={handleDrop}
+        <div className="header">
+          <h2>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h2>
+          <Spacer />
+          <Button
+            icon="delete"
+            onClick={() => setFiles([])}
+            label="Clear all"
+            disabled={!files.length || isFetching}
           />
-        )}
+          <Button icon="upload_file" className="upload-button" disabled={isFetching}>
+            <span>Add {fileOrFiles}</span>
+            <input
+              ref={inputRef}
+              type="file"
+              id="input-file-upload"
+              multiple={allowMultiple || allowSequence}
+              onChange={handleChange}
+              disabled={isFetching}
+            />
+          </Button>
+        </div>
+
+        <div className="files">
+          <label
+            id="label-file-upload"
+            htmlFor="input-file-upload"
+            className={dragActive ? 'drag-active' : ''}
+          />
+
+          <div className="scroll-container">
+            <StyledList
+              $isSuccess={!!isSuccess && !!localFilesState.length}
+              onAnimationEnd={() => setLocalFilesState([])}
+            >
+              {Object.entries(groupedFiles).map(([key, files], idx) => (
+                <li key={key}>
+                  <FileCard
+                    title={key}
+                    type={files.length > 1 ? 'sequence' : files[0].file.type}
+                    size={files.reduce((acc, file) => acc + file.file.size, 0)}
+                    length={files.length}
+                    onRemove={() => onFileRemove(key)}
+                    onSplit={() => onSeqSplit(key)}
+                    splitDisabled={files.length < 2 || !allowMultiple}
+                    isFetching={isFetching}
+                  />
+                </li>
+              ))}
+            </StyledList>
+          </div>
+
+          {!filesToGroup.length && (
+            <div className="drop-here">
+              <Icon icon="upload_file" />
+              <h3>Drop {fileOrFiles} here</h3>
+            </div>
+          )}
+
+          {dragActive && (
+            <div
+              id="drag-file-element"
+              onDrop={handleDrop}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              style={{
+                zIndex: 200,
+              }}
+            />
+          )}
+        </div>
+        <footer>
+          <div>
+            <span className="allowed">
+              Allowed:
+              {allowMultiple ? ' Multiple,' : ' Single,'}
+              {allowSequence && ' Sequence,'}
+              {validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}
+            </span>
+            <span className={successMessageOpen ? 'success' : 'error'}>
+              {successMessageOpen ? successMessageOpen : errorMessage}
+            </span>
+          </div>
+          {!saveButton && onSubmit ? (
+            <SaveButton
+              active={!!files.length}
+              saving={isFetching}
+              label={confirmLabel || 'Upload ' + fileOrFiles}
+              onClick={() => onSubmit(files)}
+            />
+          ) : (
+            saveButton
+          )}
+        </footer>
       </UploadForm>
     )
   },
