@@ -36,6 +36,12 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   aspect-ratio: 16 / 9;
 
   padding: 4px;
+  /* thumbnail variant no padding */
+  ${({ $variant }) =>
+    $variant === 'thumbnail' &&
+    css`
+      padding: 0;
+    `}
 
   flex-shrink: 0;
   overflow: hidden;
