@@ -46,6 +46,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isSecondary?: boolean
   isLoading?: boolean
   isError?: boolean
+  isHover?: boolean
+  isDragging?: boolean
   disabled?: boolean
   variant?: 'thumbnail' | 'basic' | 'full'
 }
@@ -66,8 +68,10 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isSecondary = false,
       isLoading = false,
       isError = false,
+      isHover = false,
       disabled = false,
       variant = 'full',
+      isDragging = false,
       ...props
     },
     ref,
@@ -79,7 +83,11 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideDescription = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
-    const [isImageLoading, isImageValid] = useImageLoading(imageUrl, isLoading)
+    // image animation is disabled if the image loads faster than 100ms
+    const [isImageLoading, isImageValid, disableImageAnimation] = useImageLoading(
+      imageUrl,
+      isLoading,
+    )
 
     return (
       <StyledEntityCard
@@ -91,12 +99,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isLoading={isLoading}
         $isError={isError}
         $disabled={disabled}
+        $isHover={isHover}
+        $isDragging={isDragging}
       >
         <StyledThumbnail
           className="thumbnail"
           style={{ backgroundImage: `url(${imageUrl})` }}
           $isImageLoading={isImageLoading}
           $isImageValid={isImageValid}
+          $disableImageAnimation={disableImageAnimation}
         >
           <StyledRow className="row">
             {/* top left */}

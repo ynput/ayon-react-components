@@ -20,6 +20,7 @@
     "serve-storybook": "npx http-server ./storybook-static"
   },
   "devDependencies": {
+    "@dnd-kit/core": "^6.0.8",
     "@storybook/addon-actions": "^7.0.25",
     "@storybook/addon-essentials": "^7.0.25",
     "@storybook/addon-interactions": "^7.0.25",
@@ -116,5 +117,6 @@
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "dependencies": {}
 }

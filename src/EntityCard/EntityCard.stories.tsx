@@ -3,8 +3,9 @@ import { EntityCard, EntityCardProps } from '.'
 import { useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
-import { Dropdown } from '../Dropdowns/Dropdown'
 import { Panel } from '../Panels/Panel'
+import DnDTemplate from './DnD/DnDTemplate'
+import getRandomImage from '../helpers/getRandomImage'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -14,17 +15,6 @@ const meta: Meta<typeof EntityCard> = {
 export default meta
 
 type Story = StoryObj<typeof EntityCard>
-
-const getRandomImage = () => {
-  // random width between 200 and 1000
-  const width = Math.floor(Math.random() * 800) + 200
-  const height = Math.floor(Math.random() * 800) + 200
-  const randomImage = `
-https://picsum.photos/${width}/${height}
-`
-
-  return randomImage
-}
 
 interface DataProps extends EntityCardProps {}
 
@@ -105,6 +95,7 @@ const Template = (props: EntityCardProps) => {
         <Button onClick={() => simulateLoading(true, false)}>Simulate Success</Button>
         <Button onClick={() => simulateLoading(false, true)}>Simulate Error</Button>
       </Toolbar>
+
       <EntityCard
         {...{
           isLoading,
@@ -129,4 +120,10 @@ export const Default: Story = {
     ...initData,
   },
   render: Template,
+}
+
+export const DnD: Story = {
+  name: 'Drag and Drop',
+  args: { ...Default.args },
+  render: () => DnDTemplate({ ...Default.args }),
 }
