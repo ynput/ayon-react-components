@@ -37,10 +37,18 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
 
   padding: 4px;
   /* thumbnail variant no padding */
-  ${({ $variant }) =>
+  ${({ $variant, $isActive }) =>
     $variant === 'thumbnail' &&
     css`
       padding: 0;
+
+      /* lighten thumbnail */
+      &:hover .thumbnail::after {
+        transition-duration: var(--hover-transition);
+        transition-delay: 0;
+        background-color: white;
+        opacity: 0.2;
+      }
     `}
 
   flex-shrink: 0;
