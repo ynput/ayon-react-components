@@ -123,8 +123,9 @@ const Template = (props: EntityCardProps) => {
 export const Default: Story = {
   args: {
     variant: 'full',
-    isSecondary: false,
     notification: undefined,
+    isSecondary: false,
+    disabled: false,
     ...initData,
   },
   render: Template,

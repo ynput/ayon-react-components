@@ -66,7 +66,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isSecondary = false,
       isLoading = false,
       isError = false,
-      disabled,
+      disabled = false,
       variant = 'full',
       ...props
     },
@@ -90,6 +90,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isSecondary={isSecondary}
         $isLoading={isLoading}
         $isError={isError}
+        $disabled={disabled}
       >
         <StyledThumbnail
           className="thumbnail"

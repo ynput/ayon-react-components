@@ -10,6 +10,7 @@ interface StyledEntityCardProps {
   $isLoading?: boolean
   $isSuccess?: boolean
   $isError?: boolean
+  $disabled?: boolean
 }
 
 export const StyledEntityCard = styled.div<StyledEntityCardProps>`
@@ -37,7 +38,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
 
   padding: 4px;
   /* thumbnail variant no padding */
-  ${({ $variant, $isActive }) =>
+  ${({ $variant }) =>
     $variant === 'thumbnail' &&
     css`
       padding: 0;
@@ -166,6 +167,26 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         &.status,
         &.notification {
           min-width: 28px;
+        }
+      }
+    `}
+
+    /* DISABLED */
+    ${({ $disabled }) =>
+    $disabled &&
+    css`
+      /* prevent clicks and hover */
+      pointer-events: none;
+
+      /* fade out text */
+      .row > * > * {
+        opacity: 0.5;
+      }
+
+      /* fade out image */
+      .thumbnail {
+        ::after {
+          opacity: 0.75;
         }
       }
     `}
