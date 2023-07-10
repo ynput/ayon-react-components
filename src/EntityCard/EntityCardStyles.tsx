@@ -82,6 +82,9 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         background-color: var(--selection-color);
       }
 
+      /* show drag handle cursor */
+      cursor: grab;
+
       /* description stays open */
       .description {
         grid-template-rows: 1fr;

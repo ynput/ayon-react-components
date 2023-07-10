@@ -3,8 +3,11 @@ import { EntityCard, EntityCardProps } from '.'
 import { useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
-import { Dropdown } from '../Dropdowns/Dropdown'
 import { Panel } from '../Panels/Panel'
+// DND
+import { DndContext } from '@dnd-kit/core'
+import { Droppable } from './DnD/Droppable'
+import { Draggable } from './DnD/Draggable'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -38,7 +41,11 @@ const initData: DataProps = {
   iconColor: '#FF982E',
 }
 
-const Template = (props: EntityCardProps) => {
+interface TemplateProps extends EntityCardProps {
+  disableButtons?: boolean
+}
+
+const Template = (props: TemplateProps) => {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
@@ -96,15 +103,17 @@ const Template = (props: EntityCardProps) => {
 
   return (
     <Panel>
-      <Toolbar
-        style={{
-          marginBottom: 20,
-        }}
-      >
-        <Button onClick={() => simulateLoading(false, false)}>Simulate No Image</Button>
-        <Button onClick={() => simulateLoading(true, false)}>Simulate Success</Button>
-        <Button onClick={() => simulateLoading(false, true)}>Simulate Error</Button>
-      </Toolbar>
+      {!props.disableButtons && (
+        <Toolbar
+          style={{
+            marginBottom: 20,
+          }}
+        >
+          <Button onClick={() => simulateLoading(false, false)}>Simulate No Image</Button>
+          <Button onClick={() => simulateLoading(true, false)}>Simulate Success</Button>
+          <Button onClick={() => simulateLoading(false, true)}>Simulate Error</Button>
+        </Toolbar>
+      )}
       <EntityCard
         {...{
           isLoading,
@@ -129,4 +138,38 @@ export const Default: Story = {
     ...initData,
   },
   render: Template,
+}
+
+interface DnDTemplateProps extends TemplateProps {}
+
+const DnDTemplate = (props: DnDTemplateProps) => {
+  const [column1, setColumn1] = useState([1])
+  const [column2, setColumn2] = useState([])
+
+  return (
+    <DndContext>
+      <Panel style={{ flexDirection: 'row' }}>
+        <Droppable id={1}>
+          {column1.map((item, index) => (
+            <Draggable key={item} id={item}>
+              <EntityCard key={index} {...props} {...initData} />
+            </Draggable>
+          ))}
+        </Droppable>
+        <Droppable id={2}>
+          {column2.map((item, index) => (
+            <Draggable key={item} id={item}>
+              <EntityCard key={index} {...props} {...initData} />
+            </Draggable>
+          ))}
+        </Droppable>
+      </Panel>
+    </DndContext>
+  )
+}
+
+export const DnD: Story = {
+  name: 'Drag and Drop',
+  args: { ...Default.args },
+  render: () => DnDTemplate({ ...Default.args, disableButtons: true }),
 }
