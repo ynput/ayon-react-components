@@ -97,11 +97,7 @@ const DnDTemplate = (props: EntityCardProps) => {
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      onDragStart={() => console.log('start')}
-      onDragEnd={handleDragEnd}
-    >
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <Panel style={{ flexDirection: 'row' }}>
         {columns.map(({ id, items }) => (
           <Droppable id={id} key={id}>
