@@ -23,6 +23,7 @@ const useImageLoading = (imageUrl: string = '', isLoading: boolean) => {
     }
     img.onerror = () => {
       setIsImageLoading(false)
+      setIsImageValid(false)
     }
     img.src = imageUrl
   }, [imageUrl])
