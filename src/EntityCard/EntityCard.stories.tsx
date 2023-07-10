@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { EntityCard, EntityCardProps } from '.'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
 import { Dropdown } from '../Dropdowns/Dropdown'
@@ -25,12 +25,23 @@ const Template = (props: EntityCardProps) => {
     setIsLoading(true)
     setIsError(false)
     setIsSuccess(false)
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setIsLoading(false)
       setIsError(isError)
       setIsSuccess(isSuccess)
     }, 1000)
+
+    return timeout
   }
+
+  useEffect(() => {
+    const timeout = simulateLoading(true, false)
+
+    // clear timeout
+    return () => {
+      timeout && clearTimeout(timeout)
+    }
+  }, [])
 
   return (
     <Panel>
@@ -50,6 +61,7 @@ const Template = (props: EntityCardProps) => {
           isError,
           isActive,
         }}
+        style={{ width: 225 }}
         {...props}
       />
     </Panel>
@@ -62,7 +74,7 @@ export const Default: Story = {
     titleIcon: 'lightbulb',
     subtitle: 'sc0120sh0130',
     description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
-    imageUrl: 'https://picsum.photos/200/300',
+    imageUrl: 'https://picsum.photos/225/127',
     imageAlt: 'random image',
     icon: 'visibility',
     iconColor: 'FF982E',

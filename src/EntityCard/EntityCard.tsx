@@ -101,7 +101,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           </StyledRow>
         </StyledThumbnail>
         {description && !hideDescription && (
-          <StyledDescription className="description">{description}</StyledDescription>
+          <StyledDescription className="description">
+            <span>{description}</span>
+          </StyledDescription>
         )}
       </StyledEntityCard>
     )
