@@ -4,10 +4,8 @@ import { useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
 import { Panel } from '../Panels/Panel'
-// DND
-import { DndContext } from '@dnd-kit/core'
-import { Droppable } from './DnD/Droppable'
-import { Draggable } from './DnD/Draggable'
+import DnDTemplate from './DnD/DnDTemplate'
+import getRandomImage from '../helpers/getRandomImage'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -17,17 +15,6 @@ const meta: Meta<typeof EntityCard> = {
 export default meta
 
 type Story = StoryObj<typeof EntityCard>
-
-const getRandomImage = () => {
-  // random width between 200 and 1000
-  const width = Math.floor(Math.random() * 800) + 200
-  const height = Math.floor(Math.random() * 800) + 200
-  const randomImage = `
-https://picsum.photos/${width}/${height}
-`
-
-  return randomImage
-}
 
 interface DataProps extends EntityCardProps {}
 
@@ -41,11 +28,7 @@ const initData: DataProps = {
   iconColor: '#FF982E',
 }
 
-interface TemplateProps extends EntityCardProps {
-  disableButtons?: boolean
-}
-
-const Template = (props: TemplateProps) => {
+const Template = (props: EntityCardProps) => {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
@@ -103,17 +86,16 @@ const Template = (props: TemplateProps) => {
 
   return (
     <Panel>
-      {!props.disableButtons && (
-        <Toolbar
-          style={{
-            marginBottom: 20,
-          }}
-        >
-          <Button onClick={() => simulateLoading(false, false)}>Simulate No Image</Button>
-          <Button onClick={() => simulateLoading(true, false)}>Simulate Success</Button>
-          <Button onClick={() => simulateLoading(false, true)}>Simulate Error</Button>
-        </Toolbar>
-      )}
+      <Toolbar
+        style={{
+          marginBottom: 20,
+        }}
+      >
+        <Button onClick={() => simulateLoading(false, false)}>Simulate No Image</Button>
+        <Button onClick={() => simulateLoading(true, false)}>Simulate Success</Button>
+        <Button onClick={() => simulateLoading(false, true)}>Simulate Error</Button>
+      </Toolbar>
+
       <EntityCard
         {...{
           isLoading,
@@ -140,36 +122,8 @@ export const Default: Story = {
   render: Template,
 }
 
-interface DnDTemplateProps extends TemplateProps {}
-
-const DnDTemplate = (props: DnDTemplateProps) => {
-  const [column1, setColumn1] = useState([1])
-  const [column2, setColumn2] = useState([])
-
-  return (
-    <DndContext>
-      <Panel style={{ flexDirection: 'row' }}>
-        <Droppable id={1}>
-          {column1.map((item, index) => (
-            <Draggable key={item} id={item}>
-              <EntityCard key={index} {...props} {...initData} />
-            </Draggable>
-          ))}
-        </Droppable>
-        <Droppable id={2}>
-          {column2.map((item, index) => (
-            <Draggable key={item} id={item}>
-              <EntityCard key={index} {...props} {...initData} />
-            </Draggable>
-          ))}
-        </Droppable>
-      </Panel>
-    </DndContext>
-  )
-}
-
 export const DnD: Story = {
   name: 'Drag and Drop',
   args: { ...Default.args },
-  render: () => DnDTemplate({ ...Default.args, disableButtons: true }),
+  render: () => DnDTemplate({ ...Default.args }),
 }

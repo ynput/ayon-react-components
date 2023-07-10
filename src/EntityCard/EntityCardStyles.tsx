@@ -11,12 +11,31 @@ interface StyledEntityCardProps {
   $isSuccess?: boolean
   $isError?: boolean
   $disabled?: boolean
+  $isHover?: boolean
+  $isDragging?: boolean
 }
+
+const cardHoverStyles = css`
+  background-color: var(--card-hover);
+
+  /* hover to show description */
+  .description {
+    grid-template-rows: 1fr;
+    /* transition-delay: 100ms; */
+    padding-top: 2px;
+  }
+`
 
 export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   --loading-transition: 200ms;
   --hover-transition: 150ms;
   --selection-color: var(--selected-blue);
+
+  ${({ $isHover }) =>
+    $isHover &&
+    css`
+      --hover-transition: 0ms;
+    `}
 
   /* if $isSecondary, use secondary color */
   ${({ $isSecondary }) =>
@@ -62,14 +81,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   background-color: var(--card-background);
 
   &:hover {
-    background-color: var(--card-hover);
-
-    /* hover to show description */
-    .description {
-      grid-template-rows: 1fr;
-      /* transition-delay: 100ms; */
-      padding-top: 2px;
-    }
+    ${cardHoverStyles}
   }
 
   /* when active, set background color */
@@ -193,11 +205,29 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         }
       }
     `}
+
+    transition: rotate 100ms;
+
+  /* if we are dragging, hide description and rotate */
+  ${({ $isDragging }) =>
+    $isDragging &&
+    css`
+      /* box shadow */
+      box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
+      rotate: 5deg;
+      cursor: grabbing;
+
+      .description {
+        grid-template-rows: 0fr !important;
+        padding-top: 0 !important;
+      }
+    `}
 `
 
 interface StyledThumbnailProps {
   $isImageLoading: boolean
   $isImageValid: boolean
+  $disableImageAnimation: boolean
 }
 
 // THUMBNAIL
@@ -229,6 +259,14 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
     /* sometime the image takes a bit to show */
     transition-delay: 100ms;
   }
+
+  ${({ $disableImageAnimation }) =>
+    $disableImageAnimation &&
+    css`
+      &::after {
+        display: none;
+      }
+    `}
 
   ${({ $isImageLoading }) =>
     $isImageLoading &&
