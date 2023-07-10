@@ -34,14 +34,14 @@ const Template = (props: EntityCardProps) => {
     return timeout
   }
 
-  useEffect(() => {
-    const timeout = simulateLoading(true, false)
+  //   useEffect(() => {
+  //     const timeout = simulateLoading(true, false)
 
-    // clear timeout
-    return () => {
-      timeout && clearTimeout(timeout)
-    }
-  }, [])
+  //     // clear timeout
+  //     return () => {
+  //       timeout && clearTimeout(timeout)
+  //     }
+  //   }, [])
 
   return (
     <Panel>

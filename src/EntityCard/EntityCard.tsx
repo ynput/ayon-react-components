@@ -80,9 +80,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isActive={isActive}
         $variant={variant}
         $isSecondary={isSecondary}
+        $isLoading={isLoading}
+        $isSuccess={isSuccess}
+        $isError={isError}
       >
-        <StyledThumbnail>
-          <StyledRow>
+        <StyledThumbnail className="thumbnail">
+          <StyledRow className="row">
             {/* top left */}
             {!hideTitles && (
               <StyledTitle className="title">
@@ -97,9 +100,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </StyledTitle>
             )}
           </StyledRow>
-          <StyledRow>
+          <StyledRow className="row">
             {/* bottom left */}
-            {!hideTitles && <StyledTitle className="subtitle">{subtitle}</StyledTitle>}
+            {!hideTitles && (
+              <StyledTitle className="subtitle">
+                <span>{subtitle}</span>
+              </StyledTitle>
+            )}
             {/* bottom right icon */}
             {notificationIcon && !hideIcons && (
               <StyledTitle className="notification">
