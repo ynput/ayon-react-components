@@ -25,4 +25,6 @@ dist-ssr
 res/
 yarn.lock
 
+deploy.sh
+storybook-static
 
