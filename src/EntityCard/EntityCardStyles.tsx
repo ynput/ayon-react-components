@@ -13,6 +13,7 @@ interface StyledEntityCardProps {
   $disabled?: boolean
   $isHover?: boolean
   $isDragging?: boolean
+  $isDraggable?: boolean
 }
 
 const cardHoverStyles = css`
@@ -84,8 +85,18 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
     ${cardHoverStyles}
   }
 
+  /* for keyboard selection when in dragging mode */
+  ${({ $isDraggable }) =>
+    $isDraggable &&
+    css`
+      &:has(:focus-visible),
+      &:focus-visible {
+        ${cardHoverStyles}
+      }
+    `}
+
   /* when active, set background color */
-  ${({ $isActive, $variant }) =>
+  ${({ $isActive, $variant, $isDraggable }) =>
     $isActive &&
     css`
       /* set backgrounds */
@@ -93,6 +104,14 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       &:hover {
         background-color: var(--selection-color);
       }
+
+      ${$isDraggable &&
+      css`
+        &:focus-visible,
+        &:has(:focus-visible) {
+          background-color: var(--selection-color);
+        }
+      `}
 
       /* show drag handle cursor */
       cursor: grab;
@@ -164,13 +183,21 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
         `}
 
   /* ERROR */
-        ${({ $isError }) =>
+        ${({ $isError, $isDraggable }) =>
     $isError &&
     css`
       &,
       &:hover {
         background-color: var(--color-hl-error);
       }
+
+      ${$isDraggable &&
+      css`
+        &:focus-visible,
+        &:has(:focus-visible) {
+          background-color: var(--color-hl-error);
+        }
+      `}
 
       .row > span {
         min-width: 50%;

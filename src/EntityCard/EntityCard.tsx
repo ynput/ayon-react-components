@@ -48,8 +48,11 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isError?: boolean
   isHover?: boolean
   isDragging?: boolean
+  isDraggable?: boolean
   disabled?: boolean
   variant?: 'thumbnail' | 'basic' | 'full'
+  onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
+  onActivate?: () => void
 }
 
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
@@ -72,6 +75,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       disabled = false,
       variant = 'full',
       isDragging = false,
+      isDraggable = false,
+      onThumbnailKeyDown,
+      onActivate,
       ...props
     },
     ref,
@@ -101,6 +107,19 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $disabled={disabled}
         $isHover={isHover}
         $isDragging={isDragging}
+        $isDraggable={isDraggable}
+        tabIndex={0}
+        onClick={(e) => {
+          onActivate && onActivate()
+          props.onClick && props.onClick(e)
+        }}
+        onKeyDown={(e) => {
+          props.onKeyDown && props.onKeyDown(e)
+          if (isDraggable) return
+          if (e.code === 'Enter' || e.code === 'Space') {
+            onActivate && onActivate()
+          }
+        }}
       >
         <StyledThumbnail
           className="thumbnail"
@@ -108,6 +127,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           $isImageLoading={isImageLoading}
           $isImageValid={isImageValid}
           $disableImageAnimation={disableImageAnimation}
+          tabIndex={isDraggable ? 0 : undefined}
+          onKeyDown={(e) => {
+            if (!isDraggable) return
+            e.stopPropagation()
+            onThumbnailKeyDown && onThumbnailKeyDown(e)
+            if (e.code === 'Enter' || e.code === 'Space') {
+              onActivate && onActivate()
+            }
+          }}
         >
           <StyledRow className="row">
             {/* top left */}

@@ -1,4 +1,12 @@
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import {
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { Panel } from '../../Panels/Panel'
 import { Droppable } from './Droppable'
 import { Draggable } from './Draggable'
@@ -41,12 +49,17 @@ const DnDTemplate = (props: EntityCardProps) => {
     return cards
   }, [])
 
+  const touchSensor = useSensor(TouchSensor)
+  const keyboardSensor = useSensor(KeyboardSensor)
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 8,
       },
     }),
+    touchSensor,
+    keyboardSensor,
   )
 
   const handleOnClick = (id: string) => {
@@ -109,7 +122,7 @@ const DnDTemplate = (props: EntityCardProps) => {
                   key={cardId}
                   id={cardId}
                   {...card}
-                  onClick={() => handleOnClick(cardId)}
+                  onActivate={() => handleOnClick(cardId)}
                   isActive={cardId === activeCard}
                 />
               )

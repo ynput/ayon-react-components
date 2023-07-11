@@ -23,7 +23,9 @@ export function Draggable(props: DraggableProps) {
       {...attributes}
       {...listeners}
       onClick={props.onClick}
+      onKeyUp={props.onKeyUp}
       isDragging={isDragging}
+      isDraggable
     />
   )
 }
