@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react'
 // import global styles
-import '../src/index.sass'
+import '../src/index.scss'
 import AyonTheme from './AyonTheme'
 
 const preview: Preview = {
