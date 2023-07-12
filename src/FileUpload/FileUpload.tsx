@@ -1,7 +1,7 @@
 import { useState, useRef, useMemo, forwardRef } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../Button'
-import { Icon } from '../Icon'
+import { Icon, IconType } from '../Icon'
 import { FileCard } from '../FileCard'
 import { Spacer } from '../Layout/Spacer'
 import { SaveButton } from '../SaveButton'
@@ -178,9 +178,30 @@ const extractSequence = (string: string): [string, number] | [] => {
   return [prefix, sequenceNumber]
 }
 
+const getSeqError = (files: CustomFile[]) => {
+  // message example "Frames failed to upload : 0003, 0004"
+  const prefix = 'Errors on frames : '
+  const failedFrames = []
+
+  // console.log(files)
+
+  for (const file of files) {
+    if (!file.message) continue
+
+    failedFrames.push(file.sequenceNumber)
+  }
+
+  if (!failedFrames.length) return undefined
+
+  const message = prefix + failedFrames.join(', ')
+
+  return message
+}
+
 export interface CustomFile {
   sequenceId: string | null
   sequenceNumber: number | null
+  message?: string
   file: File
 }
 
@@ -199,11 +220,19 @@ export interface FileUploadProps extends FormProps {
   validExtensions?: string[]
   confirmLabel?: string
   saveButton?: React.ReactNode
+  header?: React.ReactNode
+  footer?: React.ReactNode
   onSubmit?: (files: CustomFile[]) => void
   isFetching?: boolean
   isSuccess?: boolean
   successMessage?: string
   isError?: boolean
+  disabled?: boolean
+  title?: string
+  placeholder?: string
+  listStyle?: React.CSSProperties
+  dropIcon?: IconType
+  readOnly?: boolean
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -216,11 +245,19 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       validExtensions = [],
       confirmLabel,
       saveButton,
+      header,
+      footer,
       onSubmit,
       isFetching,
       successMessage = 'Upload successful',
       isSuccess,
       isError,
+      disabled,
+      title,
+      placeholder,
+      listStyle,
+      dropIcon,
+      readOnly,
       ...props
     },
     ref,
@@ -524,6 +561,10 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       return groupedFiles
     }, [filesToGroup])
 
+    const allowedFileTypes = `Allowed:${allowMultiple ? ' Multiple,' : ' Single,'}${
+      allowSequence && ' Sequence,'
+    }${validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}`
+
     return (
       <UploadForm
         onDragEnter={handleDrag}
@@ -532,25 +573,39 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         {...props}
       >
         <div className="header">
-          <h2>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h2>
-          <Spacer />
-          <Button
-            icon="delete"
-            onClick={() => setFiles([])}
-            label="Clear all"
-            disabled={!files.length || isFetching}
-          />
-          <Button icon="upload_file" className="upload-button" disabled={isFetching}>
-            <span>Add {fileOrFiles}</span>
-            <input
-              ref={inputRef}
-              type="file"
-              id="input-file-upload"
-              multiple={allowMultiple || allowSequence}
-              onChange={handleChange}
-              disabled={isFetching}
-            />
-          </Button>
+          {header || readOnly ? (
+            header || 'Uploaded ' + fileOrFiles
+          ) : (
+            <>
+              {title ? (
+                <h2>{title}</h2>
+              ) : (
+                <h2>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h2>
+              )}
+              <Spacer />
+              <Button
+                icon="delete"
+                onClick={() => setFiles([])}
+                label="Clear all"
+                disabled={!files.length || isFetching || disabled}
+              />
+              <Button
+                icon="upload_file"
+                className="upload-button"
+                disabled={isFetching || disabled}
+              >
+                <span>Add {fileOrFiles}</span>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  id="input-file-upload"
+                  multiple={allowMultiple || allowSequence}
+                  onChange={handleChange}
+                  disabled={isFetching || disabled}
+                />
+              </Button>
+            </>
+          )}
         </div>
 
         <div className="files">
@@ -564,6 +619,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             <StyledList
               $isSuccess={!!isSuccess && !!localFilesState.length}
               onAnimationEnd={() => setLocalFilesState([])}
+              style={listStyle}
             >
               {Object.entries(groupedFiles).map(([key, files], idx) => (
                 <li key={key}>
@@ -576,6 +632,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                     onSplit={() => onSeqSplit(key)}
                     splitDisabled={files.length < 2 || !allowMultiple}
                     isFetching={isFetching}
+                    readOnly={readOnly}
+                    disabled={disabled}
+                    message={files.length > 1 ? getSeqError(files) : files[0].message}
                   />
                 </li>
               ))}
@@ -584,12 +643,18 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
           {!filesToGroup.length && (
             <div className="drop-here">
-              <Icon icon="upload_file" />
-              <h3>Drop {fileOrFiles} here</h3>
+              <Icon icon={dropIcon ? dropIcon : disabled ? 'file_upload_off' : 'upload'} />
+              {placeholder ? (
+                <h3>{placeholder}</h3>
+              ) : disabled ? (
+                <h3>Upload disabled</h3>
+              ) : (
+                <h3>Drop {fileOrFiles} here</h3>
+              )}
             </div>
           )}
 
-          {dragActive && (
+          {dragActive && !disabled && (
             <div
               id="drag-file-element"
               onDrop={handleDrop}
@@ -602,29 +667,28 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             />
           )}
         </div>
-        <footer>
-          <div>
-            <span className="allowed">
-              Allowed:
-              {allowMultiple ? ' Multiple,' : ' Single,'}
-              {allowSequence && ' Sequence,'}
-              {validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}
-            </span>
-            <span className={successMessageOpen ? 'success' : 'error'}>
-              {successMessageOpen ? successMessageOpen : errorMessage}
-            </span>
-          </div>
-          {!saveButton && onSubmit ? (
-            <SaveButton
-              active={!!files.length}
-              saving={isFetching}
-              label={confirmLabel || 'Upload ' + fileOrFiles}
-              onClick={() => onSubmit(files)}
-            />
-          ) : (
-            saveButton
-          )}
-        </footer>
+        {footer || readOnly ? (
+          footer || <span className="allowed">{allowedFileTypes}</span>
+        ) : (
+          <footer>
+            <div>
+              <span className="allowed">{allowedFileTypes}</span>
+              <span className={successMessageOpen ? 'success' : 'error'}>
+                {successMessageOpen ? successMessageOpen : errorMessage}
+              </span>
+            </div>
+            {!saveButton && onSubmit ? (
+              <SaveButton
+                active={!!files.length && !disabled}
+                saving={isFetching}
+                label={confirmLabel || 'Upload ' + fileOrFiles}
+                onClick={() => onSubmit(files)}
+              />
+            ) : (
+              saveButton
+            )}
+          </footer>
+        )}
       </UploadForm>
     )
   },

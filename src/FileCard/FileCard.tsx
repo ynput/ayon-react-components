@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Icon, IconType } from '../Icon'
 import { Button } from '../Button'
 import { Spacer } from '../Layout/Spacer'
@@ -26,7 +26,25 @@ const getFileSizeString = (size: number) => {
   return `${size} B`
 }
 
-const StyledFileCard = styled.div<{ $isFetching: boolean }>`
+const messageAnimation = keyframes`
+  from {
+    scale: 0.5;
+    translate: 0 -50%;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+    translate: 0 -100%;
+  }
+`
+
+interface StyledFileCardProps {
+  $isFetching: boolean
+  $message?: string
+}
+
+const StyledFileCard = styled.div<StyledFileCardProps>`
   background-color: var(--color-grey-01);
   display: flex;
   border-radius: 4px;
@@ -75,12 +93,53 @@ const StyledFileCard = styled.div<{ $isFetching: boolean }>`
         speed: 1,
       })}
     `}
+
+  ${({ $message }) =>
+    $message &&
+    css`
+      &:hover {
+        /* little triangle */
+        &::before {
+          content: '';
+          position: absolute;
+          translate: 0 -100%;
+          top: -8px;
+          right: 12px;
+          border: 4px solid transparent;
+          border-top-color: var(--color-hl-01);
+          border-right-color: var(--color-hl-01);
+          rotate: 135deg;
+          animation: ${messageAnimation} 100ms ease-in-out;
+          transform-origin: bottom;
+        }
+
+        &::after {
+          content: '${$message}';
+          position: absolute;
+          top: -4px;
+
+          padding: 4px;
+          border-radius: 4px;
+          font-size: 12px;
+          right: -8px;
+          translate: 0 -100%;
+          animation: ${messageAnimation} 100ms ease-in-out;
+          transform-origin: right;
+          background-color: var(--color-hl-01);
+          color: black;
+        }
+      }
+    `}
 `
 
 const StyledButton = styled(Button)`
   background-color: unset;
   padding: 2px;
   min-height: unset;
+
+  .icon {
+    color: inherit;
+  }
 `
 
 const fileIcons: {
@@ -114,6 +173,9 @@ export interface FileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   length: number
   splitDisabled: boolean
   isFetching?: boolean
+  readOnly?: boolean
+  disabled?: boolean
+  message?: string
 }
 
 export const FileCard: FC<FileCardProps> = ({
@@ -125,6 +187,9 @@ export const FileCard: FC<FileCardProps> = ({
   length,
   splitDisabled,
   isFetching = false,
+  readOnly,
+  disabled,
+  message,
   ...props
 }) => {
   const typeIcon =
@@ -132,7 +197,7 @@ export const FileCard: FC<FileCardProps> = ({
     'insert_drive_file'
 
   return (
-    <StyledFileCard $isFetching={isFetching} {...props}>
+    <StyledFileCard $isFetching={isFetching} {...props} $message={message}>
       <Icon icon={typeIcon} />
       <span className="title">{title}</span>
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
@@ -145,11 +210,21 @@ export const FileCard: FC<FileCardProps> = ({
           visibility: splitDisabled ? 'hidden' : 'visible',
           userSelect: splitDisabled ? 'none' : 'auto',
           pointerEvents: splitDisabled ? 'none' : 'auto',
+          color: message ? 'var(--color-hl-01)' : 'white',
         }}
-        disabled={splitDisabled || isFetching}
+        disabled={splitDisabled || isFetching || disabled}
       />
-
-      <StyledButton icon="close" onClick={onRemove} disabled={isFetching} />
+      {!readOnly && (
+        <StyledButton icon="close" onClick={onRemove} disabled={isFetching || disabled} />
+      )}
+      {readOnly && (
+        <Icon
+          icon={!message ? 'check_circle' : 'error'}
+          style={{
+            color: !message ? 'white' : 'var(--color-hl-01)',
+          }}
+        />
+      )}
     </StyledFileCard>
   )
 }

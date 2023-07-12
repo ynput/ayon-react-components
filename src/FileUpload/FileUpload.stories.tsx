@@ -1,8 +1,33 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { CustomFile, FileUpload, FileUploadProps } from '.'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Panel } from '../Panels/Panel'
 import { Button } from '../Button'
+import filesData from './filesData'
+
+const getFileObjects = async (files: CustomFile[]): Promise<CustomFile[]> => {
+  const fileObjects: CustomFile[] = []
+  for (const f of files) {
+    const fileReader = new FileReader()
+    const dataUrl = await new Promise<string>((resolve) => {
+      fileReader.onload = () => {
+        resolve(fileReader.result as string)
+      }
+      fileReader.readAsDataURL(f.file)
+    })
+    const fileObject: CustomFile = {
+      ...f,
+      file: {
+        name: f.file.name,
+        type: f.file.type,
+        size: f.file.size,
+      },
+      // dataUrl: dataUrl,
+    }
+    fileObjects.push(fileObject)
+  }
+  return fileObjects
+}
 
 const meta: Meta<typeof FileUpload> = {
   component: FileUpload,
@@ -14,7 +39,7 @@ export default meta
 type Story = StoryObj<typeof FileUpload>
 
 const Template = (args: FileUploadProps) => {
-  const [files, setFiles] = useState<CustomFile[]>([])
+  const [files, setFiles] = useState<CustomFile[]>(args.files || [])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
@@ -31,7 +56,11 @@ const Template = (args: FileUploadProps) => {
     }, 1000)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const fileObjects = await getFileObjects(files)
+
+    console.log(fileObjects)
+
     setIsSubmitting(true)
     setIsSuccess(false)
     setIsFinished(false)
@@ -80,11 +109,35 @@ export const MultipleNoSeq: Story = {
   render: Template,
 }
 
-export const CustomSave: Story = {
+export const CustomUpload: Story = {
   args: {
     allowMultiple: true,
     allowSequence: true,
     saveButton: <Button icon="magic_button">Custom Save</Button>,
+    dropIcon: 'magic_button',
+    placeholder: 'Drop special files here',
+    title: 'Special files',
+  },
+  render: Template,
+}
+
+export const Disabled: Story = {
+  args: {
+    allowMultiple: true,
+    allowSequence: true,
+    disabled: true,
+  },
+  render: Template,
+}
+
+export const ReadUploaded: Story = {
+  args: {
+    allowMultiple: true,
+    allowSequence: true,
+    readOnly: true,
+    title: 'Uploaded files',
+    placeholder: 'No files uploaded',
+    files: filesData,
   },
   render: Template,
 }
