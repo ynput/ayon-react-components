@@ -4,7 +4,7 @@ This is a collection of components for the AYON project. It is a work in progres
 
 It can be used to create consistent and accessible AYON addons.
 
-For full documentation, see the [storybook](https://ayon.ynput.io/storybook).
+For full documentation, see the [storybook](https://components.ayon.dev).
 
 ## Need a component or found a bug?
 
