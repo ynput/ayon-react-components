@@ -236,6 +236,7 @@ export interface FileUploadProps extends FormProps {
   dropIcon?: IconType
   readOnly?: boolean
   disableImagePreviews?: boolean
+  maxImagePreviewSize?: number
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -262,6 +263,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       dropIcon,
       readOnly,
       disableImagePreviews,
+      maxImagePreviewSize = 1 * 1024 * 1024,
       ...props
     },
     ref,
@@ -278,7 +280,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     // when files changes, update filePreviews
     useEffect(() => {
       for (const file of files) {
-        if (file.file.type.startsWith('image/')) {
+        // only if image and below 1mb
+        if (file.file.type.startsWith('image/') && file.file.size <= maxImagePreviewSize) {
           const reader = new FileReader()
           reader.onload = () => {
             setFilePreviews((filePreviews) => ({
