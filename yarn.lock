@@ -9097,6 +9097,11 @@ markdown-to-jsx@^7.1.8:
   resolved "https://registry.yarnpkg.com/markdown-to-jsx/-/markdown-to-jsx-7.2.0.tgz#e7b46b65955f6a04d48a753acd55874a14bdda4b"
   integrity sha512-3l4/Bigjm4bEqjCR6Xr+d4DtM1X6vvtGsMGSjJYyep8RjjIvcWtrXBS8Wbfe1/P+atKNMccpsraESIaWVplzVg==
 
+material-symbols@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/material-symbols/-/material-symbols-0.10.1.tgz#a49cfce1a37079a70fd26b92f0e790b986072266"
+  integrity sha512-hGylDJScyjeR0LI524AVfCLI/thKuUX2rG78BYYHEg0R/IS4NzSh28aCP0k088968dxItxV/4hNNR4MAiXrb8Q==
+
 mdast-util-definitions@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/mdast-util-definitions/-/mdast-util-definitions-4.0.0.tgz#c5c1a84db799173b4dcf7643cda999e440c24db2"

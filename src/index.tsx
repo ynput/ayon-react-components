@@ -1,5 +1,9 @@
-// export all components here
+// import styles here
+// import icons
+import 'material-symbols/outlined.css'
+import './index.scss'
 
+// export all components here
 // ASSIGNEE
 // assigneeField
 export { AssigneeField } from './Dropdowns/AssigneeSelect/AssigneeField'
@@ -88,6 +92,3 @@ export { UserImagesStacked } from './User/UserImagesStacked'
 // ENTITY
 // entityCard
 export { EntityCard } from './EntityCard'
-
-// import styles to be included
-import './index.scss'
