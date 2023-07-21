@@ -95,7 +95,7 @@ export const SingleSeqExtensions: Story = {
   args: {
     allowMultiple: false,
     allowSequence: true,
-    validExtensions: ['jpg', 'png'],
+    accept: ['.jpg', '.png'],
   },
   render: Template,
 }
@@ -104,7 +104,7 @@ export const MultipleNoSeq: Story = {
   args: {
     allowMultiple: true,
     allowSequence: false,
-    validExtensions: ['jpg'],
+    accept: [],
   },
   render: Template,
 }
