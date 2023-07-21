@@ -234,6 +234,7 @@ export interface FileUploadProps extends FormProps {
   listStyle?: React.CSSProperties
   dropIcon?: IconType
   readOnly?: boolean
+  disableImagePreviews?: boolean
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -259,6 +260,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       listStyle,
       dropIcon,
       readOnly,
+      disableImagePreviews,
       ...props
     },
     ref,
@@ -267,6 +269,10 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     // this is mainly used for the success out animation
     const [localFilesState, setLocalFilesState] = useState<CustomFile[]>([])
+    // file images previews
+    const [filePreviews, setFilePreviews] = useState<{
+      [key: string]: string | null
+    }>({})
 
     // every time files changes, update localFilesState, unless isSuccess
     useMemo(() => {
@@ -348,7 +354,13 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         const foundMimeType =
           accept.includes(file.type) || accept.includes(file.type.split('/')[0] + '/*')
 
-        if (!foundExtension && !foundMimeType && accept.length) {
+        if (
+          !foundExtension &&
+          !foundMimeType &&
+          accept.length &&
+          !accept.includes('*/*') &&
+          !accept.includes('*')
+        ) {
           setErrorMessage(`Invalid file type: ${extension}`)
           // skip this file
           continue
@@ -508,6 +520,20 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
       if (!acceptedFiles.length) return
       else setFiles((files) => files.concat(acceptedFiles))
+
+      // now in the background get the preview images for each image file
+      for (const file of acceptedFiles) {
+        if (file.file.type.startsWith('image/')) {
+          const reader = new FileReader()
+          reader.onload = () => {
+            setFilePreviews((filePreviews) => ({
+              ...filePreviews,
+              [file.file.name]: reader.result as string,
+            }))
+          }
+          reader.readAsDataURL(file.file)
+        }
+      }
     }
 
     // triggers when file is dropped
@@ -571,8 +597,6 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
       return groupedFiles
     }, [filesToGroup])
-
-    // console.log(groupedFiles)
 
     const allowedFileTypes = `Allowed:${allowMultiple ? ' Multiple,' : ' Single,'}${
       allowSequence ? ' Sequence,' : ''
@@ -649,6 +673,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                     readOnly={readOnly}
                     disabled={disabled}
                     message={files.length > 1 ? getSeqError(files) : files[0].message}
+                    preview={!disableImagePreviews ? filePreviews[files[0].file.name] : null}
                   />
                 </li>
               ))}
