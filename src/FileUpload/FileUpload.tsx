@@ -1,4 +1,4 @@
-import { useState, useRef, useMemo, forwardRef } from 'react'
+import { useState, useRef, useMemo, forwardRef, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../Button'
 import { Icon, IconType } from '../Icon'
@@ -204,6 +204,7 @@ export interface CustomFile {
   sequenceNumber: number | null
   message?: string
   file: File
+  dataUrl?: string | null
 }
 
 // BREAKING CHANGES
@@ -273,6 +274,30 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     const [filePreviews, setFilePreviews] = useState<{
       [key: string]: string | null
     }>({})
+
+    // when files changes, update filePreviews
+    useEffect(() => {
+      for (const file of files) {
+        if (file.file.type.startsWith('image/')) {
+          const reader = new FileReader()
+          reader.onload = () => {
+            setFilePreviews((filePreviews) => ({
+              ...filePreviews,
+              [file.file.name]: reader.result as string,
+            }))
+          }
+          if (file.file instanceof Blob) {
+            reader.readAsDataURL(file.file)
+          } else if (file.dataUrl) {
+            // look for dataUrl on file
+            setFilePreviews((filePreviews) => ({
+              ...filePreviews,
+              [file.file.name]: file.dataUrl as string,
+            }))
+          }
+        }
+      }
+    }, [files])
 
     // every time files changes, update localFilesState, unless isSuccess
     useMemo(() => {
@@ -520,20 +545,6 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
       if (!acceptedFiles.length) return
       else setFiles((files) => files.concat(acceptedFiles))
-
-      // now in the background get the preview images for each image file
-      for (const file of acceptedFiles) {
-        if (file.file.type.startsWith('image/')) {
-          const reader = new FileReader()
-          reader.onload = () => {
-            setFilePreviews((filePreviews) => ({
-              ...filePreviews,
-              [file.file.name]: reader.result as string,
-            }))
-          }
-          reader.readAsDataURL(file.file)
-        }
-      }
     }
 
     // triggers when file is dropped
