@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react'
 // import global styles
 import '../src/index.scss'
+import 'material-symbols/outlined.css'
 import AyonTheme from './AyonTheme'
 
 const preview: Preview = {

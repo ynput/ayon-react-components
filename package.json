@@ -58,6 +58,7 @@
     "husky": "^8.0.1",
     "leaflet": "^1.8.0",
     "lint-staged": "^13.0.3",
+    "material-symbols": "^0.10.1",
     "postcss": "^8.4.21",
     "prettier": "^2.7.1",
     "prop-types": "^15.8.1",
@@ -117,6 +118,5 @@
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
-  },
-  "dependencies": {}
+  }
 }
