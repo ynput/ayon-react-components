@@ -8,13 +8,17 @@ import filesData from './filesData'
 const getFileObjects = async (files: CustomFile[]): Promise<CustomFile[]> => {
   const fileObjects: CustomFile[] = []
   for (const f of files) {
-    const fileReader = new FileReader()
-    const dataUrl = await new Promise<string>((resolve) => {
-      fileReader.onload = () => {
-        resolve(fileReader.result as string)
-      }
-      fileReader.readAsDataURL(f.file)
-    })
+    let dataUrl = null
+    if (f.file.type.startsWith('image/')) {
+      const fileReader = new FileReader()
+      dataUrl = await new Promise<string>((resolve) => {
+        fileReader.onload = () => {
+          resolve(fileReader.result as string)
+        }
+        fileReader.readAsDataURL(f.file)
+      })
+    }
+
     const fileObject: CustomFile = {
       ...f,
       file: {
@@ -22,7 +26,7 @@ const getFileObjects = async (files: CustomFile[]): Promise<CustomFile[]> => {
         type: f.file.type,
         size: f.file.size,
       },
-      // dataUrl: dataUrl,
+      dataUrl: dataUrl,
     }
     fileObjects.push(fileObject)
   }
@@ -95,7 +99,7 @@ export const SingleSeqExtensions: Story = {
   args: {
     allowMultiple: false,
     allowSequence: true,
-    validExtensions: ['jpg', 'png'],
+    accept: ['.jpg', '.png'],
   },
   render: Template,
 }
@@ -104,7 +108,7 @@ export const MultipleNoSeq: Story = {
   args: {
     allowMultiple: true,
     allowSequence: false,
-    validExtensions: ['jpg'],
+    accept: [],
   },
   render: Template,
 }

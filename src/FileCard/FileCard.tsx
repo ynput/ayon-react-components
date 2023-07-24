@@ -77,6 +77,13 @@ const StyledFileCard = styled.div<StyledFileCardProps>`
     font-size: 24px;
   }
 
+  img {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
   ${({ $isFetching }) =>
     $isFetching &&
     css`
@@ -176,6 +183,7 @@ export interface FileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   readOnly?: boolean
   disabled?: boolean
   message?: string
+  preview?: string | null
 }
 
 export const FileCard: FC<FileCardProps> = ({
@@ -190,6 +198,7 @@ export const FileCard: FC<FileCardProps> = ({
   readOnly,
   disabled,
   message,
+  preview,
   ...props
 }) => {
   const typeIcon =
@@ -198,7 +207,7 @@ export const FileCard: FC<FileCardProps> = ({
 
   return (
     <StyledFileCard $isFetching={isFetching} {...props} $message={message}>
-      <Icon icon={typeIcon} />
+      {preview ? <img src={preview} /> : <Icon icon={typeIcon} />}
       <span className="title">{title}</span>
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
       <Spacer />

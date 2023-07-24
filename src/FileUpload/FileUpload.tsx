@@ -1,10 +1,11 @@
-import { useState, useRef, useMemo, forwardRef } from 'react'
+import { useState, useRef, useMemo, forwardRef, useEffect } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../Button'
 import { Icon, IconType } from '../Icon'
 import { FileCard } from '../FileCard'
 import { Spacer } from '../Layout/Spacer'
 import { SaveButton } from '../SaveButton'
+import { AcceptType } from './fileTypes'
 
 const UploadForm = styled.form`
   min-height: 160px;
@@ -203,6 +204,7 @@ export interface CustomFile {
   sequenceNumber: number | null
   message?: string
   file: File
+  dataUrl?: string | null
 }
 
 // BREAKING CHANGES
@@ -217,7 +219,7 @@ export interface FileUploadProps extends FormProps {
   setFiles: React.Dispatch<React.SetStateAction<CustomFile[]>>
   allowMultiple?: boolean
   allowSequence?: boolean
-  validExtensions?: string[]
+  accept?: (AcceptType | string)[]
   confirmLabel?: string
   saveButton?: React.ReactNode
   header?: React.ReactNode
@@ -233,6 +235,8 @@ export interface FileUploadProps extends FormProps {
   listStyle?: React.CSSProperties
   dropIcon?: IconType
   readOnly?: boolean
+  disableImagePreviews?: boolean
+  maxImagePreviewSize?: number
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -242,7 +246,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       setFiles,
       allowMultiple = false,
       allowSequence = false,
-      validExtensions = [],
+      accept = ['*'],
       confirmLabel,
       saveButton,
       header,
@@ -258,6 +262,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       listStyle,
       dropIcon,
       readOnly,
+      disableImagePreviews,
+      maxImagePreviewSize = 1 * 1024 * 1024,
       ...props
     },
     ref,
@@ -266,6 +272,35 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     // this is mainly used for the success out animation
     const [localFilesState, setLocalFilesState] = useState<CustomFile[]>([])
+    // file images previews
+    const [filePreviews, setFilePreviews] = useState<{
+      [key: string]: string | null
+    }>({})
+
+    // when files changes, update filePreviews
+    useEffect(() => {
+      for (const file of files) {
+        // only if image and below 1mb
+        if (file.file.type.startsWith('image/') && file.file.size <= maxImagePreviewSize) {
+          const reader = new FileReader()
+          reader.onload = () => {
+            setFilePreviews((filePreviews) => ({
+              ...filePreviews,
+              [file.file.name]: reader.result as string,
+            }))
+          }
+          if (file.file instanceof Blob) {
+            reader.readAsDataURL(file.file)
+          } else if (file.dataUrl) {
+            // look for dataUrl on file
+            setFilePreviews((filePreviews) => ({
+              ...filePreviews,
+              [file.file.name]: file.dataUrl as string,
+            }))
+          }
+        }
+      }
+    }, [files])
 
     // every time files changes, update localFilesState, unless isSuccess
     useMemo(() => {
@@ -339,7 +374,21 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       for (const file of newFiles) {
         const fileName = file.name
         const extension = fileName.split('.').pop()
-        if (!extension || (!validExtensions.includes(extension) && validExtensions.length)) {
+        const extensionWithDot = '.' + extension
+
+        // match extension with accept list
+        const foundExtension = accept.includes(extensionWithDot) && extension
+        // or match mime type with accept list, image/jpeg or image/*
+        const foundMimeType =
+          accept.includes(file.type) || accept.includes(file.type.split('/')[0] + '/*')
+
+        if (
+          !foundExtension &&
+          !foundMimeType &&
+          accept.length &&
+          !accept.includes('*/*') &&
+          !accept.includes('*')
+        ) {
           setErrorMessage(`Invalid file type: ${extension}`)
           // skip this file
           continue
@@ -369,7 +418,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         // if it is, add it to the sequence
         const [prefix, sequenceNumber] = seqMatch
         // if the sequence doesn't exist, create it
-        const sequenceId = prefix + '.' + extension
+        const sequenceId = prefix + extensionWithDot
 
         if (!sequences[sequenceId]) sequences[sequenceId] = { files: [], counts: [] }
         const foundSequence = sequences[sequenceId]
@@ -410,8 +459,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           // return first file
           setFiles([acceptedFiles[0]])
           return
-        } else if (Object.values(sequences).length) {
-          if (Object.values(sequences).length > 1) {
+        } else if (Object.keys(sequences).length) {
+          if (Object.keys(sequences).length > 1) {
             console.log('only one sequence allowed')
             setErrorMessage('Only 1 sequence allowed')
           }
@@ -431,7 +480,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
       // if we don't allowMultiple but do allow sequences, remove all but first accepted file
       if (!allowMultiple && acceptedFiles.length > 1) {
-        setErrorMessage('Only 1 file allowed')
+        if (Object.keys(sequences).length > 1) {
+          setErrorMessage('Only 1 file allowed')
+        }
         // splice out all accepted files after the first
         acceptedFiles.splice(1, acceptedFiles.length - 1)
       }
@@ -562,8 +613,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     }, [filesToGroup])
 
     const allowedFileTypes = `Allowed:${allowMultiple ? ' Multiple,' : ' Single,'}${
-      allowSequence && ' Sequence,'
-    }${validExtensions.length ? ' ' + validExtensions.join(', ') : ' All Files Types'}`
+      allowSequence ? ' Sequence,' : ''
+    }${accept.length ? ' ' + accept.join(', ') : ' All Files Types'}`
 
     return (
       <UploadForm
@@ -599,6 +650,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                   ref={inputRef}
                   type="file"
                   id="input-file-upload"
+                  accept={accept.length ? accept.join(',') : undefined}
                   multiple={allowMultiple || allowSequence}
                   onChange={handleChange}
                   disabled={isFetching || disabled}
@@ -635,6 +687,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                     readOnly={readOnly}
                     disabled={disabled}
                     message={files.length > 1 ? getSeqError(files) : files[0].message}
+                    preview={!disableImagePreviews ? filePreviews[files[0].file.name] : null}
                   />
                 </li>
               ))}
