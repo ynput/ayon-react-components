@@ -238,6 +238,7 @@ export interface FileUploadProps extends FormProps {
   disableImagePreviews?: boolean
   maxImagePreviewSize?: number
   errorMessage?: string
+  message?: string
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -266,6 +267,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       disableImagePreviews,
       maxImagePreviewSize = 1 * 1024 * 1024,
       errorMessage,
+      message,
       ...props
     },
     ref,
@@ -728,6 +730,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           <footer>
             <div>
               <span className="allowed">{allowedFileTypes}</span>
+              {message && <span>{message}</span>}
               <span className={successMessageOpen ? 'success' : 'error'}>
                 {successMessageOpen ? successMessageOpen : internalErrorMessage}
               </span>
