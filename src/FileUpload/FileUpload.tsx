@@ -237,6 +237,7 @@ export interface FileUploadProps extends FormProps {
   readOnly?: boolean
   disableImagePreviews?: boolean
   maxImagePreviewSize?: number
+  errorMessage?: string
 }
 
 export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
@@ -264,6 +265,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       readOnly,
       disableImagePreviews,
       maxImagePreviewSize = 1 * 1024 * 1024,
+      errorMessage,
       ...props
     },
     ref,
@@ -311,7 +313,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     const [dragActive, setDragActive] = useState(false)
     const inputRef = useRef<HTMLInputElement | null>(null)
     const [successMessageOpen, setSuccessMessageOpen] = useState<string | null>()
-    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [internalErrorMessage, setErrorMessage] = useState<string | null>(null)
 
     // every time successMessage changes or isSuccess, clear it after 3 seconds
     useMemo(() => {
@@ -322,20 +324,20 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
     }, [successMessage, isSuccess])
 
-    // every time errorMessage changes, clear it after 3 seconds
+    // every time internalErrorMessage changes, clear it after 3 seconds
     useMemo(() => {
-      if (errorMessage) {
+      if (internalErrorMessage) {
         const timeout = setTimeout(() => setErrorMessage(null), 3000)
         return () => clearTimeout(timeout)
       }
-    }, [errorMessage])
+    }, [internalErrorMessage])
 
     // if we are fetching, set dragActive to false
     useMemo(() => {
       if (isFetching) setDragActive(false)
     }, [isFetching])
 
-    // if isError, set errorMessage
+    // if isError, set internalErrorMessage
     useMemo(() => {
       if (isError) setErrorMessage('Upload failed: try again')
     }, [isError])
@@ -727,8 +729,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             <div>
               <span className="allowed">{allowedFileTypes}</span>
               <span className={successMessageOpen ? 'success' : 'error'}>
-                {successMessageOpen ? successMessageOpen : errorMessage}
+                {successMessageOpen ? successMessageOpen : internalErrorMessage}
               </span>
+              {errorMessage && <span className="error">{errorMessage}</span>}
             </div>
             {!saveButton && onSubmit ? (
               <SaveButton
