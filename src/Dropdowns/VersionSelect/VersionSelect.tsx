@@ -42,11 +42,7 @@ export const VersionSelect: FC<VersionSelectProps> = forwardRef(
     const allVersions = useMemo(() => {
       const flatVersions = versions.flat()
       const uniqueVersions = [...new Set(flatVersions)]
-      return uniqueVersions.sort((a, b) => {
-        const aNum = parseInt(a.slice(1), 10)
-        const bNum = parseInt(b.slice(1), 10)
-        return aNum - bNum
-      })
+      return uniqueVersions
     }, [versions])
 
     // disabled versions (inverse of intersection)
