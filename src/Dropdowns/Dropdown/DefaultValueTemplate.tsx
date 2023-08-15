@@ -50,7 +50,10 @@ const ContentStyled = styled.div`
 `
 
 export interface DefaultValueTemplateProps
-  extends Pick<DropdownProps, 'value' | 'isMultiple' | 'dropIcon' | 'onClear' | 'placeholder'> {
+  extends Pick<
+    DropdownProps,
+    'value' | 'isMultiple' | 'dropIcon' | 'onClear' | 'onClearNoValue' | 'placeholder'
+  > {
   displayIcon?: string
   style?: React.CSSProperties
   children?: React.ReactNode
@@ -66,6 +69,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   dropIcon = 'expand_more',
   displayIcon,
   onClear,
+  onClearNoValue,
   children,
   style,
   valueStyle,
@@ -80,10 +84,11 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
     <DefaultValueStyled style={style} isOpen={!!isOpen} className={className}>
       {noValue ? (
         <>
-          {!value.length && (
-            <ContentStyled>
-              <ValueStyled>{placeholder}</ValueStyled>
-            </ContentStyled>
+          <ContentStyled>
+            <ValueStyled>{placeholder}</ValueStyled>
+          </ContentStyled>
+          {onClear && onClearNoValue && (
+            <Icon icon={'close'} onClick={onClear} id="clear" className="control" tabIndex={0} />
           )}
         </>
       ) : (
