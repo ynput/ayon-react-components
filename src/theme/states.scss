@@ -1,4 +1,5 @@
 :root {
+  // hover
   /* primary */
   --md-sys-color-primary-dark-hover: #83c2f1;
   --md-sys-color-primary-container-dark-hover: #10577b;
@@ -14,4 +15,21 @@
   --md-sys-color-surface-container-dark-hover: #343a41;
   --md-sys-color-surface-container-low-dark-hover: #2a2e33;
   --md-sys-color-surface-container-lowest-dark-hover: #24272b;
+
+  // active
+  /* primary */
+  --md-sys-color-primary-dark-active: #7ebbea;
+  --md-sys-color-primary-container-dark-active: #185e81;
+  /* secondary */
+  --md-sys-color-secondary-dark-active: #a5b7c6;
+  --md-sys-color-secondary-container-dark-active: #4b5c69;
+  /* tertiary */
+  --md-sys-color-tertiary-dark-active: #1dc594;
+  --md-sys-color-tertiary-container-dark-active: #0a664a;
+  /* container-surface */
+  --md-sys-color-surface-container-highest-dark-active: #525965;
+  --md-sys-color-surface-container-high-dark-active: #474c56;
+  --md-sys-color-surface-container-dark-active: #3a3f47;
+  --md-sys-color-surface-container-low-dark-active: #303439;
+  --md-sys-color-surface-container-lowest-dark-active: #2b2d31;
 }
