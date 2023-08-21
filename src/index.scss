@@ -69,18 +69,19 @@
 * {
   box-sizing: border-box;
   font-family: var(--base-font-family);
-  font-size: var(--base-font-size);
-  font-weight: var(--base-font-weight);
+  // font-size: var(--base-font-size);
+  font-weight: 400;
 }
 
 html {
-  color: var(--color-text);
-  background-color: var(--color-grey-01);
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-background);
 }
 
 .material-symbols-outlined {
   color: var(--color-icon);
-  font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 200, 'opsz' 20;
+  font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+  font-size: 1.25rem;
 }
 
 // Scrollbars
