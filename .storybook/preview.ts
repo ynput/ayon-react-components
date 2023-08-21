@@ -2,9 +2,8 @@ import type { Preview } from '@storybook/react'
 // import icons
 import 'material-symbols/outlined.css'
 // import fonts
-import '../src/fonts/NunitoSans_10pt-Regular.ttf'
+import '../src/fonts/NunitoSans-VariableFont.ttf'
 import '../src/fonts/NunitoSans_10pt-Italic.ttf'
-import '../src/fonts/NunitoSans_10pt-Bold.ttf'
 // import global styles
 import '../src/index.scss'
 

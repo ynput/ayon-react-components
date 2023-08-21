@@ -1,8 +1,7 @@
 @font-face {
   font-family: 'Nunito Sans'; /*Can be any text*/
-  src: local('Nunito Sans'), url('./fonts/NunitoSans_10pt-Regular.ttf') format('truetype'),
-    url('./fonts/NunitoSans_10pt-Italic.ttf') format('truetype'),
-    url('./fonts/NunitoSans_10pt-Bold.ttf') format('truetype');
+  src: local('Nunito Sans'), url('./fonts/NunitoSans-VariableFont.ttf') format('truetype'),
+    url('./fonts/NunitoSans_10pt-Italic.ttf') format('truetype');
 }
 
 @import 'primereact/theme.sass';
@@ -39,6 +38,7 @@
 
   --base-input-size: 30px;
   --base-input-border-radius: 4px;
+  --base-input-border-radius-l: 8px;
   --base-gap-small: 4px;
   --base-gap-medium: 6px;
   --base-gap-large: 8px;
