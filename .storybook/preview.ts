@@ -23,7 +23,7 @@ const preview: Preview = {
     },
     backgrounds: {
       default: 'AYON',
-      values: [{ name: 'AYON', value: '#2c313a' }],
+      values: [{ name: 'AYON', value: '#252A31' }],
     },
   },
 }

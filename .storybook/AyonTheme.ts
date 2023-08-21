@@ -13,8 +13,8 @@ export default create({
   brandTarget: '_self',
 
   // UI
-  appBg: '#2c313a',
-  appContentBg: '#2c313a',
+  appBg: '#252A31',
+  appContentBg: '#252A31',
   //   appBorderColor: '#585C6D',
   //   appBorderRadius: 4,
 
@@ -22,20 +22,20 @@ export default create({
   //   colorSecondary: '#585C6D',
 
   // Text colors
-  //   textColor: '#10162F',
+  textColor: '#F4F5F5',
   //   textInverseColor: '#ffffff',
 
   // Toolbar default and active colors
-  //   barTextColor: '#9E9E9E',
+  barTextColor: '#F4F5F5',
   //   barSelectedColor: '#ff0000',
-  barBg: '#21252b',
+  barBg: '#16191D',
 
   // Form colors
-  inputBg: '#21252b',
-  buttonBg: '#434a56',
-  booleanBg: '#434a56',
-  booleanSelectedBg: '#21252b',
-  //   inputBorder: '#10162F',
-  //   inputTextColor: '#10162F',
-  //   inputBorderRadius: 2,
+  inputBg: '#1C2026',
+  buttonBg: '#424A57',
+  booleanBg: '#424A57',
+  // booleanSelectedBg: '#004B70',
+  inputBorder: '#41474D',
+  inputTextColor: '#F4F5F5',
+  inputBorderRadius: 4,
 })
