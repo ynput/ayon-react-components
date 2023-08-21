@@ -383,6 +383,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   maxSelected?: number
   dropIcon?: IconType
   onClear?: () => void
+  onClearNoValue?: boolean
   editable?: boolean
   maxHeight?: number
   disableReorder?: boolean
@@ -430,6 +431,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
+      onClearNoValue,
       editable,
       maxHeight = 300,
       disableReorder,
@@ -862,6 +864,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       dropIcon,
       displayIcon,
       onClear: onClear ? handleClear : undefined,
+      onClearNoValue,
       style: valueStyle,
       placeholder,
       isOpen,
@@ -874,7 +877,17 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
         return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
-    }, [valueTemplate, value, isOpen, onClear, selected, handleClear, isMultiple, dropIcon])
+    }, [
+      valueTemplate,
+      value,
+      isOpen,
+      onClear,
+      onClearNoValue,
+      selected,
+      handleClear,
+      isMultiple,
+      dropIcon,
+    ])
 
     return (
       <DropdownStyled
