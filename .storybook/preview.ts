@@ -6,6 +6,8 @@ import '../src/fonts/NunitoSans-VariableFont.ttf'
 import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 // import global styles
 import '../src/index.scss'
+// import theme
+import '../src/theme/theme.scss'
 
 import AyonTheme from './AyonTheme'
 
@@ -23,7 +25,7 @@ const preview: Preview = {
     },
     backgrounds: {
       default: 'AYON',
-      values: [{ name: 'AYON', value: '#252A31' }],
+      // values: [{ name: 'AYON', value: '#252A31' }],
     },
   },
 }

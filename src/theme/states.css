@@ -1,5 +1,4 @@
 :root {
-  // hover
   /* primary */
   --md-sys-color-primary-dark-hover: #83c2f1;
   --md-sys-color-primary-container-dark-hover: #10577b;
@@ -16,7 +15,6 @@
   --md-sys-color-surface-container-low-dark-hover: #2a2e33;
   --md-sys-color-surface-container-lowest-dark-hover: #24272b;
 
-  // active
   /* primary */
   --md-sys-color-primary-dark-active: #7ebbea;
   --md-sys-color-primary-container-dark-active: #185e81;

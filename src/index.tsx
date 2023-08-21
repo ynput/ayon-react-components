@@ -5,6 +5,8 @@ import '../src/fonts/NunitoSans-VariableFont.ttf'
 import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 // import styles here
 import './index.scss'
+// import theme
+import './theme/theme.scss'
 
 // export all components here
 // ASSIGNEE
