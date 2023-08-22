@@ -94,18 +94,24 @@ export const FileCard: FC<FileCardProps> = ({
           visibility: splitDisabled ? 'hidden' : 'visible',
           userSelect: splitDisabled ? 'none' : 'auto',
           pointerEvents: splitDisabled ? 'none' : 'auto',
-          color: message ? 'var(--color-hl-01)' : 'white',
         }}
+        $error={!!message}
         disabled={splitDisabled || isFetching || disabled}
+        variant="text"
       />
       {!readOnly && (
-        <Styled.Icon icon="close" onClick={onRemove} disabled={isFetching || disabled} />
+        <Styled.Icon
+          icon="close"
+          variant="text"
+          onClick={onRemove}
+          disabled={isFetching || disabled}
+        />
       )}
       {readOnly && (
         <Icon
           icon={!message ? 'check_circle' : 'error'}
           style={{
-            color: !message ? 'white' : 'var(--color-hl-01)',
+            color: !message ? 'white' : 'var(--md-custom-color-warning)',
           }}
         />
       )}

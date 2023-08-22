@@ -1,6 +1,7 @@
 import styled, { css, keyframes } from 'styled-components'
 import getShimmerStyles from '../helpers/getShimmerStyles'
 import { Button } from '../Button'
+import { ButtonProps } from '../Button/Button.styled'
 
 const messageAnimation = keyframes`
   from {
@@ -15,13 +16,13 @@ const messageAnimation = keyframes`
   }
 `
 
-interface StyledFileCardProps {
+interface FileCardProps {
   $isFetching: boolean
   $message?: string
 }
 
-export const FileCard = styled.div<StyledFileCardProps>`
-  background-color: var(--color-grey-01);
+export const FileCard = styled.div<FileCardProps>`
+  background-color: var(--md-sys-color-surface-container-high);
   display: flex;
   border-radius: 4px;
   padding: 2px;
@@ -29,10 +30,6 @@ export const FileCard = styled.div<StyledFileCardProps>`
   cursor: pointer;
   gap: 4px;
   position: relative;
-
-  :hover {
-    background-color: var(--color-grey-02);
-  }
 
   .title {
     margin-left: 4px;
@@ -89,8 +86,8 @@ export const FileCard = styled.div<StyledFileCardProps>`
           top: -8px;
           right: 12px;
           border: 4px solid transparent;
-          border-top-color: var(--color-hl-01);
-          border-right-color: var(--color-hl-01);
+          border-top-color: var(--md-custom-color-warning);
+          border-right-color: var(--md-custom-color-warning);
           rotate: 135deg;
           animation: ${messageAnimation} 100ms ease-in-out;
           transform-origin: bottom;
@@ -108,19 +105,29 @@ export const FileCard = styled.div<StyledFileCardProps>`
           translate: 0 -100%;
           animation: ${messageAnimation} 100ms ease-in-out;
           transform-origin: right;
-          background-color: var(--color-hl-01);
+          background-color: var(--md-custom-color-warning);
           color: black;
         }
       }
     `}
 `
 
-export const Icon = styled(Button)`
-  background-color: unset;
+interface IconProps extends ButtonProps {
+  $error?: boolean
+}
+
+export const Icon = styled(Button)<IconProps>`
   padding: 2px;
-  min-height: unset;
 
   .icon {
-    color: inherit;
+    color: var(--md-sys-color-on-surface);
   }
+
+  ${({ $error }) =>
+    $error &&
+    css`
+      .icon {
+        color: var(--md-custom-color-warning);
+      }
+    `}
 `
