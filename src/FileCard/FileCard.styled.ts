@@ -19,6 +19,7 @@ const messageAnimation = keyframes`
 interface FileCardProps {
   $isFetching: boolean
   $message?: string
+  $first?: boolean
 }
 
 export const FileCard = styled.div<FileCardProps>`
@@ -74,7 +75,7 @@ export const FileCard = styled.div<FileCardProps>`
       })}
     `}
 
-  ${({ $message }) =>
+  ${({ $message, $first }) =>
     $message &&
     css`
       &:hover {
@@ -91,12 +92,14 @@ export const FileCard = styled.div<FileCardProps>`
           rotate: 135deg;
           animation: ${messageAnimation} 100ms ease-in-out;
           transform-origin: bottom;
+          z-index: 10;
         }
 
         &::after {
           content: '${$message}';
           position: absolute;
           top: -4px;
+          z-index: 20;
 
           padding: 4px;
           border-radius: 4px;
@@ -108,6 +111,22 @@ export const FileCard = styled.div<FileCardProps>`
           background-color: var(--md-custom-color-warning);
           color: black;
         }
+
+        ${$first &&
+        css`
+          &::before {
+            translate: 0 100%;
+            top: 19px;
+            rotate: -45deg;
+            animation: none;
+            right: 8px;
+          }
+          &::after {
+            animation: none;
+            top: 100%;
+            transform: translateY(100%);
+          }
+        `}
       }
     `}
 `

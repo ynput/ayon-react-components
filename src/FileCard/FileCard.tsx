@@ -59,6 +59,7 @@ export interface FileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean
   message?: string
   preview?: string | null
+  index?: number
 }
 
 export const FileCard: FC<FileCardProps> = ({
@@ -74,6 +75,7 @@ export const FileCard: FC<FileCardProps> = ({
   disabled,
   message,
   preview,
+  index,
   ...props
 }) => {
   const typeIcon =
@@ -81,7 +83,7 @@ export const FileCard: FC<FileCardProps> = ({
     'insert_drive_file'
 
   return (
-    <Styled.FileCard $isFetching={isFetching} {...props} $message={message}>
+    <Styled.FileCard $isFetching={isFetching} {...props} $message={message} $first={index === 0}>
       {preview ? <img src={preview} /> : <Icon icon={typeIcon} />}
       <span className="title">{title}</span>
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
