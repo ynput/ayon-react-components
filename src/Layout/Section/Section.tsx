@@ -1,7 +1,13 @@
+import clsx from 'clsx'
 import { HTMLAttributes, forwardRef } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-const SectionStyled = styled.section`
+type SectionProps = HTMLAttributes<HTMLElement> & {
+  direction?: 'row' | 'column'
+  wrap?: boolean
+}
+
+const SectionStyled = styled.section<SectionProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -10,31 +16,40 @@ const SectionStyled = styled.section`
 
   // column is implicit
 
-  flex-direction: column;
+  flex-direction: ${({ direction }) => (direction === 'row' ? 'row' : 'column')};
   & > * {
     width: 100%;
   }
 
-  &.row {
-    flex-direction: row;
-    & > * {
-      width: 100%;
-    }
-  }
-
-  &.wrap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
+  ${({ wrap }) =>
+    wrap &&
+    css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    `}
 `
 
-export const Section = forwardRef<HTMLElement, HTMLAttributes<HTMLElement>>(({ ...props }, ref) => {
-  return (
-    <SectionStyled {...props} ref={ref}>
-      {props.children}
-    </SectionStyled>
-  )
-})
+export const Section = forwardRef<HTMLElement, SectionProps>(
+  ({ direction = 'column', wrap, className, ...props }, ref) => {
+    return (
+      <SectionStyled
+        direction={direction}
+        wrap={wrap}
+        className={clsx(
+          {
+            ['wrap']: wrap,
+          },
+          direction,
+          className,
+        )}
+        {...props}
+        ref={ref}
+      >
+        {props.children}
+      </SectionStyled>
+    )
+  },
+)
