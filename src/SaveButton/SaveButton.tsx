@@ -25,33 +25,31 @@ const StyledSaveButton = styled(Button)<StyledSaveButtonProps>`
     css`
       transition: background-color 0s;
 
-      background-color: var(--color-hl-00);
-      color: black;
+
 
       .icon {
-        color: black;
+
 
         /* saving spine icon */
-        ${$saving &&
-        css`
-          animation: ${spin} 1s linear infinite;
-          cursor: not-allowed;
-          user-select: none;
-        `}
-      }
-
-      &:hover {
-        background-color: #76cbe8;
-      }
-
-      ${$saving &&
-      css`
-        opacity: 0.8;
-        user-select: none;
-        &:hover {
-          background-color: var(--color-hl-00);
+        ${
+          $saving &&
+          css`
+            animation: ${spin} 1s linear infinite;
+            cursor: not-allowed;
+            user-select: none;
+          `
         }
-      `}
+      }
+
+=
+
+      ${
+        $saving &&
+        css`
+          opacity: 0.8;
+          user-select: none;
+        `
+      }
     `}
 `
 
@@ -64,7 +62,10 @@ export interface SaveButtonProps extends ButtonProps {
 }
 
 export const SaveButton = forwardRef(
-  ({ active, saving, children, icon, ...props }: SaveButtonProps, ref: Ref<HTMLButtonElement>) => {
+  (
+    { active, saving, children, icon, variant = 'filled', ...props }: SaveButtonProps,
+    ref: Ref<HTMLButtonElement>,
+  ) => {
     return (
       <StyledSaveButton
         ref={ref}
@@ -72,6 +73,7 @@ export const SaveButton = forwardRef(
         icon={icon || (saving ? 'sync' : 'check')}
         $active={active}
         $saving={saving}
+        variant={variant}
         {...props}
       >
         {children}
