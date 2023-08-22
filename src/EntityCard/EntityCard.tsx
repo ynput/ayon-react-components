@@ -1,13 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
-import {
-  NoImageIcon,
-  StyledDescription,
-  StyledEntityCard,
-  StyledRow,
-  StyledThumbnail,
-  StyledTitle,
-} from '.'
+import * as Styled from './EntityCard.styled'
 import useImageLoading from '../helpers/useImageLoading'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
@@ -96,7 +89,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     )
 
     return (
-      <StyledEntityCard
+      <Styled.Card
         {...props}
         ref={ref}
         $isActive={isActive}
@@ -121,7 +114,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           }
         }}
       >
-        <StyledThumbnail
+        <Styled.Thumbnail
           className="thumbnail"
           style={{ backgroundImage: `url(${imageUrl})` }}
           $isImageLoading={isImageLoading}
@@ -137,43 +130,45 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             }
           }}
         >
-          <StyledRow className="row">
+          <Styled.Row className="row">
             {/* top left */}
             {!hideTitles && (
-              <StyledTitle className="title">
+              <Styled.Title className="title">
                 {titleIcon && <Icon icon={titleIcon} />}
                 {title && <span className="title">{title}</span>}
-              </StyledTitle>
+              </Styled.Title>
             )}
             {/* top right icon */}
             {!hideIcons && (
-              <StyledTitle className="status">
+              <Styled.Title className="status">
                 {icon && <Icon icon={icon} style={{ color: iconColor }} />}
-              </StyledTitle>
+              </Styled.Title>
             )}
-          </StyledRow>
-          {!isImageLoading && !isImageValid && <NoImageIcon icon="image" className="no-image" />}
-          <StyledRow className="row">
+          </Styled.Row>
+          {!isImageLoading && !isImageValid && (
+            <Styled.NoImageIcon icon="image" className="no-image" />
+          )}
+          <Styled.Row className="row">
             {/* bottom left */}
             {!hideTitles && (
-              <StyledTitle className="subTitle">
+              <Styled.Title className="subTitle">
                 <span>{subTitle}</span>
-              </StyledTitle>
+              </Styled.Title>
             )}
             {/* bottom right icon */}
             {notificationIcon && !hideIcons && (
-              <StyledTitle className="notification">
+              <Styled.Title className="notification">
                 <Icon icon={notificationIcon?.icon} style={{ color: notificationIcon?.color }} />
-              </StyledTitle>
+              </Styled.Title>
             )}
-          </StyledRow>
-        </StyledThumbnail>
+          </Styled.Row>
+        </Styled.Thumbnail>
         {description && !hideDescription && (
-          <StyledDescription className="description">
+          <Styled.Description className="description">
             <span>{description}</span>
-          </StyledDescription>
+          </Styled.Description>
         )}
-      </StyledEntityCard>
+      </Styled.Card>
     )
   },
 )

@@ -27,7 +27,7 @@ const cardHoverStyles = css`
   }
 `
 
-export const StyledEntityCard = styled.div<StyledEntityCardProps>`
+export const Card = styled.div<StyledEntityCardProps>`
   --loading-transition: 200ms;
   --hover-transition: 150ms;
   --selection-color: var(--selected-blue);
@@ -78,7 +78,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   user-select: none;
 
   /* style */
-  border-radius: var(--card-border-radius-l);
+  border-radius: var(--border-radius-l);
   background-color: var(--card-background);
 
   &:hover {
@@ -126,7 +126,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       /* when variant = 'basic' titles are blue */
       ${$variant === 'basic' &&
       css`
-        ${StyledTitle} {
+        ${Title} {
           background-color: var(--selection-color);
         }
       `}
@@ -258,7 +258,7 @@ interface StyledThumbnailProps {
 }
 
 // THUMBNAIL
-export const StyledThumbnail = styled.div<StyledThumbnailProps>`
+export const Thumbnail = styled.div<StyledThumbnailProps>`
   position: relative;
   display: flex;
   padding: 2px;
@@ -269,7 +269,7 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: var(--card-border-radius-m);
+  border-radius: var(--border-radius-m);
   background-color: var(--card-hover);
 
   /* image styles */
@@ -305,7 +305,7 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
 `
 
 // for the header and footer inside the thumbnail
-export const StyledRow = styled.div`
+export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -315,7 +315,7 @@ export const StyledRow = styled.div`
 `
 
 // little tags inside the thumbnail
-export const StyledTitle = styled.span`
+export const Title = styled.span`
   display: flex;
   padding: 4px;
   align-items: center;
@@ -330,7 +330,7 @@ export const StyledTitle = styled.span`
     direction: rtl;
   }
 
-  border-radius: var(--card-border-radius-m);
+  border-radius: var(--border-radius-m);
   background-color: var(--card-background, #2c313a);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
@@ -350,7 +350,7 @@ export const StyledTitle = styled.span`
   }
 `
 
-export const StyledDescription = styled.div`
+export const Description = styled.div`
   /* use the 1 row grid animation trick */
   display: grid;
   grid-template-rows: 0fr;
