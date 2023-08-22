@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 import { EntityCardProps } from './EntityCard'
 import getShimmerStyles from '../helpers/getShimmerStyles'
 import { Icon } from '../Icon'
+import * as Theme from '../theme'
 
 interface StyledEntityCardProps {
   $isActive: boolean
@@ -17,7 +18,7 @@ interface StyledEntityCardProps {
 }
 
 const cardHoverStyles = css`
-  background-color: var(--card-hover);
+  background-color: var(--md-sys-color-surface-container-high-hover);
 
   /* hover to show description */
   .description {
@@ -30,7 +31,9 @@ const cardHoverStyles = css`
 export const Card = styled.div<StyledEntityCardProps>`
   --loading-transition: 200ms;
   --hover-transition: 150ms;
-  --selection-color: var(--selected-blue);
+  --selection-color: var(--md-sys-color-primary-container);
+  --selection-color-hover: var(--md-sys-color-primary-container-hover);
+  --selection-color-active: var(--md-sys-color-primary-container-active);
 
   ${({ $isHover }) =>
     $isHover &&
@@ -42,7 +45,9 @@ export const Card = styled.div<StyledEntityCardProps>`
   ${({ $isSecondary }) =>
     $isSecondary &&
     css`
-      --selection-color: var(--selected-green);
+      --selection-color: var(--md-sys-color-tertiary-container);
+      --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
+      --selection-color-active: var(--md-sys-color-tertiary-container-active);
     `}
 
   /* layout */
@@ -79,10 +84,14 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   /* style */
   border-radius: var(--border-radius-l);
-  background-color: var(--card-background);
+  background-color: var(--md-sys-color-surface-container-high);
 
   &:hover {
     ${cardHoverStyles}
+  }
+
+  &:active {
+    background-color: var(--md-sys-color-surface-container-high-active);
   }
 
   /* for keyboard selection when in dragging mode */
@@ -100,9 +109,13 @@ export const Card = styled.div<StyledEntityCardProps>`
     $isActive &&
     css`
       /* set backgrounds */
-      &,
+      background-color: var(--selection-color);
+
       &:hover {
-        background-color: var(--selection-color);
+        background-color: var(--selection-color-hover);
+      }
+      &:active {
+        background-color: var(--selection-color-active);
       }
 
       ${$isDraggable &&
@@ -132,9 +145,13 @@ export const Card = styled.div<StyledEntityCardProps>`
       `}
     `}
 
-  ${getShimmerStyles('var(--color-grey-02)', 'var(--color-grey-03)', {
-    opacity: 1,
-  })}
+  ${getShimmerStyles(
+    'var(--md-sys-color-surface-container-high)',
+    'var(--md-sys-color-surface-container-highest)',
+    {
+      opacity: 1,
+    },
+  )}
 
     &::after {
     transition: opacity var(--loading-transition);
@@ -188,14 +205,14 @@ export const Card = styled.div<StyledEntityCardProps>`
     css`
       &,
       &:hover {
-        background-color: var(--color-hl-error);
+        background-color: var(--md-sys-color-error-container);
       }
 
       ${$isDraggable &&
       css`
         &:focus-visible,
         &:has(:focus-visible) {
-          background-color: var(--color-hl-error);
+          background-color: var(--md-sys-color-error-container);
         }
       `}
 
@@ -270,7 +287,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   align-self: stretch;
 
   border-radius: var(--border-radius-m);
-  background-color: var(--card-hover);
+  background-color: var(--md-sys-color-surface-container);
 
   /* image styles */
   background-size: cover;
@@ -281,7 +298,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
     position: absolute;
     inset: 0;
     opacity: 0;
-    background-color: var(--button-background);
+    background-color: var(--md-sys-color-surface-container-high);
     transition: opacity var(--loading-transition);
     /* sometime the image takes a bit to show */
     transition-delay: 100ms;
@@ -328,10 +345,12 @@ export const Title = styled.span`
     white-space: nowrap;
     text-align: right;
     direction: rtl;
+    /* font size etc */
+    ${Theme.labelMedium}
   }
 
   border-radius: var(--border-radius-m);
-  background-color: var(--card-background, #2c313a);
+  background-color: var(--md-sys-color-surface-container-high);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
 
@@ -346,7 +365,6 @@ export const Title = styled.span`
 
   &.subtitle {
     padding: 4px 6px;
-    font-weight: bold;
   }
 `
 
@@ -359,9 +377,10 @@ export const Description = styled.div`
 
   span {
     word-break: break-all;
-    font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* font size etc */
+    ${Theme.labelMedium}
   }
 `
 
@@ -372,5 +391,5 @@ export const NoImageIcon = styled(Icon)`
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 32px;
-  color: var(--card-background);
+  color: var(--md-sys-color-surface-container-highest);
 `
