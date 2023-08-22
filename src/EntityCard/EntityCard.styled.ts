@@ -34,6 +34,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   --selection-color: var(--md-sys-color-primary-container);
   --selection-color-hover: var(--md-sys-color-primary-container-hover);
   --selection-color-active: var(--md-sys-color-primary-container-active);
+  --selection-color-text: var(--md-sys-color-on-primary-container);
 
   ${({ $isHover }) =>
     $isHover &&
@@ -48,6 +49,7 @@ export const Card = styled.div<StyledEntityCardProps>`
       --selection-color: var(--md-sys-color-tertiary-container);
       --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
       --selection-color-active: var(--md-sys-color-tertiary-container-active);
+      --selection-color-text: var(--md-sys-color-on-tertiary-container);
     `}
 
   /* layout */
@@ -110,6 +112,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     css`
       /* set backgrounds */
       background-color: var(--selection-color);
+      color: var(--selection-color-text);
 
       &:hover {
         background-color: var(--selection-color-hover);
