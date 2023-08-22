@@ -7,6 +7,8 @@ import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 import './index.scss'
 // import theme
 import './theme/theme.scss'
+// export theme
+export * as theme from './theme'
 
 // export all components here
 // ASSIGNEE
