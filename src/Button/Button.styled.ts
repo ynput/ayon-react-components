@@ -153,7 +153,10 @@ export const Button = styled.button<ButtonProps>`
     background-color: transparent;
 
     &:hover {
-      background-color: var(--md-sys-color-surface-container-hover);
+      background-color: var(--md-sys-color-surface-container-highest-hover);
+    }
+    &:active {
+      background-color: var(--md-sys-color-surface-container-highest-active);
     }
 
     &:disabled {
