@@ -24,6 +24,8 @@ export { TagsSelect } from './Dropdowns/TagsSelect'
 export { IconSelect } from './Dropdowns/IconSelect'
 // versionSelect
 export { VersionSelect } from './Dropdowns/VersionSelect'
+// sortingDropdown
+export { SortingDropdown } from './Dropdowns/SortingDropdown'
 
 // BUTTONS
 export { Button } from './Button'
