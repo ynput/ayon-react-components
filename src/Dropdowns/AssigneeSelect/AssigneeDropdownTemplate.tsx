@@ -11,7 +11,8 @@ const RowStyled = styled.span`
   ${({ isSelected }: { isSelected?: boolean }) =>
     isSelected &&
     css`
-      background-color: var(--color-row-hl);
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
     `}
 `
 

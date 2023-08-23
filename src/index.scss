@@ -11,6 +11,7 @@
   --color-text: #d3d8de;
   --color-text-dim: #8e9297;
 
+  // these can stay for now but need to be removed
   --color-grey-00: #21252b;
   --color-grey-01: #2c313a;
   --color-grey-02: #373d48;
@@ -30,12 +31,6 @@
   --color-hl-error: #ff4422;
   --color-icon: #c1d8e9;
 
-  --selected-blue: #0e5f81;
-  --selected-green: #1a653d;
-
-  --color-row-hl: rgba(71, 184, 218, 0.2);
-  --color-row-hl-hover: rgba(71, 184, 218, 0.3);
-
   --base-input-size: 30px;
   --base-input-border-radius: 4px;
   --base-input-border-radius-l: 8px;
@@ -52,15 +47,18 @@
   --button-background: var(--color-grey-03);
   --button-background-hover: var(--color-grey-04);
 
-  --panel-background: var(--color-grey-00);
+  --panel-background: var(--md-sys-color-surface-container-low);
   --panel-border-radius: 4px;
 
   --card-background: var(--color-grey-01);
   --card-hover: var(--color-grey-03);
 
-  --card-border-radius-s: 4px;
-  --card-border-radius-m: 6px;
-  --card-border-radius-l: 8px;
+  --border-radius-m: 4px;
+  --border-radius-l: 8px;
+
+  --padding-s: 4px;
+  --padding-m: 8px;
+  --padding-l: 16px;
 
   --input-disabled-background-color: #282c34;
   --input-disabled-border-color: #353b45;
@@ -68,14 +66,33 @@
 
 * {
   box-sizing: border-box;
+  // body medium font
   font-family: var(--base-font-family);
-  // font-size: var(--base-font-size);
-  font-weight: 400;
+  font-size: var(--md-sys-typescale-body-medium-font-size);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  // color
+  color: var(--md-sys-color-on-surface);
 }
 
 html {
   color: var(--md-sys-color-on-surface);
   background-color: var(--md-sys-color-background);
+}
+
+h2 {
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+}
+
+h3 {
+  font-size: var(--md-sys-typescale-title-small-font-size);
+  font-weight: var(--md-sys-typescale-title-small-font-weight);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing);
 }
 
 .material-symbols-outlined {
