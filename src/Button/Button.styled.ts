@@ -50,6 +50,9 @@ export const Button = styled.button<ButtonProps>`
   &:active {
     background-color: var(--md-sys-color-surface-container-highest-active);
   }
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+  }
 
   &.surface,
   &.tonal,
@@ -125,6 +128,9 @@ export const Button = styled.button<ButtonProps>`
     &:disabled {
       background-color: var(--md-sys-color-primary);
     }
+    &:focus-visible {
+      outline-color: white;
+    }
   }
 
   /* FILLED = primary */
@@ -174,6 +180,9 @@ export const Button = styled.button<ButtonProps>`
     }
     &:active {
       background-color: var(--md-sys-color-tertiary-active);
+    }
+    &:focus-visible {
+      outline-color: white;
     }
 
     &.selected {
