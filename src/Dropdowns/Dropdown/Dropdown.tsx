@@ -407,7 +407,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const handleClear = () => {
       if (!onClear) return
 
-      if (selected.length > minSelected) {
+      if (selected.length > minSelected || onClearNoValue) {
         setSelected([])
         onClear()
         setIsOpen(false)
