@@ -35,8 +35,8 @@ const Input = styled.input`
   width: 100%;
   height: 100%;
 
-  &:focus {
-    outline: 1px solid var(--color-hl-00);
+  &:focus-visible {
+    outline: 1px solid var(--md-sys-color-primary);
   }
 `
 
@@ -58,8 +58,8 @@ const ColorButton = styled.button`
   /* if disabled remove click events */
   pointer-events: ${(props) => props.disabled && 'none'};
 
-  &:focus {
-    outline: 1px solid var(--color-hl-00);
+  &:focus-visible {
+    outline: 1px solid var(--md-sys-color-primary);
   }
 
   &.error,

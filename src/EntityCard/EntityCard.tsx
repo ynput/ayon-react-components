@@ -12,15 +12,15 @@ const notifications: {
   }
 } = {
   comment: {
-    color: 'var(--color-hl-00)',
+    color: 'var(--md-sys-color-primary)',
     icon: 'mark_unread_chat_alt',
   },
   due: {
-    color: 'var(--color-hl-01)',
+    color: 'var(--md-custom-color-warning)',
     icon: 'schedule',
   },
   overdue: {
-    color: 'var(--color-hl-error)',
+    color: 'var(--md-sys-color-error-container)',
     icon: 'alarm',
   },
 }

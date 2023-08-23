@@ -14,8 +14,8 @@ const StyledInputDate = styled(ReactDatePicker)`
   max-height: var(--base-input-size);
   padding: 0 5px;
 
-  &:focus {
-    outline: 1px solid var(--color-hl-00);
+  &:focus-visible {
+    outline: 1px solid var(--md-sys-color-primary);
   }
 
   &.error,

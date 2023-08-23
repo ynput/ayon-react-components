@@ -23,13 +23,18 @@
   --color-grey-08: #d3d8de;
   --color-grey-09: #f0f2f5;
 
-  --color-hl-00: #47b7da;
+  // --color-hl-00: #47b7da;
   --color-hl-01: #fb9c15;
-  --color-hl-changed: #106aa2;
   --color-hl-studio: #56a06f;
   --color-hl-project: #e67300;
   --color-hl-error: #ff4422;
   --color-icon: #c1d8e9;
+
+  // changed colors
+  --color-changed: var(--md-sys-color-primary);
+  --color-changed-hover: var(--md-sys-color-primary-hover);
+  --color-changed-active: var(--md-sys-color-primary-active);
+  --color-on-changed: var(--md-sys-color-on-primary);
 
   --base-input-size: 30px;
   --base-input-border-radius: 4px;
