@@ -26,9 +26,9 @@ const StyledDropdown = styled(Dropdown)`
 
     .option:not(:first-child) {
       max-width: 33%;
-      border-radius: var(--border-radius);
+      border-radius: var(--border-radius-m);
       .option-child {
-        border-radius: var(--border-radius);
+        border-radius: var(--border-radius-m);
         text-align: center;
       }
     }

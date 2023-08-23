@@ -11,7 +11,7 @@ export const Button = styled.button<{
   padding: 0;
   font: inherit;
   cursor: pointer;
-  background-color: var(--color-grey-00);
+  background-color: var(--md-sys-color-surface-container-low);
   &:not(:focus) {
     border: inherit;
   }
@@ -28,35 +28,44 @@ export const Button = styled.button<{
     `}
 
   &:hover {
-    background-color: var(--color-grey-02);
+    background-color: var(--md-sys-color-surface-container-low-hover);
   }
 
-  border-radius: var(--border-radius);
+  &:active {
+    background-color: var(--md-sys-color-surface-container-low-active);
+  }
+
+  border-radius: var(--border-radius-m);
 
   ${({ $isChanged }) =>
     $isChanged &&
     css`
-      background-color: var(--color-hl-00);
-      color: black;
+      background-color: var(--md-sys-color-primary);
+
+      &,
+      span,
       .icon {
-        color: black;
+        color: var(--md-sys-color-on-primary);
       }
 
       :hover {
-        filter: brightness(1.15);
-        background-color: var(--color-hl-00);
+        background-color: var(--md-sys-color-primary-hover);
       }
     `}
 
   ${({ disabled }) =>
     disabled &&
     css`
-      background-color: var(--input-disabled-background-color) !important;
-      color: var(--color-text-dim);
+      opacity: 0.7;
       font-style: italic;
 
+      /* no hover */
+      &:hover {
+        background-color: var(--md-sys-color-surface-container-low);
+      }
+
       .icon {
-        opacity: 0.3;
+        opacity: 0.5;
       }
     `}
 `
@@ -111,8 +120,8 @@ export const Container = styled.form<{
         top: 0;
         translate: 0 -100%;
         position: absolute;
-        background-color: var(--color-grey-00);
-        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        background-color: var(--md-sys-color-surface-container-low);
+        border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
         z-index: 10;
         display: flex;
         align-items: center;
@@ -151,12 +160,13 @@ export const Options = styled.ul<{
   flex-direction: column;
 
   margin: 0px;
-  /* same border used as primereact dropdowns */
-  border: 1px solid var(--color-grey-03);
-  background-color: var(--color-grey-00);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-container-low);
   z-index: 20;
   border-radius: ${({ $message, $search }) =>
-    $message || $search ? '0 0 var(--border-radius) var(--border-radius)' : 'var(--border-radius)'};
+    $message || $search
+      ? '0 0 var(--border-radius-m) var(--border-radius-m)'
+      : 'var(--border-radius-m)'};
   overflow: clip;
 
   position: relative;
@@ -175,7 +185,7 @@ export const Options = styled.ul<{
     $maxHeight &&
     ($startAnimation
       ? css`
-          animation: ${dropdownMenuAnimation($animationHeight)} 0.12s ease-in-out forwards;
+          animation: ${dropdownMenuAnimation($animationHeight)} 0.1s ease-in-out forwards;
           max-height: ${$maxHeight}px;
         `
       : css`
@@ -214,7 +224,10 @@ export const ListItem = styled.li<{
     (!$disabled
       ? css`
           &:hover {
-            background-color: var(--color-grey-02);
+            background-color: var(--md-sys-color-surface-container-low-hover);
+          }
+          &:active {
+            background-color: var(--md-sys-color-surface-container-low-active);
           }
         `
       : css`
@@ -226,12 +239,12 @@ export const ListItem = styled.li<{
   ${({ $focused }) =>
     $focused &&
     css`
-      background-color: var(--color-grey-02);
+      background-color: var(--md-sys-color-surface-container-low-hover);
 
       & > * {
         outline: solid #93cbf9 1px;
         outline-offset: -1px;
-        border-radius: var(--border-radius);
+        border-radius: var(--border-radius-m);
       }
     `}
 
@@ -239,7 +252,7 @@ export const ListItem = styled.li<{
         ${({ $startAnimation }) =>
     $startAnimation &&
     css`
-      animation: ${slideDown} 0.12s ease-in-out forwards;
+      animation: ${slideDown} 0.1s ease-in-out forwards;
     `}
 `
 
@@ -255,7 +268,8 @@ export const DefaultItem = styled.span<{
   ${({ $isSelected }) =>
     $isSelected &&
     css`
-      background-color: var(--color-row-hl);
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
     `}
 `
 
@@ -283,11 +297,9 @@ export const Search = styled.div`
     height: 100%;
     text-indent: 35px;
 
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
 
     &:focus {
-      /* outline: unset;
-        border: 1px solid var(--color-hl-00); */
       outline-offset: -1px;
       z-index: 30;
     }

@@ -3,8 +3,8 @@ import { DefaultValueTemplateProps, DefaultValueTemplate } from '.'
 import styled from 'styled-components'
 
 const TagStyled = styled.span`
-  background-color: var(--color-grey-03);
-  border-radius: 3px;
+  background-color: var(--md-sys-color-surface-container-high);
+  border-radius: var(--border-radius-m);
   padding: 2px 4px;
 `
 
