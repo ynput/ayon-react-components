@@ -82,9 +82,6 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
       dataKey="id"
       multiSelect={multiSelect}
       widthExpand
-      buttonStyle={{
-        backgroundColor: !!value.length ? 'var(--color-grey-00)' : undefined,
-      }}
       valueTemplate={(values, selected, isOpen) => (
         <DefaultValueTemplate
           value={[]}
