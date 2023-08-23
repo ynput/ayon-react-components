@@ -20,7 +20,7 @@ const Template = () => (
     <h2>{'Spacer ->'}</h2>
     <Spacer
       style={{
-        backgroundColor: 'lightblue',
+        backgroundColor: 'var(--md-sys-color-primary)',
       }}
     />
     <h2>{'<- Spacer'}</h2>
