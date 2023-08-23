@@ -26,7 +26,6 @@ export const Icon = styled.div<IconStyledProps>`
     $valueTemplate
       ? css`
           border: 1px solid var(--md-sys-color-outline-variant);
-          background-color: var(--md-sys-color-surface-container-low);
           border-radius: var(--border-radius-m);
 
           width: 150px;
