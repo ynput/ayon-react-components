@@ -175,7 +175,7 @@ export const Options = styled.ul<{
     $maxHeight &&
     ($startAnimation
       ? css`
-          animation: ${dropdownMenuAnimation($animationHeight)} 0.17s ease-in-out forwards;
+          animation: ${dropdownMenuAnimation($animationHeight)} 0.12s ease-in-out forwards;
           max-height: ${$maxHeight}px;
         `
       : css`
@@ -239,7 +239,7 @@ export const ListItem = styled.li<{
         ${({ $startAnimation }) =>
     $startAnimation &&
     css`
-      animation: ${slideDown} 0.17s ease-in-out forwards;
+      animation: ${slideDown} 0.12s ease-in-out forwards;
     `}
 `
 
