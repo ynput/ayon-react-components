@@ -1,35 +1,16 @@
 import { FC, useMemo, forwardRef, Ref } from 'react'
 import { Dropdown, DropdownProps } from '../Dropdown'
-import styled, { css } from 'styled-components'
-
-const StyledItem = styled.div<{ $disabled: boolean; $isSelected: boolean }>`
-  height: 30px;
-  display: flex;
-  align-items: center;
-  padding: 0 8px;
-  white-space: nowrap;
-
-  ${({ $disabled }) =>
-    $disabled &&
-    css`
-      opacity: 0.5;
-    `}
-
-  ${({ $isSelected }) =>
-    $isSelected &&
-    css`
-      background: var(--color-row-hl);
-    `}
-`
+import * as Styled from './VersionSelect.styled'
 
 export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'value' | 'onChange'> {
   value: string[]
   versions: string[][]
+  version?: string[]
   onChange: (value: string[]) => void
 }
 
 export const VersionSelect: FC<VersionSelectProps> = forwardRef(
-  ({ value, versions, onChange, ...props }, ref: Ref<HTMLDivElement>) => {
+  ({ value, versions, version, onChange, ...props }, ref: Ref<HTMLDivElement>) => {
     // we need to find the intersection of all versions
     const intersection = useMemo(
       () =>
@@ -51,20 +32,31 @@ export const VersionSelect: FC<VersionSelectProps> = forwardRef(
       [intersection],
     )
 
+    const options = useMemo(() => {
+      if (version) {
+        return version.map((v) => ({
+          value: v,
+          label: v,
+        }))
+      } else {
+        return allVersions.map((v) => ({
+          value: v,
+          label: v,
+        }))
+      }
+    }, [version, allVersions])
+
     return (
       <Dropdown
         ref={ref}
         value={value}
+        options={options}
         align={'right'}
-        options={allVersions.map((version) => ({
-          value: version,
-          label: version,
-        }))}
         itemTemplate={({ value }, isActive, isSelected) => (
-          <StyledItem
+          <Styled.Item
             $disabled={!intersection.includes(value)}
             $isSelected={versions.length < 2 && isSelected}
-          >{`${value}`}</StyledItem>
+          >{`${value}`}</Styled.Item>
         )}
         onChange={(v) => onChange(v.map((v) => v.toString()))}
         valueStyle={{ minWidth: 100, ...props.valueStyle }}

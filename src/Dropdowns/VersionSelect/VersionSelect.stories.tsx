@@ -12,12 +12,12 @@ export default meta
 
 type Story = StoryObj<typeof VersionSelect>
 
-const Template = ({ value: initValue, versions }: VersionSelectProps) => {
+const Template = ({ value: initValue, ...props }: VersionSelectProps) => {
   const [value, setValue] = useState<string[]>(initValue)
 
   return (
     <div style={{ display: 'flex', gap: 8 }}>
-      <VersionSelect {...{ value, versions, onChange: setValue }} />
+      <VersionSelect {...{ ...props, value, onChange: setValue }} />
       <Button icon="replay" onClick={() => setValue(initValue)} />
     </div>
   )
@@ -36,6 +36,7 @@ export const Multiple: Story = {
     ...Default.args,
     versions: [...(Default?.args?.versions || []), ['v001', 'v002', 'v010', 'v003', 'v005']],
     value: ['v002', 'v005'],
+    version: Default?.args?.versions && Default?.args?.versions[0],
   },
   render: Template,
 }
