@@ -13,11 +13,7 @@ type Story = StoryObj<typeof Divider>
 const Template = () => (
   <div>
     <h2>{'vvv Divider vvv'}</h2>
-    <Divider
-      style={{
-        backgroundColor: 'lightblue',
-      }}
-    />
+    <Divider />
     <h2>{'^^^ Divider ^^^'}</h2>
   </div>
 )
