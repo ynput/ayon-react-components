@@ -1,20 +1,5 @@
 import { HTMLAttributes, forwardRef } from 'react'
-import styled from 'styled-components'
 import { PanelStyled } from '../Panel'
-import { LoaderShade } from '../../Overlay/LoaderShade'
-
-const ScrollPanelStyled = styled(PanelStyled)`
-  padding: 0;
-  padding: 12px;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: scroll;
-  gap: var(--base-gap-medium);
-`
 
 export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
@@ -34,7 +19,6 @@ export const TablePanel = forwardRef<HTMLDivElement, ScrollPanelProps>(
       }}
     >
       <div style={{ flexGrow: 1, position: 'relative' }}>
-        {loading ? <LoaderShade /> : null}
         <div
           style={{
             position: 'absolute',
