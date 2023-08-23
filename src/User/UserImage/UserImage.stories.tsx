@@ -18,3 +18,8 @@ export const Default: Story = {
     src: `https://repo.imm.cz/avatars/demouser${randomUserNumber}.jpg`,
   },
 }
+export const Initials: Story = {
+  args: {
+    fullName: 'Demo User',
+  },
+}
