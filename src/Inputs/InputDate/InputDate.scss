@@ -34,7 +34,7 @@
     .react-datepicker__quarter-text--in-selecting-range,
     .react-datepicker__year-text--in-selecting-range
   ) {
-  color: white;
+  color: var(--md-sys-color-on-surface);
 }
 
 .react-datepicker__day--keyboard-selected,
@@ -44,7 +44,7 @@
   color: black;
 }
 
-$background-color: var(--color-grey-01);
+$background-color: var(--md-sys-color-surface-container-high);
 
 // background-color
 // .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::before,
@@ -54,7 +54,7 @@ $background-color: var(--color-grey-01);
 
 .react-datepicker__header {
   background-color: $background-color;
-  border-bottom: 1px solid #aeaeae;
+  border-bottom: 1px solid var(--md-sys-color-outline);
 }
 
 .react-datepicker__time-container
@@ -105,7 +105,7 @@ $background-color: var(--color-grey-01);
 .react-datepicker__quarter-text,
 .react-datepicker__year-text {
   &:hover {
-    background-color: var(--color-grey-02);
+    background-color: var(--md-sys-color-surface-container-highest);
   }
 }
 
@@ -113,17 +113,17 @@ $background-color: var(--color-grey-01);
 .react-datepicker__month-dropdown,
 .react-datepicker__month-year-dropdown {
   background-color: $background-color;
-  border: 1px solid #aeaeae;
+  border: 1px solid var(--md-sys-color-outline);
 }
 
 .react-datepicker__today-button {
   background: $background-color;
-  border-top: 1px solid #aeaeae;
+  border-top: 1px solid var(--md-sys-color-outline);
 }
 
 .react-datepicker {
   background-color: $background-color;
-  border: 1px solid var(--color-grey-03);
+  border: 1px solid var(--md-sys-color-outline-variant);
 }
 
 // selected
@@ -150,24 +150,33 @@ $background-color: var(--color-grey-01);
 .react-datepicker__year-text--selected,
 .react-datepicker__year-text--in-selecting-range,
 .react-datepicker__year-text--in-range {
-  background-color: var(--color-row-hl);
-
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  border: 1px solid var(--md-sys-color-on-secondary-container);
   &:hover {
-    background-color: var(--color-row-hl);
+    background-color: var(--md-sys-color-primary-container-hover);
   }
 }
 
 // today
 .react-datepicker__day--today {
-  border: 1px solid var(--color-row-hl);
-  border-radius: 3px;
+  color: var(--md-sys-color-on-secondary-container);
+  background-color: var(--md-sys-color-secondary-container);
+  &:hover {
+    background-color: var(--md-sys-color-secondary-container-hover);
+  }
+
+  border-radius: 4px;
 }
 
 .react-datepicker__triangle {
   transform: none !important;
   left: 40px !important;
 }
-
+.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::before,
+.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::after {
+  border-bottom-color: var(--md-sys-color-on-surface);
+}
 .react-datepicker {
   z-index: 200;
 }

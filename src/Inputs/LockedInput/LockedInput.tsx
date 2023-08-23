@@ -1,32 +1,7 @@
 import { forwardRef, useEffect, useState } from 'react'
-import styled, { css } from 'styled-components'
-import { InputText } from '../InputText'
+import * as Styled from './LockedInput.styled'
 import { Button } from '../../Button'
 import { IconType } from '../../Icon'
-
-const UsernameStyled = styled.form`
-  display: flex;
-  flex-direction: row;
-  gap: 4px;
-
-  input {
-    flex: 1;
-  }
-`
-
-const StyledInputText = styled(InputText)<{ $open: boolean }>`
-  ${({ $open }) =>
-    !$open &&
-    css`
-      cursor: pointer;
-      background-color: var(--button-background);
-      font-style: normal;
-
-      &:hover {
-        background-color: var(--button-background-hover);
-      }
-    `}
-`
 
 export interface LockedInputProps
   extends Omit<React.InputHTMLAttributes<HTMLFormElement>, 'onSubmit'> {
@@ -101,8 +76,8 @@ export const LockedInput = forwardRef<HTMLFormElement, LockedInputProps>(
     }, [disabled, editing])
 
     return (
-      <UsernameStyled key={label} ref={ref} {...props} onSubmit={handleSubmit}>
-        <StyledInputText
+      <Styled.Username key={label} ref={ref} {...props} onSubmit={handleSubmit}>
+        <Styled.LockedInputText
           value={editing ? editingValue : value}
           readOnly={!editing}
           onChange={handleChange}
@@ -123,7 +98,7 @@ export const LockedInput = forwardRef<HTMLFormElement, LockedInputProps>(
           ) : (
             <Button icon={editIcon} onClick={onEdit || handleOpen} />
           ))}
-      </UsernameStyled>
+      </Styled.Username>
     )
   },
 )
