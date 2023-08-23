@@ -442,9 +442,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           ) : (
             <>
               {title ? (
-                <h2>{title}</h2>
+                <h3>{title}</h3>
               ) : (
-                <h2>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h2>
+                <h3>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h3>
               )}
               <Spacer />
               <Button
@@ -489,6 +489,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
               {Object.entries(groupedFiles).map(([key, files], idx) => (
                 <li key={key}>
                   <FileCard
+                    index={idx}
                     title={key}
                     type={files.length > 1 ? 'sequence' : files[0].file.type}
                     size={files.reduce((acc, file) => acc + file.file.size, 0)}

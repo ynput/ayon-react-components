@@ -117,11 +117,11 @@ export const Form = styled.form`
     }
 
     .success {
-      color: var(--color-hl-00);
+      color: var(--md-sys-color-primary);
     }
 
     .error {
-      color: var(--color-hl-error);
+      color: var(--md-sys-color-error);
     }
   }
 `
