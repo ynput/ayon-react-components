@@ -79,8 +79,6 @@ export { Toolbar } from './Layout/Toolbar'
 // OVERLAY
 // dialog
 export { Dialog } from './Overlay/Dialog'
-// loaderShade
-export { LoaderShade } from './Overlay/LoaderShade'
 
 // PANELS
 // panel
