@@ -1,6 +1,7 @@
 :root {
   /* primary */
   --md-sys-color-primary-dark-hover: #83c2f1;
+  --md-sys-color-on-primary-dark-hover: #0B405D;
   --md-sys-color-primary-container-dark-hover: #10577b;
   /* secondary */
   --md-sys-color-secondary-dark-hover: #abbdcd;
@@ -17,6 +18,7 @@
 
   /* primary */
   --md-sys-color-primary-dark-active: #7ebbea;
+  --md-sys-color-on-primary-dark-active: #114664;
   --md-sys-color-primary-container-dark-active: #185e81;
   /* secondary */
   --md-sys-color-secondary-dark-active: #a5b7c6;
