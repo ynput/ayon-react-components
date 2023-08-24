@@ -50,8 +50,7 @@ const Checkerboard = styled.span`
 `
 
 const ColorButton = styled.button`
-  color: var(--color-text);
-  border: 1px solid var(--color-grey-03);
+  border: 1px solid var(--md-sys-color-outline-variant);
   cursor: pointer;
   margin: 0;
 
