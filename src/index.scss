@@ -13,18 +13,25 @@
 
   // replaced or removed
   // --color-grey-00: hsl(216, 13%, 15%); -> --md-sys-color-surface-container-low
+  --color-grey-00: var(--md-sys-color-surface-container-low);
   // --color-grey-01: hsl(219, 14%, 20%); -> --md-sys-color-surface-container
+  --color-grey-01: var(--md-sys-color-surface-container);
   // --color-grey-02: hsl(219, 13%, 25%); -> --md-sys-color-surface-container-high
+  --color-grey-02: var(--md-sys-color-surface-container-high);
   // --color-grey-03: hsl(218, 12%, 30%); -> --md-sys-color-surface-container-highest
+  --color-grey-03: var(--md-sys-color-surface-container-highest);
   // --color-grey-04: hsl(219, 13%, 34%); -> --md-sys-color-surface-container-highest-hover
-  // --color-grey-05: hsl(216, 13%, 39%); -> removed
-  // --color-grey-06: hsl(215, 11%, 47%); -> removed
-  // --color-grey-07: hsl(216, 14%, 65%); -> removed
-  // --color-grey-08: hsl(213, 14%, 85%); -> --md-sys-color-inverse-surface
-  // --color-grey-09: hsl(216, 20%, 95%); -> --md-sys-color-on-background
+  --color-grey-04: var(--md-sys-color-surface-container-highest-hover);
+  --color-grey-05: hsl(216, 13%, 39%);
+  --color-grey-06: hsl(215, 11%, 47%);
+  --color-grey-07: hsl(216, 14%, 65%);
+  --color-grey-08: var(--md-sys-color-inverse-surface);
+  --color-grey-09: var(--md-sys-color-on-background);
 
   // --color-hl-00: #47b7da; -> --md-custom-color-primary
+  --md-custom-color-primary: var(--color-hl-00);
   // --color-hl-01: #fb9c15; -> --md-custom-color-warning
+  --md-custom-color-warning: var(--color-hl-01);
   --color-hl-studio: var(--md-sys-color-tertiary-fixed-dim);
   --color-hl-project: var(--md-custom-color-warning);
   --color-hl-site: #efa0a8;
