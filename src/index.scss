@@ -48,14 +48,12 @@
 
   // Buttons
 
-  --button-background: var(--color-grey-03);
-  --button-background-hover: var(--color-grey-04);
+  // --button-background: var(--color-grey-03); -> --md-sys-color-surface-container-highest
+  // --button-background-hover: var(--color-grey-04); -> --md-sys-color-surface-container-highest
 
   --panel-background: var(--md-sys-color-surface-container-low);
+  --panel-background-hover: var(--md-sys-color-surface-container-low-hover);
   --panel-border-radius: 4px;
-
-  --card-background: var(--color-grey-01);
-  --card-hover: var(--color-grey-03);
 
   --border-radius-m: 4px;
   --border-radius-l: 8px;
