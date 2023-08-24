@@ -122,6 +122,9 @@ h3 {
   background-clip: content-box;
 
   &:hover {
-    background-color: var(--color-grey-04);
+    background-color: var(--md-sys-color-surface-container-highest-hover);
+  }
+  &:active {
+    background-color: var(--md-sys-color-surface-container-highest-active);
   }
 }
