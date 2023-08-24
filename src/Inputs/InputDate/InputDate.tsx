@@ -6,9 +6,9 @@ import './InputDate.scss'
 const StyledInputDate = styled(ReactDatePicker)`
   width: 100%;
 
-  color: var(--color-text);
-  border: 1px solid var(--color-grey-03);
-  background-color: var(--color-grey-00);
+  color: var(--md-sys-color-on-surface);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-container-low);
   border-radius: var(--base-input-border-radius);
   min-height: var(--base-input-size);
   max-height: var(--base-input-size);
