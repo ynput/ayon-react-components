@@ -25,14 +25,7 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   ${({ disabled }) =>
     disabled &&
     css`
-      color: var(--color-text-dim);
-      span {
-        color: var(--color-text-dim);
-      }
-      img {
-        opacity: 0.5;
-      }
-      background-color: var(--input-disabled-background-color);
+      opacity: 0.7;
     `}
 
   ${({ isMultiple }) =>

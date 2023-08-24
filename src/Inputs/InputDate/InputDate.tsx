@@ -24,9 +24,7 @@ const StyledInputDate = styled(ReactDatePicker)`
   }
 
   &:disabled {
-    color: var(--color-text-dim);
-    background-color: var(--input-disabled-background-color);
-    border-color: var(--input-disabled-border-color);
+    opacity: 0.7;
     font-style: italic;
     cursor: not-allowed;
   }
