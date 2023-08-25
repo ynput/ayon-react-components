@@ -54,7 +54,7 @@
   transition-duration: 0.2s
 
 .p-disabled, .p-component:disabled
-  opacity: 0.4
+  opacity: 0.6
 
 .p-error
   color: var(--color-hl-error)
@@ -565,9 +565,9 @@
 
 .p-selectbutton
   .p-button
-    background: #1e1e1e
-    border: 1px solid #383838
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--md-sys-color-surface-container-lowest)
+    border: 1px solid var(--md-sys-color-outline-variant)
+    color: var(--md-sys-color-on-surface)
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
     .p-button-icon-left, .p-button-icon-right
@@ -575,27 +575,27 @@
 
     &:not(.p-disabled):not(.p-highlight):hover
       background: rgba(255, 255, 255, 0.03)
-      border-color: #383838
-      color: rgba(255, 255, 255, 0.87)
+      border-color: var(--md-sys-color-outline-variant)
+      color: var(--md-sys-color-on-surface)
 
       .p-button-icon-left, .p-button-icon-right
         color: rgba(255, 255, 255, 0.6)
 
     &.p-highlight
-      background: #64b5f6
-      border-color: #64b5f6
-      color: #212529
+      background: var(--md-sys-color-primary-container)
+      border-color: var(--md-sys-color-primary-container)
+      color: var(--md-sys-color-on-primary-container)
 
       .p-button-icon-left, .p-button-icon-right
-        color: #212529
+        color: var(--md-sys-color-on-primary-container)
 
       &:hover
-        background: #43a5f4
-        border-color: #43a5f4
-        color: #212529
+        background: var(--md-sys-color-primary-container-hover)
+        border-color: var(--md-sys-color-primary-container-hover)
+        color: var(--md-sys-color-on-primary-container)
 
         .p-button-icon-left, .p-button-icon-right
-          color: #212529
+          color: var(--md-sys-color-on-primary-container)
 
   &.p-invalid > .p-button
     border-color: var(--color-hl-error)

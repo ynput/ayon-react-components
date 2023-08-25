@@ -24,6 +24,7 @@ export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {
 export const ScrollPanel = forwardRef<HTMLDivElement, ScrollPanelProps>((props, ref) => {
   return (
     <PanelStyled
+      $direction="column"
       {...props}
       ref={ref}
       style={{
@@ -31,7 +32,9 @@ export const ScrollPanel = forwardRef<HTMLDivElement, ScrollPanelProps>((props, 
         ...(props.style || {}),
       }}
     >
-      <ScrollPanelStyled style={props.scrollStyle}>{props.children}</ScrollPanelStyled>
+      <ScrollPanelStyled $direction="column" style={props.scrollStyle}>
+        {props.children}
+      </ScrollPanelStyled>
     </PanelStyled>
   )
 })
