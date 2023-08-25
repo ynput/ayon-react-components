@@ -218,6 +218,9 @@ export const Button = styled.button<ButtonProps>`
       &:hover {
         background-color: var(--md-sys-color-primary-container-hover);
       }
+      &:active {
+        background-color: var(--md-sys-color-primary-container-active);
+      }
     `}
 
   /* icon color should inherit color */
