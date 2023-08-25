@@ -12,9 +12,6 @@ export const PanelStyled = styled.div<{ $direction: PanelProps['direction'] }>`
   border-radius: var(--border-radius-m);
   display: flex;
   flex-direction: ${({ $direction }) => $direction};
-  align-items: ${({ $direction }) => ($direction === 'column' ? 'flex-start' : 'center')};
-  justify-content: ${({ $direction }) =>
-    $direction === 'column' ? 'flex-start' : 'space-between'};
   gap: var(--base-gap-medium);
 
   &.transparent {
