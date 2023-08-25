@@ -13,7 +13,7 @@
   --md-sys-color-surface-container-highest-dark-hover: hsl(216, 11%, 34%);
   --md-sys-color-surface-container-high-dark-hover: hsl(217, 11%, 29%);
   --md-sys-color-surface-container-dark-hover: hsl(212, 11%, 23%);
-  --md-sys-color-surface-container-low-dark-hover: hsl(213, 10%, 18%);
+  --md-sys-color-surface-container-low-dark-hover: hsl(213, 14%, 16%);
   --md-sys-color-surface-container-lowest-dark-hover: hsl(214, 9%, 15%);
 
   /* primary */
@@ -30,6 +30,6 @@
   --md-sys-color-surface-container-highest-dark-active: hsl(218, 10%, 36%);
   --md-sys-color-surface-container-high-dark-active: hsl(220, 10%, 31%);
   --md-sys-color-surface-container-dark-active: hsl(217, 10%, 25%);
-  --md-sys-color-surface-container-low-dark-active: hsl(213, 9%, 21%);
+  --md-sys-color-surface-container-low-dark-active: hsl(213, 14%, 20%);
   --md-sys-color-surface-container-lowest-dark-active: hsl(220, 7%, 18%);
 }
