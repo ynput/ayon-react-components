@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, forwardRef } from 'react'
 import * as Styled from './Button.styled'
 import { Icon, IconType } from '../Icon'
 import clsx from 'clsx'
-import Typography from '../theme/Typography.module.css'
+import Typography from '../theme/typography.module.css'
 
 // TYPES
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
