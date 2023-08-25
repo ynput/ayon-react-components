@@ -40,7 +40,8 @@
   --surface-border:#383838
   --surface-hover:rgba(255, 255, 255, 0.03)
   --maskbg:rgba(0, 0, 0, 0.4)
-  --focus-ring:0 0 0 1px #93cbf9
+  --focus-color: var(--md-sys-color-primary)
+  --focus-ring:0 0 0 1px var(--focus-color)
   color-scheme: dark
 
 .p-component
@@ -220,7 +221,7 @@
   &.p-focus .p-inputswitch-slider
     outline: 0 none
     outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    box-shadow: 0 0 0 1px var(--focus-color)
 
   &:not(.p-disabled):hover .p-inputswitch-slider
     background: rgba(255, 255, 255, 0.03)
@@ -421,7 +422,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       .p-checkbox
         margin-right: 0.5rem
@@ -500,7 +501,7 @@
       &.p-focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
         border-color: #64b5f6
 
     .p-radiobutton-icon
@@ -551,7 +552,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
     &.p-rating-item-active .p-rating-icon
       color: #64b5f6
@@ -629,7 +630,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
   .p-slider-range
     background: #64b5f6
@@ -651,7 +652,7 @@
     &.p-focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
       border-color: #64b5f6
 
   .p-treeselect-label
@@ -731,7 +732,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
   .p-treeselect-items-wrapper
     .p-tree
@@ -1945,7 +1946,7 @@
 
   &:enabled:focus, &:not(button):not(a):not(.p-disabled):focus
     background: transparent
-    box-shadow: 0 0 0 1px #93cbf9
+    box-shadow: 0 0 0 1px var(--focus-color)
     border-color: transparent
 
   &:enabled:active, &:not(button):not(a):not(.p-disabled):active
@@ -2285,7 +2286,7 @@
     .p-carousel-prev:focus, .p-carousel-next:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
   .p-carousel-indicators
     padding: 1rem
@@ -2388,7 +2389,7 @@
           color: #64b5f6
 
     &:focus
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
       outline: 0 none
 
   .p-datatable-tbody > tr
@@ -2419,7 +2420,7 @@
       .p-row-toggler:focus, .p-row-editor-init:focus, .p-row-editor-save:focus, .p-row-editor-cancel:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
       .p-row-editor-save
         margin-right: 0.5rem
@@ -2447,7 +2448,7 @@
       color: rgba(255, 255, 255, 0.87)
 
     &:focus
-      outline: 0.15rem solid #93cbf9
+      outline: 0.15rem solid var(--focus-color)
       outline-offset: -0.15rem
 
   &.p-datatable-selectable-cell .p-datatable-tbody > tr.p-selectable-row > td.p-selectable-cell
@@ -2456,7 +2457,7 @@
       color: rgba(255, 255, 255, 0.87)
 
     &:focus
-      outline: 0.15rem solid #93cbf9
+      outline: 0.15rem solid var(--focus-color)
       outline-offset: -0.15rem
 
   &.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):not(.p-datatable-emptymessage):hover
@@ -2641,7 +2642,7 @@
   &:focus
     outline: 0 none
     outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-column-filter-clear-button
   width: 2rem
@@ -2660,7 +2661,7 @@
   &:focus
     outline: 0 none
     outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-column-filter-overlay
   background: #1e1e1e
@@ -2693,7 +2694,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     .p-column-filter-separator
       border-top: 1px solid #383838
@@ -2787,7 +2788,7 @@
             &:focus
               outline: 0 none
               outline-offset: 0
-              box-shadow: 0 0 0 1px #93cbf9
+              box-shadow: 0 0 0 1px var(--focus-color)
 
         .fc-icon-chevron-left
           font-family: 'PrimeIcons' !important
@@ -2808,7 +2809,7 @@
         &:focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
 
         &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
           background: #1e1e1e
@@ -2834,7 +2835,7 @@
         &.fc-dayGridMonth-button:focus, &.fc-timeGridWeek-button:focus, &.fc-timeGridDay-button:focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
           z-index: 1
 
       .fc-button-group .fc-button
@@ -2902,7 +2903,7 @@
             &:focus
               outline: 0 none
               outline-offset: 0
-              box-shadow: 0 0 0 1px #93cbf9
+              box-shadow: 0 0 0 1px var(--focus-color)
 
         .fc-popover-body
           padding: 1rem
@@ -2955,7 +2956,7 @@
             &:focus
               outline: 0 none
               outline-offset: 0
-              box-shadow: 0 0 0 1px #93cbf9
+              box-shadow: 0 0 0 1px var(--focus-color)
 
         &:disabled
           opacity: 0.4
@@ -2982,7 +2983,7 @@
         &:focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
 
         &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
           background: #1e1e1e
@@ -3008,7 +3009,7 @@
         &.fc-dayGridMonth-button:not(:disabled):focus, &.fc-timeGridWeek-button:not(:disabled):focus, &.fc-timeGridDay-button:not(:disabled):focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
           z-index: 1
 
       .fc-button-group .fc-button
@@ -3079,7 +3080,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
         color: rgba(255, 255, 255, 0.87)
@@ -3144,7 +3145,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-paginator
   background: #1e1e1e
@@ -3273,7 +3274,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
         color: rgba(255, 255, 255, 0.87)
@@ -3340,7 +3341,7 @@
         &:focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
 
       .p-treenode-icon
         margin-right: 0.5rem
@@ -3355,7 +3356,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
         background: rgba(100, 181, 246, 0.16)
@@ -3436,7 +3437,7 @@
     background: #1e1e1e
 
   .p-sortable-column
-    outline-color: #93cbf9
+    outline-color: var(--focus-color)
 
     .p-sortable-column-icon
       color: rgba(255, 255, 255, 0.6)
@@ -3494,7 +3495,7 @@
         &:focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: 0 0 0 1px #93cbf9
+          box-shadow: 0 0 0 1px var(--focus-color)
 
         + .p-checkbox
           margin-right: 0.5rem
@@ -3503,7 +3504,7 @@
             color: rgba(255, 255, 255, 0.87)
 
     &:focus
-      outline: 0.15rem solid #93cbf9
+      outline: 0.15rem solid var(--focus-color)
       outline-offset: -0.15rem
 
     &.p-highlight
@@ -3601,7 +3602,7 @@
     &:not(.p-disabled) .p-accordion-header-link:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link
       background: rgba(255, 255, 255, 0.03)
@@ -3710,7 +3711,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
     &:hover
       background: rgba(255, 255, 255, 0.03)
@@ -3773,7 +3774,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
   &.p-panel-toggleable .p-panel-header
     padding: 0.5rem 1rem
@@ -3839,7 +3840,7 @@
         &:not(.p-disabled):focus
           outline: 0 none
           outline-offset: 0
-          box-shadow: inset 0 0 0 1px #93cbf9
+          box-shadow: inset 0 0 0 1px var(--focus-color)
 
       &:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link
         background: #1e1e1e
@@ -3864,7 +3865,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 1px #93cbf9
+      box-shadow: inset 0 0 0 1px var(--focus-color)
 
   .p-tabview-panels
     background: #1e1e1e
@@ -3962,7 +3963,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
       &:last-child
         margin-right: 0
@@ -4064,7 +4065,7 @@
     .p-sidebar-close:focus, .p-sidebar-icon:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
     + .p-sidebar-content
       padding-top: 0
@@ -4136,7 +4137,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
       .p-menuitem-text
         color: rgba(255, 255, 255, 0.87)
@@ -4190,7 +4191,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   .p-submenu-list
     padding: 0.25rem 0
@@ -4337,7 +4338,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     &.p-menuitem-active > .p-menuitem-link
       background: rgba(255, 255, 255, 0.03)
@@ -4374,7 +4375,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   .p-megamenu-panel
     background: #1e1e1e
@@ -4443,7 +4444,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-menu-overlay
     background: #1e1e1e
@@ -4496,7 +4497,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   .p-menubar-root-list > .p-menuitem
     > .p-menuitem-link
@@ -4526,7 +4527,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     &.p-menuitem-active > .p-menuitem-link
       background: rgba(255, 255, 255, 0.03)
@@ -4576,7 +4577,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
     .p-menubar-root-list
       position: absolute
@@ -4624,7 +4625,7 @@
           &:focus
             outline: 0 none
             outline-offset: 0
-            box-shadow: inset 0 0 0 0.15rem #93cbf9
+            box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
           > .p-submenu-icon
             margin-left: auto
@@ -4693,7 +4694,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled) > a:hover
       background: rgba(255, 255, 255, 0.03)
@@ -4752,7 +4753,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 0.15rem #93cbf9
+        box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       .p-panelmenu-icon
         margin-right: 0.5rem
@@ -4813,7 +4814,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-slidemenu-overlay
     background: #1e1e1e
@@ -4868,7 +4869,7 @@
     &:not(.p-disabled):focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
   &.p-highlight
     .p-steps-number
@@ -4917,7 +4918,7 @@
       &:not(.p-disabled):focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: inset 0 0 0 1px #93cbf9
+        box-shadow: inset 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link
       background: #1e1e1e
@@ -4963,7 +4964,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: inset 0 0 0 0.15rem #93cbf9
+      box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-tieredmenu-overlay
     background: #1e1e1e
@@ -5060,7 +5061,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
   &.p-message-info
     background: #b3e5fc
@@ -5143,7 +5144,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
     &.p-toast-message-info
       background: #b3e5fc
@@ -5280,7 +5281,7 @@
       &:focus
         outline: 0 none
         outline-offset: 0
-        box-shadow: 0 0 0 1px #93cbf9
+        box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-galleria-mask, .p-image-mask
   --maskbg:rgba(0, 0, 0, 0.9)
@@ -5366,7 +5367,7 @@
     &:focus
       outline: 0 none
       outline-offset: 0
-      box-shadow: 0 0 0 1px #93cbf9
+      box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-scrolltop
   width: 3rem
@@ -5432,7 +5433,7 @@
   &:focus
     outline: 0 none
     outline-offset: 0
-    box-shadow: 0 0 0 1px #93cbf9
+    box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-progressbar
   border: 0 none
