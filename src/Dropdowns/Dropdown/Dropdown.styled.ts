@@ -242,7 +242,7 @@ export const ListItem = styled.li<{
       background-color: var(--md-sys-color-surface-container-low-hover);
 
       & > * {
-        outline: solid #93cbf9 1px;
+        outline: solid var(--focus-color) 1px;
         outline-offset: -1px;
         border-radius: var(--border-radius-m);
       }

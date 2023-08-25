@@ -27,6 +27,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         title={tooltip}
         $link={link}
         $icon={!!icon}
+        $variant={variant}
+        $selected={!!selected}
         className={clsx(className, variant, Typography.labelLarge, selected && 'selected')}
         {...props}
         ref={ref}

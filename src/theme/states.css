@@ -2,7 +2,7 @@
   /* primary */
   --md-sys-color-primary-dark-hover: hsl(206, 80%, 73%);
   --md-sys-color-on-primary-dark-hover: hsl(201, 79%, 20%);
-  --md-sys-color-primary-container-dark-hover: hsl(200, 77%, 27%);
+  --md-sys-color-primary-container-dark-hover: hsl(200, 50%, 25%);
   /* secondary */
   --md-sys-color-secondary-dark-hover: hsl(208, 25%, 74%);
   --md-sys-color-secondary-container-dark-hover: hsl(207, 19%, 33%);
@@ -19,7 +19,7 @@
   /* primary */
   --md-sys-color-primary-dark-active: hsl(206, 72%, 71%);
   --md-sys-color-on-primary-dark-active: hsl(202, 71%, 23%);
-  --md-sys-color-primary-container-dark-active: hsl(200, 69%, 30%);
+  --md-sys-color-primary-container-dark-active: hsl(200, 50%, 31%);
   /* secondary */
   --md-sys-color-secondary-dark-active: hsl(207, 22%, 71%);
   --md-sys-color-secondary-container-dark-active: hsl(206, 17%, 35%);

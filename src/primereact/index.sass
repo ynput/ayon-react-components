@@ -7,7 +7,7 @@ $op-button-primary-background: #434a56
 
 // New scheme
 
-$color-grey-00: #21252b
+$color-grey-00: var(--md-sys-color-surface-container-low)
 $color-grey-01: #2c313a
 $color-grey-02: #373d48
 $color-grey-03: #434a56
@@ -86,12 +86,12 @@ $prime-button-background: $color-grey-03
         text-decoration-thickness: 3px
 
     &:nth-child(odd)
-      background: #21252b
-      border-left: 4px solid #21252b
+      background: var(--md-sys-color-surface-container-low)
+      border-left: 4px solid var(--md-sys-color-surface-container-low)
 
     &:nth-child(even)
-      background: #272c33
-      border-left: 4px solid #272c33
+      background: var(--md-sys-color-surface-container-low-hover)
+      border-left: 4px solid var(--md-sys-color-surface-container-low-hover)
 
     &.p-highlight
       background: var(--md-sys-color-primary-container) !important
@@ -99,7 +99,7 @@ $prime-button-background: $color-grey-03
         background: var(--md-sys-color-primary-container-hover) !important
 
     &:hover
-      background: rgba(255, 255, 255, 0.05) !important
+      background: var(--md-sys-color-primary-container-active) !important
       color: white
 
     td
