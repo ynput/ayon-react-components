@@ -13,6 +13,7 @@ import { Draggable } from './Draggable'
 import { EntityCardProps } from '../EntityCard'
 import { useMemo, useState } from 'react'
 import getRandomImage from '../../helpers/getRandomImage'
+import { Section } from '../../Layout/Section'
 
 const DnDTemplate = (props: EntityCardProps) => {
   const [activeCard, setActiveCard] = useState('')
@@ -111,9 +112,9 @@ const DnDTemplate = (props: EntityCardProps) => {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <Panel style={{ flexDirection: 'row' }}>
+      <Section direction="row" style={{ alignItems: 'flex-start' }}>
         {columns.map(({ id, items }) => (
-          <Droppable id={id} key={id}>
+          <Droppable id={id} key={id} columns={columns}>
             {items.map((cardId) => {
               const card = cards.find((card) => card.id === cardId)
               if (!card) return null
@@ -129,7 +130,7 @@ const DnDTemplate = (props: EntityCardProps) => {
             })}
           </Droppable>
         ))}
-      </Panel>
+      </Section>
     </DndContext>
   )
 }
