@@ -59,7 +59,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   position: relative;
 
   /* size */
-  min-width: 200px;
+  min-width: 195px;
   height: auto;
   aspect-ratio: 16 / 9;
 
@@ -85,7 +85,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   user-select: none;
 
   /* style */
-  border-radius: var(--border-radius-l);
+  border-radius: var(--border-radius-xl);
   background-color: var(--md-sys-color-surface-container-high);
 
   &:hover {
@@ -289,7 +289,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: var(--border-radius-m);
+  border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container);
 
   /* image styles */
@@ -352,7 +352,7 @@ export const Title = styled.span`
     ${Theme.labelMedium}
   }
 
-  border-radius: var(--border-radius-m);
+  border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container-high);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
@@ -393,6 +393,6 @@ export const NoImageIcon = styled(Icon)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 32px;
-  color: var(--md-sys-color-surface-container-highest);
+  font-size: 40px;
+  color: var(--md-sys-color-outline);
 `
