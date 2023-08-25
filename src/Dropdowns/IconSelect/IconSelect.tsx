@@ -1,50 +1,7 @@
 import { forwardRef, useMemo } from 'react'
-import styled, { css } from 'styled-components'
+import * as Styled from './IconSelect.styled'
 import { Dropdown, DropdownProps } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../../Icon'
-
-interface IconStyledProps {
-  $valueTemplate?: boolean
-  $isActive?: boolean
-}
-
-const IconStyled = styled.div<IconStyledProps>`
-  display: flex;
-  align-items: center;
-  /* justify-content: center; */
-
-  gap: 8px;
-  padding-left: 0.5rem;
-
-  height: 30px;
-
-  span:last-child {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  /* valueTemplate */
-  ${({ $valueTemplate }) =>
-    $valueTemplate
-      ? css`
-          color: var(--color-text);
-          border: 1px solid var(--color-grey-03);
-          background-color: var(--color-grey-00);
-
-          width: 150px;
-        `
-      : css`
-          width: 100%;
-        `}
-
-  /* isActive */
-    ${({ $isActive }) =>
-    $isActive &&
-    css`
-      background: rgba(100, 181, 246, 0.16);
-    `}
-`
 
 export interface IconTemplateProps {
   value: IconSelectProps['value']
@@ -55,12 +12,12 @@ export interface IconTemplateProps {
 
 const IconTemplate = ({ value, valueTemplate, isActive, isSelected }: IconTemplateProps) => {
   return (
-    <IconStyled $valueTemplate={valueTemplate} $isActive={isSelected}>
+    <Styled.Icon $valueTemplate={valueTemplate} $isActive={isSelected}>
       {value.map((icon) => (
         <Icon key={icon} icon={icon as IconType} />
       ))}
       {value.length < 2 && <span>{value}</span>}
-    </IconStyled>
+    </Styled.Icon>
   )
 }
 

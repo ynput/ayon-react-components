@@ -18,7 +18,11 @@ export const Default: Story = {
         maxWidth: 200,
       }}
     >
-      <TableRow name="Description" value="Some very long string that will be truncated" />
+      <TableRow
+        name="Description"
+        value="Some very long string that will be truncated"
+        tooltip="Say something amazing here!"
+      />
     </Panel>
   ),
 }

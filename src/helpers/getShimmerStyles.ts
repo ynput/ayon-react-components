@@ -10,8 +10,8 @@ const shimmerAnimation = keyframes`
 `
 
 function getShimmerStyles(
-  color1 = 'var(--color-grey-01)',
-  color2 = 'var(--color-grey-02)',
+  color1 = 'var(--md-sys-color-surface-container-high)',
+  color2 = 'var(--md-sys-color-surface-container-highest)',
   config: { speed?: number; opacity?: number; delay?: number } = {},
 ) {
   const { speed = 1.2, opacity = 0.25, delay = 0.15 } = config

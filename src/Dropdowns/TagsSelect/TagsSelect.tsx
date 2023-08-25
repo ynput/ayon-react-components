@@ -1,39 +1,9 @@
-import { DefaultItemStyled, Dropdown, DropdownProps } from '../Dropdown'
+import { DropdownProps } from '../Dropdown'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { TagsSelectValueTemplate, TagsSelectValueTemplateProps } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
-import styled from 'styled-components'
+import * as Styled from './TagsSelect.styled'
 import { Icon } from '../../Icon'
-
-const StyledDropdown = styled(Dropdown)`
-  .options {
-    flex-direction: row;
-    width: ${({ width }: { width?: number }) => (width ? `${width}px` : '100%')};
-    flex-wrap: wrap;
-    gap: 4px;
-    padding: 4px;
-
-    .option {
-      flex: 1;
-    }
-
-    /* add new full width */
-    .option:first-child {
-      min-width: 100%;
-      margin: -4px;
-      margin-bottom: 0px;
-    }
-
-    .option:not(:first-child) {
-      max-width: 33%;
-      border-radius: var(--border-radius);
-      .option-child {
-        border-radius: var(--border-radius);
-        text-align: center;
-      }
-    }
-  }
-`
 
 export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   value: string[]
@@ -96,7 +66,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
     }, [inputValue])
 
     return (
-      <StyledDropdown
+      <Styled.TagSelectDropdown
         {...props}
         value={value}
         valueTemplate={(v, s, o) => (
@@ -108,7 +78,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
           />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
-          <DefaultItemStyled
+          <Styled.DefaultItem
             $isSelected={isSelected}
             className="option-child"
             style={{
@@ -118,7 +88,7 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
           >
             {tag.icon && <Icon icon={tag.icon} />}
             <span>{tag.name || tag.label}</span>
-          </DefaultItemStyled>
+          </Styled.DefaultItem>
         )}
         options={tagsOptions || []}
         dataKey={'name'}

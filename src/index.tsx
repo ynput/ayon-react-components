@@ -1,11 +1,14 @@
 // import icons
 import 'material-symbols/outlined.css'
 // import fonts
-import '../src/fonts/NunitoSans_10pt-Regular.ttf'
+import '../src/fonts/NunitoSans-VariableFont.ttf'
 import '../src/fonts/NunitoSans_10pt-Italic.ttf'
-import '../src/fonts/NunitoSans_10pt-Bold.ttf'
 // import styles here
 import './index.scss'
+// import theme
+import './theme/theme.scss'
+// export theme
+export * as theme from './theme'
 
 // export all components here
 // ASSIGNEE
@@ -21,6 +24,8 @@ export { TagsSelect } from './Dropdowns/TagsSelect'
 export { IconSelect } from './Dropdowns/IconSelect'
 // versionSelect
 export { VersionSelect } from './Dropdowns/VersionSelect'
+// sortingDropdown
+export { SortingDropdown } from './Dropdowns/SortingDropdown'
 
 // BUTTONS
 export { Button } from './Button'
@@ -76,8 +81,6 @@ export { Toolbar } from './Layout/Toolbar'
 // OVERLAY
 // dialog
 export { Dialog } from './Overlay/Dialog'
-// loaderShade
-export { LoaderShade } from './Overlay/LoaderShade'
 
 // PANELS
 // panel

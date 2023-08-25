@@ -1,50 +1,7 @@
 import { forwardRef } from 'react'
 import { SortCardType } from './SortingDropdown'
 import { Icon } from '../../Icon'
-import styled, { css } from 'styled-components'
-
-const StyledCard = styled.div<{ $disabled: boolean }>`
-  background-color: var(--button-background);
-
-  /* layout */
-  display: flex;
-  padding: 0px 4px;
-  justify-content: center;
-  align-items: center;
-  min-height: unset;
-  gap: 0;
-  overflow: hidden;
-
-  /* styling */
-  border-radius: 9px;
-  pointer-events: all;
-
-  .remove {
-    border-radius: 100%;
-    padding: 0;
-    margin-right: 4px;
-    font-size: 16px;
-    background-color: var(--color-grey-01);
-  }
-
-  /* prevent hover when disabled */
-  ${({ $disabled }) =>
-    $disabled
-      ? css`
-          pointer-events: none;
-        `
-      : css`
-          :hover {
-            background-color: var(--button-background-hover);
-          }
-
-          .remove {
-            :hover {
-              background-color: var(--panel-background);
-            }
-          }
-        `}
-`
+import * as Styled from './SortCard.styled'
 
 interface SortCardProps extends SortCardType, Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {
   onRemove: () => void
@@ -54,7 +11,7 @@ interface SortCardProps extends SortCardType, Omit<React.HTMLAttributes<HTMLDivE
 const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
   ({ id, label, sortOrder, onRemove, disabled, ...props }, ref) => {
     return (
-      <StyledCard {...props} ref={ref} tabIndex={0} $disabled={!!disabled}>
+      <Styled.Card {...props} ref={ref} tabIndex={0} $disabled={!!disabled}>
         <Icon
           icon="close"
           onClick={(e) => {
@@ -74,7 +31,7 @@ const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
           }}
           className="sort-order"
         />
-      </StyledCard>
+      </Styled.Card>
     )
   },
 )

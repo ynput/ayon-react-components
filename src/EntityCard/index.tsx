@@ -1,2 +1,2 @@
 export * from './EntityCard'
-export * from './EntityCardStyles'
+export * from './EntityCard.styled'

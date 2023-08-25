@@ -1,44 +1,54 @@
 @font-face {
   font-family: 'Nunito Sans'; /*Can be any text*/
-  src: local('Nunito Sans'), url('./fonts/NunitoSans_10pt-Regular.ttf') format('truetype'),
-    url('./fonts/NunitoSans_10pt-Italic.ttf') format('truetype'),
-    url('./fonts/NunitoSans_10pt-Bold.ttf') format('truetype');
+  src: local('Nunito Sans'), url('./fonts/NunitoSans-VariableFont.ttf') format('truetype'),
+    url('./fonts/NunitoSans_10pt-Italic.ttf') format('truetype');
 }
 
 @import 'primereact/theme.sass';
 @import 'primereact/index.sass';
 
 :root {
-  --color-text: #d3d8de;
-  --color-text-dim: #8e9297;
+  // --color-text: #d3d8de;
+  // --color-text-dim: #8e9297;
 
-  --color-grey-00: #21252b;
-  --color-grey-01: #2c313a;
-  --color-grey-02: #373d48;
-  --color-grey-03: #434a56;
-  --color-grey-04: #4b5362;
-  --color-grey-05: #576170;
-  --color-grey-06: #6b7685;
-  --color-grey-07: #99a3b2;
-  --color-grey-08: #d3d8de;
-  --color-grey-09: #f0f2f5;
+  // replaced or removed
+  // --color-grey-00: hsl(216, 13%, 15%); -> --md-sys-color-surface-container-low
+  --color-grey-00: var(--md-sys-color-surface-container-low);
+  // --color-grey-01: hsl(219, 14%, 20%); -> --md-sys-color-surface-container
+  --color-grey-01: var(--md-sys-color-surface-container);
+  // --color-grey-02: hsl(219, 13%, 25%); -> --md-sys-color-surface-container-high
+  --color-grey-02: var(--md-sys-color-surface-container-high);
+  // --color-grey-03: hsl(218, 12%, 30%); -> --md-sys-color-surface-container-highest
+  --color-grey-03: var(--md-sys-color-surface-container-highest);
+  // --color-grey-04: hsl(219, 13%, 34%); -> --md-sys-color-surface-container-highest-hover
+  --color-grey-04: var(--md-sys-color-surface-container-highest-hover);
+  --color-grey-05: hsl(216, 13%, 39%);
+  --color-grey-06: hsl(215, 11%, 47%);
+  --color-grey-07: hsl(216, 14%, 65%);
+  --color-grey-08: var(--md-sys-color-inverse-surface);
+  --color-grey-09: var(--md-sys-color-on-background);
 
-  --color-hl-00: #47b7da;
-  --color-hl-01: #fb9c15;
-  --color-hl-changed: #106aa2;
-  --color-hl-studio: #56a06f;
-  --color-hl-project: #e67300;
-  --color-hl-error: #ff4422;
-  --color-icon: #c1d8e9;
+  // --color-hl-00: #47b7da; -> --md-custom-color-primary
+  --md-custom-color-primary: var(--color-hl-00);
+  // --color-hl-01: #fb9c15; -> --md-custom-color-warning
+  --md-custom-color-warning: var(--color-hl-01);
+  --color-hl-studio: var(--md-sys-color-tertiary-fixed-dim);
+  --color-hl-project: var(--md-custom-color-warning);
+  --color-hl-site: #efa0a8;
+  --color-hl-variant: #f9d56e;
+  --color-hl-production: #00f0b4;
+  --color-hl-staging: #fa6e46;
+  --color-hl-error: --md-sys-color-error-container;
 
-  --selected-blue: #0e5f81;
-  --selected-green: #1a653d;
-
-  --color-row-hl: rgba(71, 184, 218, 0.2);
-  --color-row-hl-hover: rgba(71, 184, 218, 0.3);
+  // changed colors
+  --color-changed: var(--md-sys-color-primary);
+  --color-changed-hover: var(--md-sys-color-primary-hover);
+  --color-changed-active: var(--md-sys-color-primary-active);
+  --color-on-changed: var(--md-sys-color-on-primary);
 
   --base-input-size: 30px;
   --base-input-border-radius: 4px;
+  --base-input-border-radius-l: 8px;
   --base-gap-small: 4px;
   --base-gap-medium: 6px;
   --base-gap-large: 8px;
@@ -49,38 +59,60 @@
 
   // Buttons
 
-  --button-background: var(--color-grey-03);
-  --button-background-hover: var(--color-grey-04);
+  // --button-background: var(--color-grey-03); -> --md-sys-color-surface-container-highest
+  // --button-background-hover: var(--color-grey-04); -> --md-sys-color-surface-container-highest
 
-  --panel-background: var(--color-grey-00);
+  --panel-background: var(--md-sys-color-surface-container-low);
+  --panel-background-hover: var(--md-sys-color-surface-container-low-hover);
   --panel-border-radius: 4px;
 
-  --card-background: var(--color-grey-01);
-  --card-hover: var(--color-grey-03);
+  --border-radius-m: 4px;
+  --border-radius-l: 8px;
+  --border-radius-xl: 12px;
 
-  --card-border-radius-s: 4px;
-  --card-border-radius-m: 6px;
-  --card-border-radius-l: 8px;
+  --padding-s: 4px;
+  --padding-m: 8px;
+  --padding-l: 16px;
 
-  --input-disabled-background-color: #282c34;
-  --input-disabled-border-color: #353b45;
+  // --input-disabled-background-color: #282c34;
+  // --input-disabled-border-color: #353b45;
 }
 
 * {
   box-sizing: border-box;
+  // body medium font
   font-family: var(--base-font-family);
-  font-size: var(--base-font-size);
-  font-weight: var(--base-font-weight);
+  font-size: var(--md-sys-typescale-body-medium-font-size);
+  font-weight: var(--md-sys-typescale-body-medium-font-weight);
+  line-height: var(--md-sys-typescale-body-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-body-medium-letter-spacing);
+  // color
+  color: var(--md-sys-color-on-surface);
 }
 
 html {
-  color: var(--color-text);
-  background-color: var(--color-grey-01);
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-background);
+}
+
+h2 {
+  font-size: var(--md-sys-typescale-title-medium-font-size);
+  font-weight: var(--md-sys-typescale-title-medium-font-weight);
+  line-height: var(--md-sys-typescale-title-medium-line-height);
+  letter-spacing: var(--md-sys-typescale-title-medium-letter-spacing);
+}
+
+h3 {
+  font-size: var(--md-sys-typescale-title-small-font-size);
+  font-weight: var(--md-sys-typescale-title-small-font-weight);
+  line-height: var(--md-sys-typescale-title-small-line-height);
+  letter-spacing: var(--md-sys-typescale-title-small-letter-spacing);
 }
 
 .material-symbols-outlined {
-  color: var(--color-icon);
-  font-variation-settings: 'FILL' 0, 'wght' 100, 'GRAD' 200, 'opsz' 20;
+  color: var(--md-sys-color-on-surface);
+  font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+  font-size: 1.25rem;
 }
 
 // Scrollbars
@@ -96,12 +128,15 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: var(--color-grey-03);
+  background-color: var(--md-sys-color-surface-container-highest);
   border-radius: 20px;
   border: 6px solid transparent;
   background-clip: content-box;
 
   &:hover {
-    background-color: var(--color-grey-04);
+    background-color: var(--md-sys-color-surface-container-highest-hover);
+  }
+  &:active {
+    background-color: var(--md-sys-color-surface-container-highest-active);
   }
 }

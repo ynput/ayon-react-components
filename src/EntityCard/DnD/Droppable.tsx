@@ -1,47 +1,54 @@
 import { useDroppable } from '@dnd-kit/core'
-import styled, { css } from 'styled-components'
+import * as Styled from './Droppable.styled'
+import React, { useEffect, useRef, useState } from 'react'
 
-const StyledColumn = styled.div<{
-  $isOver: boolean
-}>`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 266px;
-  height: 524px;
-  padding: 16px;
-  gap: 8px;
-  border-radius: 8px;
+interface DroppableProps {
+  children: React.ReactNode
+  id: string
+  columns: {
+    id: string
+    items: string[]
+  }[]
+}
 
-  ${({ $isOver }) =>
-    $isOver &&
-    css`
-      &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-color: black;
-        opacity: 0.2;
-        z-index: 500;
-      }
-    `}
-`
-
-export function Droppable(props: { children: React.ReactNode; id: string }) {
-  const { isOver, setNodeRef } = useDroppable({
+export function Droppable(props: DroppableProps) {
+  const { isOver, setNodeRef, active, over } = useDroppable({
     id: props.id,
   })
 
-  const style = {
-    borderWidth: 2,
-    borderStyle: 'solid',
-    borderColor: isOver ? 'white' : 'gray',
-  }
+  // calculate the number of children
+  const childrenCount = React.Children.count(props.children)
+
+  const [isScrolling, setIsScrolling] = useState(false)
+  const itemsRef = useRef<HTMLDivElement>(null)
+  // figure if the column items are overflowing and scrolling
+  useEffect(() => {
+    const el = itemsRef.current
+    if (!el) return
+    // now work out if the items are overflowing
+    const isOverflowing = el.scrollHeight > el.clientHeight
+    setIsScrolling(isOverflowing)
+  }, [itemsRef.current, childrenCount])
+
+  // find out which column the active card has come from
+  const activeColumn = props.columns.find((column) => column.items.includes(active?.id as string))
+  const isColumnActive = activeColumn?.id === props.id
+  const isOverSelf = over?.id === activeColumn?.id
 
   return (
-    <StyledColumn ref={setNodeRef} style={style} $isOver={isOver}>
-      {props.children}
-    </StyledColumn>
+    <Styled.Column ref={setNodeRef} $isOver={isOver} $active={!!active} $isOverSelf={isOverSelf}>
+      <Styled.Header>
+        <h3>Header - {childrenCount}</h3>
+      </Styled.Header>
+      <Styled.Items
+        className="items"
+        ref={itemsRef}
+        $isScrolling={isScrolling}
+        $isColumnActive={isColumnActive}
+        $active={!!active}
+      >
+        {props.children}
+      </Styled.Items>
+    </Styled.Column>
   )
 }

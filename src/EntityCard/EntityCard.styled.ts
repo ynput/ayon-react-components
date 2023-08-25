@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 import { EntityCardProps } from './EntityCard'
 import getShimmerStyles from '../helpers/getShimmerStyles'
 import { Icon } from '../Icon'
+import * as Theme from '../theme'
 
 interface StyledEntityCardProps {
   $isActive: boolean
@@ -17,7 +18,7 @@ interface StyledEntityCardProps {
 }
 
 const cardHoverStyles = css`
-  background-color: var(--card-hover);
+  background-color: var(--md-sys-color-surface-container-high-hover);
 
   /* hover to show description */
   .description {
@@ -27,10 +28,13 @@ const cardHoverStyles = css`
   }
 `
 
-export const StyledEntityCard = styled.div<StyledEntityCardProps>`
+export const Card = styled.div<StyledEntityCardProps>`
   --loading-transition: 200ms;
   --hover-transition: 150ms;
-  --selection-color: var(--selected-blue);
+  --selection-color: var(--md-sys-color-primary-container);
+  --selection-color-hover: var(--md-sys-color-primary-container-hover);
+  --selection-color-active: var(--md-sys-color-primary-container-active);
+  --selection-color-text: var(--md-sys-color-on-primary-container);
 
   ${({ $isHover }) =>
     $isHover &&
@@ -42,7 +46,10 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   ${({ $isSecondary }) =>
     $isSecondary &&
     css`
-      --selection-color: var(--selected-green);
+      --selection-color: var(--md-sys-color-tertiary-container);
+      --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
+      --selection-color-active: var(--md-sys-color-tertiary-container-active);
+      --selection-color-text: var(--md-sys-color-on-tertiary-container);
     `}
 
   /* layout */
@@ -52,7 +59,7 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   position: relative;
 
   /* size */
-  min-width: 200px;
+  min-width: 208px;
   height: auto;
   aspect-ratio: 16 / 9;
 
@@ -78,11 +85,15 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
   user-select: none;
 
   /* style */
-  border-radius: var(--card-border-radius-l);
-  background-color: var(--card-background);
+  border-radius: var(--border-radius-xl);
+  background-color: var(--md-sys-color-surface-container-high);
 
   &:hover {
     ${cardHoverStyles}
+  }
+
+  &:active {
+    background-color: var(--md-sys-color-surface-container-high-active);
   }
 
   /* for keyboard selection when in dragging mode */
@@ -100,9 +111,14 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
     $isActive &&
     css`
       /* set backgrounds */
-      &,
+      background-color: var(--selection-color);
+      color: var(--selection-color-text);
+
       &:hover {
-        background-color: var(--selection-color);
+        background-color: var(--selection-color-hover);
+      }
+      &:active {
+        background-color: var(--selection-color-active);
       }
 
       ${$isDraggable &&
@@ -126,15 +142,19 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
       /* when variant = 'basic' titles are blue */
       ${$variant === 'basic' &&
       css`
-        ${StyledTitle} {
+        ${Title} {
           background-color: var(--selection-color);
         }
       `}
     `}
 
-  ${getShimmerStyles('var(--color-grey-02)', 'var(--color-grey-03)', {
-    opacity: 1,
-  })}
+  ${getShimmerStyles(
+    'var(--md-sys-color-surface-container-high)',
+    'var(--md-sys-color-surface-container-highest)',
+    {
+      opacity: 1,
+    },
+  )}
 
     &::after {
     transition: opacity var(--loading-transition);
@@ -188,14 +208,14 @@ export const StyledEntityCard = styled.div<StyledEntityCardProps>`
     css`
       &,
       &:hover {
-        background-color: var(--color-hl-error);
+        background-color: var(--md-sys-color-error-container);
       }
 
       ${$isDraggable &&
       css`
         &:focus-visible,
         &:has(:focus-visible) {
-          background-color: var(--color-hl-error);
+          background-color: var(--md-sys-color-error-container);
         }
       `}
 
@@ -258,7 +278,7 @@ interface StyledThumbnailProps {
 }
 
 // THUMBNAIL
-export const StyledThumbnail = styled.div<StyledThumbnailProps>`
+export const Thumbnail = styled.div<StyledThumbnailProps>`
   position: relative;
   display: flex;
   padding: 2px;
@@ -269,8 +289,8 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: var(--card-border-radius-m);
-  background-color: var(--card-hover);
+  border-radius: var(--border-radius-l);
+  background-color: var(--md-sys-color-surface-container);
 
   /* image styles */
   background-size: cover;
@@ -281,7 +301,7 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
     position: absolute;
     inset: 0;
     opacity: 0;
-    background-color: var(--button-background);
+    background-color: var(--md-sys-color-surface-container-high);
     transition: opacity var(--loading-transition);
     /* sometime the image takes a bit to show */
     transition-delay: 100ms;
@@ -305,7 +325,7 @@ export const StyledThumbnail = styled.div<StyledThumbnailProps>`
 `
 
 // for the header and footer inside the thumbnail
-export const StyledRow = styled.div`
+export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -315,7 +335,7 @@ export const StyledRow = styled.div`
 `
 
 // little tags inside the thumbnail
-export const StyledTitle = styled.span`
+export const Title = styled.span`
   display: flex;
   padding: 4px;
   align-items: center;
@@ -328,10 +348,12 @@ export const StyledTitle = styled.span`
     white-space: nowrap;
     text-align: right;
     direction: rtl;
+    /* font size etc */
+    ${Theme.labelMedium}
   }
 
-  border-radius: var(--card-border-radius-m);
-  background-color: var(--card-background, #2c313a);
+  border-radius: var(--border-radius-l);
+  background-color: var(--md-sys-color-surface-container-high);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
 
@@ -346,11 +368,10 @@ export const StyledTitle = styled.span`
 
   &.subtitle {
     padding: 4px 6px;
-    font-weight: bold;
   }
 `
 
-export const StyledDescription = styled.div`
+export const Description = styled.div`
   /* use the 1 row grid animation trick */
   display: grid;
   grid-template-rows: 0fr;
@@ -359,9 +380,10 @@ export const StyledDescription = styled.div`
 
   span {
     word-break: break-all;
-    font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
+    /* font size etc */
+    ${Theme.labelMedium}
   }
 `
 
@@ -371,6 +393,6 @@ export const NoImageIcon = styled(Icon)`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 32px;
-  color: var(--card-background);
+  font-size: 40px;
+  color: var(--md-sys-color-outline);
 `

@@ -1,106 +1,5 @@
 import { KeyboardEvent, MouseEvent, forwardRef, useMemo } from 'react'
-import styled, { css, keyframes } from 'styled-components'
-import { Button } from '../../Button'
-
-// fade in animation keyframes
-const fadeInAnimation = keyframes`
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-`
-
-const Shade = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.6);
-  z-index: 500;
-  cursor: pointer;
-
-  /* fade in animation */
-  animation: ${fadeInAnimation} 0.13s ease-in-out;
-`
-
-// opening up animation keyframes
-const openAnimation = keyframes`
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-`
-
-const DialogWindow = styled.div<{ $noHeader: boolean }>`
-  background-color: var(--color-grey-01);
-  border-radius: var(--border-radius);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  min-width: 200px;
-  min-height: 100px;
-  max-width: 85%;
-  max-height: 85%;
-  position: relative;
-  cursor: auto;
-  :focus {
-    outline: none;
-  }
-
-  /* open animation */
-  animation: ${openAnimation} 0.13s ease-in-out;
-
-  /* add padding to top if no header */
-
-  ${({ $noHeader }) =>
-    $noHeader &&
-    css`
-      padding-top: 46px;
-    `}
-`
-
-const BaseDialogEdge = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-`
-
-const DialogHeader = styled(BaseDialogEdge)`
-  font-weight: bold;
-  border-bottom: 1px solid var(--color-surface-04);
-  padding: 16px 0;
-`
-
-const DialogFooter = styled(BaseDialogEdge)`
-  border-top: 1px solid var(--color-surface-04);
-  padding: 16px 0;
-`
-
-const DialogBody = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-
-  flex-grow: 1;
-`
-
-const ButtonStyled = styled(Button)`
-  position: absolute;
-  top: 8px;
-  right: 8px;
-`
+import * as Styled from './Dialog.styled'
 
 export interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
   onHide?: () => void
@@ -120,12 +19,12 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   ) => {
     const headerComp = useMemo(() => {
       if (!header) return null
-      return <DialogHeader style={headerStyle}>{header}</DialogHeader>
+      return <Styled.Header style={headerStyle}>{header}</Styled.Header>
     }, [header])
 
     const footerComp = useMemo(() => {
       if (!footer) return null
-      return <DialogFooter style={footerStyle}>{footer}</DialogFooter>
+      return <Styled.Footer style={footerStyle}>{footer}</Styled.Footer>
     }, [header])
 
     const onShadeClick = (event: MouseEvent<HTMLDivElement>): void => {
@@ -142,14 +41,14 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
     if (!visible) return null
 
     return (
-      <Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown} ref={ref}>
-        <DialogWindow {...props} onKeyDown={onKeyDown} tabIndex={-1} $noHeader={!headerComp}>
-          <ButtonStyled icon="close" autoFocus onClick={onHide} />
+      <Styled.Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown} ref={ref}>
+        <Styled.Window {...props} onKeyDown={onKeyDown} tabIndex={-1} $noHeader={!headerComp}>
+          <Styled.Close icon="close" autoFocus onClick={onHide} />
           {headerComp}
-          <DialogBody style={bodyStyle}>{children}</DialogBody>
+          <Styled.Body style={bodyStyle}>{children}</Styled.Body>
           {footerComp}
-        </DialogWindow>
-      </Shade>
+        </Styled.Window>
+      </Styled.Shade>
     )
   },
 )

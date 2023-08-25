@@ -9,7 +9,7 @@ const DividerStyled = styled.div`
   ${(props) =>
     !props.children &&
     css`
-      border-bottom: 1px solid var(--color-grey-03);
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
     `}
 
   ${(props) =>
@@ -19,7 +19,7 @@ const DividerStyled = styled.div`
       &::after {
         content: '';
         height: 1px;
-        background-color: var(--color-grey-03);
+        background-color: var(--md-sys-color-outline-variant);
       }
 
       &::before {

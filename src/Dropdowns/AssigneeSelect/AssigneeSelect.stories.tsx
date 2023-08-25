@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { AssigneeSelect } from '.'
+import { AssigneeSelect, AssigneeSelectProps } from '.'
 import { useState } from 'react'
 
 const meta: Meta<typeof AssigneeSelect> = {
@@ -25,13 +25,19 @@ const users = Array.from({ length: 3 }, (_, i) => ({
   email: `email${i + 1}@email.com`,
 }))
 
-const Template = () => {
+const Template = (args: AssigneeSelectProps) => {
   const initValue = users.map((user) => user.name)
 
   const [value, setValue] = useState(initValue)
 
   return (
-    <AssigneeSelect options={allUsers} value={value} onChange={(names) => setValue(names)} editor />
+    <AssigneeSelect
+      {...args}
+      options={allUsers}
+      value={value}
+      onChange={(names) => setValue(names)}
+      editor
+    />
   )
 }
 

@@ -4,8 +4,8 @@ import { Icon, IconType } from '../../Icon'
 import { DropdownProps } from './Dropdown'
 
 const DefaultValueStyled = styled.div`
-  border: 1px solid var(--color-grey-03);
-  border-radius: var(--border-radius);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--border-radius-m);
   height: 100%;
   display: flex;
   align-items: center;
