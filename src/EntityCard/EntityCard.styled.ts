@@ -59,7 +59,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   position: relative;
 
   /* size */
-  min-width: 195px;
+  min-width: 208px;
   height: auto;
   aspect-ratio: 16 / 9;
 

@@ -11,44 +11,41 @@ import { Panel } from '../../Panels/Panel'
 import { Droppable } from './Droppable'
 import { Draggable } from './Draggable'
 import { EntityCardProps } from '../EntityCard'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import getRandomImage from '../../helpers/getRandomImage'
 import { Section } from '../../Layout/Section'
+import KanBanContainer from './KanBanContainer'
 
-const DnDTemplate = (props: EntityCardProps) => {
+interface DnDTemplatesProps extends EntityCardProps {
+  columns: {
+    id: string
+    items: string[]
+  }[]
+}
+
+const DnDTemplate = (props: DnDTemplatesProps) => {
   const [activeCard, setActiveCard] = useState('')
-  const [columns, setColumns] = useState<
-    {
-      id: string
-      items: string[]
-    }[]
-  >([
-    { id: '1', items: ['1'] },
-    { id: '2', items: ['2', '3'] },
-    { id: '3', items: [] },
-  ])
 
-  const cards = useMemo(() => {
-    const cards: EntityCardProps[] = [
-      {
-        id: '1',
-        ...props,
-        imageUrl: getRandomImage(),
-      },
-      {
-        id: '2',
-        ...props,
-        imageUrl: getRandomImage(),
-      },
-      {
-        id: '3',
-        ...props,
-        imageUrl: getRandomImage(),
-      },
-    ]
+  const [columns, setColumns] = useState(props.columns || [])
 
-    return cards
-  }, [])
+  const [cards, setCards] = useState<EntityCardProps[]>([])
+
+  useEffect(() => {
+    console.log('setting card')
+    const newCards: EntityCardProps[] = []
+
+    props.columns.forEach((column) => {
+      column.items.forEach((itemId) => {
+        newCards.push({
+          id: itemId,
+          ...props,
+          imageUrl: getRandomImage(),
+        })
+      })
+    })
+
+    setCards(newCards)
+  }, [props.columns])
 
   const touchSensor = useSensor(TouchSensor)
   const keyboardSensor = useSensor(KeyboardSensor)
@@ -112,7 +109,7 @@ const DnDTemplate = (props: EntityCardProps) => {
 
   return (
     <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-      <Section direction="row" style={{ alignItems: 'flex-start' }}>
+      <KanBanContainer>
         {columns.map(({ id, items }) => (
           <Droppable id={id} key={id} columns={columns}>
             {items.map((cardId) => {
@@ -130,7 +127,7 @@ const DnDTemplate = (props: EntityCardProps) => {
             })}
           </Droppable>
         ))}
-      </Section>
+      </KanBanContainer>
     </DndContext>
   )
 }

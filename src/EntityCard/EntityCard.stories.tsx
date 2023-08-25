@@ -122,8 +122,33 @@ export const Default: Story = {
   render: Template,
 }
 
+const columns = [
+  { id: '1', items: ['1'] },
+  { id: '2', items: ['2', '3'] },
+  { id: '3', items: [] },
+]
+
 export const DnD: Story = {
   name: 'Drag and Drop',
   args: { ...Default.args },
-  render: () => DnDTemplate({ ...Default.args }),
+  render: () => DnDTemplate({ ...Default.args, columns }),
+}
+
+const moreColumns = [
+  { id: '1', items: ['1'] },
+  { id: '2', items: ['2', '3'] },
+  { id: '3', items: ['4', '5', '6'] },
+  { id: '4', items: ['7'] },
+  { id: '5', items: ['8', '9', '10', '11', '12'] },
+  { id: '6', items: ['13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'] },
+]
+
+export const KanBan: Story = {
+  name: 'KanBan',
+  args: { ...Default.args },
+  render: () =>
+    DnDTemplate({
+      ...Default.args,
+      columns: moreColumns,
+    }),
 }
