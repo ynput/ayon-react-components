@@ -146,7 +146,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
           </Styled.Row>
           {!isImageLoading && !isImageValid && (
-            <Styled.NoImageIcon icon="image" className="no-image" />
+            <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
           )}
           <Styled.Row className="row">
             {/* bottom left */}
