@@ -11,6 +11,7 @@ export type ButtonProps = {
 
 // STYLES
 export const Button = styled.button<ButtonProps>`
+  user-select: none;
   /* button reset */
   padding: 0;
   margin: 0;

@@ -4,6 +4,7 @@ export const Button = styled.button<{
   $isChanged: boolean
   $isOpen: boolean
 }>`
+  user-select: none;
   /* remove defaults */
   background: none;
   color: inherit;

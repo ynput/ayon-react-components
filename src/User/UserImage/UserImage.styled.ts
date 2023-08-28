@@ -14,6 +14,7 @@ export const CircleImage = styled.div`
   overflow: hidden;
   background-color: var(--md-sys-color-surface-container-highest);
   border: solid 1px var(--md-sys-color-outline);
+  user-select: none;
 
   img {
     width: 100%;
