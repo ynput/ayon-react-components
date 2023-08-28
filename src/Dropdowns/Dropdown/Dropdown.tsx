@@ -59,6 +59,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   ) => React.ReactNode
   align?: 'left' | 'right'
   multiSelect?: boolean
+  multiSelectClose?: boolean
   search?: boolean
   disabled?: boolean
   valueIcon?: string
@@ -112,6 +113,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       widthExpand = true,
       align = 'left',
       multiSelect,
+      multiSelectClose = false,
       isMultiple,
       search,
       placeholder = 'Select an option...',
@@ -339,8 +341,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // commit changes
       onChange && onChange(changeValue)
+      setValue(changeValue)
       //   reset selected
-      setSelected([])
+      // setSelected([])
 
       // focus on value
       valueRef.current?.focus()
@@ -399,10 +402,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       // update temp value
       // update state
       setSelected(newSelected)
-      // if not multi, close
-      if (!multiSelect || (addingNew && searchForm) || maxSelected === 1)
+      // if not multi or multiSelectClose then close
+      if (!multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose) {
+        setValue(newSelected)
         handleClose(undefined, newSelected)
+      }
     }
+
+    console.log(selected)
 
     const handleClear = () => {
       if (!onClear) return

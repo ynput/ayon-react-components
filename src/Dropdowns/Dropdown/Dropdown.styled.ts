@@ -219,6 +219,7 @@ export const ListItem = styled.li<{
   $disabled?: boolean
 }>`
   cursor: pointer;
+  user-select: none;
 
   ${({ $usingKeyboard, $disabled }) =>
     !$usingKeyboard &&
