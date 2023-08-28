@@ -21,22 +21,27 @@ const options: SortCardType[] = [
   {
     id: 'shot',
     label: 'Shot',
+    sortOrder: true,
   },
   {
     id: 'dueDate',
     label: 'Due date',
+    sortOrder: true,
   },
   {
     id: 'status',
     label: 'Status',
+    sortOrder: true,
   },
   {
     id: 'assignee',
     label: 'Assignee',
+    sortOrder: true,
   },
   {
     id: 'project',
     label: 'Project',
+    sortOrder: true,
   },
 ]
 

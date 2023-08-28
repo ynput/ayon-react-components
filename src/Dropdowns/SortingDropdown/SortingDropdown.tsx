@@ -1,6 +1,20 @@
 import { FC, useState } from 'react'
 import { DefaultValueTemplate, Dropdown, DropdownProps } from '../Dropdown'
+import { css } from 'styled-components'
+
+const StyledDropdown = styled(Dropdown)<{ $cardHovering: boolean }>`
+  ${({ $cardHovering }) =>
+    $cardHovering &&
+    css`
+      button {
+        &:hover {
+          background-color: var(--md-sys-color-surface-container-low);
+        }
+      }
+    `}
+`
 import SortCard from './SortCard'
+import styled from 'styled-components'
 
 export type SortCardType = {
   id: string
@@ -17,8 +31,8 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
 }
 
 export const SortingDropdown: FC<SortingDropdownProps> = ({
-  value,
-  options,
+  value = [],
+  options = [],
   onChange,
   title = 'Sort by',
   multiSelect = true,
@@ -57,11 +71,13 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
     }
 
     // find the value in value
-    const idx = value.findIndex((v) => v.id === id)
-    if (idx === -1) throw new Error(`SortingDropdown: value with id ${id} not found`)
-    const newValues = [...value]
+    const item = value.find((v) => v.id === id)
+    const itemIndex = value.findIndex((v) => v.id === id)
+    if (!item) throw new Error(`SortingDropdown: value with id ${id} not found`)
     // flip sort order
-    newValues[idx].sortOrder = !newValues[idx].sortOrder
+    const newItem = { ...item, sortOrder: !item.sortOrder }
+    const newValues = [...value]
+    newValues.splice(itemIndex, 1, newItem)
     // set the new value
     onChange(newValues)
   }
@@ -73,57 +89,63 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
   }
 
   return (
-    <Dropdown
+    <StyledDropdown
       {...props}
+      $cardHovering={cardHovering}
       disableOpen={cardHovering && !!value.length}
       value={value.map(({ id }) => id)}
       options={options}
       onChange={handleChange}
       dataKey="id"
       multiSelect={multiSelect}
+      // multiSelectClose
       widthExpand
-      valueTemplate={(values, selected, isOpen) => (
-        <DefaultValueTemplate
-          value={[]}
-          placeholder=""
-          isOpen={isOpen}
-          childrenCustom={
-            <>
-              <span>{title}</span>
-              {selected.map((v) => {
-                const id = v.toString()
-                // find the sort card in options
-                const sortValue = value.find((o) => o.id === id) || options.find((o) => o.id === id)
-                if (!sortValue) return ''
+      valueTemplate={(values, selected, isOpen) => {
+        // console.log(selected)
+        return (
+          <DefaultValueTemplate
+            value={[]}
+            placeholder=""
+            isOpen={isOpen}
+            childrenCustom={
+              <>
+                <span>{title}</span>
+                {selected.map((v) => {
+                  const id = v.toString()
+                  // find the sort card in options
+                  const sortValue =
+                    value.find((o) => o.id === id) || options.find((o) => o.id === id)
+                  if (!sortValue) return ''
 
-                return (
-                  <SortCard
-                    key={id}
-                    {...sortValue}
-                    disabled={isOpen}
-                    sortOrder={sortValue?.sortOrder ?? true}
-                    onMouseEnter={() => !isOpen && setCardHovering(true)}
-                    onMouseLeave={() => setCardHovering(false)}
-                    onClick={(e) => !isOpen && handleSortChange(id, e)}
-                    onRemove={() => !isOpen && handleRemove(id)}
-                    onKeyDown={(e) => {
-                      if (isOpen) return
-                      e.stopPropagation()
-                      if (e.key === 'Enter') {
-                        if ((e.target as HTMLDivElement).id !== 'remove') {
-                          handleSortChange(id)
-                        } else {
-                          handleRemove(id)
+                  return (
+                    <SortCard
+                      key={id}
+                      {...sortValue}
+                      disabled={isOpen}
+                      sortOrder={sortValue?.sortOrder ?? true}
+                      onMouseEnter={() => !isOpen && setCardHovering(true)}
+                      onMouseLeave={() => setCardHovering(false)}
+                      onClick={(e) => !isOpen && handleSortChange(id, e)}
+                      onRemove={() => !isOpen && handleRemove(id)}
+                      onKeyDown={(e) => {
+                        if (isOpen) return
+                        e.stopPropagation()
+                        if (e.key === 'Enter') {
+                          if ((e.target as HTMLDivElement).id !== 'remove') {
+                            handleSortChange(id)
+                          } else {
+                            handleRemove(id)
+                          }
                         }
-                      }
-                    }}
-                  />
-                )
-              })}
-            </>
-          }
-        />
-      )}
+                      }}
+                    />
+                  )
+                })}
+              </>
+            }
+          />
+        )
+      }}
     />
   )
 }
