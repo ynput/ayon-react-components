@@ -7,7 +7,12 @@ type SectionProps = HTMLAttributes<HTMLElement> & {
   wrap?: boolean
 }
 
-const SectionStyled = styled.section<SectionProps>`
+type SectionStyleProps = {
+  $direction: 'row' | 'column'
+  $wrap?: boolean
+}
+
+const SectionStyled = styled.section<SectionStyleProps>`
   position: relative;
   display: flex;
   align-items: center;
@@ -16,13 +21,13 @@ const SectionStyled = styled.section<SectionProps>`
 
   // column is implicit
 
-  flex-direction: ${({ direction }) => (direction === 'row' ? 'row' : 'column')};
+  flex-direction: ${({ $direction }) => ($direction === 'row' ? 'row' : 'column')};
   & > * {
     width: 100%;
   }
 
-  ${({ wrap }) =>
-    wrap &&
+  ${({ $wrap }) =>
+    $wrap &&
     css`
       position: absolute;
       top: 0;
@@ -36,8 +41,8 @@ export const Section = forwardRef<HTMLElement, SectionProps>(
   ({ direction = 'column', wrap, className, ...props }, ref) => {
     return (
       <SectionStyled
-        direction={direction}
-        wrap={wrap}
+        $direction={direction}
+        $wrap={!!wrap}
         className={clsx(
           {
             ['wrap']: wrap,
