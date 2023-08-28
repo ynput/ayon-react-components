@@ -32,7 +32,7 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
     isMultiple &&
     css`
       ::before {
-        content: 'Multiple (';
+        content: 'Mixed (';
         margin-right: 4px;
       }
 

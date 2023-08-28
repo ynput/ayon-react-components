@@ -94,7 +94,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
       ) : (
         <>
           <ContentStyled>
-            {isMultiple && <span>{`Multiple (`}</span>}
+            {isMultiple && <span>{`Mixed (`}</span>}
             {displayIcon && <Icon icon={displayIcon as IconType} />}
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
