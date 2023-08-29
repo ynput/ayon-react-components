@@ -288,6 +288,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   align-items: center;
   flex: 1 0 0;
   align-self: stretch;
+  z-index: 50;
 
   border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container);
@@ -338,6 +339,7 @@ export const Row = styled.div`
 export const Title = styled.span`
   display: flex;
   padding: 4px;
+  gap: 4px;
   align-items: center;
   min-height: 28px;
   overflow: hidden;
