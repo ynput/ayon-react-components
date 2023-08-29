@@ -100,11 +100,15 @@ export const FileCard: FC<FileCardProps> = ({
         $error={!!message}
         disabled={splitDisabled || isFetching || disabled}
         variant="text"
+        $variant="text"
+        $selected={false}
       />
       {!readOnly && (
         <Styled.Icon
           icon="close"
           variant="text"
+          $variant="text"
+          $selected={false}
           onClick={onRemove}
           disabled={isFetching || disabled}
         />

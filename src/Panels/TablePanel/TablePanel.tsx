@@ -5,12 +5,14 @@ export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   scrollStyle?: React.CSSProperties
   loading?: boolean
+  direction?: 'column' | 'row'
 }
 
 export const TablePanel = forwardRef<HTMLDivElement, ScrollPanelProps>(
-  ({ loading, ...props }, ref) => (
+  ({ loading, direction = 'column', ...props }, ref) => (
     <PanelStyled
       {...props}
+      $direction={direction}
       style={{
         padding: 0,
         minHeight: 150,
