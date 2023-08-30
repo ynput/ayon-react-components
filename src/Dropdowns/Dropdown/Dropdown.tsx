@@ -409,8 +409,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
     }
 
-    console.log(selected)
-
     const handleClear = () => {
       if (!onClear) return
 
