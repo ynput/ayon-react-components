@@ -9,7 +9,7 @@ export const Switch = styled.div`
   justify-content: flex-start;
 
   .switch-body {
-    --bheight: calc(var(--base-input-size) * 0.7);
+    --bheight: calc(var(--base-input-size) * 0.75);
     --bwidth: calc(var(--bheight) * 1.75);
     position: relative;
     display: inline-block;
@@ -32,14 +32,15 @@ export const Switch = styled.div`
       bottom: 0;
       transition: 0.2s;
       border-radius: calc(var(--bheight) / 2);
+      border: 1px solid var(--md-sys-color-outline);
 
       &:before {
         position: absolute;
         content: '';
         height: calc(var(--bheight) * 0.8);
         width: calc(var(--bheight) * 0.8);
-        left: calc(var(--bheight) * 0);
-        bottom: calc(var(--bheight) * 0);
+        left: calc(var(--bheight) * 0.05);
+        bottom: calc(var(--bheight) * 0.06);
         transition: 0.2s;
         border-radius: 50%;
         scale: 0.7;
@@ -49,7 +50,6 @@ export const Switch = styled.div`
     /* not check styles */
     input:not(:checked) + .slider {
       background-color: var(--md-sys-color-surface-container-highest);
-      border: 2px solid var(--md-sys-color-outline);
       :before {
         background-color: var(--md-sys-color-on-surface);
       }
@@ -62,9 +62,9 @@ export const Switch = styled.div`
     /* checked styles */
     input:checked + .slider {
       background-color: var(--md-sys-color-primary);
-      border: 2px solid var(--md-sys-color-primary);
+      border-color: var(--md-sys-color-primary);
       &::before {
-        transform: translateX(calc(var(--bheight) * 0.65));
+        transform: translateX(calc(var(--bheight) * 0.75));
         scale: 1;
         background-color: var(--md-sys-color-on-primary);
       }
