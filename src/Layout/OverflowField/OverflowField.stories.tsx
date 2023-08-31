@@ -23,6 +23,8 @@ export const Default: Story = {
         value={'Some very long string that will be truncated'}
         align={'left'}
         onClick={() => window.alert('clicked')}
+        icon="content_copy"
+        isCopy
       />
     </Panel>
   ),

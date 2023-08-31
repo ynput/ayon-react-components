@@ -12,6 +12,10 @@ export const OverflowField = styled.div<{ $isNode: boolean; $align: string }>`
     white-space: nowrap;
   }
 
+  & > .icon {
+    margin-left: 4px;
+  }
+
   ${({ $isNode }) =>
     !$isNode &&
     css`
@@ -28,9 +32,9 @@ export const OverflowString = styled.span`
   padding: 0 4px;
 `
 
-export const RevealString = styled.span<{ $align: string }>`
+export const RevealString = styled.span<{ $align: string; $isCopy: boolean }>`
   position: absolute;
-  background-color: var(--md-sys-color-surface-container-high);
+  background-color: var(--md-sys-color-surface-container-highest);
   border-radius: var(--border-radius-m);
   right: ${({ $align }) => ($align === 'left' ? 'unset' : 0)};
   left: ${({ $align }) => ($align === 'left' ? 0 : 'unset')};
@@ -46,10 +50,27 @@ export const RevealString = styled.span<{ $align: string }>`
   opacity: 0;
   padding: 0 4px;
 
+  .copy {
+    display: none;
+    position: relative;
+    top: 6px;
+    margin-right: 4px;
+  }
+
   :hover {
     opacity: 1;
     height: auto;
     box-shadow: 0 0 8px 0 rgb(0 0 0 / 20%);
     transition: opacity 0.2s;
+
+    ${({ $isCopy }) =>
+      $isCopy &&
+      css`
+        margin-top: -6px;
+      `}
+
+    .copy {
+      display: inline-block;
+    }
   }
 `
