@@ -233,7 +233,13 @@ export const ListItem = styled.li<{
           }
         `
       : css`
-          cursor: not-allowed;
+          text-decoration: line-through;
+          background-color: var(--md-sys-color-surface-container-low-hover);
+          &,
+          & > * {
+            cursor: not-allowed;
+          }
+          opacity: 0.3;
         `)}
 
   /* $focused */
