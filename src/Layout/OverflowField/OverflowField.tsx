@@ -1,14 +1,14 @@
 import * as Styled from './OverflowField.styled'
-import { forwardRef, isValidElement } from 'react'
+import { MouseEvent, forwardRef, isValidElement } from 'react'
 
 export interface OverflowFieldProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onClick'> {
   value?: string | number | React.ReactNode
   align?: 'left' | 'right'
-  onClick?: (value: string) => void
+  onClick?: (value: string, e: MouseEvent<HTMLSpanElement>) => void
 }
 
 export const OverflowField = forwardRef<HTMLDivElement, OverflowFieldProps>(
-  ({ value = '', style, align = 'right', onClick }, ref) => {
+  ({ value = '', align = 'right', onClick, ...props }, ref) => {
     let isNode = false
 
     //   check if value is a react node
@@ -17,11 +17,11 @@ export const OverflowField = forwardRef<HTMLDivElement, OverflowFieldProps>(
     }
 
     return (
-      <Styled.OverflowField style={style} $align={align} $isNode={isNode} ref={ref}>
+      <Styled.OverflowField $align={align} $isNode={isNode} ref={ref} {...props}>
         {isNode ? value : <Styled.OverflowString>{value}</Styled.OverflowString>}
         {!isNode && (
           <Styled.RevealString
-            onClick={() => value && onClick && onClick(value.toString())}
+            onClick={(e) => value && onClick && onClick(value.toString(), e)}
             $align={align}
           >
             {value}
