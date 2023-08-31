@@ -38,18 +38,18 @@ export const Switch = styled.div`
         content: '';
         height: calc(var(--bheight) * 0.8);
         width: calc(var(--bheight) * 0.8);
-        left: calc(var(--bheight) * 0.1);
-        bottom: calc(var(--bheight) * 0.1);
+        left: calc(var(--bheight) * 0);
+        bottom: calc(var(--bheight) * 0);
         transition: 0.2s;
         border-radius: 50%;
-        scale: 0.8;
+        scale: 0.7;
       }
     }
 
     /* not check styles */
     input:not(:checked) + .slider {
       background-color: var(--md-sys-color-surface-container-highest);
-      outline: 2px solid var(--md-sys-color-outline);
+      border: 2px solid var(--md-sys-color-outline);
       :before {
         background-color: var(--md-sys-color-on-surface);
       }
@@ -62,10 +62,10 @@ export const Switch = styled.div`
     /* checked styles */
     input:checked + .slider {
       background-color: var(--md-sys-color-primary);
-      outline: 2px solid var(--md-sys-color-primary);
+      border: 2px solid var(--md-sys-color-primary);
       &::before {
         transform: translateX(calc(var(--bheight) * 0.65));
-        scale: 1.1;
+        scale: 1;
         background-color: var(--md-sys-color-on-primary);
       }
 
