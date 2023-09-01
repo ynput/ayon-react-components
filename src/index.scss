@@ -32,12 +32,13 @@
   --md-custom-color-primary: var(--color-hl-00);
   // --color-hl-01: #fb9c15; -> --md-custom-color-warning
   --md-custom-color-warning: var(--color-hl-01);
-  --color-hl-studio: var(--md-sys-color-tertiary-fixed-dim);
-  --color-hl-project: var(--md-custom-color-warning);
-  --color-hl-site: #efa0a8;
+  --color-hl-studio: #25d15f;
+  --color-hl-project: #ff9e3d;
+  --color-hl-site: #ff99aa;
   --color-hl-variant: #f9d56e;
-  --color-hl-production: #00f0b4;
-  --color-hl-staging: #fa6e46;
+  --color-hl-production: var(--md-sys-color-tertiary);
+  --color-hl-staging: #ff858b;
+  --color-hl-developer: #c78fff;
   --color-hl-error: var(--md-sys-color-error-container);
 
   // changed colors

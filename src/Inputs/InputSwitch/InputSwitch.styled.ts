@@ -9,7 +9,7 @@ export const Switch = styled.div`
   justify-content: flex-start;
 
   .switch-body {
-    --bheight: calc(var(--base-input-size) * 0.75);
+    --bheight: calc(var(--base-input-size) * 0.7);
     --bwidth: calc(var(--bheight) * 1.75);
     position: relative;
     display: inline-block;
@@ -37,13 +37,12 @@ export const Switch = styled.div`
       &:before {
         position: absolute;
         content: '';
-        height: calc(var(--bheight) * 0.8);
-        width: calc(var(--bheight) * 0.8);
-        left: calc(var(--bheight) * 0.05);
-        bottom: calc(var(--bheight) * 0.06);
+        height: calc(var(--bheight) * 0.7);
+        width: calc(var(--bheight) * 0.7);
+        left: calc(var(--bheight) * 0.11);
+        bottom: calc(var(--bheight) * 0.1);
         transition: 0.2s;
         border-radius: 50%;
-        scale: 0.7;
       }
     }
 
@@ -65,7 +64,6 @@ export const Switch = styled.div`
       border-color: var(--md-sys-color-primary);
       &::before {
         transform: translateX(calc(var(--bheight) * 0.75));
-        scale: 1;
         background-color: var(--md-sys-color-on-primary);
       }
 

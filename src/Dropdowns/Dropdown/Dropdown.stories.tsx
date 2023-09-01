@@ -82,6 +82,7 @@ export const Tags: Story = {
     valueTemplate: 'tags',
     multiSelect: true,
     editable: true,
+    disabledValues: ['add'],
   },
 }
 

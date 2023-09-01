@@ -49,6 +49,7 @@ export const RevealString = styled.span<{ $align: string; $isCopy: boolean }>`
 
   opacity: 0;
   padding: 0 4px;
+  padding-bottom: 6px;
 
   .copy {
     display: none;
