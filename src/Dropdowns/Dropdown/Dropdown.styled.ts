@@ -86,7 +86,7 @@ export const Dropdown = styled.div`
   }
 `
 
-export const Container = styled.form<{
+export const Container = styled.div<{
   $isOpen: boolean
   $height?: number
   $message: string
