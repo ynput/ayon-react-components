@@ -1,14 +1,14 @@
 import { forwardRef } from 'react'
 import * as Styled from './UserImage.styled'
 
-export interface UserImageProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface UserImageProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string
   fullName?: string
   size?: number
   highlight?: boolean
 }
 
-export const UserImage = forwardRef<HTMLDivElement, UserImageProps>(
+export const UserImage = forwardRef<HTMLSpanElement, UserImageProps>(
   ({ src, fullName, size = 30, highlight, ...props }, ref) => {
     const fontSize = Math.round((13 / 30) * size)
 
