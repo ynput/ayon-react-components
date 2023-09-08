@@ -349,7 +349,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    const formRef = useRef<HTMLFormElement>(null)
+    const formRef = useRef<HTMLDivElement>(null)
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const handleChange = (
@@ -436,7 +436,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onOpen && onOpen()
     }
 
-    const handleSearchSubmit = (e: React.MouseEvent<HTMLFormElement>): void => {}
+    const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
 
     // KEY BOARD CONTROL
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
