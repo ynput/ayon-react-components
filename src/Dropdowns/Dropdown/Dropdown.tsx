@@ -349,7 +349,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    const formRef = useRef<HTMLFormElement>(null)
+    const formRef = useRef<HTMLDivElement>(null)
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const handleChange = (
@@ -436,7 +436,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onOpen && onOpen()
     }
 
-    const handleSearchSubmit = (e: React.MouseEvent<HTMLFormElement>): void => {}
+    const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
 
     // KEY BOARD CONTROL
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -545,10 +545,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [options, value, dataKey, labelKey, selected, isOpen])
 
     const displayIcon = useMemo(() => {
-      if (!value.length || valueTemplate === 'tags') return null
+      if (!value.length) return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
-      if (options.length) return options[editable ? 1 : 0].icon
+      if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
       return null
     }, [valueIcon, multiSelect, options])
 

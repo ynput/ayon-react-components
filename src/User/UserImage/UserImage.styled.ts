@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 
-export const CircleImage = styled.div`
+export const CircleImage = styled.span`
   border-radius: 100%;
   aspect-ratio: 1/1;
 
