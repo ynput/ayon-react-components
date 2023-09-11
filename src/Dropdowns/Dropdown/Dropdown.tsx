@@ -545,10 +545,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [options, value, dataKey, labelKey, selected, isOpen])
 
     const displayIcon = useMemo(() => {
-      if (!value.length || valueTemplate === 'tags') return null
+      if (!value.length) return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
-      if (options.length) return options[editable ? 1 : 0].icon
+      if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
       return null
     }, [valueIcon, multiSelect, options])
 

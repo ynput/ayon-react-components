@@ -93,7 +93,12 @@ export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
         options={tagsOptions || []}
         dataKey={'name'}
         disabled={disabled}
-        onChange={(tags) => onChange && onChange(tags.map((tag) => tag.toString() as string))}
+        onChange={(tags) =>
+          onChange &&
+          onChange(
+            tags.map((tag) => tag.toString() as string).filter((tag) => tag && tag !== 'Add tags'),
+          )
+        }
         widthExpand={widthExpand}
         multiSelect
         search
