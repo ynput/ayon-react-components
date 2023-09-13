@@ -270,7 +270,7 @@ export const DefaultItem = styled.span<{
   display: flex;
   gap: 8px;
   align-items: center;
-  height: 30px;
+  height: 32px;
   padding: 0 8px;
 
   ${({ $isSelected }) =>

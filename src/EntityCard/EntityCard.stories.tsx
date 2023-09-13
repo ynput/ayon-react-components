@@ -26,6 +26,7 @@ const initData: DataProps = {
   imageUrl: getRandomImage(),
   icon: 'visibility',
   iconColor: '#FF982E',
+  assignees: [{ fullName: 'John Doe', avatarUrl: getRandomImage() }, { fullName: 'John Doe' }],
 }
 
 const Template = (props: EntityCardProps) => {

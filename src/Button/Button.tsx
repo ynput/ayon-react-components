@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react'
 import * as Styled from './Button.styled'
-import { Icon, IconType } from '../Icon'
+import { Icon, IconProps, IconType } from '../Icon'
 import clsx from 'clsx'
 import Typography from '../theme/typography.module.css'
 
@@ -11,7 +11,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   tooltip?: string
   link?: boolean
   disabled?: boolean
-  iconStyle?: React.CSSProperties
+  iconProps?: Omit<IconProps, 'icon'>
   variant?: 'surface' | 'tonal' | 'filled' | 'nav' | 'text' | 'tertiary'
   className?: string
   selected?: boolean
@@ -19,7 +19,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { label, icon, tooltip, link, iconStyle, variant = 'surface', className, selected, ...props },
+    { label, icon, tooltip, link, variant = 'surface', className, selected, iconProps, ...props },
     ref,
   ) => {
     return (
@@ -33,7 +33,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
         ref={ref}
       >
-        {!link && icon && <Icon icon={icon} />} {label} {props.children}
+        {!link && icon && <Icon icon={icon} {...iconProps} />} {label} {props.children}
       </Styled.Button>
     )
   },

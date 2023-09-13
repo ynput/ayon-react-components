@@ -26,9 +26,7 @@ const users = Array.from({ length: 3 }, (_, i) => ({
 }))
 
 const Template = (args: AssigneeSelectProps) => {
-  const initValue = users.map((user) => user.name)
-
-  const [value, setValue] = useState(initValue)
+  const [value, setValue] = useState(args.value)
 
   return (
     <AssigneeSelect
@@ -43,4 +41,15 @@ const Template = (args: AssigneeSelectProps) => {
 
 export const Default: Story = {
   render: Template,
+  args: {
+    value: users.map((user) => user.name),
+  },
+}
+export const Custom: Story = {
+  render: Template,
+  args: {
+    emptyMessage: 'Assignees',
+    emptyIcon: 'group',
+    value: [],
+  },
 }

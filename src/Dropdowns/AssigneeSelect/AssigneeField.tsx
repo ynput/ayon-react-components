@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { UserImagesStacked } from '../../User/UserImagesStacked'
 import { forwardRef } from 'react'
-import { Icon } from '../../Icon'
+import { Icon, IconType } from '../../Icon'
 
 const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   position: relative;
@@ -54,7 +54,7 @@ export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement>
   isMultiple?: boolean
   placeholder?: string
   emptyMessage?: string
-  emptyIcon?: boolean
+  emptyIcon?: IconType | null
   size?: number
 }
 
@@ -66,7 +66,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       disabled,
       isMultiple,
       placeholder,
-      emptyIcon = true,
+      emptyIcon = 'add_circle',
       emptyMessage = '',
       size = 21,
       ...props
@@ -99,7 +99,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
             </>
           ) : (
             <>
-              {emptyIcon && !isMultiple && <Icon icon="add_circle" />}
+              {emptyIcon && !isMultiple && <Icon icon={emptyIcon} />}
               {emptyMessage && <span>{emptyMessage}</span>}
             </>
           )

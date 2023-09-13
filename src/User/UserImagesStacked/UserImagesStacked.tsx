@@ -11,12 +11,14 @@ const StackedStyled = styled.div`
   }
 `
 
+export interface User {
+  avatarUrl?: string
+  fullName?: string
+  self?: boolean
+}
+
 export interface UserImagesStackedProps extends React.HTMLAttributes<HTMLDivElement> {
-  users: {
-    avatarUrl?: string
-    fullName?: string
-    self?: boolean
-  }[]
+  users: User[]
   size?: number
   gap?: number
   max?: number
@@ -41,7 +43,7 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
             src={user.avatarUrl}
             key={i}
             fullName={user.fullName || ''}
-            style={{ zIndex: -i, ...userStyle }}
+            style={{ zIndex: -i, width: size, height: size, ...userStyle }}
             highlight={user.self}
             size={size}
           />
