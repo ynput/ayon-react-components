@@ -24,7 +24,8 @@ const cardHoverStyles = css`
   .description {
     grid-template-rows: 1fr;
     /* transition-delay: 100ms; */
-    padding-top: 2px;
+    padding: 2px;
+    padding-bottom: 0;
   }
 `
 
@@ -63,7 +64,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   height: auto;
   aspect-ratio: 16 / 9;
 
-  padding: 4px;
+  padding: 2px;
   /* thumbnail variant no padding */
   ${({ $variant }) =>
     $variant === 'thumbnail' &&
@@ -85,7 +86,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   user-select: none;
 
   /* style */
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-xxl);
   background-color: var(--md-sys-color-surface-container-high);
 
   &:hover {
@@ -135,7 +136,8 @@ export const Card = styled.div<StyledEntityCardProps>`
       /* description stays open */
       .description {
         grid-template-rows: 1fr;
-        padding-top: 2px;
+        padding: 2px;
+        padding-bottom: 0;
         transition-delay: 0;
       }
 
@@ -290,7 +292,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   align-self: stretch;
   z-index: 50;
 
-  border-radius: var(--border-radius-l);
+  border-radius: var(--border-radius-xl);
   background-color: var(--md-sys-color-surface-container);
 
   /* image styles */
