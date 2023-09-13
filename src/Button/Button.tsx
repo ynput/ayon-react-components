@@ -11,7 +11,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   tooltip?: string
   link?: boolean
   disabled?: boolean
-  iconProps?: IconProps
+  iconProps?: Omit<IconProps, 'icon'>
   variant?: 'surface' | 'tonal' | 'filled' | 'nav' | 'text' | 'tertiary'
   className?: string
   selected?: boolean
