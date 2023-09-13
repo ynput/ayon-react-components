@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import useImageLoading from '../helpers/useImageLoading'
+import { User, UserImagesStacked } from '../User/UserImagesStacked'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -43,6 +44,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isDragging?: boolean
   isDraggable?: boolean
   disabled?: boolean
+  assignees?: User[]
   variant?: 'thumbnail' | 'basic' | 'full'
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
@@ -71,6 +73,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isDraggable = false,
       onThumbnailKeyDown,
       onActivate,
+      assignees,
       ...props
     },
     ref,
@@ -156,9 +159,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Title>
             )}
             {/* bottom right icon */}
-            {notificationIcon && !hideIcons && (
+            {notificationIcon && !hideIcons && !assignees?.length && (
               <Styled.Title className="notification">
                 <Icon icon={notificationIcon?.icon} style={{ color: notificationIcon?.color }} />
+              </Styled.Title>
+            )}
+            {/* bottom right assignees */}
+            {assignees?.length && (
+              <Styled.Title className="assignees">
+                <UserImagesStacked users={assignees} size={26} gap={-0.5} />
               </Styled.Title>
             )}
           </Styled.Row>

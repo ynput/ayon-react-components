@@ -7,9 +7,7 @@ const getRandomImage = (seed?: string) => {
   // random width between 200 and 1000
   const width = Math.floor(Math.random() * 800) + 200
   const height = Math.floor(Math.random() * 800) + 200
-  const randomImage = `
-  https://picsum.photos/seed/${seed}/${width}/${height}
-  `
+  const randomImage = `https://picsum.photos/seed/${seed}/${width}/${height}`
 
   return randomImage
 }

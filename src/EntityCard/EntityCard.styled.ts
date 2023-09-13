@@ -167,6 +167,17 @@ export const Card = styled.div<StyledEntityCardProps>`
     transition: opacity var(--loading-transition);
   }
 
+  .assignees {
+    padding: 1px;
+    border-radius: 14px;
+    min-width: max-content;
+    color: red;
+
+    .user-image {
+      border-color: var(--md-sys-color-surface-container-high);
+    }
+  }
+
   /* set opacity to 0 when not loading */
   ${({ $isLoading }) =>
     $isLoading
@@ -180,7 +191,8 @@ export const Card = styled.div<StyledEntityCardProps>`
             min-width: 50%;
 
             &.status,
-            &.notification {
+            &.notification,
+            &.assignees {
               min-width: 28px;
             }
             /* hide all text and icons */
@@ -229,7 +241,8 @@ export const Card = styled.div<StyledEntityCardProps>`
         }
 
         &.status,
-        &.notification {
+        &.notification,
+        &.assignees {
           min-width: 28px;
         }
       }
