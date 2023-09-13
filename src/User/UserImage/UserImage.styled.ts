@@ -15,6 +15,7 @@ export const CircleImage = styled.span`
   background-color: var(--md-sys-color-surface-container-highest);
   border: solid 1px var(--md-sys-color-outline);
   user-select: none;
+  color: var(--md-sys-color-on-surface);
 
   img {
     width: 100%;
