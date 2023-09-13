@@ -43,6 +43,7 @@ export const Switch = styled.div`
         bottom: calc(var(--bheight) * 0.1);
         transition: 0.2s;
         border-radius: 50%;
+        scale: 0.8;
       }
     }
 
@@ -64,6 +65,7 @@ export const Switch = styled.div`
       border-color: var(--md-sys-color-primary);
       &::before {
         transform: translateX(calc(var(--bheight) * 0.75));
+        scale: 1;
         background-color: var(--md-sys-color-on-primary);
       }
 
@@ -76,6 +78,17 @@ export const Switch = styled.div`
 
     input:focus-visible + * {
       outline: 2px solid var(--md-sys-color-tertiary) !important;
+    }
+
+    input:disabled + .slider {
+      border-color: transparent;
+      &::before {
+        opacity: 0.4;
+      }
+
+      &:hover {
+        background-color: var(--md-sys-color-surface-container-highest);
+      }
     }
   } // switch-body
 `
