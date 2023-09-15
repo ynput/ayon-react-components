@@ -92,6 +92,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     // when files changes, update filePreviews
     useEffect(() => {
+      if (!Array.isArray(files)) return
       for (const file of files) {
         // only if image and below 1mb
         if (file.file.type.startsWith('image/') && file.file.size <= maxImagePreviewSize) {
@@ -208,7 +209,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         }
 
         // check if file already exists
-        if (files.find((f) => f.file.name === fileName)) {
+        if (files?.find((f) => f.file.name === fileName)) {
           setErrorMessage(`File already exists: ${fileName}`)
           // skip this file
           continue
@@ -406,8 +407,10 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
     // we do this so that we can show the success out animation temporarily
     const filesToGroup = useMemo(() => {
-      if (!isSuccess || !localFilesState.length) return files
-      else return localFilesState
+      if (!isSuccess || !localFilesState.length) {
+        if (Array.isArray(files)) return files
+        else return []
+      } else return localFilesState
     }, [files, isSuccess, localFilesState])
 
     // group together files with the same sequenceId
@@ -451,7 +454,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                 icon="delete"
                 onClick={() => setFiles([])}
                 label="Clear all"
-                disabled={!files.length || isFetching || disabled}
+                disabled={!files?.length || isFetching || disabled}
               />
               <Button
                 icon="upload_file"
@@ -491,16 +494,24 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
                   <FileCard
                     index={idx}
                     title={key}
-                    type={files.length > 1 ? 'sequence' : files[0].file.type}
-                    size={files.reduce((acc, file) => acc + file.file.size, 0)}
-                    length={files.length}
+                    type={
+                      files?.length > 1
+                        ? 'sequence'
+                        : (files?.length && files[0].file.type) || 'unknown'
+                    }
+                    size={files?.reduce((acc, file) => acc + file.file.size, 0)}
+                    length={files?.length}
                     onRemove={() => onFileRemove(key)}
                     onSplit={() => onSeqSplit(key)}
-                    splitDisabled={files.length < 2 || !allowMultiple}
+                    splitDisabled={files?.length < 2 || !allowMultiple}
                     isFetching={isFetching}
                     readOnly={readOnly}
                     disabled={disabled}
-                    message={files.length > 1 ? getSeqError(files) : files[0].message}
+                    message={
+                      files?.length > 1
+                        ? getSeqError(files)
+                        : (files?.length && files[0].message) || ''
+                    }
                     preview={!disableImagePreviews ? filePreviews[files[0].file.name] : null}
                   />
                 </li>
@@ -548,7 +559,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             </div>
             {!saveButton && onSubmit ? (
               <SaveButton
-                active={!!files.length && !disabled}
+                active={!!files?.length && !disabled}
                 saving={isFetching}
                 label={confirmLabel || 'Upload ' + fileOrFiles}
                 onClick={() => onSubmit(files)}
