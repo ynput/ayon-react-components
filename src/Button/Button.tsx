@@ -12,7 +12,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   link?: boolean
   disabled?: boolean
   iconProps?: Omit<IconProps, 'icon'>
-  variant?: 'surface' | 'tonal' | 'filled' | 'nav' | 'text' | 'tertiary'
+  variant?: 'surface' | 'tonal' | 'filled' | 'nav' | 'text' | 'tertiary' | 'danger'
   className?: string
   selected?: boolean
 }
