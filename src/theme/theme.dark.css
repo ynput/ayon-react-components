@@ -65,6 +65,8 @@
     --md-sys-color-surface-container-hover: var(--md-sys-color-surface-container-dark-hover);
     --md-sys-color-surface-container-low-hover: var(--md-sys-color-surface-container-low-dark-hover);
     --md-sys-color-surface-container-lowest-hover: var(--md-sys-color-surface-container-lowest-dark-hover);
+    --md-sys-color-error-hover: var(--md-sys-color-error-dark-hover);
+    --md-sys-color-error-container-hover: var(--md-sys-color-error-container-dark-hover);
     /* active */
     --md-sys-color-primary-active: var(--md-sys-color-primary-dark-active);
     --md-sys-color-on-primary-active: var(--md-sys-color-on-primary-dark-active);
@@ -78,5 +80,6 @@
     --md-sys-color-surface-container-active: var(--md-sys-color-surface-container-dark-active);
     --md-sys-color-surface-container-low-active: var(--md-sys-color-surface-container-low-dark-active);
     --md-sys-color-surface-container-lowest-active: var(--md-sys-color-surface-container-lowest-dark-active);
-
+    --md-sys-color-error-active: var(--md-sys-color-error-dark-active);
+    --md-sys-color-error-container-active: var(--md-sys-color-error-container-dark-active);
 }

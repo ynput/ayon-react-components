@@ -11,7 +11,15 @@ const meta: Meta<typeof Button> = {
 export default meta
 type Story = StoryObj<typeof Button>
 
-const variants: ButtonProps['variant'][] = ['surface', 'tonal', 'filled', 'tertiary', 'text', 'nav']
+const variants: ButtonProps['variant'][] = [
+  'surface',
+  'tonal',
+  'filled',
+  'tertiary',
+  'text',
+  'nav',
+  'danger',
+]
 
 const AllButtons = (args: Story['args']) => {
   const [selected, setSelected] = useState(variants)
