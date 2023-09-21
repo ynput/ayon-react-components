@@ -5,7 +5,7 @@ export type ButtonProps = {
   label?: string
   $link?: boolean
   $icon?: boolean
-  $variant: 'surface' | 'tonal' | 'filled' | 'text' | 'tertiary' | 'nav'
+  $variant: 'surface' | 'tonal' | 'filled' | 'text' | 'tertiary' | 'nav' | 'danger'
   $selected: boolean
 }
 
@@ -205,6 +205,25 @@ export const Button = styled.button<ButtonProps>`
 
       &:disabled {
         background-color: var(--md-sys-color-tertiary);
+      }
+    `}
+
+      /* TEXT = surface-container */
+  ${({ $variant }) =>
+    $variant === 'danger' &&
+    css`
+      background-color: var(--md-sys-color-error-container);
+      color: var(--md-sys-color-on-error-container);
+
+      &:hover {
+        background-color: var(--md-sys-color-error-container-hover);
+      }
+      &:active {
+        background-color: var(--md-sys-color-error-container-active);
+      }
+
+      &:disabled {
+        background-color: var(--md-sys-color-error-container);
       }
     `}
 

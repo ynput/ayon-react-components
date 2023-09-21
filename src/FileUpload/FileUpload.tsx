@@ -361,7 +361,13 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       }
 
       if (!acceptedFiles.length) return
-      else setFiles((files) => files.concat(acceptedFiles))
+      else {
+        const newFiles = [...files]
+        for (const file of acceptedFiles) {
+          newFiles.push(file)
+        }
+        setFiles(newFiles)
+      }
     }
 
     // triggers when file is dropped
