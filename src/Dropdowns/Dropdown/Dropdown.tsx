@@ -88,6 +88,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   disabledValues?: (string | number)[]
   listInline?: boolean
   disableOpen?: boolean
+  openOnFocus?: boolean
 }
 
 export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
@@ -137,6 +138,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       disabledValues = [],
       listInline = false,
       disableOpen = false,
+      openOnFocus = true,
       ...props
     },
     ref,
@@ -419,7 +421,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
     }
 
-    const handleOpen = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const handleOpen = (
+      e: React.MouseEvent<HTMLButtonElement> | React.FocusEvent<HTMLButtonElement>,
+    ): void => {
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') return handleClear()
 
@@ -609,6 +613,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
             style={buttonStyle}
             className={`button ${buttonClassName}`}
+            onFocus={(e) => openOnFocus && handleOpen(e)}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
