@@ -17,6 +17,8 @@ export const Default: Story = {
       style={{
         maxWidth: 150,
         margin: '20px 0',
+        display: 'flex',
+        gap: 10,
       }}
     >
       <OverflowField
@@ -26,6 +28,7 @@ export const Default: Story = {
         icon="content_copy"
         isCopy
       />
+      <OverflowField value={'Short text'} align={'left'} onClick={() => window.alert('clicked')} />
     </Panel>
   ),
 }
