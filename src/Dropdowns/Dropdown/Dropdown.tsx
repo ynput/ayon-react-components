@@ -613,7 +613,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
             style={buttonStyle}
             className={`button ${buttonClassName}`}
-            onFocus={(e) => openOnFocus && handleOpen(e)}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
