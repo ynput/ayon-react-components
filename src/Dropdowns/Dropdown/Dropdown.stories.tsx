@@ -94,6 +94,7 @@ export const Search: Story = {
     onClear: () => console.log('clear'),
     placeholder: 'Selected an Icon...',
     value: [],
+    openOnFocus: true,
   },
   render: Template,
 }
@@ -145,7 +146,7 @@ export const CustomTemplates: Story = {
               backgroundColor: 'unset',
               color: 'black',
             }}
-            iconStyle={{ color: 'black' }}
+            iconProps={{ style: { color: 'black' } }}
           />
         ))}
       </div>

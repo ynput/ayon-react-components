@@ -80,14 +80,26 @@ export const Switch = styled.div`
       outline: 2px solid var(--md-sys-color-tertiary) !important;
     }
 
-    input:disabled + .slider {
-      border-color: transparent;
-      &::before {
-        opacity: 0.4;
+    input:disabled {
+      &:not(:checked) + .slider {
+        border-color: transparent;
+        &::before {
+          opacity: 0.4;
+        }
+
+        &:hover {
+          background-color: var(--md-sys-color-surface-container-highest);
+        }
       }
 
-      &:hover {
-        background-color: var(--md-sys-color-surface-container-highest);
+      &:checked + .slider {
+        opacity: 0.5;
+
+        &:hover {
+          &::before {
+            background-color: var(--md-sys-color-on-primary);
+          }
+        }
       }
     }
   } // switch-body
