@@ -28,7 +28,23 @@ export const Default: Story = {
         icon="content_copy"
         isCopy
       />
-      <OverflowField value={'Short text'} align={'left'} onClick={() => window.alert('clicked')} />
+      <OverflowField
+        value={'Short text'}
+        align={'left'}
+        onClick={() => window.alert('clicked')}
+        icon="content_copy"
+        isCopy
+      />
+      <OverflowField
+        value={'Short no copy'}
+        align={'left'}
+        onClick={() => window.alert('clicked')}
+      />
+      <OverflowField
+        value={'Longer and no copy'}
+        align={'left'}
+        onClick={() => window.alert('clicked')}
+      />
     </Panel>
   ),
 }

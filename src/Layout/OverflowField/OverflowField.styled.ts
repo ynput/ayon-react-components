@@ -49,7 +49,7 @@ export const RevealString = styled.span<{ $align: string; $isCopy: boolean }>`
 
   opacity: 0;
   padding: 0 4px;
-  padding-bottom: 0;
+  padding-bottom: ${({ $isCopy }) => ($isCopy ? '6px' : '0')};
 
   .copy {
     display: none;
