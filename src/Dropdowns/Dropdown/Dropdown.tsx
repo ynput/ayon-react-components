@@ -273,15 +273,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       return [...selectedNotInOptionsItems, ...options]
     }, [value, options])
 
-    if ((search || editable) && searchForm) {
-      // filter out search matches
-      options = options.filter((o) =>
-        searchFields.some(
-          (key) => o[key] && String(o[key])?.toLowerCase()?.includes(searchForm.toLowerCase()),
-        ),
-      )
-    }
-
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
       () =>
@@ -304,6 +295,17 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         return [searchItem, ...options]
       } else return options
     }, [editable, searchForm, options])
+
+    const nonSearchedOptions = [...options]
+
+    if ((search || editable) && searchForm) {
+      // filter out search matches
+      options = options.filter((o) =>
+        searchFields.some(
+          (key) => o[key] && String(o[key])?.toLowerCase()?.includes(searchForm.toLowerCase()),
+        ),
+      )
+    }
 
     // HANDLERS
 
@@ -517,6 +519,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             selectedValue = searchForm
           }
 
+          if (!selectedValue) {
+            // no value selected, then use what was already selected
+            selectedValue = value
+          }
+
           handleClose(undefined, [selectedValue])
           // focus back on button
           valueRef.current?.focus()
@@ -540,7 +547,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     const labels = useMemo(() => {
       const values = isOpen ? selected : value
       let result: any[] = []
-      options.forEach((o) => {
+      nonSearchedOptions.forEach((o) => {
         if (values.includes(o[dataKey])) {
           result.push(o[labelKey] || o[dataKey])
         }
