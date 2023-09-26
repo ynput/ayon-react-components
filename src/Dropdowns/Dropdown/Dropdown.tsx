@@ -138,7 +138,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       disabledValues = [],
       listInline = false,
       disableOpen = false,
-      openOnFocus = true,
+      openOnFocus = false,
       ...props
     },
     ref,
@@ -425,10 +425,13 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
     const handleOpen = (
       e: React.MouseEvent<HTMLButtonElement> | React.FocusEvent<HTMLButtonElement>,
+      focus?: boolean,
     ): void => {
       // check if onClear was clicked
-      if ((e.target as HTMLDivElement).id === 'clear') return handleClear()
-
+      if ((e.target as HTMLDivElement).id === 'clear') {
+        if (focus) return
+        else return handleClear()
+      }
       if (isOpen) {
         return handleClose()
       }
@@ -440,6 +443,14 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       setIsOpen(!isOpen)
 
       onOpen && onOpen()
+    }
+
+    const handleOnFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
+      setTimeout(() => {
+        if (openOnFocus && !isOpen) {
+          handleOpen(e, true)
+        }
+      }, 100)
     }
 
     const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
@@ -620,6 +631,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
             style={buttonStyle}
             className={`button ${buttonClassName}`}
+            onFocus={handleOnFocus}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
