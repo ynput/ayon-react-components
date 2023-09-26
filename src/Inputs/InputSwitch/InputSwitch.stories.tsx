@@ -11,7 +11,11 @@ export default meta
 type Story = StoryObj<typeof InputSwitch>
 
 export const Default: Story = {
+  args: {},
+}
+export const Disabled: Story = {
   args: {
-    value: 'true',
+    checked: true,
+    disabled: true,
   },
 }
