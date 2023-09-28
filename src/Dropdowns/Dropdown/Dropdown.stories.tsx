@@ -3,6 +3,8 @@ import { Dropdown, DropdownProps } from '.'
 import { useState } from 'react'
 import { Button } from '../../Button'
 import { IconType } from '../../Icon'
+import { InputText } from '../../Inputs/InputText'
+import { Toolbar } from '../../Layout/Toolbar'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -43,18 +45,21 @@ const Template = (args: DropdownProps) => {
   }
 
   return (
-    <Dropdown
-      {...args}
-      value={value}
-      onChange={handleChange}
-      options={args.options || options}
-      onClear={handleClear}
-      widthExpand
-      style={{
-        width: 250,
-        ...args.style,
-      }}
-    />
+    <Toolbar>
+      <Dropdown
+        {...args}
+        value={value}
+        onChange={handleChange}
+        options={args.options || options}
+        onClear={args.onClear && handleClear}
+        widthExpand
+        style={{
+          width: 250,
+          ...args.style,
+        }}
+      />
+      <InputText />
+    </Toolbar>
   )
 }
 
@@ -66,6 +71,8 @@ export const Icons: Story = {
     minSelected: 1,
     widthExpand: true,
     maxHeight: 180,
+    onClear: undefined,
+    openOnFocus: true,
   },
   render: Template,
 }
@@ -91,7 +98,7 @@ export const Search: Story = {
   args: {
     searchFields: ['value', 'keyword'],
     search: true,
-    onClear: () => console.log('clear'),
+    onClear: undefined,
     placeholder: 'Selected an Icon...',
     value: [],
     openOnFocus: true,

@@ -502,7 +502,12 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       }
 
       // SUBMIT WITH ENTER
-      if (e.code === 'Enter') {
+      if (
+        e.code === 'Enter' ||
+        e.code === 'Space' ||
+        e.code === 'NumpadEnter' ||
+        e.code === 'Tab'
+      ) {
         // prevent reloads
         e.preventDefault()
 
@@ -521,9 +526,11 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             handleClose(undefined, [...selected, options[0][dataKey]])
           }
         } else {
+          // convert selectedValue to array
+          selectedValue = selectedValue ? [selectedValue] : null
           // only one option and no keyboard
           if (options.length === 1 && !editable) {
-            selectedValue = options[0][dataKey]
+            selectedValue = [options[0][dataKey]]
           }
 
           if (editable && searchForm) {
@@ -535,7 +542,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             selectedValue = value
           }
 
-          handleClose(undefined, [selectedValue])
+          handleClose(undefined, selectedValue as (string | number)[])
           // focus back on button
           valueRef.current?.focus()
         }
