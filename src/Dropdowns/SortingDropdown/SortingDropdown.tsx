@@ -1,20 +1,18 @@
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { DefaultValueTemplate, Dropdown, DropdownProps } from '../Dropdown'
-import { css } from 'styled-components'
-
-const StyledDropdown = styled(Dropdown)<{ $cardHovering: boolean }>`
-  ${({ $cardHovering }) =>
-    $cardHovering &&
-    css`
-      button {
-        &:hover {
-          background-color: var(--md-sys-color-surface-container-low);
-        }
-      }
-    `}
-`
+import styled, { css } from 'styled-components'
 import SortCard from './SortCard'
-import styled from 'styled-components'
+
+const StyledDropdown = styled(Dropdown)`
+  /* prevent active state if there is an active state on .action (close or sort buttons) */
+  &:has(.action:active) {
+    button {
+      &:active {
+        background-color: var(--md-sys-color-surface-container-low-hover);
+      }
+    }
+  }
+`
 
 export type SortCardType = {
   id: string
@@ -38,8 +36,6 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
   multiSelect = true,
   ...props
 }) => {
-  const [cardHovering, setCardHovering] = useState(false)
-
   const handleChange = (v: DropdownProps['value']) => {
     // for each value, find in value, if not found, find in options and add sortOrder
     const newValues = v.map((id) => {
@@ -62,14 +58,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
     onChange(newValues)
   }
 
-  const handleSortChange = (id: string, e?: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    e?.stopPropagation()
-    // check if e is the remove button (id=remove)
-    if (e?.currentTarget.id === 'remove') {
-      e.preventDefault()
-      return
-    }
-
+  const handleSortChange = (id: string) => {
     // find the value in value
     const item = value.find((v) => v.id === id)
     const itemIndex = value.findIndex((v) => v.id === id)
@@ -91,8 +80,6 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
   return (
     <StyledDropdown
       {...props}
-      $cardHovering={cardHovering}
-      disableOpen={cardHovering && !!value.length}
       value={value.map(({ id }) => id)}
       options={options}
       onChange={handleChange}
@@ -123,9 +110,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
                       {...sortValue}
                       disabled={isOpen}
                       sortOrder={sortValue?.sortOrder ?? true}
-                      onMouseEnter={() => !isOpen && setCardHovering(true)}
-                      onMouseLeave={() => setCardHovering(false)}
-                      onClick={(e) => !isOpen && handleSortChange(id, e)}
+                      onSortBy={() => !isOpen && handleSortChange(id)}
                       onRemove={() => !isOpen && handleRemove(id)}
                       onKeyDown={(e) => {
                         if (isOpen) return
