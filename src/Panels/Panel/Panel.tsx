@@ -21,6 +21,19 @@ export const PanelStyled = styled.div<{ $direction: PanelProps['direction'] }>`
   &.nopad {
     padding: 0;
   }
+
+  /* scrollbar */
+  scrollbar-width: 8px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 8px;
+  }
 `
 
 export const Panel = forwardRef<HTMLDivElement, PanelProps>(

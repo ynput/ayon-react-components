@@ -195,9 +195,17 @@ export const Options = styled.ul<{
         `)}
 
   overflow-y: scroll;
+  /* scrollbar */
+  scrollbar-width: 8px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--md-sys-color-surface-container-low);
+  }
 
-  ::-webkit-scrollbar {
-    display: none;
+  &::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 8px;
   }
 `
 

@@ -14,6 +14,19 @@ const ScrollPanelStyled = styled(PanelStyled)`
   overflow-y: scroll;
   gap: var(--base-gap-medium);
   background-color: transparent;
+
+  /* scrollbar */
+  scrollbar-width: 8px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 8px;
+  }
 `
 
 export interface ScrollPanelProps extends HTMLAttributes<HTMLDivElement> {

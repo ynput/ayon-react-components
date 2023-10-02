@@ -35,6 +35,19 @@ const SectionStyled = styled.section<SectionStyleProps>`
       right: 0;
       bottom: 0;
     `}
+
+  /* scrollbar */
+  scrollbar-width: 8px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 8px;
+  }
 `
 
 export const Section = forwardRef<HTMLElement, SectionProps>(
