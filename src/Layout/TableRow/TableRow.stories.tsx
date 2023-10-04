@@ -31,6 +31,13 @@ const rows = [
     value: false,
   },
   {
+    name: 'Null Value',
+    value: null,
+  },
+  {
+    name: 'Undefined Value',
+  },
+  {
     name: 'color',
     value: ['red', 'green', 'blue'],
   },

@@ -17,7 +17,7 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
     type = type || typeof value
     if (type === 'number') value = value?.toString()
     else if (type === 'object' && Array.isArray(value)) value = value?.join(', ')
-    else if (type === 'object' && !value?.$$typeof && !isValidElement(value))
+    else if (type === 'object' && !value?.$$typeof && !isValidElement(value) && value)
       value = JSON.stringify(value)
     else if (type === 'date') value = new Date(value).toLocaleDateString()
 
