@@ -1,6 +1,6 @@
 import * as Styled from './TableRow.styled'
 import { OverflowField } from '../OverflowField'
-import { forwardRef } from 'react'
+import { forwardRef, isValidElement } from 'react'
 import { InputSwitch } from '../../Inputs/InputSwitch'
 
 export interface TableRowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onCopy'> {
@@ -15,9 +15,10 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
   ({ name, value, tooltip, type, onCopy, children, ...props }, ref) => {
     type = type || typeof value
     if (type === 'number') value = value?.toString()
-    if (type === 'array') value = value?.join(', ')
-    if (type === 'object') value = JSON.stringify(value)
-    if (type === 'date') value = new Date(value).toLocaleDateString()
+    else if (type === 'array') value = value?.join(', ')
+    else if (type === 'object' && !value?.$$typeof && !isValidElement(value))
+      value = JSON.stringify(value)
+    else if (type === 'date') value = new Date(value).toLocaleDateString()
 
     // check if there are any children
     const hasChildren = children !== undefined
