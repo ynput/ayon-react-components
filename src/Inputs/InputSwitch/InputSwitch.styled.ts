@@ -1,16 +1,20 @@
 import styled from 'styled-components'
 
 export const Switch = styled.div`
-  max-height: var(--base-input-size);
-  min-height: var(--base-input-size);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  --bheight: calc(var(--base-input-size) * 0.7);
+  &.compact {
+    --bheight: calc(var(--base-input-size) * 0.55);
+  }
+  --bwidth: calc(var(--bheight) * 1.75);
+
+  max-height: var(--bheight);
+  min-height: var(--bheight);
 
   .switch-body {
-    --bheight: calc(var(--base-input-size) * 0.7);
-    --bwidth: calc(var(--bheight) * 1.75);
     position: relative;
     display: inline-block;
     height: var(--bheight);
