@@ -6,7 +6,7 @@ export const AttributeTableRow = styled.div`
   position: relative;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 0;
+  padding: 6px 0;
   gap: 8px;
   border-top: 1px solid var(--md-sys-color-outline-variant);
   width: 100%;
