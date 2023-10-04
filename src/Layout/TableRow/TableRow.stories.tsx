@@ -27,6 +27,10 @@ const rows = [
     value: true,
   },
   {
+    name: 'Has Children',
+    value: false,
+  },
+  {
     name: 'color',
     value: ['red', 'green', 'blue'],
   },
