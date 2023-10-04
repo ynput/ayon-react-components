@@ -2,6 +2,7 @@ import * as Styled from './TableRow.styled'
 import { OverflowField } from '../OverflowField'
 import { forwardRef, isValidElement } from 'react'
 import { InputSwitch } from '../../Inputs/InputSwitch'
+import { Icon } from '../../Icon'
 
 export interface TableRowProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onCopy'> {
   name?: string
@@ -28,7 +29,7 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
         <Styled.Title $tooltip={tooltip}>{name}</Styled.Title>
         {!hasChildren &&
           (type === 'boolean' ? (
-            <InputSwitch checked={value as boolean} disabled compact />
+            <Icon icon={value ? 'check' : 'close'} />
           ) : value ? (
             <OverflowField value={value} onClick={onCopy} />
           ) : (
