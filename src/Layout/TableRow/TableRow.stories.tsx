@@ -17,22 +17,18 @@ const rows = [
     value: 'Some very long string that will be truncated',
     tooltip: 'Say something amazing here!',
     onCopy: () => console.log('copied'),
-    type: 'string',
   },
   {
     name: 'Age',
     value: 42,
-    type: 'number',
   },
   {
     name: 'Is Active',
     value: true,
-    type: 'boolean',
   },
   {
     name: 'color',
     value: ['red', 'green', 'blue'],
-    type: 'array',
   },
   {
     name: 'custom',
@@ -48,6 +44,10 @@ const rows = [
     name: 'birthday',
     value: new Date().toISOString(),
     type: 'date',
+  },
+  {
+    name: 'Value Node',
+    value: <div>Some JSX</div>,
   },
 ]
 
