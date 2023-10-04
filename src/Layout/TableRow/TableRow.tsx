@@ -17,6 +17,7 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
     if (type === 'number') value = value?.toString()
     if (type === 'array') value = value?.join(', ')
     if (type === 'object') value = JSON.stringify(value)
+    if (type === 'date') value = new Date(value).toLocaleDateString()
 
     // check if there are any children
     const hasChildren = children !== undefined

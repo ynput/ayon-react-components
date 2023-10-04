@@ -44,6 +44,11 @@ const rows = [
       </div>
     ),
   },
+  {
+    name: 'birthday',
+    value: new Date().toISOString(),
+    type: 'date',
+  },
 ]
 
 export const Default: Story = {
