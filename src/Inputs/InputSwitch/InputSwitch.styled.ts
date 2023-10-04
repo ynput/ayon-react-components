@@ -7,7 +7,7 @@ export const Switch = styled.div`
   justify-content: flex-start;
   --bheight: calc(var(--base-input-size) * 0.7);
   &.compact {
-    --bheight: calc(var(--base-input-size) * 0.6);
+    --bheight: calc(var(--base-input-size) * 0.55);
   }
   --bwidth: calc(var(--bheight) * 1.75);
 
