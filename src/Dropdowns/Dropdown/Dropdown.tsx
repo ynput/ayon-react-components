@@ -205,7 +205,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        let y = valueRec.y + (listInline ? 0 : valueHeight)
+        let y = valueRec.y + (listInline ? 0 : valueHeight) - 1
 
         // check it's not vertically off screen
         if (maxHeight + y + 20 > window.innerHeight) {
