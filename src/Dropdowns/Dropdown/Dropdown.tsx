@@ -162,10 +162,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       left?: number | null
       right?: number | null
       y: number | null
-    }>({ left: null, right: null, y: 0 })
-    const [startAnimation, setStartAnimation] = useState(false)
-    const [startAnimationFinished, setStartAnimationFinished] = useState(false)
-    const [optionsHeight, setOptionsHeight] = useState(0)
+    }>({ left: null, right: null, y: null })
     const [minWidth, setMinWidth] = useState(0)
     // search
     const [searchForm, setSearchForm] = useState('')
@@ -193,21 +190,18 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // USE EFFECTS
     // sets the correct position and height
     useEffect(() => {
-      if (isOpen && valueRef.current && optionsRef.current) {
+      if (isOpen && valueRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
         const valueWidth = valueRec.width
         const valueHeight = valueRec.height
-
-        const optionsRec = optionsRef.current.getBoundingClientRect()
-        const optionsHeight = optionsRec.height
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
         let y = valueRec.y + (listInline ? 0 : valueHeight)
 
         // check it's not vertically off screen
-        if (optionsHeight + y + 20 > window.innerHeight) {
-          y = window.innerHeight - optionsHeight - 20
+        if (maxHeight + y + 20 > window.innerHeight) {
+          y = window.innerHeight - maxHeight - 20
         }
 
         if (align === 'right') {
@@ -218,16 +212,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         if (widthExpand) setMinWidth(valueWidth)
-
-        // console.log(optionsHeight)
-
-        // then start animation
-        setStartAnimation(true)
-        setOptionsHeight(optionsHeight)
-      } else {
-        setStartAnimation(false)
       }
-    }, [isOpen, valueRef, optionsRef, setMinWidth, setStartAnimation, setPos])
+    }, [isOpen, valueRef, setMinWidth, setPos])
 
     // set initial selected from value
     useEffect(() => {
@@ -321,8 +307,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // close dropdown
       setIsOpen(false)
-      // reset animation
-      setStartAnimationFinished(false)
 
       // reset keyboard
       setActiveIndex(null)
@@ -599,7 +583,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       style: valueStyle,
       placeholder,
       isOpen,
-      setStartAnimationFinished,
       className: valueClassName,
     }
 
@@ -653,7 +636,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             )}
           </Styled.Button>
         )}
-        {isOpen && options && (
+        {isOpen && options && (pos.y || pos.y === 0) && (
           <Styled.Container
             style={{
               left: pos?.left || 'unset',
@@ -664,11 +647,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $message={message || ''}
             $isOpen={true}
             onSubmit={handleSearchSubmit}
-            $startAnimation={startAnimation}
             ref={formRef}
           >
             {(search || editable) && (
-              <Styled.Search $startAnimation={startAnimation} className="search">
+              <Styled.Search className="search">
                 <Icon icon={'search'} />
                 <InputText
                   value={searchForm}
@@ -684,11 +666,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
               $message={message || ''}
               $search={!!search || !!editable}
               ref={optionsRef}
-              style={{ minWidth, ...listStyle }}
-              $startAnimation={startAnimation}
-              $animationHeight={optionsHeight}
-              $maxHeight={maxHeight}
-              onAnimationEnd={() => setStartAnimationFinished(true)}
+              style={{ minWidth, maxHeight, ...listStyle }}
               className={'options'}
             >
               {showOptions.map((option, i) => (
@@ -699,9 +677,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   }
                   $focused={usingKeyboard && activeIndex === i}
                   $usingKeyboard={usingKeyboard}
-                  $startAnimation={
-                    startAnimation && !startAnimationFinished && (search || editable || i !== 0)
-                  }
                   tabIndex={0}
                   className={`option ${listClassName}`}
                   $disabled={disabledValues.includes(option[dataKey])}
@@ -732,7 +707,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                   onClick={handleShowMore}
                   $focused={false}
                   $usingKeyboard={false}
-                  $startAnimation={startAnimation}
                   className="option"
                 >
                   <Styled.DefaultItem $isSelected={false} className="option-child hidden">

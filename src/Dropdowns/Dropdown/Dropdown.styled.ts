@@ -85,16 +85,23 @@ export const Dropdown = styled.div`
     height: 100%;
   }
 `
+export const dropdownMenuAnimation = () => keyframes`
+    0% {
+      scale: 0.95;
+    opacity: .6;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
+  `
 
 export const Container = styled.div<{
   $isOpen: boolean
-  $height?: number
   $message: string
-  $startAnimation: boolean
 }>`
   width: 100%;
   position: relative;
-  height: ${({ $height }) => `${$height}px`};
   width: auto;
   display: inline-block;
   height: min-content;
@@ -102,17 +109,11 @@ export const Container = styled.div<{
   position: fixed;
   z-index: 60;
 
-  /* position: fixed; */
-
-  /* hide when startAnimation false */
-  ${({ $startAnimation }) =>
-    !$startAnimation &&
-    css`
-      opacity: 0;
-    `}
+  animation: ${dropdownMenuAnimation()} 0.03s ease-in-out forwards;
+  transform-origin: top center;
 
   /* show warning when changing multiple entities */
-    ${({ $isOpen, $message }) =>
+  ${({ $isOpen, $message }) =>
     $isOpen &&
     $message &&
     css`
@@ -135,27 +136,14 @@ export const Container = styled.div<{
     `}
 `
 
-export const dropdownMenuAnimation = (end: number) => keyframes`
-    0% {
-      max-height: 0;
-      opacity: 0;
-  }
-  100% {
-      max-height: ${end}px;
-      opacity: 1;
-  }
-  `
-
 export const Options = styled.ul<{
   $message: string
   $search: boolean
-  $startAnimation: boolean
-  $animationHeight: number
-  $maxHeight?: number
 }>`
   width: auto;
   list-style-type: none;
   padding: unset;
+  box-shadow: 0 2px 16px #0006;
 
   display: flex;
   flex-direction: column;
@@ -181,19 +169,6 @@ export const Options = styled.ul<{
     margin-top: -1px;
   }
 
-  /* play animation on $startAnimation */
-  ${({ $startAnimation, $animationHeight, $maxHeight }) =>
-    $maxHeight &&
-    ($startAnimation
-      ? css`
-          animation: ${dropdownMenuAnimation($animationHeight)} 0.1s ease-in-out forwards;
-          max-height: ${$maxHeight}px;
-        `
-      : css`
-          opacity: 0;
-          max-height: ${$maxHeight}px;
-        `)}
-
   overflow-y: scroll;
   /* scrollbar */
   scrollbar-width: 8px;
@@ -209,21 +184,9 @@ export const Options = styled.ul<{
   }
 `
 
-export const slideDown = keyframes`
-    0% {
-      transform: translateY(-100%);
-      opacity: 0;
-  }
-  100% {
-      transform: translateY(0);
-      opacity: 1;
-  }
-  `
-
 export const ListItem = styled.li<{
   $focused: boolean
   $usingKeyboard: boolean
-  $startAnimation: boolean
   $disabled?: boolean
 }>`
   cursor: pointer;
@@ -262,13 +225,6 @@ export const ListItem = styled.li<{
         outline-offset: -1px;
         border-radius: var(--border-radius-m);
       }
-    `}
-
-  /* start animation, slide down 100% height */
-        ${({ $startAnimation }) =>
-    $startAnimation &&
-    css`
-      animation: ${slideDown} 0.1s ease-in-out forwards;
     `}
 `
 
@@ -319,14 +275,5 @@ export const Search = styled.div`
       outline-offset: -1px;
       z-index: 30;
     }
-
-    opacity: 0;
-    /* $startAnimation transition opacity 0 to 1 */
-    ${({ $startAnimation }: { $startAnimation: boolean }) =>
-      $startAnimation &&
-      css`
-        transition: opacity 0.05;
-        opacity: 1;
-      `}
   }
 `
