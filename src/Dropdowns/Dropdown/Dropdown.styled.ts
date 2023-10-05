@@ -73,7 +73,7 @@ export const Button = styled.button<{
 
 export const Dropdown = styled.div`
   position: relative;
-  height: 30px;
+  height: 32px;
   /* width: 100%; */
   display: inline-block;
 
