@@ -14,7 +14,7 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   height: 30px;
   gap: 4px;
 
-  span {
+  span:not(.user-image) {
     position: relative;
     top: 1px;
     white-space: nowrap;
