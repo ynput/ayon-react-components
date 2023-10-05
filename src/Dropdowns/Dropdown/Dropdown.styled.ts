@@ -1,3 +1,4 @@
+import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import styled, { css, keyframes } from 'styled-components'
 
 export const Button = styled.button<{
@@ -136,27 +137,47 @@ export const Container = styled.div<{
     `}
 `
 
-export const Options = styled.ul<{
+type ScrollableProps = {
   $message: string
   $search: boolean
-}>`
+}
+
+export const Scrollable = styled(OverlayScrollbarsComponent)<ScrollableProps>`
+  border: 1px solid var(--md-sys-color-outline-variant);
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: ${({ $message, $search }) =>
+    $message || $search
+      ? '0 0 var(--border-radius-m) var(--border-radius-m)'
+      : 'var(--border-radius-m)'};
+
+  box-shadow: 0 1px 16px rgb(0 0 0 / 20%);
+
+  .os-scrollbar-handle {
+    background-color: var(--md-sys-color-surface-container-highest);
+    opacity: 0.75;
+
+    &:hover {
+      opacity: 1;
+      background-color: var(--md-sys-color-surface-container-highest);
+    }
+
+    &:active {
+      background-color: var(--md-sys-color-surface-container-highest-active);
+    }
+  }
+`
+
+export const Options = styled.ul`
   width: auto;
   list-style-type: none;
   padding: unset;
-  box-shadow: 0 2px 16px #0006;
 
   display: flex;
   flex-direction: column;
 
   margin: 0px;
-  border: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--md-sys-color-surface-container-low);
+
   z-index: 20;
-  border-radius: ${({ $message, $search }) =>
-    $message || $search
-      ? '0 0 var(--border-radius-m) var(--border-radius-m)'
-      : 'var(--border-radius-m)'};
-  overflow: clip;
 
   position: relative;
 
@@ -167,20 +188,6 @@ export const Options = styled.ul<{
   /* move first child up by 1px to line up with list item (as it has no bottom border) */
   li:first-child {
     margin-top: -1px;
-  }
-
-  overflow-y: scroll;
-  /* scrollbar */
-  scrollbar-width: 8px;
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    background: var(--md-sys-color-surface-container-low);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: var(--md-sys-color-outline);
-    border-radius: 8px;
   }
 `
 

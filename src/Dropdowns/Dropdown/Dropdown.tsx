@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
+import React, { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
@@ -8,6 +8,7 @@ import { InputText } from '../../Inputs/InputText'
 import { Icon, IconType } from '../../Icon'
 import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
+import 'overlayscrollbars/overlayscrollbars.css'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -192,7 +193,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     useEffect(() => {
       if (isOpen && valueRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
-        const valueWidth = valueRec.width
+        const valueWidth = valueRec.width - 2
         const valueHeight = valueRec.height
 
         const left = valueRec.x
@@ -224,25 +225,24 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     useEffect(() => {
       // focus element
       if (usingKeyboard) {
-        const childNode = optionsRef.current?.childNodes[activeIndex || 0] as HTMLLIElement
+        const optionEl = optionsRef.current
+        if (!optionEl) return
+        const childNode = optionEl.childNodes[activeIndex || 0] as HTMLLIElement
         // scroll
-        const parentHeight = optionsRef.current?.getBoundingClientRect().height || 0
+        const parentHeight = optionEl.getBoundingClientRect().height || 0
 
         const childNodeRect = childNode?.getBoundingClientRect()
-        const parentRect = optionsRef.current?.getBoundingClientRect()
+        const parentRect = optionEl.getBoundingClientRect()
 
         const childTop = childNodeRect?.top - (parentRect?.top || 0)
         const childBottom = childNodeRect?.bottom - (parentRect?.top || 0)
 
         if (childBottom > parentHeight + 1) {
           // scroll down
-          optionsRef.current?.scrollTo(
-            0,
-            optionsRef.current?.scrollTop + (childBottom - parentHeight),
-          )
+          optionEl.scrollTo(0, optionEl.scrollTop + (childBottom - parentHeight))
         } else if (childTop - 1 < 0) {
           // scroll up
-          optionsRef.current?.scrollTo(0, optionsRef.current?.scrollTop + childTop - 1)
+          optionEl.scrollTo(0, optionEl.scrollTop + childTop - 1)
         }
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
@@ -316,6 +316,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // reset search
       setSearchForm('')
+
+      // reset width
+      setMinWidth(0)
 
       // check if value has changed
       const isSame = isEqual(changeValue, value)
@@ -603,6 +606,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       dropIcon,
     ])
 
+    const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
     return (
       <Styled.Dropdown
         onKeyDown={handleKeyPress}
@@ -636,7 +640,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             )}
           </Styled.Button>
         )}
-        {isOpen && options && (pos.y || pos.y === 0) && (
+        {!!isShowOptions && (
           <Styled.Container
             style={{
               left: pos?.left || 'unset',
@@ -662,59 +666,65 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
                 />
               </Styled.Search>
             )}
-            <Styled.Options
+            <Styled.Scrollable
+              style={{ maxHeight }}
               $message={message || ''}
               $search={!!search || !!editable}
-              ref={optionsRef}
-              style={{ minWidth, maxHeight, ...listStyle }}
-              className={'options'}
+              defer
             >
-              {showOptions.map((option, i) => (
-                <Styled.ListItem
-                  key={`${option[dataKey]}-${i}`}
-                  onClick={(e) =>
-                    !disabledValues.includes(option[dataKey]) && handleChange(option[dataKey], i, e)
-                  }
-                  $focused={usingKeyboard && activeIndex === i}
-                  $usingKeyboard={usingKeyboard}
-                  tabIndex={0}
-                  className={`option ${listClassName}`}
-                  $disabled={disabledValues.includes(option[dataKey])}
-                >
-                  {itemTemplate ? (
-                    itemTemplate(
-                      option,
-                      value.includes(option[dataKey]),
-                      selected.includes(option[dataKey]),
-                      i,
-                    )
-                  ) : (
-                    <Styled.DefaultItem
-                      $isSelected={selected.includes(option[dataKey])}
-                      className={`option-child ${
-                        value.includes(option[dataKey]) ? 'selected' : ''
-                      } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
-                      style={itemStyle}
-                    >
-                      {option.icon && <Icon icon={option.icon} />}
-                      <span>{option[labelKey] || option[dataKey]}</span>
+              <Styled.Options
+                style={{ minWidth, ...listStyle }}
+                className={'options'}
+                ref={optionsRef}
+              >
+                {showOptions.map((option, i) => (
+                  <Styled.ListItem
+                    key={`${option[dataKey]}-${i}`}
+                    onClick={(e) =>
+                      !disabledValues.includes(option[dataKey]) &&
+                      handleChange(option[dataKey], i, e)
+                    }
+                    $focused={usingKeyboard && activeIndex === i}
+                    $usingKeyboard={usingKeyboard}
+                    tabIndex={0}
+                    className={`option ${listClassName}`}
+                    $disabled={disabledValues.includes(option[dataKey])}
+                  >
+                    {itemTemplate ? (
+                      itemTemplate(
+                        option,
+                        value.includes(option[dataKey]),
+                        selected.includes(option[dataKey]),
+                        i,
+                      )
+                    ) : (
+                      <Styled.DefaultItem
+                        $isSelected={selected.includes(option[dataKey])}
+                        className={`option-child ${
+                          value.includes(option[dataKey]) ? 'selected' : ''
+                        } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
+                        style={itemStyle}
+                      >
+                        {option.icon && <Icon icon={option.icon} />}
+                        <span>{option[labelKey] || option[dataKey]}</span>
+                      </Styled.DefaultItem>
+                    )}
+                  </Styled.ListItem>
+                ))}
+                {!!hiddenLength && (
+                  <Styled.ListItem
+                    onClick={handleShowMore}
+                    $focused={false}
+                    $usingKeyboard={false}
+                    className="option"
+                  >
+                    <Styled.DefaultItem $isSelected={false} className="option-child hidden">
+                      <span>{`Show ${50} more...`}</span>
                     </Styled.DefaultItem>
-                  )}
-                </Styled.ListItem>
-              ))}
-              {!!hiddenLength && (
-                <Styled.ListItem
-                  onClick={handleShowMore}
-                  $focused={false}
-                  $usingKeyboard={false}
-                  className="option"
-                >
-                  <Styled.DefaultItem $isSelected={false} className="option-child hidden">
-                    <span>{`Show ${50} more...`}</span>
-                  </Styled.DefaultItem>
-                </Styled.ListItem>
-              )}
-            </Styled.Options>
+                  </Styled.ListItem>
+                )}
+              </Styled.Options>
+            </Styled.Scrollable>
           </Styled.Container>
         )}
       </Styled.Dropdown>

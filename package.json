@@ -60,6 +60,8 @@
     "leaflet": "^1.8.0",
     "lint-staged": "^13.0.3",
     "material-symbols": "^0.10.1",
+    "overlayscrollbars": "^2.3.2",
+    "overlayscrollbars-react": "^0.5.2",
     "postcss": "^8.4.21",
     "prettier": "^2.7.1",
     "prop-types": "^15.8.1",
