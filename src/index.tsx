@@ -99,3 +99,6 @@ export { UserImagesStacked } from './User/UserImagesStacked'
 // ENTITY
 // entityCard
 export { EntityCard } from './EntityCard'
+
+// export getShimmerStyles
+export { getShimmerStyles } from './helpers'

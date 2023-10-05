@@ -9,7 +9,7 @@ const shimmerAnimation = keyframes`
   }
 `
 
-function getShimmerStyles(
+export function getShimmerStyles(
   color1 = 'var(--md-sys-color-surface-container-high)',
   color2 = 'var(--md-sys-color-surface-container-highest)',
   config: { speed?: number; opacity?: number; delay?: number } = {},

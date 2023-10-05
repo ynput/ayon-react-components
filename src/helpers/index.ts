@@ -1,0 +1,1 @@
+export { getShimmerStyles } from './getShimmerStyles'
