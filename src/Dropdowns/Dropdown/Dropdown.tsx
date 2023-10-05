@@ -1,4 +1,4 @@
-import React, { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
+import React, { CSSProperties, forwardRef, useEffect, RefObject, useImperativeHandle } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
@@ -90,10 +90,16 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   disabledValues?: (string | number)[]
   listInline?: boolean
   disableOpen?: boolean
-  openOnFocus?: boolean
 }
 
-export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
+export interface DropdownRef {
+  getElement: () => HTMLDivElement | null
+  getOptions: () => HTMLUListElement | null
+  open: () => void
+  close: () => void
+}
+
+export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
   (
     {
       value: initialValue = [],
@@ -140,7 +146,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       disabledValues = [],
       listInline = false,
       disableOpen = false,
-      openOnFocus = false,
       ...props
     },
     ref,
@@ -183,6 +188,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [maxOptionsShown])
 
     // REFS
+    const elementRef = useRef<HTMLDivElement>(null)
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
     const searchRef = useRef<HTMLInputElement>(null)
@@ -433,14 +439,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onOpen && onOpen()
     }
 
-    const handleOnFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-      setTimeout(() => {
-        if (openOnFocus && !isOpen) {
-          handleOpen(e, true)
-        }
-      }, 100)
-    }
-
     const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
 
     // KEY BOARD CONTROL
@@ -497,7 +495,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         e.code === 'Tab'
       ) {
         // prevent reloads
-        e.preventDefault()
+        if (e.code !== 'Tab') e.preventDefault()
+
+        // if closed and pressing tab, ignore and focus next item (default)
+        if (!isOpen && e.code === 'Tab') return
 
         // open
         if (!isOpen) {
@@ -607,6 +608,18 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       dropIcon,
     ])
 
+    // attach the refs to the ref
+    useImperativeHandle(
+      ref,
+      () => ({
+        getElement: () => elementRef.current,
+        getOptions: () => optionsRef.current,
+        open: () => setIsOpen(true),
+        close: () => setIsOpen(false),
+      }),
+      [elementRef, valueRef, optionsRef, searchRef],
+    )
+
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
     return (
       <Styled.Dropdown
@@ -614,7 +627,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         onMouseMove={() => usingKeyboard && setUsingKeyboard(false)}
         style={style}
         className={`dropdown ${className}`}
-        ref={ref}
+        ref={elementRef}
         {...props}
       >
         {value && (
@@ -626,7 +639,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
             style={buttonStyle}
             className={`button ${buttonClassName}`}
-            onFocus={handleOnFocus}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
