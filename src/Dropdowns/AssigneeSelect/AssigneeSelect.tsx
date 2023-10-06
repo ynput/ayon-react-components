@@ -1,5 +1,5 @@
 import { AssigneeField, AssigneeDropdownTemplate, AssigneeFieldProps } from '.'
-import { Dropdown, DropdownProps } from '../Dropdown'
+import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { forwardRef, useMemo } from 'react'
 
 export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'emptyMessage'> {
@@ -23,7 +23,7 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
   onAssigneeFieldClick?: AssigneeFieldProps['onClick']
 }
 
-export const AssigneeSelect = forwardRef<HTMLDivElement, AssigneeSelectProps>(
+export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
   (
     {
       value = [],

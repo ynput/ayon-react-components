@@ -1,6 +1,6 @@
 import { forwardRef, useMemo } from 'react'
 import * as Styled from './IconSelect.styled'
-import { Dropdown, DropdownProps } from '../Dropdown'
+import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../../Icon'
 
 export interface IconTemplateProps {
@@ -30,7 +30,7 @@ export interface IconSelectProps
   multiSelect?: DropdownProps['multiSelect']
 }
 
-export const IconSelect = forwardRef<HTMLDivElement, IconSelectProps>(
+export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
   ({ value, onChange, featured = [], multiSelect, featuredOnly, ...props }, ref) => {
     const dropdownOptions = useMemo(() => {
       const dropdownOptions = []

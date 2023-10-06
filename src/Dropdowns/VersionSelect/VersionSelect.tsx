@@ -1,5 +1,5 @@
 import { FC, useMemo, forwardRef, Ref } from 'react'
-import { Dropdown, DropdownProps } from '../Dropdown'
+import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import * as Styled from './VersionSelect.styled'
 
 export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'value' | 'onChange'> {
@@ -9,8 +9,8 @@ export interface VersionSelectProps extends Omit<DropdownProps, 'options' | 'val
   onChange: (value: string[]) => void
 }
 
-export const VersionSelect: FC<VersionSelectProps> = forwardRef(
-  ({ value, versions, version, onChange, ...props }, ref: Ref<HTMLDivElement>) => {
+export const VersionSelect = forwardRef<DropdownRef, VersionSelectProps>(
+  ({ value, versions, version, onChange, ...props }, ref) => {
     // we need to find the intersection of all versions
     const intersection = useMemo(
       () =>
