@@ -108,7 +108,7 @@ export const Container = styled.div<{
   height: min-content;
 
   position: fixed;
-  z-index: 60;
+  z-index: 2000;
 
   animation: ${dropdownMenuAnimation()} 0.03s ease-in-out forwards;
   transform-origin: top center;
