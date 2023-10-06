@@ -1,4 +1,4 @@
-import { CSSProperties, forwardRef, useEffect, RefObject } from 'react'
+import React, { CSSProperties, forwardRef, useEffect, RefObject, useImperativeHandle } from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
@@ -8,6 +8,8 @@ import { InputText } from '../../Inputs/InputText'
 import { Icon, IconType } from '../../Icon'
 import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
+import 'overlayscrollbars/overlayscrollbars.css'
+import { createPortal } from 'react-dom'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -88,10 +90,16 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   disabledValues?: (string | number)[]
   listInline?: boolean
   disableOpen?: boolean
-  openOnFocus?: boolean
 }
 
-export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
+export interface DropdownRef {
+  getElement: () => HTMLDivElement | null
+  getOptions: () => HTMLUListElement | null
+  open: () => void
+  close: () => void
+}
+
+export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
   (
     {
       value: initialValue = [],
@@ -138,7 +146,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       disabledValues = [],
       listInline = false,
       disableOpen = false,
-      openOnFocus = false,
       ...props
     },
     ref,
@@ -162,10 +169,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       left?: number | null
       right?: number | null
       y: number | null
-    }>({ left: null, right: null, y: 0 })
-    const [startAnimation, setStartAnimation] = useState(false)
-    const [startAnimationFinished, setStartAnimationFinished] = useState(false)
-    const [optionsHeight, setOptionsHeight] = useState(0)
+    }>({ left: null, right: null, y: null })
     const [minWidth, setMinWidth] = useState(0)
     // search
     const [searchForm, setSearchForm] = useState('')
@@ -184,6 +188,7 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     }, [maxOptionsShown])
 
     // REFS
+    const elementRef = useRef<HTMLDivElement>(null)
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
     const searchRef = useRef<HTMLInputElement>(null)
@@ -193,21 +198,18 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     // USE EFFECTS
     // sets the correct position and height
     useEffect(() => {
-      if (isOpen && valueRef.current && optionsRef.current) {
+      if (isOpen && valueRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
-        const valueWidth = valueRec.width
+        const valueWidth = valueRec.width - 2
         const valueHeight = valueRec.height
-
-        const optionsRec = optionsRef.current.getBoundingClientRect()
-        const optionsHeight = optionsRec.height
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        let y = valueRec.y + (listInline ? 0 : valueHeight)
+        let y = valueRec.y + (listInline ? 0 : valueHeight) - 1
 
         // check it's not vertically off screen
-        if (optionsHeight + y + 20 > window.innerHeight) {
-          y = window.innerHeight - optionsHeight - 20
+        if (maxHeight + y + 20 > window.innerHeight) {
+          y = window.innerHeight - maxHeight - 20
         }
 
         if (align === 'right') {
@@ -218,16 +220,8 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         }
 
         if (widthExpand) setMinWidth(valueWidth)
-
-        // console.log(optionsHeight)
-
-        // then start animation
-        setStartAnimation(true)
-        setOptionsHeight(optionsHeight)
-      } else {
-        setStartAnimation(false)
       }
-    }, [isOpen, valueRef, optionsRef, setMinWidth, setStartAnimation, setPos])
+    }, [isOpen, valueRef, setMinWidth, setPos])
 
     // set initial selected from value
     useEffect(() => {
@@ -238,25 +232,24 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
     useEffect(() => {
       // focus element
       if (usingKeyboard) {
-        const childNode = optionsRef.current?.childNodes[activeIndex || 0] as HTMLLIElement
+        const optionEl = optionsRef.current
+        if (!optionEl) return
+        const childNode = optionEl.childNodes[activeIndex || 0] as HTMLLIElement
         // scroll
-        const parentHeight = optionsRef.current?.getBoundingClientRect().height || 0
+        const parentHeight = optionEl.getBoundingClientRect().height || 0
 
         const childNodeRect = childNode?.getBoundingClientRect()
-        const parentRect = optionsRef.current?.getBoundingClientRect()
+        const parentRect = optionEl.getBoundingClientRect()
 
         const childTop = childNodeRect?.top - (parentRect?.top || 0)
         const childBottom = childNodeRect?.bottom - (parentRect?.top || 0)
 
         if (childBottom > parentHeight + 1) {
           // scroll down
-          optionsRef.current?.scrollTo(
-            0,
-            optionsRef.current?.scrollTop + (childBottom - parentHeight),
-          )
+          optionEl.scrollTo(0, optionEl.scrollTop + (childBottom - parentHeight))
         } else if (childTop - 1 < 0) {
           // scroll up
-          optionsRef.current?.scrollTo(0, optionsRef.current?.scrollTop + childTop - 1)
+          optionEl.scrollTo(0, optionEl.scrollTop + childTop - 1)
         }
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
@@ -321,8 +314,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // close dropdown
       setIsOpen(false)
-      // reset animation
-      setStartAnimationFinished(false)
 
       // reset keyboard
       setActiveIndex(null)
@@ -332,6 +323,9 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
 
       // reset search
       setSearchForm('')
+
+      // reset width
+      setMinWidth(0)
 
       // check if value has changed
       const isSame = isEqual(changeValue, value)
@@ -445,14 +439,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       onOpen && onOpen()
     }
 
-    const handleOnFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-      setTimeout(() => {
-        if (openOnFocus && !isOpen) {
-          handleOpen(e, true)
-        }
-      }, 100)
-    }
-
     const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
 
     // KEY BOARD CONTROL
@@ -509,7 +495,10 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
         e.code === 'Tab'
       ) {
         // prevent reloads
-        e.preventDefault()
+        if (e.code !== 'Tab') e.preventDefault()
+
+        // if closed and pressing tab, ignore and focus next item (default)
+        if (!isOpen && e.code === 'Tab') return
 
         // open
         if (!isOpen) {
@@ -599,7 +588,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       style: valueStyle,
       placeholder,
       isOpen,
-      setStartAnimationFinished,
       className: valueClassName,
     }
 
@@ -620,13 +608,26 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
       dropIcon,
     ])
 
+    // attach the refs to the ref
+    useImperativeHandle(
+      ref,
+      () => ({
+        getElement: () => elementRef.current,
+        getOptions: () => optionsRef.current,
+        open: () => setIsOpen(true),
+        close: () => setIsOpen(false),
+      }),
+      [elementRef, valueRef, optionsRef, searchRef],
+    )
+
+    const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
     return (
       <Styled.Dropdown
         onKeyDown={handleKeyPress}
         onMouseMove={() => usingKeyboard && setUsingKeyboard(false)}
         style={style}
         className={`dropdown ${className}`}
-        ref={ref}
+        ref={elementRef}
         {...props}
       >
         {value && (
@@ -638,7 +639,6 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             $isOpen={isOpen}
             style={buttonStyle}
             className={`button ${buttonClassName}`}
-            onFocus={handleOnFocus}
           >
             {valueTemplateNode ? (
               valueTemplateNode(value, selected, isOpen)
@@ -653,96 +653,96 @@ export const Dropdown = forwardRef<HTMLDivElement, DropdownProps>(
             )}
           </Styled.Button>
         )}
-        {isOpen && options && (
-          <Styled.Container
-            style={{
-              left: pos?.left || 'unset',
-              right: pos?.right || 'unset',
-              top: pos?.y || 'unset',
-              ...itemStyle,
-            }}
-            $message={message || ''}
-            $isOpen={true}
-            onSubmit={handleSearchSubmit}
-            $startAnimation={startAnimation}
-            ref={formRef}
-          >
-            {(search || editable) && (
-              <Styled.Search $startAnimation={startAnimation} className="search">
-                <Icon icon={'search'} />
-                <InputText
-                  value={searchForm}
-                  onChange={(e) => setSearchForm(e.target.value)}
-                  autoFocus
-                  tabIndex={0}
-                  ref={searchRef}
-                  onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
-                />
-              </Styled.Search>
-            )}
-            <Styled.Options
+
+        {!!isShowOptions &&
+          createPortal(
+            <Styled.Container
+              style={{
+                left: pos?.left || 'unset',
+                right: pos?.right || 'unset',
+                top: pos?.y || 'unset',
+                ...itemStyle,
+              }}
               $message={message || ''}
-              $search={!!search || !!editable}
-              ref={optionsRef}
-              style={{ minWidth, ...listStyle }}
-              $startAnimation={startAnimation}
-              $animationHeight={optionsHeight}
-              $maxHeight={maxHeight}
-              onAnimationEnd={() => setStartAnimationFinished(true)}
-              className={'options'}
+              $isOpen={true}
+              onSubmit={handleSearchSubmit}
+              ref={formRef}
             >
-              {showOptions.map((option, i) => (
-                <Styled.ListItem
-                  key={`${option[dataKey]}-${i}`}
-                  onClick={(e) =>
-                    !disabledValues.includes(option[dataKey]) && handleChange(option[dataKey], i, e)
-                  }
-                  $focused={usingKeyboard && activeIndex === i}
-                  $usingKeyboard={usingKeyboard}
-                  $startAnimation={
-                    startAnimation && !startAnimationFinished && (search || editable || i !== 0)
-                  }
-                  tabIndex={0}
-                  className={`option ${listClassName}`}
-                  $disabled={disabledValues.includes(option[dataKey])}
-                >
-                  {itemTemplate ? (
-                    itemTemplate(
-                      option,
-                      value.includes(option[dataKey]),
-                      selected.includes(option[dataKey]),
-                      i,
-                    )
-                  ) : (
-                    <Styled.DefaultItem
-                      $isSelected={selected.includes(option[dataKey])}
-                      className={`option-child ${
-                        value.includes(option[dataKey]) ? 'selected' : ''
-                      } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
-                      style={itemStyle}
-                    >
-                      {option.icon && <Icon icon={option.icon} />}
-                      <span>{option[labelKey] || option[dataKey]}</span>
-                    </Styled.DefaultItem>
-                  )}
-                </Styled.ListItem>
-              ))}
-              {!!hiddenLength && (
-                <Styled.ListItem
-                  onClick={handleShowMore}
-                  $focused={false}
-                  $usingKeyboard={false}
-                  $startAnimation={startAnimation}
-                  className="option"
-                >
-                  <Styled.DefaultItem $isSelected={false} className="option-child hidden">
-                    <span>{`Show ${50} more...`}</span>
-                  </Styled.DefaultItem>
-                </Styled.ListItem>
+              {(search || editable) && (
+                <Styled.Search className="search">
+                  <Icon icon={'search'} />
+                  <InputText
+                    value={searchForm}
+                    onChange={(e) => setSearchForm(e.target.value)}
+                    autoFocus
+                    tabIndex={0}
+                    ref={searchRef}
+                    onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
+                  />
+                </Styled.Search>
               )}
-            </Styled.Options>
-          </Styled.Container>
-        )}
+              <Styled.Scrollable
+                style={{ maxHeight }}
+                $message={message || ''}
+                $search={!!search || !!editable}
+                defer
+              >
+                <Styled.Options
+                  style={{ minWidth, ...listStyle }}
+                  className={'options'}
+                  ref={optionsRef}
+                >
+                  {showOptions.map((option, i) => (
+                    <Styled.ListItem
+                      key={`${option[dataKey]}-${i}`}
+                      onClick={(e) =>
+                        !disabledValues.includes(option[dataKey]) &&
+                        handleChange(option[dataKey], i, e)
+                      }
+                      $focused={usingKeyboard && activeIndex === i}
+                      $usingKeyboard={usingKeyboard}
+                      tabIndex={0}
+                      className={`option ${listClassName}`}
+                      $disabled={disabledValues.includes(option[dataKey])}
+                    >
+                      {itemTemplate ? (
+                        itemTemplate(
+                          option,
+                          value.includes(option[dataKey]),
+                          selected.includes(option[dataKey]),
+                          i,
+                        )
+                      ) : (
+                        <Styled.DefaultItem
+                          $isSelected={selected.includes(option[dataKey])}
+                          className={`option-child ${
+                            value.includes(option[dataKey]) ? 'selected' : ''
+                          } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
+                          style={itemStyle}
+                        >
+                          {option.icon && <Icon icon={option.icon} />}
+                          <span>{option[labelKey] || option[dataKey]}</span>
+                        </Styled.DefaultItem>
+                      )}
+                    </Styled.ListItem>
+                  ))}
+                  {!!hiddenLength && (
+                    <Styled.ListItem
+                      onClick={handleShowMore}
+                      $focused={false}
+                      $usingKeyboard={false}
+                      className="option"
+                    >
+                      <Styled.DefaultItem $isSelected={false} className="option-child hidden">
+                        <span>{`Show ${50} more...`}</span>
+                      </Styled.DefaultItem>
+                    </Styled.ListItem>
+                  )}
+                </Styled.Options>
+              </Styled.Scrollable>
+            </Styled.Container>,
+            document.body,
+          )}
       </Styled.Dropdown>
     )
   },

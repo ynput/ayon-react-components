@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Dropdown, DropdownProps } from '.'
-import { useState } from 'react'
+import { Dropdown, DropdownProps, DropdownRef } from '.'
+import { useRef, useState } from 'react'
 import { Button } from '../../Button'
 import { IconType } from '../../Icon'
 import { InputText } from '../../Inputs/InputText'
@@ -32,6 +32,7 @@ const options: { value: IconType; keyword: string }[] = [
 
 const Template = (args: DropdownProps) => {
   const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
+  const dropdownRef = useRef<DropdownRef>(null)
 
   const handleClear = () => {
     // if minSelected is set, we need to set the value to the minSelected
@@ -57,8 +58,10 @@ const Template = (args: DropdownProps) => {
           width: 250,
           ...args.style,
         }}
+        ref={dropdownRef}
       />
       <InputText />
+      <Button label="Open dropdown" onClick={() => dropdownRef.current?.open()} />
     </Toolbar>
   )
 }
@@ -72,7 +75,6 @@ export const Icons: Story = {
     widthExpand: true,
     maxHeight: 180,
     onClear: undefined,
-    openOnFocus: true,
   },
   render: Template,
 }
@@ -101,7 +103,6 @@ export const Search: Story = {
     onClear: undefined,
     placeholder: 'Selected an Icon...',
     value: [],
-    openOnFocus: true,
   },
   render: Template,
 }
