@@ -1,4 +1,4 @@
-import { DropdownProps } from '../Dropdown'
+import { DropdownProps, DropdownRef } from '../Dropdown'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { TagsSelectValueTemplate, TagsSelectValueTemplateProps } from './TagsSelectValueTemplate'
 import { type TagsOrderType, type TagsType } from './tags'
@@ -25,7 +25,7 @@ export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   valueProps?: TagsSelectValueTemplateProps
 }
 
-export const TagsSelect = forwardRef<HTMLDivElement, TagsSelectProps>(
+export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
   (
     {
       value: inputValue = [],
