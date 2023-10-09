@@ -29,7 +29,7 @@ export const TableRow = forwardRef<HTMLDivElement, TableRowProps>(
         <Styled.Title $tooltip={tooltip}>{name}</Styled.Title>
         {!hasChildren &&
           (type === 'boolean' ? (
-            <Icon icon={value ? 'check' : 'close'} />
+            <InputSwitch checked={!!value} compact disabled />
           ) : value ? (
             <OverflowField value={value} onClick={onCopy} />
           ) : (
