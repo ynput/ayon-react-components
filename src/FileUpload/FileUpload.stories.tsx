@@ -113,6 +113,15 @@ export const MultipleNoSeq: Story = {
   render: Template,
 }
 
+export const SeqOnly: Story = {
+  args: {
+    allowMultiple: true,
+    onlySequences: true,
+    allowSequence: true,
+  },
+  render: Template,
+}
+
 export const CustomUpload: Story = {
   args: {
     allowMultiple: true,
