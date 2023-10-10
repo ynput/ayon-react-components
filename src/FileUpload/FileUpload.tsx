@@ -28,6 +28,7 @@ export interface FileUploadProps extends FormProps {
   setFiles: React.Dispatch<React.SetStateAction<CustomFile[]>>
   allowMultiple?: boolean
   allowSequence?: boolean
+  allowBrokenSequence?: boolean
   onlySequences?: boolean
   accept?: (AcceptType | string)[]
   confirmLabel?: string
@@ -58,6 +59,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       setFiles,
       allowMultiple = false,
       allowSequence = false,
+      allowBrokenSequence = false,
       onlySequences = false,
       accept = ['*'],
       confirmLabel,
@@ -324,6 +326,12 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           } else {
             continue
           }
+        }
+
+        // check if broken sequences are allow and if the sequence is broken
+        if (counts.length > 1 && !allowBrokenSequence) {
+          setErrorMessage('Broken sequences not allowed')
+          continue
         }
 
         // sort the files by filename

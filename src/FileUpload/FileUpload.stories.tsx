@@ -92,6 +92,7 @@ export const AllAllowed: Story = {
   args: {
     allowMultiple: true,
     allowSequence: true,
+    allowBrokenSequence: true,
   },
   render: Template,
 }
