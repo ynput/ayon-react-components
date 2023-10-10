@@ -84,7 +84,11 @@ export const FileCard: FC<FileCardProps> = ({
 
   return (
     <Styled.FileCard $isFetching={isFetching} {...props} $message={message} $first={index === 0}>
-      {preview ? <img src={preview} /> : <Icon icon={typeIcon} />}
+      {preview ? (
+        <img src={preview} className="preview image" />
+      ) : (
+        <Icon icon={typeIcon} className="preview" />
+      )}
       <span className="title">{title}</span>
       {length > 1 && <span className="length">{`(${length} files)`}</span>}
       <Spacer />
@@ -102,6 +106,7 @@ export const FileCard: FC<FileCardProps> = ({
         variant="text"
         $variant="text"
         $selected={false}
+        className="sequence-split-button"
       />
       {!readOnly && (
         <Styled.Icon
@@ -111,6 +116,7 @@ export const FileCard: FC<FileCardProps> = ({
           $selected={false}
           onClick={onRemove}
           disabled={isFetching || disabled}
+          className="sequence-remove-button"
         />
       )}
       {readOnly && (
@@ -119,6 +125,7 @@ export const FileCard: FC<FileCardProps> = ({
           style={{
             color: !message ? 'white' : 'var(--md-custom-color-warning)',
           }}
+          className="status-icon"
         />
       )}
     </Styled.FileCard>

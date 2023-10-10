@@ -28,6 +28,8 @@ export interface FileUploadProps extends FormProps {
   setFiles: React.Dispatch<React.SetStateAction<CustomFile[]>>
   allowMultiple?: boolean
   allowSequence?: boolean
+  allowBrokenSequence?: boolean
+  onlySequences?: boolean
   accept?: (AcceptType | string)[]
   confirmLabel?: string
   saveButton?: React.ReactNode
@@ -57,6 +59,8 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       setFiles,
       allowMultiple = false,
       allowSequence = false,
+      allowBrokenSequence = false,
+      onlySequences = false,
       accept = ['*'],
       confirmLabel,
       saveButton,
@@ -216,7 +220,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         }
 
         // check we can even have sequences
-        if (!allowSequence) {
+        if (!allowSequence && !onlySequences) {
           acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
           continue
         }
@@ -225,7 +229,11 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         const seqMatch = extractSequence(fileName)
 
         if (!seqMatch.length) {
-          acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
+          if (!onlySequences) {
+            acceptedFiles.push({ file, sequenceNumber: null, sequenceId: null })
+          } else {
+            setErrorMessage('Only sequences allowed')
+          }
           continue
         }
 
@@ -304,14 +312,26 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       // for each sequence
       for (const [id, { files, counts }] of Object.entries(sequences)) {
         if (files.length < 2) {
-          // if there is only one file in the sequence, add it to the accepted files
-          acceptedFiles.push({ ...files[0], sequenceId: null, sequenceNumber: null })
+          if (!onlySequences) {
+            // if there is only one file in the sequence, add it to the accepted files
+            acceptedFiles.push({ ...files[0], sequenceId: null, sequenceNumber: null })
+          } else {
+            // we must have a sequence, discard if file is not part of a sequence
+            setErrorMessage('Only sequences allowed')
+            continue
+          }
           if (!allowMultiple && allowSequence) {
             setErrorMessage('Only 1 file allowed')
             break
           } else {
             continue
           }
+        }
+
+        // check if broken sequences are allow and if the sequence is broken
+        if (counts.length > 1 && !allowBrokenSequence) {
+          setErrorMessage('Broken sequences not allowed')
+          continue
         }
 
         // sort the files by filename
@@ -434,9 +454,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       return groupedFiles
     }, [filesToGroup])
 
-    const allowedFileTypes = `Allowed:${allowMultiple ? ' Multiple,' : ' Single,'}${
-      allowSequence ? ' Sequence,' : ''
-    }${accept.length ? ' ' + accept.join(', ') : ' All Files Types'}`
+    const allowedFileTypes = `Allowed:${allowMultiple ? ' Multiple uploads,' : ' Single upload,'}${
+      allowSequence ? ` Sequence${onlySequences ? ' only' : ''},` : ''
+    }${accept.length && accept.join('') !== '*' ? ' ' + accept.join(', ') : ' All files types'}`
 
     return (
       <Styled.Form
