@@ -177,6 +177,9 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
       let acceptedFiles: CustomFile[] = []
 
+      // sort files by name
+      const newFilesArray = Array.from(newFiles).sort((a, b) => a.name.localeCompare(b.name))
+
       // split files into sequences and single files
       const sequences: {
         [key: string]: {
@@ -189,7 +192,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       } = {}
 
       // for each file in the list
-      for (const file of newFiles) {
+      for (const file of newFilesArray) {
         const fileName = file.name
         const extension = fileName.split('.').pop()
         const extensionWithDot = '.' + extension
