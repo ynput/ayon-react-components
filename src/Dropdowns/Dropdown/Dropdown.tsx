@@ -170,6 +170,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       right?: number | null
       y: number | null
     }>({ left: null, right: null, y: null })
+    // if the dropdown is vertically off screen
+    const [offScreen, setOffScreen] = useState(false)
 
     const [minWidth, setMinWidth] = useState(0)
     // search
@@ -213,8 +215,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         let y = valueRec.y + (listInline ? 0 : valueHeight)
 
         // check it's not vertically off screen
+        // in CSS we transformY by -100%
         if (optionsHeight + y + 10 > window.innerHeight) {
-          y = window.innerHeight - optionsHeight - 20
+          y = valueRec.y
+          setOffScreen(true)
         }
 
         if (align === 'right') {
@@ -666,6 +670,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 left: pos?.left || 'unset',
                 right: pos?.right || 'unset',
                 top: pos?.y || 'unset',
+                translate: offScreen ? '0 -100%' : 'none',
+                transformOrigin: offScreen ? 'center bottom' : 'center top',
                 ...itemStyle,
               }}
               $message={message || ''}

@@ -186,7 +186,7 @@ export const Scrolled: Story = {
             key={i}
             {...args}
             value={args.value || [options[0].value]}
-            options={[...options, ...options].splice(0, 5)}
+            options={[...options, ...options]}
             widthExpand
             style={{
               width: 250,
