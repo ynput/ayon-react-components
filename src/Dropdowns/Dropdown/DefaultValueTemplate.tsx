@@ -25,8 +25,8 @@ const DefaultValueStyled = styled.div`
   .icon.control {
     transition: transform 0.15s;
     /* scale and opacity goes to 0 when open  */
-    ${({ isOpen }: { isOpen: boolean }) =>
-      isOpen &&
+    ${({ $isOpen }: { $isOpen: boolean }) =>
+      $isOpen &&
       css`
         &:not(#clear) {
           transform: rotate(180deg);
@@ -81,7 +81,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   const noValue = !value.length
 
   return (
-    <DefaultValueStyled style={style} isOpen={!!isOpen} className={className}>
+    <DefaultValueStyled style={style} $isOpen={!!isOpen} className={className}>
       {noValue ? (
         <>
           <ContentStyled>
