@@ -677,6 +677,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               }}
               $message={message || ''}
               $isOpen={true}
+              $hidden={!isShowOptions}
               onSubmit={handleSearchSubmit}
               ref={formRef}
             >

@@ -88,8 +88,8 @@ export const Dropdown = styled.div`
 `
 export const dropdownMenuAnimation = () => keyframes`
     0% {
-      transform: scaleY(0.8) scaleX(0.95);
-      opacity: .3;
+      transform: scaleY(0.85) scaleX(0.95);
+      opacity: .6;
     }
     100% {
       transform: scale(1);
@@ -100,6 +100,7 @@ export const dropdownMenuAnimation = () => keyframes`
 export const Container = styled.div<{
   $isOpen: boolean
   $message: string
+  $hidden: boolean
 }>`
   width: 100%;
   position: relative;
@@ -110,7 +111,11 @@ export const Container = styled.div<{
   position: fixed;
   z-index: 2000;
 
-  animation: ${dropdownMenuAnimation()} 0.06s ease forwards;
+  ${({ $hidden }) =>
+    !$hidden &&
+    css`
+      animation: ${dropdownMenuAnimation()} 0.05s ease-out forwards;
+    `};
   transform-origin: top center;
 
   /* show warning when changing multiple entities */
