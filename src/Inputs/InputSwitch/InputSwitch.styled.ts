@@ -81,7 +81,8 @@ export const Switch = styled.div`
     }
 
     input:focus-visible + * {
-      outline: 2px solid var(--md-sys-color-tertiary) !important;
+      box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-highest),
+        0 0 0 4px var(--md-sys-color-primary);
     }
 
     input:disabled {
