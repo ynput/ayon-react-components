@@ -88,13 +88,13 @@ export const Dropdown = styled.div`
 `
 export const dropdownMenuAnimation = () => keyframes`
     0% {
-      scale: 0.95;
-    opacity: .6;
-  }
-  100% {
-    scale: 1;
-    opacity: 1;
-  }
+      transform: scaleY(0.8) scaleX(0.95);
+      opacity: .3;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   `
 
 export const Container = styled.div<{
@@ -110,7 +110,7 @@ export const Container = styled.div<{
   position: fixed;
   z-index: 2000;
 
-  animation: ${dropdownMenuAnimation()} 0.03s ease-in-out forwards;
+  animation: ${dropdownMenuAnimation()} 0.06s ease forwards;
   transform-origin: top center;
 
   /* show warning when changing multiple entities */
