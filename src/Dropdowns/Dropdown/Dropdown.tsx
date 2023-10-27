@@ -204,7 +204,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     useEffect(() => {
       if (isOpen && valueRef.current && formRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
-        const valueWidth = valueRec.width
+        // -2 for border
+        const valueWidth = valueRec.width - 2
         const valueHeight = valueRec.height
 
         const optionsRec = formRef.current.getBoundingClientRect()
