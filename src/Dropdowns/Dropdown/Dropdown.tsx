@@ -666,7 +666,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           createPortal(
             <Styled.Container
               style={{
-                visibility: isShowOptions ? 'visible' : 'hidden',
+                opacity: isShowOptions ? 1 : 0,
                 left: pos?.left || 'unset',
                 right: pos?.right || 'unset',
                 top: pos?.y || 'unset',
