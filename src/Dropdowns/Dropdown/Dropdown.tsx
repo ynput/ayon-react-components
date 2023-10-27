@@ -170,6 +170,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       right?: number | null
       y: number | null
     }>({ left: null, right: null, y: null })
+    // if the dropdown is vertically off screen
+    const [offScreen, setOffScreen] = useState(false)
+
     const [minWidth, setMinWidth] = useState(0)
     // search
     const [searchForm, setSearchForm] = useState('')
@@ -192,24 +195,30 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const valueRef = useRef<HTMLButtonElement>(null)
     const optionsRef = useRef<HTMLUListElement>(null)
     const searchRef = useRef<HTMLInputElement>(null)
+    const formRef = useRef<HTMLDivElement>(null)
 
     // const [optionsWidth, setOptionsWidth] = useState<null | number>(null)
 
     // USE EFFECTS
     // sets the correct position and height
     useEffect(() => {
-      if (isOpen && valueRef.current) {
+      if (isOpen && valueRef.current && formRef.current) {
         const valueRec = valueRef.current.getBoundingClientRect()
-        const valueWidth = valueRec.width - 2
+        const valueWidth = valueRec.width
         const valueHeight = valueRec.height
+
+        const optionsRec = formRef.current.getBoundingClientRect()
+        const optionsHeight = optionsRec.height
 
         const left = valueRec.x
         const right = window.innerWidth - valueRec.x - valueWidth
-        let y = valueRec.y + (listInline ? 0 : valueHeight) - 1
+        let y = valueRec.y + (listInline ? 0 : valueHeight)
 
         // check it's not vertically off screen
-        if (maxHeight + y + 20 > window.innerHeight) {
-          y = window.innerHeight - maxHeight - 20
+        // in CSS we transformY by -100%
+        if (optionsHeight + y + 10 > window.innerHeight) {
+          y = valueRec.y
+          setOffScreen(true)
         }
 
         if (align === 'right') {
@@ -221,7 +230,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
         if (widthExpand) setMinWidth(valueWidth)
       }
-    }, [isOpen, valueRef, setMinWidth, setPos])
+    }, [isOpen, valueRef, formRef, setMinWidth, setPos])
 
     // set initial selected from value
     useEffect(() => {
@@ -347,7 +356,6 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    const formRef = useRef<HTMLDivElement>(null)
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const handleChange = (
@@ -654,13 +662,16 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           </Styled.Button>
         )}
 
-        {!!isShowOptions &&
+        {isOpen &&
           createPortal(
             <Styled.Container
               style={{
+                visibility: isShowOptions ? 'visible' : 'hidden',
                 left: pos?.left || 'unset',
                 right: pos?.right || 'unset',
                 top: pos?.y || 'unset',
+                translate: offScreen ? '0 -100%' : 'none',
+                transformOrigin: offScreen ? 'center bottom' : 'center top',
                 ...itemStyle,
               }}
               $message={message || ''}

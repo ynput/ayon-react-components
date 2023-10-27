@@ -5,6 +5,7 @@ import { Button } from '../../Button'
 import { IconType } from '../../Icon'
 import { InputText } from '../../Inputs/InputText'
 import { Toolbar } from '../../Layout/Toolbar'
+import { Panel } from '../../Panels/Panel'
 
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
@@ -174,4 +175,28 @@ export const CustomTemplates: Story = {
     ),
   },
   render: Template,
+}
+
+export const Scrolled: Story = {
+  render: (args: DropdownProps) => {
+    return (
+      <Panel style={{ overflow: 'scroll', position: 'absolute', inset: 0 }}>
+        {Array.from(Array(50).keys()).map((i) => (
+          <Dropdown
+            key={i}
+            {...args}
+            value={args.value || [options[0].value]}
+            options={[...options, ...options]}
+            widthExpand
+            style={{
+              width: 250,
+              height: 32,
+              flex: 'none',
+              ...args.style,
+            }}
+          />
+        ))}
+      </Panel>
+    )
+  },
 }
