@@ -37,12 +37,6 @@ const Template = (args: DropdownProps) => {
   )
   const dropdownRef = useRef<DropdownRef>(null)
 
-  const handleClear = () => {
-    // if minSelected is set, we need to set the value to the minSelected
-    const newValue = args.minSelected ? options.slice(0, args.minSelected).map((o) => o.value) : []
-    setValue(newValue)
-  }
-
   const handleChange = (v: (string | number)[]) => {
     console.log(v)
     setValue(v)
@@ -55,7 +49,7 @@ const Template = (args: DropdownProps) => {
         value={value}
         onChange={handleChange}
         options={args.options || options}
-        onClear={args.onClear && handleClear}
+        onClear={args.onClear && setValue}
         widthExpand
         style={{
           width: 250,
@@ -208,8 +202,10 @@ export const InvalidValue: Story = {
   args: {
     placeholder: 'Select a value...',
     onClear: () => console.log('clear'),
+    onClearNullValue: true,
     value: null,
     multiSelect: true,
+    nullPlaceholder: 'No value (custom placeholder)',
   },
   render: Template,
 }

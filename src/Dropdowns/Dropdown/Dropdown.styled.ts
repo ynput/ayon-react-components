@@ -77,6 +77,7 @@ export const Dropdown = styled.div`
   height: 32px;
   /* width: 100%; */
   display: inline-block;
+  overflow: hidden;
 
   button {
     width: 100%;

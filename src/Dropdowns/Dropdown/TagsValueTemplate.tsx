@@ -17,7 +17,7 @@ const TagsValueTemplate: FC<Omit<DefaultValueTemplateProps, 'children'>> = (prop
       valueStyle={{ gap: 4, display: 'flex' }}
       style={{ padding: '0 4px' }}
     >
-      {value.map((v) => (
+      {value?.map((v) => (
         <TagStyled key={v}>{v}</TagStyled>
       ))}
     </DefaultValueTemplate>

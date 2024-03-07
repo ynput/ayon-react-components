@@ -28,7 +28,7 @@ const DefaultValueStyled = styled.div`
     ${({ $isOpen }: { $isOpen: boolean }) =>
       $isOpen &&
       css`
-        &:not(#clear) {
+        &:not(#clear):not(#backspace) {
           transform: rotate(180deg);
         }
       `}
@@ -52,7 +52,13 @@ const ContentStyled = styled.div`
 export interface DefaultValueTemplateProps
   extends Pick<
     DropdownProps,
-    'value' | 'isMultiple' | 'dropIcon' | 'onClear' | 'onClearNoValue' | 'placeholder'
+    | 'value'
+    | 'isMultiple'
+    | 'dropIcon'
+    | 'onClear'
+    | 'onClearNullValue'
+    | 'nullPlaceholder'
+    | 'placeholder'
   > {
   displayIcon?: string
   style?: React.CSSProperties
@@ -69,7 +75,8 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   dropIcon = 'expand_more',
   displayIcon,
   onClear,
-  onClearNoValue,
+  onClearNullValue,
+  nullPlaceholder,
   children,
   style,
   valueStyle,
@@ -80,15 +87,42 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
 }) => {
   const noValue = !value?.length
 
+  const handleOnClearClick = (value: null | []) => {
+    onClear && onClear(value)
+  }
+
   return (
     <DefaultValueStyled style={style} $isOpen={!!isOpen} className={className}>
       {noValue ? (
         <>
           <ContentStyled>
-            <ValueStyled>{placeholder}</ValueStyled>
+            <ValueStyled style={{ opacity: 0.5 }}>
+              {value === null
+                ? nullPlaceholder || '(no value)'
+                : onClearNullValue
+                ? '(empty list)'
+                : placeholder}
+            </ValueStyled>
           </ContentStyled>
-          {onClear && onClearNoValue && (
-            <Icon icon={'close'} onClick={onClear} id="clear" className="control" tabIndex={0} />
+          {onClear && onClearNullValue && (
+            <>
+              <Icon
+                icon={'backspace'}
+                onClick={() => handleOnClearClick(null)}
+                id={'backspace'}
+                className="control"
+                tabIndex={0}
+                data-tooltip={'Clear to NULL'}
+              />
+              <Icon
+                icon={'close'}
+                onClick={() => handleOnClearClick([])}
+                id={'clear'}
+                className="control"
+                tabIndex={0}
+                data-tooltip={'Clear to empty list'}
+              />
+            </>
           )}
         </>
       ) : (
@@ -99,8 +133,25 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
+          {onClear && onClearNullValue && (
+            <Icon
+              icon={'backspace'}
+              onClick={() => handleOnClearClick(null)}
+              id={'backspace'}
+              className="control"
+              tabIndex={0}
+              data-tooltip={'Clear to NULL'}
+            />
+          )}
           {onClear && (
-            <Icon icon={'close'} onClick={onClear} id="clear" className="control" tabIndex={0} />
+            <Icon
+              icon={'close'}
+              onClick={() => handleOnClearClick([])}
+              id="clear"
+              className="control"
+              tabIndex={0}
+              data-tooltip={'Clear to empty list'}
+            />
           )}
         </>
       )}

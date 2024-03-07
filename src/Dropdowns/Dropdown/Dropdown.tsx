@@ -82,8 +82,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   minSelected?: number
   maxSelected?: number
   dropIcon?: IconType
-  onClear?: () => void
-  onClearNoValue?: boolean
+  onClear?: (value: null | []) => void
+  onClearNullValue?: boolean // show clear button when no value and changes icon to clear null
+  nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
   disableReorder?: boolean
@@ -139,7 +140,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
-      onClearNoValue,
+      onClearNullValue,
+      nullPlaceholder,
       editable,
       maxHeight = 300,
       disableReorder,
@@ -178,7 +180,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // search
     const [searchForm, setSearchForm] = useState('')
     // selection
-    const [selected, setSelected] = useState<(string | number)[]>([])
+    const [selected, setSelected] = useState<(string | number)[] | null>([])
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -236,7 +238,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // set initial selected from value
     useEffect(() => {
-      setSelected(compact(value))
+      setSelected(value)
     }, [value, setSelected])
 
     // keyboard support
@@ -316,7 +318,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     const handleClose = (
       e?: React.MouseEvent<HTMLDivElement>,
-      changeValue?: (string | number)[],
+      changeValue?: (string | number)[] | null,
       outside?: boolean,
     ): void => {
       // changeValue is used on single select
@@ -350,7 +352,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
 
       // commit changes
-      onChange && onChange(changeValue)
+      onChange && changeValue && onChange(changeValue)
       setValue(changeValue)
       //   reset selected
       // setSelected([])
@@ -369,7 +371,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
-      let newSelected = [...selected]
+      let newSelected = selected ? [...selected] : []
 
       const addingNew = editable && index === 0
 
@@ -418,12 +420,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
-    const handleClear = () => {
+    const handleClear = (value: null | []) => {
       if (!onClear) return
 
-      if (selected.length > minSelected || onClearNoValue) {
+      if ((selected?.length || 0) > minSelected || onClearNullValue) {
         setSelected([])
-        onClear()
+        onClear(value)
         setIsOpen(false)
       }
     }
@@ -435,7 +437,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') {
         if (focus) return
-        else return handleClear()
+        else return handleClear([])
+      } else if ((e.target as HTMLDivElement).id === 'backspace') {
+        if (focus) return
+        else return handleClear(null)
       }
       if (isOpen) {
         return handleClose()
@@ -514,16 +519,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         // open
         if (!isOpen) {
           // check not clear button
-          if ((e.target as HTMLDivElement).id === 'clear') return onChange && onChange([])
+          if ((e.target as HTMLDivElement).id === 'clear') {
+            return handleClear([])
+          } else if ((e.target as HTMLDivElement).id === 'backspace') {
+            return handleClear(null)
+          }
           return setIsOpen(true)
         }
 
         if (multiSelect) {
           selectedValue && handleChange(selectedValue, activeIndex || 0)
 
-          // nothing selected and only one option
-          if (options.length === 1 || (options.length === 2 && editable)) {
-            handleClose(undefined, [...selected, options[0][dataKey]])
+          // nothing selected and only one option and not nullable
+          if (options.length === 1 || (options.length === 2 && editable && !onClearNullValue)) {
+            handleClose(undefined, selected ? [...selected] : [], options[0][dataKey])
           }
         } else {
           // convert selectedValue to array
@@ -566,7 +575,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       const values = isOpen ? selected : value || []
       let result: any[] = []
       nonSearchedOptions.forEach((o) => {
-        if (values.includes(o[dataKey])) {
+        if (values?.includes(o[dataKey])) {
           result.push(o[labelKey] || o[dataKey])
         }
       })
@@ -595,7 +604,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       dropIcon,
       displayIcon,
       onClear: onClear ? handleClear : undefined,
-      onClearNoValue,
+      onClearNullValue,
+      nullPlaceholder,
       style: valueStyle,
       placeholder,
       isOpen,
@@ -612,7 +622,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       value,
       isOpen,
       onClear,
-      onClearNoValue,
+      onClearNullValue,
       selected,
       handleClear,
       isMultiple,
@@ -651,7 +661,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           className={`button ${buttonClassName}`}
         >
           {valueTemplateNode ? (
-            valueTemplateNode(value || [], selected, isOpen)
+            valueTemplateNode(value || [], selected || [], isOpen)
           ) : (
             <DefaultValueTemplate {...DefaultValueTemplateProps}>
               {!labels.length && disabled && placeholder
@@ -722,12 +732,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         itemTemplate(
                           option,
                           !!value && value.includes(option[dataKey]),
-                          selected.includes(option[dataKey]),
+                          !!selected?.includes(option[dataKey]),
                           i,
                         )
                       ) : (
                         <Styled.DefaultItem
-                          $isSelected={selected.includes(option[dataKey])}
+                          $isSelected={!!selected?.includes(option[dataKey])}
                           className={`option-child ${
                             value && value.includes(option[dataKey]) ? 'selected' : ''
                           } ${
