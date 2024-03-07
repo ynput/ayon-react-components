@@ -92,6 +92,14 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   &:hover {
     ${cardHoverStyles}
+
+    ${({ $isFullHighlight }) =>
+      $isFullHighlight &&
+      css`
+        .inner-card {
+          background-color: var(--md-sys-color-surface-container-high-hover);
+        }
+      `}
   }
 
   &:active {
@@ -145,8 +153,11 @@ export const Card = styled.div<StyledEntityCardProps>`
       /* when variant = 'basic' titles are blue */
       ${($variant === 'basic' || $isFullHighlight) &&
       css`
-        ${Title} {
+        .inner-card {
           background-color: var(--selection-color);
+        }
+        &:hover .inner-card {
+          background-color: var(--selection-color-hover);
         }
       `}
     `}

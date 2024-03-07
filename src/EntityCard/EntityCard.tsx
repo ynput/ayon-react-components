@@ -139,14 +139,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           <Styled.Row className="row">
             {/* top left */}
             {!hideTitles && (
-              <Styled.Title className="title">
+              <Styled.Title className="inner-card title">
                 {titleIcon && <Icon icon={titleIcon} />}
                 {title && <span className="title">{title}</span>}
               </Styled.Title>
             )}
             {/* top right icon */}
             {!hideIcons && (
-              <Styled.Title className="status">
+              <Styled.Title className="inner-card status">
                 {icon && <Icon icon={icon} style={{ color: iconColor }} />}
               </Styled.Title>
             )}
@@ -157,7 +157,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           <Styled.Row className="row">
             {/* bottom left */}
             {!hideTitles && (
-              <Styled.Title className="subTitle">
+              <Styled.Title className="inner-card subTitle">
                 <span>{subTitle}</span>
               </Styled.Title>
             )}
@@ -169,7 +169,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
             {/* bottom right assignees */}
             {!!assignees?.length && (
-              <Styled.Title className="assignees">
+              <Styled.Title className="inner-card assignees">
                 <UserImagesStacked users={assignees} size={26} gap={-0.5} />
               </Styled.Title>
             )}
