@@ -15,6 +15,7 @@ interface StyledEntityCardProps {
   $isHover?: boolean
   $isDragging?: boolean
   $isDraggable?: boolean
+  $isFullHighlight?: boolean
 }
 
 const cardHoverStyles = css`
@@ -108,7 +109,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     `}
 
   /* when active, set background color */
-  ${({ $isActive, $variant, $isDraggable }) =>
+  ${({ $isActive, $variant, $isDraggable, $isFullHighlight }) =>
     $isActive &&
     css`
       /* set backgrounds */
@@ -142,7 +143,7 @@ export const Card = styled.div<StyledEntityCardProps>`
       }
 
       /* when variant = 'basic' titles are blue */
-      ${$variant === 'basic' &&
+      ${($variant === 'basic' || $isFullHighlight) &&
       css`
         ${Title} {
           background-color: var(--selection-color);
@@ -154,7 +155,8 @@ export const Card = styled.div<StyledEntityCardProps>`
     'var(--md-sys-color-surface-container-high)',
     'var(--md-sys-color-surface-container-highest)',
     {
-      opacity: 1,
+      opacity: 0.5,
+      speed: 1.5,
     },
   )}
 
@@ -187,8 +189,18 @@ export const Card = styled.div<StyledEntityCardProps>`
           /* title card loading styles */
           .row > span {
             /* change color of cards */
-            opacity: 0.7;
+            opacity: 1;
             min-width: 50%;
+            position: relative;
+            /* shimmer */
+            ${getShimmerStyles(
+              'var(--md-sys-color-surface-container-high)',
+              'var(--md-sys-color-surface-container-highest)',
+              {
+                opacity: 0.5,
+                speed: 1.5,
+              },
+            )}
 
             &.status,
             &.notification,

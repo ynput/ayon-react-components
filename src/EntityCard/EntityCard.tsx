@@ -46,6 +46,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean
   assignees?: User[]
   variant?: 'thumbnail' | 'basic' | 'full'
+  isFullHighlight?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -71,6 +72,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       variant = 'full',
       isDragging = false,
       isDraggable = false,
+      isFullHighlight,
       onThumbnailKeyDown,
       onActivate,
       assignees,
@@ -104,6 +106,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isHover={isHover}
         $isDragging={isDragging}
         $isDraggable={isDraggable}
+        $isFullHighlight={isFullHighlight}
         tabIndex={0}
         onClick={(e) => {
           onActivate && onActivate()
@@ -148,7 +151,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Title>
             )}
           </Styled.Row>
-          {!isImageLoading && !isImageValid && (
+          {!isLoading && !isImageLoading && !isImageValid && (
             <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
           )}
           <Styled.Row className="row">
@@ -165,7 +168,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Title>
             )}
             {/* bottom right assignees */}
-            {assignees?.length && (
+            {!!assignees?.length && (
               <Styled.Title className="assignees">
                 <UserImagesStacked users={assignees} size={26} gap={-0.5} />
               </Styled.Title>
