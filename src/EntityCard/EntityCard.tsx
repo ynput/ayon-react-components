@@ -47,6 +47,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   assignees?: User[]
   variant?: 'thumbnail' | 'basic' | 'full'
   isFullHighlight?: boolean
+  isActiveAnimate?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -72,7 +73,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       variant = 'full',
       isDragging = false,
       isDraggable = false,
-      isFullHighlight,
+      isFullHighlight = false,
+      isActiveAnimate = false,
       onThumbnailKeyDown,
       onActivate,
       assignees,
@@ -107,6 +109,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isDragging={isDragging}
         $isDraggable={isDraggable}
         $isFullHighlight={isFullHighlight}
+        $isActiveAnimate={isActiveAnimate}
         tabIndex={0}
         onClick={(e) => {
           onActivate && onActivate()

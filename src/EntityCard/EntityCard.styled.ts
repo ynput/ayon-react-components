@@ -16,6 +16,7 @@ interface StyledEntityCardProps {
   $isDragging?: boolean
   $isDraggable?: boolean
   $isFullHighlight?: boolean
+  $isActiveAnimate?: boolean
 }
 
 const cardHoverStyles = css`
@@ -66,6 +67,14 @@ export const Card = styled.div<StyledEntityCardProps>`
   aspect-ratio: 16 / 9;
 
   padding: 2px;
+
+  &,
+  .thumbnail {
+    transition: padding 100ms ease;
+    padding: ${({ $isActive, $isActiveAnimate }) =>
+      $isActive && $isActiveAnimate ? '4px' : '2px'};
+  }
+
   /* thumbnail variant no padding */
   ${({ $variant }) =>
     $variant === 'thumbnail' &&
