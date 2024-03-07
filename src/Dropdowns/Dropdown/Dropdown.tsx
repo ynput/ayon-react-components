@@ -42,7 +42,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   buttonStyle?: CSSProperties
   onOpen?: () => void
   onClose?: () => void
-  value: Array<string | number>
+  value: Array<string | number> | null
   valueTemplate?:
     | ((
         value: (string | number)[],
@@ -82,8 +82,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   minSelected?: number
   maxSelected?: number
   dropIcon?: IconType
-  onClear?: () => void
-  onClearNoValue?: boolean
+  onClear?: (value: null | []) => void
+  onClearNullValue?: boolean // show clear button when no value and changes icon to clear null
+  nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
   disableReorder?: boolean
@@ -139,7 +140,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
-      onClearNoValue,
+      onClearNullValue,
+      nullPlaceholder,
       editable,
       maxHeight = 300,
       disableReorder,
@@ -150,16 +152,17 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     },
     ref,
   ) => {
-    const [value, setValue] = useState<(string | number)[]>([])
+    const [value, setValue] = useState<(string | number)[] | null>([])
 
     useEffect(() => {
-      setValue(compact(initialValue))
+      // set null if null otherwise compact array (array with no nulls or undefine)
+      setValue(initialValue === null ? null : compact(initialValue))
     }, [initialValue])
 
     // value = useMemo(() => compact(value), [value])
 
     // if there are multiple but multiSelect is false
-    if (!multiSelect && value.length > 1) {
+    if (!multiSelect && value && value.length > 1) {
       isMultiple = true
     }
 
@@ -177,7 +180,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // search
     const [searchForm, setSearchForm] = useState('')
     // selection
-    const [selected, setSelected] = useState<(string | number)[]>([])
+    const [selected, setSelected] = useState<(string | number)[] | null>([])
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -267,7 +270,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // if editable, merge current search into showOptions
     options = useMemo(() => {
       // add in any values that are not in options
-      const selectedNotInOptions = value.filter((s) => !options.some((o) => o[dataKey] === s))
+      const selectedNotInOptions =
+        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
@@ -279,7 +283,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
       () =>
-        disableReorder
+        disableReorder || !value || !value.length
           ? options
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
@@ -314,7 +318,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     const handleClose = (
       e?: React.MouseEvent<HTMLDivElement>,
-      changeValue?: (string | number)[],
+      changeValue?: (string | number)[] | null,
       outside?: boolean,
     ): void => {
       // changeValue is used on single select
@@ -348,7 +352,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
 
       // commit changes
-      onChange && onChange(changeValue)
+      onChange && changeValue && onChange(changeValue)
       setValue(changeValue)
       //   reset selected
       // setSelected([])
@@ -367,7 +371,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
-      let newSelected = [...selected]
+      let newSelected = selected ? [...selected] : []
 
       const addingNew = editable && index === 0
 
@@ -416,12 +420,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
-    const handleClear = () => {
+    const handleClear = (value: null | []) => {
       if (!onClear) return
 
-      if (selected.length > minSelected || onClearNoValue) {
+      if ((selected?.length || 0) > minSelected || onClearNullValue) {
         setSelected([])
-        onClear()
+        onClear(value)
         setIsOpen(false)
       }
     }
@@ -433,7 +437,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') {
         if (focus) return
-        else return handleClear()
+        else return handleClear([])
+      } else if ((e.target as HTMLDivElement).id === 'backspace') {
+        if (focus) return
+        else return handleClear(null)
       }
       if (isOpen) {
         return handleClose()
@@ -512,16 +519,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         // open
         if (!isOpen) {
           // check not clear button
-          if ((e.target as HTMLDivElement).id === 'clear') return onChange && onChange([])
+          if ((e.target as HTMLDivElement).id === 'clear') {
+            return handleClear([])
+          } else if ((e.target as HTMLDivElement).id === 'backspace') {
+            return handleClear(null)
+          }
           return setIsOpen(true)
         }
 
         if (multiSelect) {
           selectedValue && handleChange(selectedValue, activeIndex || 0)
 
-          // nothing selected and only one option
-          if (options.length === 1 || (options.length === 2 && editable)) {
-            handleClose(undefined, [...selected, options[0][dataKey]])
+          // nothing selected and only one option and not nullable
+          if (options.length === 1 || (options.length === 2 && editable && !onClearNullValue)) {
+            handleClose(undefined, selected ? [...selected] : [], options[0][dataKey])
           }
         } else {
           // convert selectedValue to array
@@ -561,10 +572,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }
 
     const labels = useMemo(() => {
-      const values = isOpen ? selected : value
+      const values = isOpen ? selected : value || []
       let result: any[] = []
       nonSearchedOptions.forEach((o) => {
-        if (values.includes(o[dataKey])) {
+        if (values?.includes(o[dataKey])) {
           result.push(o[labelKey] || o[dataKey])
         }
       })
@@ -572,7 +583,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }, [options, value, dataKey, labelKey, selected, isOpen])
 
     const displayIcon = useMemo(() => {
-      if (!value.length) return null
+      if (!value?.length) return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
       if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
@@ -593,7 +604,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       dropIcon,
       displayIcon,
       onClear: onClear ? handleClear : undefined,
-      onClearNoValue,
+      onClearNullValue,
+      nullPlaceholder,
       style: valueStyle,
       placeholder,
       isOpen,
@@ -610,7 +622,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       value,
       isOpen,
       onClear,
-      onClearNoValue,
+      onClearNullValue,
       selected,
       handleClear,
       isMultiple,
@@ -639,29 +651,27 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         ref={elementRef}
         {...props}
       >
-        {value && (
-          <Styled.Button
-            ref={valueRef}
-            onClick={handleOpen}
-            disabled={disabled}
-            $isChanged={!!isChanged}
-            $isOpen={isOpen}
-            style={buttonStyle}
-            className={`button ${buttonClassName}`}
-          >
-            {valueTemplateNode ? (
-              valueTemplateNode(value, selected, isOpen)
-            ) : (
-              <DefaultValueTemplate {...DefaultValueTemplateProps}>
-                {!labels.length && disabled && placeholder
-                  ? placeholder
-                  : labels.length
-                  ? labels.join(', ')
-                  : emptyMessage}
-              </DefaultValueTemplate>
-            )}
-          </Styled.Button>
-        )}
+        <Styled.Button
+          ref={valueRef}
+          onClick={handleOpen}
+          disabled={disabled}
+          $isChanged={!!isChanged}
+          $isOpen={isOpen}
+          style={buttonStyle}
+          className={`button ${buttonClassName}`}
+        >
+          {valueTemplateNode ? (
+            valueTemplateNode(value || [], selected || [], isOpen)
+          ) : (
+            <DefaultValueTemplate {...DefaultValueTemplateProps}>
+              {!labels.length && disabled && placeholder
+                ? placeholder
+                : labels.length
+                ? labels.join(', ')
+                : emptyMessage}
+            </DefaultValueTemplate>
+          )}
+        </Styled.Button>
 
         {isOpen &&
           createPortal(
@@ -721,16 +731,18 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                       {itemTemplate ? (
                         itemTemplate(
                           option,
-                          value.includes(option[dataKey]),
-                          selected.includes(option[dataKey]),
+                          !!value && value.includes(option[dataKey]),
+                          !!selected?.includes(option[dataKey]),
                           i,
                         )
                       ) : (
                         <Styled.DefaultItem
-                          $isSelected={selected.includes(option[dataKey])}
+                          $isSelected={!!selected?.includes(option[dataKey])}
                           className={`option-child ${
-                            value.includes(option[dataKey]) ? 'selected' : ''
-                          } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
+                            value && value.includes(option[dataKey]) ? 'selected' : ''
+                          } ${
+                            value && value.includes(option[dataKey]) ? 'active' : ''
+                          } ${itemClassName}`}
                           style={itemStyle}
                         >
                           {option.icon && <Icon icon={option.icon} />}

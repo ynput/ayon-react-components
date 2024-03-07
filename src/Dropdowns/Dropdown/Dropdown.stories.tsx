@@ -32,14 +32,10 @@ const options: { value: IconType; keyword: string }[] = [
 ]
 
 const Template = (args: DropdownProps) => {
-  const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
+  const [value, setValue] = useState<(string | number)[] | null>(
+    args.value === undefined ? [options[0].value] : args.value,
+  )
   const dropdownRef = useRef<DropdownRef>(null)
-
-  const handleClear = () => {
-    // if minSelected is set, we need to set the value to the minSelected
-    const newValue = args.minSelected ? options.slice(0, args.minSelected).map((o) => o.value) : []
-    setValue(newValue)
-  }
 
   const handleChange = (v: (string | number)[]) => {
     console.log(v)
@@ -53,7 +49,7 @@ const Template = (args: DropdownProps) => {
         value={value}
         onChange={handleChange}
         options={args.options || options}
-        onClear={args.onClear && handleClear}
+        onClear={args.onClear && setValue}
         widthExpand
         style={{
           width: 250,
@@ -199,4 +195,17 @@ export const Scrolled: Story = {
       </Panel>
     )
   },
+}
+
+// simple dropdown with 1000 items and search
+export const InvalidValue: Story = {
+  args: {
+    placeholder: 'Select a value...',
+    onClear: () => console.log('clear'),
+    onClearNullValue: true,
+    value: null,
+    multiSelect: true,
+    nullPlaceholder: 'No value (custom placeholder)',
+  },
+  render: Template,
 }
