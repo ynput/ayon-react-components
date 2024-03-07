@@ -42,7 +42,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   buttonStyle?: CSSProperties
   onOpen?: () => void
   onClose?: () => void
-  value: Array<string | number>
+  value: Array<string | number> | null
   valueTemplate?:
     | ((
         value: (string | number)[],
@@ -150,16 +150,17 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     },
     ref,
   ) => {
-    const [value, setValue] = useState<(string | number)[]>([])
+    const [value, setValue] = useState<(string | number)[] | null>([])
 
     useEffect(() => {
-      setValue(compact(initialValue))
+      // set null if null otherwise compact array (array with no nulls or undefine)
+      setValue(initialValue === null ? null : compact(initialValue))
     }, [initialValue])
 
     // value = useMemo(() => compact(value), [value])
 
     // if there are multiple but multiSelect is false
-    if (!multiSelect && value.length > 1) {
+    if (!multiSelect && value && value.length > 1) {
       isMultiple = true
     }
 
@@ -235,7 +236,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // set initial selected from value
     useEffect(() => {
-      setSelected(value)
+      setSelected(compact(value))
     }, [value, setSelected])
 
     // keyboard support
@@ -267,7 +268,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // if editable, merge current search into showOptions
     options = useMemo(() => {
       // add in any values that are not in options
-      const selectedNotInOptions = value.filter((s) => !options.some((o) => o[dataKey] === s))
+      const selectedNotInOptions =
+        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
@@ -279,7 +281,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
       () =>
-        disableReorder
+        disableReorder || !value || !value.length
           ? options
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
@@ -561,7 +563,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }
 
     const labels = useMemo(() => {
-      const values = isOpen ? selected : value
+      const values = isOpen ? selected : value || []
       let result: any[] = []
       nonSearchedOptions.forEach((o) => {
         if (values.includes(o[dataKey])) {
@@ -572,7 +574,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }, [options, value, dataKey, labelKey, selected, isOpen])
 
     const displayIcon = useMemo(() => {
-      if (!value.length) return null
+      if (!value?.length) return null
       if (valueIcon) return valueIcon
       if (multiSelect && value.length > 1) return null
       if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
@@ -639,29 +641,27 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         ref={elementRef}
         {...props}
       >
-        {value && (
-          <Styled.Button
-            ref={valueRef}
-            onClick={handleOpen}
-            disabled={disabled}
-            $isChanged={!!isChanged}
-            $isOpen={isOpen}
-            style={buttonStyle}
-            className={`button ${buttonClassName}`}
-          >
-            {valueTemplateNode ? (
-              valueTemplateNode(value, selected, isOpen)
-            ) : (
-              <DefaultValueTemplate {...DefaultValueTemplateProps}>
-                {!labels.length && disabled && placeholder
-                  ? placeholder
-                  : labels.length
-                  ? labels.join(', ')
-                  : emptyMessage}
-              </DefaultValueTemplate>
-            )}
-          </Styled.Button>
-        )}
+        <Styled.Button
+          ref={valueRef}
+          onClick={handleOpen}
+          disabled={disabled}
+          $isChanged={!!isChanged}
+          $isOpen={isOpen}
+          style={buttonStyle}
+          className={`button ${buttonClassName}`}
+        >
+          {valueTemplateNode ? (
+            valueTemplateNode(value || [], selected, isOpen)
+          ) : (
+            <DefaultValueTemplate {...DefaultValueTemplateProps}>
+              {!labels.length && disabled && placeholder
+                ? placeholder
+                : labels.length
+                ? labels.join(', ')
+                : emptyMessage}
+            </DefaultValueTemplate>
+          )}
+        </Styled.Button>
 
         {isOpen &&
           createPortal(
@@ -721,7 +721,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                       {itemTemplate ? (
                         itemTemplate(
                           option,
-                          value.includes(option[dataKey]),
+                          !!value && value.includes(option[dataKey]),
                           selected.includes(option[dataKey]),
                           i,
                         )
@@ -729,8 +729,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         <Styled.DefaultItem
                           $isSelected={selected.includes(option[dataKey])}
                           className={`option-child ${
-                            value.includes(option[dataKey]) ? 'selected' : ''
-                          } ${value.includes(option[dataKey]) ? 'active' : ''} ${itemClassName}`}
+                            value && value.includes(option[dataKey]) ? 'selected' : ''
+                          } ${
+                            value && value.includes(option[dataKey]) ? 'active' : ''
+                          } ${itemClassName}`}
                           style={itemStyle}
                         >
                           {option.icon && <Icon icon={option.icon} />}

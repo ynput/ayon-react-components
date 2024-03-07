@@ -32,7 +32,9 @@ const options: { value: IconType; keyword: string }[] = [
 ]
 
 const Template = (args: DropdownProps) => {
-  const [value, setValue] = useState<(string | number)[]>(args.value || [options[0].value])
+  const [value, setValue] = useState<(string | number)[] | null>(
+    args.value === undefined ? [options[0].value] : args.value,
+  )
   const dropdownRef = useRef<DropdownRef>(null)
 
   const handleClear = () => {
@@ -199,4 +201,15 @@ export const Scrolled: Story = {
       </Panel>
     )
   },
+}
+
+// simple dropdown with 1000 items and search
+export const InvalidValue: Story = {
+  args: {
+    placeholder: 'Select a value...',
+    onClear: () => console.log('clear'),
+    value: null,
+    multiSelect: true,
+  },
+  render: Template,
 }

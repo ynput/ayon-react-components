@@ -78,7 +78,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   className,
   childrenCustom,
 }) => {
-  const noValue = !value.length
+  const noValue = !value?.length
 
   return (
     <DefaultValueStyled style={style} $isOpen={!!isOpen} className={className}>
