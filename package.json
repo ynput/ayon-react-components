@@ -121,5 +121,8 @@
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
+  },
+  "resolutions": {
+    "jackspeak": "2.1.1"
   }
 }

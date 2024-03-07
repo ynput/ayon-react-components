@@ -15,6 +15,8 @@ interface StyledEntityCardProps {
   $isHover?: boolean
   $isDragging?: boolean
   $isDraggable?: boolean
+  $isFullHighlight?: boolean
+  $isActiveAnimate?: boolean
 }
 
 const cardHoverStyles = css`
@@ -65,6 +67,14 @@ export const Card = styled.div<StyledEntityCardProps>`
   aspect-ratio: 16 / 9;
 
   padding: 2px;
+
+  &,
+  .thumbnail {
+    transition: padding 100ms ease;
+    padding: ${({ $isActive, $isActiveAnimate }) =>
+      $isActive && $isActiveAnimate ? '4px' : '2px'};
+  }
+
   /* thumbnail variant no padding */
   ${({ $variant }) =>
     $variant === 'thumbnail' &&
@@ -91,6 +101,14 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   &:hover {
     ${cardHoverStyles}
+
+    ${({ $isFullHighlight }) =>
+      $isFullHighlight &&
+      css`
+        .inner-card {
+          background-color: var(--md-sys-color-surface-container-high-hover);
+        }
+      `}
   }
 
   &:active {
@@ -108,7 +126,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     `}
 
   /* when active, set background color */
-  ${({ $isActive, $variant, $isDraggable }) =>
+  ${({ $isActive, $variant, $isDraggable, $isFullHighlight }) =>
     $isActive &&
     css`
       /* set backgrounds */
@@ -142,10 +160,13 @@ export const Card = styled.div<StyledEntityCardProps>`
       }
 
       /* when variant = 'basic' titles are blue */
-      ${$variant === 'basic' &&
+      ${($variant === 'basic' || $isFullHighlight) &&
       css`
-        ${Title} {
+        .inner-card {
           background-color: var(--selection-color);
+        }
+        &:hover .inner-card {
+          background-color: var(--selection-color-hover);
         }
       `}
     `}
@@ -154,7 +175,8 @@ export const Card = styled.div<StyledEntityCardProps>`
     'var(--md-sys-color-surface-container-high)',
     'var(--md-sys-color-surface-container-highest)',
     {
-      opacity: 1,
+      opacity: 0.5,
+      speed: 1.5,
     },
   )}
 
@@ -187,8 +209,18 @@ export const Card = styled.div<StyledEntityCardProps>`
           /* title card loading styles */
           .row > span {
             /* change color of cards */
-            opacity: 0.7;
+            opacity: 1;
             min-width: 50%;
+            position: relative;
+            /* shimmer */
+            ${getShimmerStyles(
+              'var(--md-sys-color-surface-container-high)',
+              'var(--md-sys-color-surface-container-highest)',
+              {
+                opacity: 0.5,
+                speed: 1.5,
+              },
+            )}
 
             &.status,
             &.notification,

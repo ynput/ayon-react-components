@@ -46,6 +46,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled?: boolean
   assignees?: User[]
   variant?: 'thumbnail' | 'basic' | 'full'
+  isFullHighlight?: boolean
+  isActiveAnimate?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -71,6 +73,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       variant = 'full',
       isDragging = false,
       isDraggable = false,
+      isFullHighlight = false,
+      isActiveAnimate = false,
       onThumbnailKeyDown,
       onActivate,
       assignees,
@@ -104,6 +108,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $isHover={isHover}
         $isDragging={isDragging}
         $isDraggable={isDraggable}
+        $isFullHighlight={isFullHighlight}
+        $isActiveAnimate={isActiveAnimate}
         tabIndex={0}
         onClick={(e) => {
           onActivate && onActivate()
@@ -136,25 +142,25 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           <Styled.Row className="row">
             {/* top left */}
             {!hideTitles && (
-              <Styled.Title className="title">
+              <Styled.Title className="inner-card title">
                 {titleIcon && <Icon icon={titleIcon} />}
                 {title && <span className="title">{title}</span>}
               </Styled.Title>
             )}
             {/* top right icon */}
             {!hideIcons && (
-              <Styled.Title className="status">
+              <Styled.Title className="inner-card status">
                 {icon && <Icon icon={icon} style={{ color: iconColor }} />}
               </Styled.Title>
             )}
           </Styled.Row>
-          {!isImageLoading && !isImageValid && (
+          {!isLoading && !isImageLoading && !isImageValid && (
             <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
           )}
           <Styled.Row className="row">
             {/* bottom left */}
             {!hideTitles && (
-              <Styled.Title className="subTitle">
+              <Styled.Title className="inner-card subTitle">
                 <span>{subTitle}</span>
               </Styled.Title>
             )}
@@ -165,8 +171,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Title>
             )}
             {/* bottom right assignees */}
-            {assignees?.length && (
-              <Styled.Title className="assignees">
+            {!!assignees?.length && (
+              <Styled.Title className="inner-card assignees">
                 <UserImagesStacked users={assignees} size={26} gap={-0.5} />
               </Styled.Title>
             )}
