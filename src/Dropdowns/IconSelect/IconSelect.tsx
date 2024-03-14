@@ -13,10 +13,10 @@ export interface IconTemplateProps {
 const IconTemplate = ({ value, valueTemplate, isActive, isSelected }: IconTemplateProps) => {
   return (
     <Styled.Icon $valueTemplate={valueTemplate} $isActive={isSelected}>
-      {value.map((icon) => (
+      {value?.map((icon) => (
         <Icon key={icon} icon={icon as IconType} />
       ))}
-      {value.length < 2 && <span>{value}</span>}
+      {value && value.length < 2 && <span>{value}</span>}
     </Styled.Icon>
   )
 }

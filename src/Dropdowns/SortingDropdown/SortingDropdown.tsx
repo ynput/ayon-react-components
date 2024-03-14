@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { DefaultValueTemplate, Dropdown, DropdownProps } from '../Dropdown'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import SortCard from './SortCard'
 
 const StyledDropdown = styled(Dropdown)`
@@ -38,7 +38,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
 }) => {
   const handleChange = (v: DropdownProps['value']) => {
     // for each value, find in value, if not found, find in options and add sortOrder
-    const newValues = v.map((id) => {
+    const newValues = v?.map((id) => {
       const idx = value.findIndex((v) => v.id === id)
       if (idx === -1) {
         const option = options.find((o) => o.id === id)
@@ -55,7 +55,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
       }
     })
 
-    onChange(newValues)
+    onChange(newValues ?? [])
   }
 
   const handleSortChange = (id: string) => {

@@ -82,8 +82,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   minSelected?: number
   maxSelected?: number
   dropIcon?: IconType
-  onClear?: (value: null | []) => void
-  onClearNullValue?: boolean // show clear button when no value and changes icon to clear null
+  onClear?: (value: []) => void
+  onClearNull?: (value: null) => void
   nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
@@ -140,7 +140,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
-      onClearNullValue,
+      onClearNull,
       nullPlaceholder,
       editable,
       maxHeight = 300,
@@ -420,14 +420,19 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
-    const handleClear = (value: null | []) => {
+    const handleClear = () => {
       if (!onClear) return
 
-      if ((selected?.length || 0) > minSelected || onClearNullValue) {
-        setSelected([])
-        onClear(value)
-        setIsOpen(false)
-      }
+      setSelected([])
+      onClear([])
+      setIsOpen(false)
+    }
+    const handleClearNull = () => {
+      if (!onClearNull) return
+
+      setSelected([])
+      onClearNull(null)
+      setIsOpen(false)
     }
 
     const handleOpen = (
@@ -437,10 +442,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') {
         if (focus) return
-        else return handleClear([])
+        else return handleClear()
       } else if ((e.target as HTMLDivElement).id === 'backspace') {
         if (focus) return
-        else return handleClear(null)
+        else return handleClearNull()
       }
       if (isOpen) {
         return handleClose()
@@ -520,9 +525,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (!isOpen) {
           // check not clear button
           if ((e.target as HTMLDivElement).id === 'clear') {
-            return handleClear([])
+            return handleClear()
           } else if ((e.target as HTMLDivElement).id === 'backspace') {
-            return handleClear(null)
+            return handleClearNull()
           }
           return setIsOpen(true)
         }
@@ -531,7 +536,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           selectedValue && handleChange(selectedValue, activeIndex || 0)
 
           // nothing selected and only one option and not nullable
-          if (options.length === 1 || (options.length === 2 && editable && !onClearNullValue)) {
+          if (options.length === 1 || (options.length === 2 && editable && !onClearNull)) {
             handleClose(undefined, selected ? [...selected] : [], options[0][dataKey])
           }
         } else {
@@ -603,8 +608,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       isMultiple,
       dropIcon,
       displayIcon,
-      onClear: onClear ? handleClear : undefined,
-      onClearNullValue,
+      onClear: onClear && handleClear,
+      onClearNull: onClearNull && handleClearNull,
       nullPlaceholder,
       style: valueStyle,
       placeholder,
@@ -622,7 +627,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       value,
       isOpen,
       onClear,
-      onClearNullValue,
+      onClearNull,
       selected,
       handleClear,
       isMultiple,
