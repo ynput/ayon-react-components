@@ -50,6 +50,7 @@ const Template = (args: DropdownProps) => {
         onChange={handleChange}
         options={args.options || options}
         onClear={args.onClear && setValue}
+        onClearNull={args.onClearNull && setValue}
         widthExpand
         style={{
           width: 250,
@@ -201,8 +202,8 @@ export const Scrolled: Story = {
 export const InvalidValue: Story = {
   args: {
     placeholder: 'Select a value...',
-    onClear: () => console.log('clear'),
-    onClearNullValue: true,
+    onClearNull: () => console.log('clear null'),
+    onClear: undefined,
     value: null,
     multiSelect: true,
     nullPlaceholder: 'No value (custom placeholder)',

@@ -56,7 +56,7 @@ export interface DefaultValueTemplateProps
     | 'isMultiple'
     | 'dropIcon'
     | 'onClear'
-    | 'onClearNullValue'
+    | 'onClearNull'
     | 'nullPlaceholder'
     | 'placeholder'
   > {
@@ -75,7 +75,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   dropIcon = 'expand_more',
   displayIcon,
   onClear,
-  onClearNullValue,
+  onClearNull,
   nullPlaceholder,
   children,
   style,
@@ -87,10 +87,6 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
 }) => {
   const noValue = !value?.length
 
-  const handleOnClearClick = (value: null | []) => {
-    onClear && onClear(value)
-  }
-
   return (
     <DefaultValueStyled style={style} $isOpen={!!isOpen} className={className}>
       {noValue ? (
@@ -99,30 +95,30 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
             <ValueStyled style={{ opacity: 0.5 }}>
               {value === null
                 ? nullPlaceholder || '(no value)'
-                : onClearNullValue
+                : onClearNull
                 ? '(empty list)'
                 : placeholder}
             </ValueStyled>
           </ContentStyled>
-          {onClear && onClearNullValue && (
-            <>
-              <Icon
-                icon={'backspace'}
-                onClick={() => handleOnClearClick(null)}
-                id={'backspace'}
-                className="control"
-                tabIndex={0}
-                data-tooltip={'Clear to NULL'}
-              />
-              <Icon
-                icon={'close'}
-                onClick={() => handleOnClearClick([])}
-                id={'clear'}
-                className="control"
-                tabIndex={0}
-                data-tooltip={'Clear to empty list'}
-              />
-            </>
+          {onClearNull && (
+            <Icon
+              icon={'backspace'}
+              onClick={() => onClearNull(null)}
+              id={'backspace'}
+              className="control"
+              tabIndex={0}
+              data-tooltip={'Set to Inherit (null)'}
+            />
+          )}
+          {onClear && (
+            <Icon
+              icon={'close'}
+              onClick={() => onClear([])}
+              id={'clear'}
+              className="control"
+              tabIndex={0}
+              data-tooltip={'Clear to empty list'}
+            />
           )}
         </>
       ) : (
@@ -133,20 +129,20 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
-          {onClear && onClearNullValue && (
+          {onClearNull && (
             <Icon
               icon={'backspace'}
-              onClick={() => handleOnClearClick(null)}
+              onClick={() => onClearNull(null)}
               id={'backspace'}
               className="control"
               tabIndex={0}
-              data-tooltip={'Clear to NULL'}
+              data-tooltip={'Set to Inherit (null)'}
             />
           )}
           {onClear && (
             <Icon
               icon={'close'}
-              onClick={() => handleOnClearClick([])}
+              onClick={() => onClear([])}
               id="clear"
               className="control"
               tabIndex={0}
