@@ -210,3 +210,35 @@ export const InvalidValue: Story = {
   },
   render: Template,
 }
+
+// outside state synced to dropdown state
+export const SyncedState: Story = {
+  args: {},
+  render: (args: DropdownProps) => {
+    const [value, setValue] = useState<(string | number)[] | null>([])
+    const [liveValue, setLiveValue] = useState<(string | number)[] | null>([])
+
+    const handleChange = (v: (string | number)[] | null) => {
+      setValue(v)
+      setLiveValue(v)
+    }
+
+    return (
+      <>
+        <Dropdown
+          value={value}
+          multiSelect
+          onSelectionChange={(v) => setLiveValue(v)}
+          onChange={handleChange}
+          options={args.options || options}
+          widthExpand
+          style={{
+            width: 250,
+            ...args.style,
+          }}
+        />
+        <span>{liveValue?.join(', ')}</span>
+      </>
+    )
+  },
+}

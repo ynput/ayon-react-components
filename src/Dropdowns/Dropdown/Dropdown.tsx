@@ -70,6 +70,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   isChanged?: boolean
   isMultiple?: boolean
   onChange?: (v: (string | number)[]) => void
+  onSelectionChange?: (v: (string | number)[]) => void
   maxOptionsShown?: number
   style?: CSSProperties
   className?: string
@@ -119,6 +120,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       disabled,
       onClose,
       onChange,
+      onSelectionChange,
       onOpen,
       widthExpand = true,
       align = 'left',
@@ -409,6 +411,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         // focus on search
         searchRef.current?.focus()
       }
+
+      // send on selection changed event
+      onSelectionChange && onSelectionChange(newSelected)
 
       // update temp value
       // update state
