@@ -35,7 +35,7 @@ export const AssigneeDropdownTemplate = ({
 }: AssigneeDropdownProps) => {
   return (
     <RowStyled {...{ isSelected, onClick }}>
-      <UserImage src={avatarUrl} fullName={fullName || name} size={size} />
+      <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
       {fullName || name}
     </RowStyled>
   )
