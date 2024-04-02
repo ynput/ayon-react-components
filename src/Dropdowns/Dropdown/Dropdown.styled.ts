@@ -110,7 +110,7 @@ export const Container = styled.div<{
   height: min-content;
 
   position: fixed;
-  z-index: 2000;
+  z-index: 10000;
 
   ${({ $hidden }) =>
     !$hidden &&
