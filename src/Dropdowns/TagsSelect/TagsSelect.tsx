@@ -110,7 +110,6 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         align={align}
         style={styleDropdown}
         width={width}
-        
       />
     )
   },
