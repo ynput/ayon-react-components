@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { AssigneeSelect, AssigneeSelectProps } from '.'
 import { useState } from 'react'
+import usersData from './users.json'
 
 const meta: Meta<typeof AssigneeSelect> = {
   component: AssigneeSelect,
@@ -11,19 +12,32 @@ export default meta
 
 type Story = StoryObj<typeof AssigneeSelect>
 
-const allUsers = Array.from({ length: 100 }, (_, i) => ({
-  name: `user${i + 1}`,
-  fullName: `User ${i + 1}`,
-  avatarUrl: `https://repo.imm.cz/avatars/demouser${i + 10}.jpg`,
-  email: `email${i + 1}@email.com`,
-}))
+// randomly attach an image to the user
+const allUsers = usersData.map((user, i) => {
+  let avatarUrl
+  if (Math.random() < 0.1) {
+    avatarUrl = 'broken-url'
+  }
 
-const users = Array.from({ length: 3 }, (_, i) => ({
-  name: `user${i + 1}`,
-  fullName: `User ${i + 1}`,
-  avatarUrl: `https://repo.imm.cz/avatars/demouser${i + 10}.jpg`,
-  email: `email${i + 1}@email.com`,
-}))
+  if (Math.random() > 0.5) {
+    avatarUrl = `https://repo.imm.cz/avatars/demouser${i + 10}.jpg`
+  }
+
+  return {
+    ...user,
+    avatarUrl,
+  }
+})
+
+const getRandomUsers = (number = 2) => {
+  const randomUsers = []
+  for (let i = 0; i < number; i++) {
+    randomUsers.push(allUsers[Math.floor(Math.random() * allUsers.length)])
+  }
+  return randomUsers
+}
+
+const selectedUsers = getRandomUsers().map((user) => user.name)
 
 const Template = (args: AssigneeSelectProps) => {
   const [value, setValue] = useState(args.value)
@@ -42,7 +56,7 @@ const Template = (args: AssigneeSelectProps) => {
 export const Default: Story = {
   render: Template,
   args: {
-    value: users.map((user) => user.name),
+    value: selectedUsers,
   },
 }
 export const Custom: Story = {
