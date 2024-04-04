@@ -97,7 +97,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         align={align}
         multiSelect
         search
-        searchFields={['name', 'fullName', 'email']}
+        searchFields={['fullName', 'name', 'email']}
         ref={ref}
         {...props}
       />

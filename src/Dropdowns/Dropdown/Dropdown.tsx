@@ -10,6 +10,7 @@ import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
+import { matchSorter } from 'match-sorter'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -309,11 +310,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     if ((search || editable) && searchForm) {
       // filter out search matches
-      options = options.filter((o) =>
-        searchFields.some(
-          (key) => o[key] && String(o[key])?.toLowerCase()?.includes(searchForm.toLowerCase()),
-        ),
-      )
+      options = matchSorter(options, searchForm, { keys: searchFields })
     }
 
     // HANDLERS
