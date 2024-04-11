@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Modal } from '.'
-import { useState } from 'react'
+import { useRef } from 'react'
 import { Button } from '../../Button'
 
 const meta: Meta<typeof Modal> = {
@@ -23,24 +23,30 @@ type Story = StoryObj<typeof Modal>
 // }
 
 const Template = () => {
-  // const [isNewsletterModalOpen, setNewsletterModalOpen] = useState<boolean>(false);
-  // const [newsletterFormData, setNewsletterFormData] = useState<NewsletterModalData | null>(null);
 
-  // const handleCloseNewsletterModal = () => {
-  //   setNewsletterModalOpen(false);
-  // };
+  const modalRef = useRef<HTMLDialogElement | null>(null);
+
+  const toggleDialog = () => {
+    const modalElement = modalRef.current
+      if (!modalElement) return
+      if (modalElement) {
+        modalElement.hasAttribute('open') ? modalElement.close() : modalElement.showModal();
+      }
+  }
 
   
   return (
     <>
-      {/* <Button onClick={() => show()} icon="open_in_full">
+      <Button onClick={() => toggleDialog()} icon="open_in_full">
         Show Modal
-      </Button> */}
+      </Button>
       <Modal 
         hasCloseBtn={true}
         header={'Dialog Header'}
         children={'Dialog Body'}
         footer={'Dialog Footer'}
+        toggleDialog={toggleDialog}
+        ref={modalRef}
       />
     </>
   )
