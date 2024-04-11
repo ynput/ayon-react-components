@@ -81,6 +81,8 @@ export { Toolbar } from './Layout/Toolbar'
 // OVERLAY
 // dialog
 export { Dialog } from './Overlay/Dialog'
+// modal
+export { Modal } from './Overlay/Modal'
 
 // PANELS
 // panel
