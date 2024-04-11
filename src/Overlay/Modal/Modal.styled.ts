@@ -1,5 +1,6 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../../Button'
+import { titleLarge } from '../../theme'
 
 
 const fadeInAnimation = keyframes`
@@ -17,12 +18,11 @@ export const Dialog = styled.dialog`
     border-radius: var(--border-radius-m);
     flex-direction: column;
     gap: 16px;
-    padding: 16px;
+    padding: 16px 0;
     min-width: 200px;
     min-height: 100px;
     max-width: 85%;
     max-height: 85%;
-   
 
     /* Backdrop property affects inactive area around modal */
     &::backdrop {
@@ -41,9 +41,6 @@ export const Dialog = styled.dialog`
     /* Styles for dialogs that carry non-modal behavior */
     &:not(:modal) {
     }
-
-   
-
 `
 
 export const Close = styled(Button)`
@@ -62,17 +59,19 @@ export const BaseDialogEdge = styled.div`
 export const Header = styled(BaseDialogEdge)`
   display: flex;
   flex-direction: column;
-  font-weight: bold;
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  padding: 16px 0;
+  padding: 16px;
+  & > * { 
+    ${titleLarge}
+  }
 `
 
 export const Footer = styled(BaseDialogEdge)`
   border-top: 1px solid var(--md-sys-color-outline-variant);
-  padding: 16px 0;
+  padding: 16px;
 `
 export const Body = styled.div`
-  padding: 16px 0;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   overflow: auto;

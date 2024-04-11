@@ -57,7 +57,6 @@ const Template = () => {
         Show Modal
       </Button>
       <Modal 
-        hasCloseBtn={true}
         header={<HeaderContent/>}
         children={<BodyContent />}
         footer={<FooterContent />}
