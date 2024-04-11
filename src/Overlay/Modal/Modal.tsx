@@ -6,7 +6,7 @@ type ModalProps = {
     isOpen: boolean;
     hasCloseBtn?: boolean;
     onClose?: () => void;
-    toggleDialog?: () => void;
+    toggleDialog: () => void;
     header?: React.ReactNode;
     children?: React.ReactNode;
     footer?: React.ReactNode;
@@ -17,30 +17,13 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>((
 ref,
 ) => {
 
-
-//   useEffect(() => {
-//     setModalOpen(isOpen);
-//   }, [isOpen]);
-
-//   useEffect(() => {
-//     if (modalElement && isModalOpen) modalElement.showModal()
-//     if (modalElement && !isModalOpen) modalElement.close();
-//   }, [isModalOpen])
-
-
-
-//   const handleCloseModal = () => {
-//     if (onClose) {
-//       onClose();
-//     }
-//     setModalOpen(false);
-//   };
-
-
+    const closeIfClickOutside = (e: React.MouseEvent) => {
+        if (e.currentTarget === e.target) toggleDialog()
+    }
   
   return (
     <>
-    <Styled.Dialog ref={ref} className="modal">
+    <Styled.Dialog ref={ref} onClick={(e) => closeIfClickOutside(e)}className="modal">
         <Styled.Close icon="close" autoFocus onClick={toggleDialog} />
         {header && <Styled.Header>{header}</Styled.Header>}
         {children && <Styled.Body>{children}</Styled.Body>}
