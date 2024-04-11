@@ -36,7 +36,12 @@ const Template = () => {
       {/* <Button onClick={() => show()} icon="open_in_full">
         Show Modal
       </Button> */}
-      <Modal hasCloseBtn={true} />
+      <Modal 
+        hasCloseBtn={true}
+        header={'Dialog Header'}
+        children={'Dialog Body'}
+        footer={'Dialog Footer'}
+      />
     </>
   )
 }
