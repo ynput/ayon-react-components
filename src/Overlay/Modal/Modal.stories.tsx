@@ -22,16 +22,32 @@ type Story = StoryObj<typeof Modal>
 //   },
 // }
 
+const HeaderContent = () => (
+  <>
+    <div>This is title of modal</div>
+    <span>This is perex</span>
+  </>
+)
+
+const BodyContent = () => (
+  <>
+    <div>Are you sure you want to permanently delete this folder and all its associated tasks, products, versions, representations, and workfiles?</div>
+  </>
+)
+
+const FooterContent = () => <span>Ynput is awesome. Copyright ©2024 Ynput</span>
+
+
+
 const Template = () => {
 
   const modalRef = useRef<HTMLDialogElement | null>(null);
 
   const toggleDialog = () => {
     const modalElement = modalRef.current
-      if (!modalElement) return
-      if (modalElement) {
-        modalElement.hasAttribute('open') ? modalElement.close() : modalElement.showModal();
-      }
+    const isModalOpen =  modalElement?.hasAttribute('open')
+    if (!modalElement) return
+    isModalOpen ? modalElement.close() : modalElement.showModal()
   }
 
   
@@ -42,9 +58,9 @@ const Template = () => {
       </Button>
       <Modal 
         hasCloseBtn={true}
-        header={'Dialog Header'}
-        children={'Dialog Body'}
-        footer={'Dialog Footer'}
+        header={<HeaderContent/>}
+        children={<BodyContent />}
+        footer={<FooterContent />}
         toggleDialog={toggleDialog}
         ref={modalRef}
       />

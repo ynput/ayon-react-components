@@ -3,19 +3,15 @@ import * as Styled from './Modal.styled'
 import { Button } from '../../Button'
 
 type ModalProps = {
-    isOpen: boolean;
     hasCloseBtn?: boolean;
-    onClose?: () => void;
     toggleDialog: () => void;
     header?: React.ReactNode;
     children?: React.ReactNode;
     footer?: React.ReactNode;
   };
 
-export const Modal = forwardRef<HTMLDialogElement, ModalProps>((
-    {isOpen, hasCloseBtn, onClose, children, header, footer, toggleDialog },
-ref,
-) => {
+export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props, ref) => {
+    const { hasCloseBtn, children, header, footer, toggleDialog } = props
 
     const closeIfClickOutside = (e: React.MouseEvent) => {
         if (e.currentTarget === e.target) toggleDialog()

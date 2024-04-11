@@ -60,6 +60,8 @@ export const BaseDialogEdge = styled.div`
 
 
 export const Header = styled(BaseDialogEdge)`
+  display: flex;
+  flex-direction: column;
   font-weight: bold;
   border-bottom: 1px solid var(--md-sys-color-outline-variant);
   padding: 16px 0;
