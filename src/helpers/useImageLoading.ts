@@ -14,6 +14,9 @@ const useImageLoading = (imageUrl: string = '', isLoading: boolean) => {
     const img = new Image()
     const startTime = performance.now()
     img.onload = () => {
+      // get img src intrinsic size
+      console.log(img)
+
       const loadTime = performance.now() - startTime
       setIsImageLoading(false)
       setIsImageValid(true)

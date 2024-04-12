@@ -1,7 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
-import useImageLoading from '../helpers/useImageLoading'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
@@ -89,11 +88,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideDescription = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
-    // image animation is disabled if the image loads faster than 100ms
-    const [isImageLoading, isImageValid, disableImageAnimation] = useImageLoading(
-      imageUrl,
-      isLoading,
-    )
+    const [isImageError, setIsImageError] = useState(!imageUrl)
+    const [isImageLoading, setIsImageLoading] = useState(true)
+
+    const handleImageError = () => {
+      setIsImageError(true)
+      setIsImageLoading(false)
+    }
 
     return (
       <Styled.Card
@@ -125,10 +126,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       >
         <Styled.Thumbnail
           className="thumbnail"
-          style={{ backgroundImage: `url(${imageUrl})` }}
-          $isImageLoading={isImageLoading}
-          $isImageValid={isImageValid}
-          $disableImageAnimation={disableImageAnimation}
           tabIndex={isDraggable ? 0 : undefined}
           onKeyDown={(e) => {
             if (!isDraggable) return
@@ -139,6 +136,18 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             }
           }}
         >
+          {/* middle Icon */}
+          {!isLoading && !isImageLoading && (
+            <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
+          )}
+          {!isLoading && imageUrl && !isImageError && (
+            <Styled.Image
+              src={imageUrl}
+              onError={handleImageError}
+              onLoad={() => setIsImageLoading(true)}
+            />
+          )}
+
           <Styled.Row className="row">
             {/* top left */}
             {!hideTitles && (
@@ -154,9 +163,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Title>
             )}
           </Styled.Row>
-          {!isLoading && !isImageLoading && !isImageValid && (
-            <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
-          )}
           <Styled.Row className="row">
             {/* bottom left */}
             {!hideTitles && (

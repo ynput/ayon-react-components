@@ -318,11 +318,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     `}
 `
 
-interface StyledThumbnailProps {
-  $isImageLoading: boolean
-  $isImageValid: boolean
-  $disableImageAnimation: boolean
-}
+interface StyledThumbnailProps {}
 
 // THUMBNAIL
 export const Thumbnail = styled.div<StyledThumbnailProps>`
@@ -339,37 +335,16 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
 
   border-radius: var(--border-radius-xl);
   background-color: var(--md-sys-color-surface-container);
+`
 
-  /* image styles */
-  background-size: cover;
-  background-position: center;
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    background-color: var(--md-sys-color-surface-container-high);
-    transition: opacity var(--loading-transition);
-    /* sometime the image takes a bit to show */
-    transition-delay: 100ms;
-  }
-
-  ${({ $disableImageAnimation }) =>
-    $disableImageAnimation &&
-    css`
-      &::after {
-        display: none;
-      }
-    `}
-
-  ${({ $isImageLoading }) =>
-    $isImageLoading &&
-    css`
-      &::after {
-        opacity: 1;
-      }
-    `}
+// IMAGE
+export const Image = styled.img`
+  z-index: 10;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `
 
 // for the header and footer inside the thumbnail
