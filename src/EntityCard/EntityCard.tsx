@@ -107,17 +107,22 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       <Styled.Card
         {...props}
         ref={ref}
-        $isActive={isActive}
+        className={clsx(
+          {
+            isActive,
+            isSecondary,
+            isLoading,
+            isError,
+            disabled,
+            isHover,
+            isDragging,
+            isDraggable,
+            isFullHighlight,
+            isActiveAnimate,
+          },
+          'entity-card',
+        )}
         $variant={variant}
-        $isSecondary={isSecondary}
-        $isLoading={isLoading}
-        $isError={isError}
-        $disabled={disabled}
-        $isHover={isHover}
-        $isDragging={isDragging}
-        $isDraggable={isDraggable}
-        $isFullHighlight={isFullHighlight}
-        $isActiveAnimate={isActiveAnimate}
         tabIndex={0}
         onClick={(e) => {
           onActivate && onActivate()

@@ -5,18 +5,7 @@ import { Icon } from '../Icon'
 import * as Theme from '../theme'
 
 interface StyledEntityCardProps {
-  $isActive: boolean
-  $isSecondary?: boolean
   $variant?: EntityCardProps['variant']
-  $isLoading?: boolean
-  $isSuccess?: boolean
-  $isError?: boolean
-  $disabled?: boolean
-  $isHover?: boolean
-  $isDragging?: boolean
-  $isDraggable?: boolean
-  $isFullHighlight?: boolean
-  $isActiveAnimate?: boolean
 }
 
 const cardHoverStyles = css`
@@ -30,6 +19,14 @@ const cardHoverStyles = css`
     padding-bottom: 0;
   }
 `
+const blueTitleStyles = css`
+  .inner-card {
+    background-color: var(--selection-color);
+  }
+  &:hover .inner-card {
+    background-color: var(--selection-color-hover);
+  }
+`
 
 export const Card = styled.div<StyledEntityCardProps>`
   --loading-transition: 200ms;
@@ -39,21 +36,17 @@ export const Card = styled.div<StyledEntityCardProps>`
   --selection-color-active: var(--md-sys-color-primary-container-active);
   --selection-color-text: var(--md-sys-color-on-primary-container);
 
-  ${({ $isHover }) =>
-    $isHover &&
-    css`
-      --hover-transition: 0ms;
-    `}
+  &.isHover {
+    --hover-transition: 0ms;
+  }
 
   /* if $isSecondary, use secondary color */
-  ${({ $isSecondary }) =>
-    $isSecondary &&
-    css`
-      --selection-color: var(--md-sys-color-tertiary-container);
-      --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
-      --selection-color-active: var(--md-sys-color-tertiary-container-active);
-      --selection-color-text: var(--md-sys-color-on-tertiary-container);
-    `}
+  &.isSecondary {
+    --selection-color: var(--md-sys-color-tertiary-container);
+    --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
+    --selection-color-active: var(--md-sys-color-tertiary-container-active);
+    --selection-color-text: var(--md-sys-color-on-tertiary-container);
+  }
 
   /* layout */
   display: flex;
@@ -71,8 +64,11 @@ export const Card = styled.div<StyledEntityCardProps>`
   &,
   .thumbnail {
     transition: padding 100ms ease;
-    padding: ${({ $isActive, $isActiveAnimate }) =>
-      $isActive && $isActiveAnimate ? '4px' : '2px'};
+
+    padding: 2px;
+    &.isActive.isActiveAnimate {
+      padding: 4px;
+    }
   }
 
   /* thumbnail variant no padding */
@@ -102,13 +98,11 @@ export const Card = styled.div<StyledEntityCardProps>`
   &:hover {
     ${cardHoverStyles}
 
-    ${({ $isFullHighlight }) =>
-      $isFullHighlight &&
-      css`
-        .inner-card {
-          background-color: var(--md-sys-color-surface-container-high-hover);
-        }
-      `}
+    &.isFullHighlight {
+      .inner-card {
+        background-color: var(--md-sys-color-surface-container-high-hover);
+      }
+    }
   }
 
   &:active {
@@ -116,60 +110,51 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   /* for keyboard selection when in dragging mode */
-  ${({ $isDraggable }) =>
-    $isDraggable &&
-    css`
-      &:has(:focus-visible),
-      &:focus-visible {
-        ${cardHoverStyles}
-      }
-    `}
+  &.isDraggable {
+    &:has(:focus-visible),
+    &:focus-visible {
+      ${cardHoverStyles}
+    }
+  }
 
   /* when active, set background color */
-  ${({ $isActive, $variant, $isDraggable, $isFullHighlight }) =>
-    $isActive &&
-    css`
-      /* set backgrounds */
-      background-color: var(--selection-color);
-      color: var(--selection-color-text);
+  &.isActive {
+    /* set backgrounds */
+    background-color: var(--selection-color);
+    color: var(--selection-color-text);
+    /* show drag handle cursor */
+    cursor: grab;
 
-      &:hover {
-        background-color: var(--selection-color-hover);
+    /* description stays open */
+    .description {
+      grid-template-rows: 1fr;
+      padding: 2px;
+      padding-bottom: 0;
+      transition-delay: 0;
+    }
+
+    &:hover {
+      background-color: var(--selection-color-hover);
+    }
+    &:active {
+      background-color: var(--selection-color-active);
+    }
+
+    &.isDraggable {
+      &:focus-visible,
+      &:has(:focus-visible) {
+        background-color: var(--selection-color);
       }
-      &:active {
-        background-color: var(--selection-color-active);
-      }
+    }
 
-      ${$isDraggable &&
-      css`
-        &:focus-visible,
-        &:has(:focus-visible) {
-          background-color: var(--selection-color);
-        }
-      `}
+    /* $variant = 'basic' titles are blue */
+    ${({ $variant }) => $variant === 'basic' && blueTitleStyles}
 
-      /* show drag handle cursor */
-      cursor: grab;
-
-      /* description stays open */
-      .description {
-        grid-template-rows: 1fr;
-        padding: 2px;
-        padding-bottom: 0;
-        transition-delay: 0;
-      }
-
-      /* when variant = 'basic' titles are blue */
-      ${($variant === 'basic' || $isFullHighlight) &&
-      css`
-        .inner-card {
-          background-color: var(--selection-color);
-        }
-        &:hover .inner-card {
-          background-color: var(--selection-color-hover);
-        }
-      `}
-    `}
+    /* isFullHighlight title are blue */
+    &.isFullHighlight {
+      ${blueTitleStyles}
+    }
+  }
 
   ${getShimmerStyles(
     'var(--md-sys-color-surface-container-high)',
@@ -180,7 +165,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     },
   )}
 
-    &::after {
+  &::after {
     transition: opacity var(--loading-transition);
   }
 
@@ -200,122 +185,111 @@ export const Card = styled.div<StyledEntityCardProps>`
     }
   }
 
-  /* set opacity to 0 when not loading */
-  ${({ $isLoading }) =>
-    $isLoading
-      ? css`
-          /* LOADING ACTIVE */
-          pointer-events: none;
-          /* title card loading styles */
-          .row > span {
-            /* change color of cards */
-            opacity: 1;
-            min-width: 50%;
-            position: relative;
-            /* shimmer */
-            ${getShimmerStyles(
-              'var(--md-sys-color-surface-container-high)',
-              'var(--md-sys-color-surface-container-highest)',
-              {
-                opacity: 0.5,
-                speed: 1.5,
-              },
-            )}
+  &.isLoading {
+    /* LOADING ACTIVE */
+    pointer-events: none;
+    /* title card loading styles */
+    .row > span {
+      /* change color of cards */
+      opacity: 1;
+      min-width: 50%;
+      position: relative;
+      /* shimmer */
+      ${getShimmerStyles(
+        'var(--md-sys-color-surface-container-high)',
+        'var(--md-sys-color-surface-container-highest)',
+        {
+          opacity: 0.5,
+          speed: 1.5,
+        },
+      )}
 
-            &.status,
+      &.status,
             &.notification,
             &.assignees {
-              min-width: 28px;
-            }
-            /* hide all text and icons */
-            & > * {
-              opacity: 0;
-              user-select: none;
-              pointer-events: none;
-            }
-          }
+        min-width: 28px;
+      }
+      /* hide all text and icons */
+      & > * {
+        opacity: 0;
+        user-select: none;
+        pointer-events: none;
+      }
+    }
 
-          /* hide description */
-          .description {
-            grid-template-rows: 0fr !important;
-            padding-top: 0 !important;
-          }
-        `
-      : css`
-          /* LOADING FINISHED */
-          &::after {
-            opacity: 0;
-          }
-        `}
+    /* hide description */
+    .description {
+      grid-template-rows: 0fr !important;
+      padding-top: 0 !important;
+    }
+  }
 
-  /* ERROR */
-        ${({ $isError, $isDraggable }) =>
-    $isError &&
-    css`
-      &,
-      &:hover {
+  &:not(.isLoading) {
+    /* LOADING FINISHED */
+    &::after {
+      opacity: 0;
+    }
+  }
+
+  &.isError {
+    &,
+    &:hover {
+      background-color: var(--md-sys-color-error-container);
+    }
+
+    &.isDraggable {
+      &:focus-visible,
+      &:has(:focus-visible) {
         background-color: var(--md-sys-color-error-container);
       }
+    }
 
-      ${$isDraggable &&
-      css`
-        &:focus-visible,
-        &:has(:focus-visible) {
-          background-color: var(--md-sys-color-error-container);
-        }
-      `}
+    .row > span {
+      min-width: 50%;
 
-      .row > span {
-        min-width: 50%;
-
-        & > * {
-          display: none;
-        }
-
-        &.status,
-        &.notification,
-        &.assignees {
-          min-width: 28px;
-        }
-      }
-    `}
-
-    /* DISABLED */
-    ${({ $disabled }) =>
-    $disabled &&
-    css`
-      /* prevent clicks and hover */
-      pointer-events: none;
-
-      /* fade out text */
-      .row > * > * {
-        opacity: 0.5;
+      & > * {
+        display: none;
       }
 
-      /* fade out image */
-      .thumbnail {
-        ::after {
-          opacity: 0.75;
-        }
+      &.status,
+      &.notification,
+      &.assignees {
+        min-width: 28px;
       }
-    `}
+    }
+  }
 
-    transition: rotate 100ms;
+  &.disabled {
+    /* prevent clicks and hover */
+    pointer-events: none;
+
+    /* fade out text */
+    .row > * > * {
+      opacity: 0.5;
+    }
+
+    /* fade out image */
+    .thumbnail {
+      ::after {
+        opacity: 0.75;
+      }
+    }
+  }
+
+  transition: rotate 100ms;
 
   /* if we are dragging, hide description and rotate */
-  ${({ $isDragging }) =>
-    $isDragging &&
-    css`
-      /* box shadow */
-      box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
-      rotate: 5deg;
-      cursor: grabbing;
+  &.isDragging {
+    /* box shadow */
+    box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
+    rotate: 5deg;
+    cursor: grabbing;
 
-      .description {
-        grid-template-rows: 0fr !important;
-        padding-top: 0 !important;
-      }
-    `}
+    .description {
+      grid-template-rows: 0fr !important;
+      padding-top: 0 !important;
+    }
+  }
 `
 
 interface StyledThumbnailProps {}

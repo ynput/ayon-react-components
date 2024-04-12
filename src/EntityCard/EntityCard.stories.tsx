@@ -31,6 +31,7 @@ const initData: DataProps = {
     { fullName: 'John Doe', name: 'john' },
   ],
   isFullHighlight: false,
+  isActiveAnimate: false,
 }
 
 const Template = (props: EntityCardProps) => {
