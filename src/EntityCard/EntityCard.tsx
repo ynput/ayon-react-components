@@ -144,7 +144,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             <Styled.Image
               src={imageUrl}
               onError={handleImageError}
-              onLoad={() => setIsImageLoading(true)}
+              onLoad={() => setIsImageLoading(false)}
             />
           )}
 
