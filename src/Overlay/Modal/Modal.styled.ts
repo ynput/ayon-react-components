@@ -18,7 +18,7 @@ export const Dialog = styled.dialog`
     border-radius: var(--border-radius-m);
     flex-direction: column;
     gap: 16px;
-    padding: 16px 0;
+    padding: 0;
     min-width: 200px;
     min-height: 100px;
     max-width: 85%;
@@ -67,6 +67,8 @@ export const Header = styled(BaseDialogEdge)`
 `
 
 export const Footer = styled(BaseDialogEdge)`
+  display: flex;
+  flex-direction: row-reverse;
   border-top: 1px solid var(--md-sys-color-outline-variant);
   padding: 16px;
 `

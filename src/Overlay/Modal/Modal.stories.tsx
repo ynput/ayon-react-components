@@ -23,10 +23,7 @@ type Story = StoryObj<typeof Modal>
 // }
 
 const HeaderContent = () => (
-  <>
     <div>This is title of modal</div>
-    <span>This is perex</span>
-  </>
 )
 
 const BodyContent = () => (
@@ -59,7 +56,7 @@ const Template = () => {
       <Modal 
         header={<HeaderContent/>}
         children={<BodyContent />}
-        footer={<FooterContent />}
+        // footer={<FooterContent />}
         toggleDialog={toggleDialog}
         ref={modalRef}
       />

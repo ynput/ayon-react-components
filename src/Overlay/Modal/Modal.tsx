@@ -22,7 +22,7 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props, ref) => 
         <Styled.Close icon="close" autoFocus onClick={toggleDialog} />
         {header && <Styled.Header>{header}</Styled.Header>}
         {children && <Styled.Body>{children}</Styled.Body>}
-        {footer ? <Styled.Footer>{footer}</Styled.Footer> : <Button onClick={toggleDialog}>Close</Button>}
+        <Styled.Footer>{footer ? footer : <Button variant="text" onClick={toggleDialog}>Close</Button>}</Styled.Footer>
     </Styled.Dialog>
     </>
   )
