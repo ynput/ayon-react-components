@@ -121,6 +121,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             isActiveAnimate,
           },
           'entity-card',
+          props.className,
         )}
         $variant={variant}
         tabIndex={0}
