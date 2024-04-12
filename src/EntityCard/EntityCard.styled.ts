@@ -345,6 +345,15 @@ export const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+  /* loading transition */
+  opacity: 1;
+  transition: opacity 300ms;
+  transition-delay: 100ms;
+
+  &.loading {
+    opacity: 0;
+  }
 `
 
 // for the header and footer inside the thumbnail
@@ -419,4 +428,13 @@ export const NoImageIcon = styled(Icon)`
   transform: translate(-50%, -50%);
   font-size: 40px;
   color: var(--md-sys-color-outline);
+
+  /* loading transition */
+  opacity: 1;
+  transition: opacity 300ms;
+  transition-delay: 300ms;
+
+  &.loading {
+    opacity: 0;
+  }
 `

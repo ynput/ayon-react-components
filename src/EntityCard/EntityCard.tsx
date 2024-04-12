@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
+import clsx from 'clsx'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -143,14 +144,18 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           }}
         >
           {/* middle Icon */}
-          {!isLoading && !isImageLoading && (
-            <Styled.NoImageIcon icon={titleIcon || 'image'} className="no-image" />
+          {!isLoading && (
+            <Styled.NoImageIcon
+              icon={titleIcon || 'image'}
+              className={clsx('no-image', { loading: isImageLoading })}
+            />
           )}
           {!isLoading && imageUrl && !isImageError && (
             <Styled.Image
               src={imageUrl}
               onError={handleImageError}
               onLoad={() => setIsImageLoading(false)}
+              className={clsx({ loading: isImageLoading })}
             />
           )}
 
