@@ -89,7 +89,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideTitles = variant === 'thumbnail'
 
     const [isImageError, setIsImageError] = useState(!imageUrl)
-    const [isImageLoading, setIsImageLoading] = useState(true)
+    const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
+
+    // reset image loading state
+    useEffect(() => {
+      setIsImageError(!imageUrl)
+      setIsImageLoading(!!imageUrl)
+    }, [imageUrl])
 
     const handleImageError = () => {
       setIsImageError(true)
