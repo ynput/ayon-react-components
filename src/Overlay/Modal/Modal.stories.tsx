@@ -34,6 +34,10 @@ const BodyContent = () => (
 
 const FooterContent = () => <span>Ynput is awesome. Copyright ©2024 Ynput</span>
 
+const closeProps = {
+  label: 'Close'
+}
+
 
 
 const Template = () => {
@@ -59,6 +63,8 @@ const Template = () => {
         // footer={<FooterContent />}
         toggleDialog={toggleDialog}
         ref={modalRef}
+        closeProps={closeProps}
+        hideCancelButton={false} 
       />
     </>
   )
