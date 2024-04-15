@@ -59,7 +59,6 @@ export const BaseDialogEdge = styled.div`
 export const Header = styled(BaseDialogEdge)`
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
   padding: 16px;
   & > * { 
     ${titleLarge}
@@ -69,7 +68,6 @@ export const Header = styled(BaseDialogEdge)`
 export const Footer = styled(BaseDialogEdge)`
   display: flex;
   flex-direction: row-reverse;
-  border-top: 1px solid var(--md-sys-color-outline-variant);
   padding: 16px;
 `
 export const Body = styled.div`
