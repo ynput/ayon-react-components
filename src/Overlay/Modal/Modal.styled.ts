@@ -31,11 +31,11 @@ export const Dialog = styled.dialog`
 
     /* Styles for dialogs that carry modal behavior */
     &:modal {
-       
     }
 
     &:modal[open] {
-      animation: ${fadeInAnimation} 0.13s ease-in-out;
+      animation: ${fadeInAnimation} 0.2s ease-in-out forwards, ${fadeInAnimation} 0.2s ease-in-out backwards;
+      animation-fill-mode: both;
     }
 
     /* Styles for dialogs that carry non-modal behavior */
