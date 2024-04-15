@@ -43,10 +43,6 @@ export const Dialog = styled.dialog`
     /* Styles for dialogs that carry non-modal behavior */
     &:not(:modal) {
     }
-
-    .alert {
-      color: red;
-    }
 `
 
 export const Close = styled(Button)`

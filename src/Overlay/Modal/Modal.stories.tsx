@@ -62,7 +62,7 @@ const Template = () => {
         onClose={handleCloseModal}
         closeProps={closeProps}
         hideCancelButton={false}
-        classNames={{header: 'alert'}} 
+        // classNames={{header: 'alert'}} 
       />
     </>
   )

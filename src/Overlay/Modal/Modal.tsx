@@ -7,18 +7,18 @@ type ModalProps = {
     children?: React.ReactNode;
     footer?: React.ReactNode;
     closeProps?: ButtonProps;
-    hideCancelButton: boolean;
+    hideCancelButton?: boolean;
     isOpen: boolean;
     onClose?: () => void;
-    classNames: ClassNames;
+    classNames?: ClassNames;
   };
 
   type ClassNames = {
     header?: string;
     body?: string;
     footer?: string;
-    cancelBtn?: string;
-    closeBtn?: string;
+    cancelButton?: string;
+    closeButton?: string;
   };
 
 
@@ -46,12 +46,15 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
       setModalOpen(false);
     };
 
+  //*TODO resolveClassNames() ? *//
+
+
   return (
       <Styled.Dialog {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
-          {hideCancelButton ? null : <Styled.Close className={'cancelBtn'+ ' ' + classNames.cancelBtn} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
-          {header && <Styled.Header className={'header'+ ' ' + classNames.header}>{header}</Styled.Header>}
-          {children && <Styled.Body className={'body' + ' ' + classNames.body}>{children}</Styled.Body>}
-          <Styled.Footer>{footer ? footer : <Button className={'closeBtn' + ' ' + classNames.closeBtn} {...closeProps} variant="text" onClick={handleCloseModal} />}</Styled.Footer>
+          {hideCancelButton ? null : <Styled.Close className={classNames ? 'cancelButton'+ ' ' + classNames.cancelButton : 'cancelButton'} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
+           <Styled.Header className={classNames ? 'header'+ ' ' + classNames.header : 'header' }>{header ? header : ''}</Styled.Header>
+          {children && <Styled.Body className={classNames ? 'body'+ ' ' + classNames.body : 'body' }>{children}</Styled.Body>}
+          {footer ? <Styled.Footer> {footer} </Styled.Footer> : <Button className={classNames ? 'closeButton' + ' ' + classNames.closeButton : 'closeButton'} {...closeProps} variant="text" onClick={handleCloseModal} />}
       </Styled.Dialog>
   )
 })
