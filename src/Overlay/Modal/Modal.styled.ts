@@ -6,9 +6,11 @@ import { titleLarge } from '../../theme'
 const fadeInAnimation = keyframes`
   0% {
     opacity: 0;
+    transform: scale(0);
   }
   100% {
     opacity: 1;
+    transform: scale(1);
   }
 `
 
@@ -34,7 +36,7 @@ export const Dialog = styled.dialog`
     }
 
     &:modal[open] {
-      animation: ${fadeInAnimation} 0.2s ease-in-out forwards, ${fadeInAnimation} 0.2s ease-in-out backwards;
+      animation: ${fadeInAnimation} 0.25s ease-in-out forwards, ${fadeInAnimation} 0.25s ease-in-out backwards;
       animation-fill-mode: both;
     }
 
