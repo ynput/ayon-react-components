@@ -10,11 +10,20 @@ type ModalProps = {
     hideCancelButton: boolean;
     isOpen: boolean;
     onClose?: () => void;
+    classNames: ClassNames;
+  };
+
+  type ClassNames = {
+    header?: string;
+    body?: string;
+    footer?: string;
+    cancelBtn?: string;
+    closeBtn?: string;
   };
 
 
 export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
-    const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose } = props
+    const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose, classNames } = props
 
     const [isModalOpen, setModalOpen] = useState(isOpen);
     const modalRef = useRef<HTMLDialogElement | null>(null);
@@ -23,9 +32,7 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
         if (e.currentTarget === e.target) handleCloseModal()
     }
 
-    useEffect(() => {
-      setModalOpen(isOpen);
-    }, [isOpen]);
+    useEffect(() => setModalOpen(isOpen), [isOpen]);
 
     useEffect(() => {
       const modalElement = modalRef.current;
@@ -35,18 +42,16 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
 
 
     const handleCloseModal = () => {
-      if (onClose) {
-        onClose();
-      }
+      if (onClose) onClose()
       setModalOpen(false);
     };
 
   return (
       <Styled.Dialog {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
-          {hideCancelButton ? null : <Styled.Close icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
-          {header && <Styled.Header>{header}</Styled.Header>}
-          {children && <Styled.Body>{children}</Styled.Body>}
-          <Styled.Footer>{footer ? footer : <Button {...closeProps} variant="text" onClick={handleCloseModal} />}</Styled.Footer>
+          {hideCancelButton ? null : <Styled.Close className={'cancelBtn'+ ' ' + classNames.cancelBtn} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
+          {header && <Styled.Header className={'header'+ ' ' + classNames.header}>{header}</Styled.Header>}
+          {children && <Styled.Body className={'body' + ' ' + classNames.body}>{children}</Styled.Body>}
+          <Styled.Footer>{footer ? footer : <Button className={'closeBtn' + ' ' + classNames.closeBtn} {...closeProps} variant="text" onClick={handleCloseModal} />}</Styled.Footer>
       </Styled.Dialog>
   )
 })
