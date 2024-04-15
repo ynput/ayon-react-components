@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Modal } from '.'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '../../Button'
 
 const meta: Meta<typeof Modal> = {
@@ -42,27 +42,24 @@ const closeProps = {
 
 const Template = () => {
 
-  const modalRef = useRef<HTMLDialogElement | null>(null);
+  const [openModal, setOpenModal] = useState(false)
 
-  const toggleDialog = () => {
-    const modalElement = modalRef.current
-    const isModalOpen =  modalElement?.hasAttribute('open')
-    if (!modalElement) return
-    isModalOpen ? modalElement.close() : modalElement.showModal()
+  const handleCloseModal = () => {
+    setOpenModal(false)
   }
 
   
   return (
     <>
-      <Button onClick={() => toggleDialog()} icon="open_in_full">
+      <Button onClick={() => setOpenModal(!openModal)} icon="open_in_full">
         Show Modal
       </Button>
       <Modal 
         header={<HeaderContent/>}
         children={<BodyContent />}
         // footer={<FooterContent />}
-        toggleDialog={toggleDialog}
-        ref={modalRef}
+        isOpen={openModal}
+        onClose={handleCloseModal}
         closeProps={closeProps}
         hideCancelButton={false} 
       />
