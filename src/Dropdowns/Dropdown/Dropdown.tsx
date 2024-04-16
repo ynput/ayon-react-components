@@ -538,11 +538,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         }
 
         if (multiSelect) {
-          selectedValue && handleChange(selectedValue, activeIndex || 0)
+          if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
 
-          // nothing selected and only one option and not nullable
+          // nothing selected take first option
           if (options.length === 1 || (options.length === 2 && editable && !onClearNull)) {
-            handleClose(undefined, selected ? [...selected] : [], options[0][dataKey])
+            const newSelected = [...(selected || []), options[0][dataKey]]
+            handleClose(undefined, newSelected, options[0][dataKey])
           }
         } else {
           // convert selectedValue to array
