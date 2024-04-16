@@ -540,8 +540,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (multiSelect) {
           if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
 
+          const firstOption = options[0]
+          const firstOptionAlreadySelected = selected?.includes(firstOption[dataKey])
+
           // nothing selected take first option
-          if (options.length === 1 || (options.length === 2 && editable && !onClearNull)) {
+          if ((options.length === 1 || editable) && !firstOptionAlreadySelected) {
             const newSelected = [...(selected || []), options[0][dataKey]]
             handleClose(undefined, newSelected, options[0][dataKey])
           }
