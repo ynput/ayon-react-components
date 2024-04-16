@@ -540,13 +540,19 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (multiSelect) {
           if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
 
-          const firstOption = options[0]
-          const firstOptionAlreadySelected = selected?.includes(firstOption[dataKey])
+          let selectedValues = [options[0][dataKey]]
+          // if editable, split by comma
+          if (editable && searchForm) {
+            selectedValues = searchForm.split(',').map((s) => s.trim())
+          }
+
+          // filter out already selected
+          selectedValues = selectedValues.filter((s) => !selected?.includes(s))
 
           // nothing selected take first option
-          if ((options.length === 1 || editable) && !firstOptionAlreadySelected) {
-            const newSelected = [...(selected || []), options[0][dataKey]]
-            handleClose(undefined, newSelected, options[0][dataKey])
+          if (options.length === 1 || editable) {
+            const newSelected = [...(selected || []), ...selectedValues]
+            handleClose(undefined, newSelected, ...selectedValues)
           }
         } else {
           // convert selectedValue to array
