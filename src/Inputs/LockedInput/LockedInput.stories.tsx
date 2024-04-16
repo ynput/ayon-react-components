@@ -51,8 +51,8 @@ export const OpenDialog: Story = {
         {dialogOpen && (
           <Dialog
             header="Edit Username"
-            visible={dialogOpen}
-            onHide={() => setDialogOpen(false)}
+            isOpen={dialogOpen}
+            onClose={() => setDialogOpen(false)}
             footer={
               <>
                 <Button onClick={handleCancel}>Cancel</Button>

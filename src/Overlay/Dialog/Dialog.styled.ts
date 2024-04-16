@@ -1,98 +1,68 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../../Button'
+import { titleLarge } from '../../theme'
 
-// fade in animation keyframes
-export const fadeInAnimation = keyframes`
+
+const fadeInAnimation = keyframes`
   0% {
-    opacity: 0;
+    opacity: 0.3;
+    transform: scale(0.8);
   }
   100% {
     opacity: 1;
-  }
-`
-
-export const Shade = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 500;
-  cursor: pointer;
-
-  /* fade in animation */
-  animation: ${fadeInAnimation} 0.13s ease-in-out;
-`
-
-// opening up animation keyframes
-export const openAnimation = keyframes`
-  0% {
-    transform: scale(0.5);
-    opacity: 0;
-  }
-  100% {
     transform: scale(1);
-    opacity: 1;
   }
 `
 
-export const Window = styled.div<{ $noHeader: boolean }>`
-  background-color: var(--md-sys-color-surface-container);
-  border-radius: var(--border-radius-m);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-  min-width: 200px;
-  min-height: 100px;
-  max-width: 85%;
-  max-height: 85%;
-  position: relative;
-  cursor: auto;
-  :focus {
-    outline: none;
-  }
+const widthSizes  = {
+  sm: '400px',
+  md: '600px',
+  lg: '800px',
+  full: '85%',
+};
 
-  /* open animation */
-  animation: ${openAnimation} 0.13s ease-in-out;
+const heightSizes  = {
+  sm: '300px',
+  md: '400px',
+  lg: '500px',
+  full: '85%',
+};
 
-  /* add padding to top if no header */
+const getWidthSize = (size: string) => size ? widthSizes[size as keyof typeof widthSizes] : widthSizes.sm;
+const getHeightSize = (size: string) => size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm;
 
-  ${({ $noHeader }) =>
-    $noHeader &&
-    css`
-      padding-top: 46px;
-    `}
-`
 
-export const BaseDialogEdge = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 6px;
-`
+export const Dialog = styled.dialog<{ $size?: string }>`
+    background-color: var(--md-sys-color-surface-container);
+    border: none;
+    border-radius: var(--border-radius-m);
+    flex-direction: column;
+    gap: 16px;
+    padding: 0;
+    min-width: 200px;
+    min-height: 100px;
+    max-width: 85%;
+    width: ${({ $size }) => $size ? css` ${getWidthSize($size)}` : '200px'};
+    max-Height: ${({ $size }) => $size ? css` ${getHeightSize($size)}` : '100px' };
 
-export const Header = styled(BaseDialogEdge)`
-  font-weight: bold;
-  border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  padding: 16px 0;
-`
+    /* Backdrop property affects inactive area around modal */
+    &::backdrop {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
 
-export const Footer = styled(BaseDialogEdge)`
-  border-top: 1px solid var(--md-sys-color-outline-variant);
-  padding: 16px 0;
-`
+    /* Styles for dialogs that carry modal behavior */
+    &:modal {
+      display: flex;
+    }
 
-export const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
+    &:modal[open] {
+      animation: ${fadeInAnimation} 150ms ease-in-out forwards, ${fadeInAnimation} 150ms ease-in-out backwards;
+      animation-fill-mode: both;
+    }
 
-  flex-grow: 1;
+    /* Styles for dialogs that carry non-modal behavior */
+    &:not(:modal) {
+    }
 `
 
 export const Close = styled(Button)`
@@ -100,3 +70,33 @@ export const Close = styled(Button)`
   top: 8px;
   right: 8px;
 `
+
+export const BaseDialogEdge = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+`
+
+
+export const Header = styled(BaseDialogEdge)`
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  & > * { 
+    ${titleLarge}
+  }
+`
+
+export const Footer = styled(BaseDialogEdge)`
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 16px;
+`
+export const Body = styled.div`
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex-grow: 1;
+`
+

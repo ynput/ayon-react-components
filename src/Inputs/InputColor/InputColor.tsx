@@ -235,7 +235,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
           onBlur={() => !useDialog && handleConfirmDialog()}
           ref={previewRef}
         />
-        <Dialog header={DialogTitle} onHide={handleCancelDialog} visible={dialogOpen}>
+        <Dialog header={DialogTitle} onClose={() => setDialogOpen(false)} isOpen={dialogOpen} >
           <ColorInputs>
             <ColorPickerPreview
               onChange={handleColorInputOnChange}

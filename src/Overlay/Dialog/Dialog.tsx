@@ -1,54 +1,62 @@
-import { KeyboardEvent, MouseEvent, forwardRef, useMemo } from 'react'
+import { forwardRef, useEffect, useRef, useState } from "react";
 import * as Styled from './Dialog.styled'
+import { Button, ButtonProps } from '../../Button'
 
-export interface DialogProps extends React.HTMLAttributes<HTMLDivElement> {
-  onHide?: () => void
-  header?: React.ReactNode
-  footer?: React.ReactNode
-  children?: React.ReactNode
-  headerStyle?: React.CSSProperties
-  bodyStyle?: React.CSSProperties
-  footerStyle?: React.CSSProperties
-  visible?: boolean
-}
+type DialogProps = {
+    header?: React.ReactNode;
+    children?: React.ReactNode;
+    footer?: React.ReactNode;
+    closeProps?: ButtonProps;
+    hideCancelButton?: boolean;
+    isOpen: boolean;
+    onClose?: () => void;
+    classNames?: ClassNames;
+    size?: "sm" | "md" | "lg" | "full";
+  };
 
-export const Dialog = forwardRef<HTMLDivElement, DialogProps>(
-  (
-    { onHide, header, footer, children, headerStyle, bodyStyle, footerStyle, visible, ...props },
-    ref,
-  ) => {
-    const headerComp = useMemo(() => {
-      if (!header) return null
-      return <Styled.Header style={headerStyle}>{header}</Styled.Header>
-    }, [header])
+  type ClassNames = {
+    header?: string;
+    body?: string;
+    footer?: string;
+    cancelButton?: string;
+    closeButton?: string;
+  };
 
-    const footerComp = useMemo(() => {
-      if (!footer) return null
-      return <Styled.Footer style={footerStyle}>{footer}</Styled.Footer>
-    }, [header])
+  
 
-    const onShadeClick = (event: MouseEvent<HTMLDivElement>): void => {
-      if (event.currentTarget != event.target) return
-      if (!onHide) return
-      event.preventDefault()
-      onHide()
+
+export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
+    const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose, classNames, size } = props
+
+    const [isModalOpen, setModalOpen] = useState(isOpen);
+    const modalRef = useRef<HTMLDialogElement | null>(null);
+
+    const closeIfClickOutside = (e: React.MouseEvent) => {
+        if (e.currentTarget === e.target) handleCloseModal()
     }
 
-    const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === 'Escape' && onHide) onHide()
-    }
+    useEffect(() => setModalOpen(isOpen), [isOpen]);
 
-    if (!visible) return null
+    useEffect(() => {
+      const modalElement = modalRef.current;
+      if (!modalElement) return
+      isModalOpen ? modalElement.showModal() : modalElement.close()
+    }, [isModalOpen]);
 
-    return (
-      <Styled.Shade className="dialog-shade" onClick={onShadeClick} onKeyDown={onKeyDown} ref={ref}>
-        <Styled.Window {...props} onKeyDown={onKeyDown} tabIndex={-1} $noHeader={!headerComp}>
-          <Styled.Close icon="close" autoFocus onClick={onHide} />
-          {headerComp}
-          <Styled.Body style={bodyStyle}>{children}</Styled.Body>
-          {footerComp}
-        </Styled.Window>
-      </Styled.Shade>
-    )
-  },
-)
+
+    const handleCloseModal = () => {
+      if (onClose) onClose()
+      setModalOpen(false);
+    };
+
+  return (
+      <Styled.Dialog $size={size} {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
+          {hideCancelButton ? null : <Styled.Close className={classNames ? 'cancelButton'+ ' ' + classNames.cancelButton : 'cancelButton'} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
+           <Styled.Header className={classNames ? 'header'+ ' ' + classNames.header : 'header' }>{header ? header : ''}</Styled.Header>
+          {children && <Styled.Body className={classNames ? 'body'+ ' ' + classNames.body : 'body' }>{children}</Styled.Body>}
+          <Styled.Footer> 
+            {footer ?  footer : <Button className={classNames ? 'closeButton' + ' ' + classNames.closeButton : 'closeButton'} {...closeProps} variant="text" onClick={handleCloseModal} />} 
+          </Styled.Footer>
+      </Styled.Dialog>
+  )
+})
