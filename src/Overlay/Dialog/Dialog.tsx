@@ -49,8 +49,6 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
       setModalOpen(false);
     };
 
-    console.log(size,'size')
-
   return (
       <Styled.Dialog $size={size} {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
           {hideCancelButton ? null : <Styled.Close className={classNames ? 'cancelButton'+ ' ' + classNames.cancelButton : 'cancelButton'} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
