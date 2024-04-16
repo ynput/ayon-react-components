@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Modal } from '.'
+import { Dialog } from '.'
 import { useRef, useState } from 'react'
 import { Button } from '../../Button'
 
-const meta: Meta<typeof Modal> = {
-  component: Modal,
+const meta: Meta<typeof Dialog> = {
+  component: Dialog,
   tags: ['autodocs'],
 }
 
 export default meta
 
-type Story = StoryObj<typeof Modal>
+type Story = StoryObj<typeof Dialog>
 
 // const payload = {
 //   message: 'Are you sure you want to discard your changes?',
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof Modal>
 // }
 
 const HeaderContent = () => (
-    <div>This is title of modal</div>
+    <div>This is title of dialog</div>
 )
 
 const BodyContent = () => (
@@ -54,7 +54,7 @@ const Template = () => {
       <Button onClick={() => setOpenModal(!openModal)} icon="open_in_full">
         Show Modal
       </Button>
-      <Modal 
+      <Dialog 
         header={<HeaderContent/>}
         children={<BodyContent />}
         // footer={<FooterContent />}

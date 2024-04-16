@@ -11,7 +11,7 @@ import { Button } from '../../Button/Button'
 import { InputNumber } from '../InputNumber'
 import { InputText } from '../InputText'
 import ColorPickerPreview from './ColorPickerPreview'
-import { Modal } from '../../Overlay/Modal'
+import { Dialog } from '../../Overlay/Dialog'
 
 const ColorInputs = styled.div`
   display: flex;
@@ -235,7 +235,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
           onBlur={() => !useDialog && handleConfirmDialog()}
           ref={previewRef}
         />
-        <Modal header={DialogTitle} onClose={() => setDialogOpen(false)} isOpen={dialogOpen} >
+        <Dialog header={DialogTitle} onClose={() => setDialogOpen(false)} isOpen={dialogOpen} >
           <ColorInputs>
             <ColorPickerPreview
               onChange={handleColorInputOnChange}
@@ -298,7 +298,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
             <Button label={'Cancel'} onClick={handleCancelDialog} />
             <Button label={'Apply'} onClick={handleConfirmDialog} />
           </Confirmations>
-        </Modal>
+        </Dialog>
       </div>
     )
   },

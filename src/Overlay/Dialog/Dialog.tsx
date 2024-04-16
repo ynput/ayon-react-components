@@ -1,8 +1,8 @@
 import { forwardRef, useEffect, useRef, useState } from "react";
-import * as Styled from './Modal.styled'
+import * as Styled from './Dialog.styled'
 import { Button, ButtonProps } from '../../Button'
 
-type ModalProps = {
+type DialogProps = {
     header?: React.ReactNode;
     children?: React.ReactNode;
     footer?: React.ReactNode;
@@ -22,7 +22,7 @@ type ModalProps = {
   };
 
 
-export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
+export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
     const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose, classNames } = props
 
     const [isModalOpen, setModalOpen] = useState(isOpen);
@@ -46,15 +46,14 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(( props) => {
       setModalOpen(false);
     };
 
-  //*TODO resolveClassNames() ? *//
-
-
   return (
       <Styled.Dialog {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
           {hideCancelButton ? null : <Styled.Close className={classNames ? 'cancelButton'+ ' ' + classNames.cancelButton : 'cancelButton'} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
            <Styled.Header className={classNames ? 'header'+ ' ' + classNames.header : 'header' }>{header ? header : ''}</Styled.Header>
           {children && <Styled.Body className={classNames ? 'body'+ ' ' + classNames.body : 'body' }>{children}</Styled.Body>}
-          {footer ? <Styled.Footer> {footer} </Styled.Footer> : <Button className={classNames ? 'closeButton' + ' ' + classNames.closeButton : 'closeButton'} {...closeProps} variant="text" onClick={handleCloseModal} />}
+          <Styled.Footer> 
+            {footer ?  footer : <Button className={classNames ? 'closeButton' + ' ' + classNames.closeButton : 'closeButton'} {...closeProps} variant="text" onClick={handleCloseModal} />} 
+          </Styled.Footer>
       </Styled.Dialog>
   )
 })
