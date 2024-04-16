@@ -54,7 +54,7 @@ const Template = () => {
         closeProps={closeProps}
         hideCancelButton={false}
         // classNames={{header: 'alert'}}
-        size='sm'
+        size='full'
       />
     </>
   )

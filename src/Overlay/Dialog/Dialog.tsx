@@ -11,7 +11,7 @@ type DialogProps = {
     isOpen: boolean;
     onClose?: () => void;
     classNames?: ClassNames;
-    size?: string;
+    size?: "sm" | "md" | "lg" | "full";
   };
 
   type ClassNames = {
@@ -48,6 +48,8 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
       if (onClose) onClose()
       setModalOpen(false);
     };
+
+    console.log(size,'size')
 
   return (
       <Styled.Dialog $size={size} {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">

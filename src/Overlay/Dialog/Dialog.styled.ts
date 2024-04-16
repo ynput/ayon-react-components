@@ -18,14 +18,14 @@ const widthSizes  = {
   sm: '400px',
   md: '600px',
   lg: '800px',
-  full: '90%',
+  full: '85%',
 };
 
 const heightSizes  = {
   sm: '300px',
   md: '400px',
   lg: '500px',
-  full: '80%',
+  full: '85%',
 };
 
 const getWidthSize = (size: string) => size ? widthSizes[size as keyof typeof widthSizes] : widthSizes.sm;
@@ -42,9 +42,8 @@ export const Dialog = styled.dialog<{ $size?: string }>`
     min-width: 200px;
     min-height: 100px;
     max-width: 85%;
-    max-height: 85%;
     width: ${({ $size }) => $size ? css` ${getWidthSize($size)}` : '200px'};
-    height: ${({ $size }) => $size ? css` ${getHeightSize($size)}` : '100px' };
+    max-Height: ${({ $size }) => $size ? css` ${getHeightSize($size)}` : '100px' };
 
     /* Backdrop property affects inactive area around modal */
     &::backdrop {
