@@ -79,8 +79,6 @@ export { TableRow } from './Layout/TableRow'
 export { Toolbar } from './Layout/Toolbar'
 
 // OVERLAY
-// dialog
-export { Dialog } from './Overlay/Dialog'
 // modal
 export { Modal } from './Overlay/Modal'
 

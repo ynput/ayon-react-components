@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { LockedInput } from '.'
 import { useState } from 'react'
-import { Dialog } from '../../Overlay/Dialog'
+import { Modal } from '../../Overlay/Modal'
 import { InputText } from '../InputText'
 import { Button } from '../../Button'
 
@@ -49,10 +49,10 @@ export const OpenDialog: Story = {
       <>
         <LockedInput value={value} onEdit={() => setDialogOpen(true)} />
         {dialogOpen && (
-          <Dialog
+          <Modal
             header="Edit Username"
-            visible={dialogOpen}
-            onHide={() => setDialogOpen(false)}
+            isOpen={dialogOpen}
+            onClose={() => setDialogOpen(false)}
             footer={
               <>
                 <Button onClick={handleCancel}>Cancel</Button>
@@ -61,7 +61,7 @@ export const OpenDialog: Story = {
             }
           >
             <InputText value={editingValue} onChange={(e) => setEditingValue(e.target.value)} />
-          </Dialog>
+          </Modal>
         )}
       </>
     )
