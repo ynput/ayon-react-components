@@ -517,6 +517,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         e.code === 'NumpadEnter' ||
         e.code === 'Tab'
       ) {
+        // check we are not searching and pressing space
+        if (e.code === 'Space' && search) return
+
         // prevent reloads
         if (e.code !== 'Tab') e.preventDefault()
 
