@@ -14,7 +14,25 @@ const fadeInAnimation = keyframes`
   }
 `
 
-export const Dialog = styled.dialog`
+const widthSizes  = {
+  sm: '400px',
+  md: '600px',
+  lg: '800px',
+  full: '90%',
+};
+
+const heightSizes  = {
+  sm: '300px',
+  md: '400px',
+  lg: '500px',
+  full: '80%',
+};
+
+const getWidthSize = (size: string) => size ? widthSizes[size as keyof typeof widthSizes] : widthSizes.sm;
+const getHeightSize = (size: string) => size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm;
+
+
+export const Dialog = styled.dialog<{ $size?: string }>`
     background-color: var(--md-sys-color-surface-container);
     border: none;
     border-radius: var(--border-radius-m);
@@ -25,6 +43,8 @@ export const Dialog = styled.dialog`
     min-height: 100px;
     max-width: 85%;
     max-height: 85%;
+    width: ${({ $size }) => $size ? css` ${getWidthSize($size)}` : '200px'};
+    height: ${({ $size }) => $size ? css` ${getHeightSize($size)}` : '100px' };
 
     /* Backdrop property affects inactive area around modal */
     &::backdrop {
@@ -33,6 +53,7 @@ export const Dialog = styled.dialog`
 
     /* Styles for dialogs that carry modal behavior */
     &:modal {
+      display: flex;
     }
 
     &:modal[open] {

@@ -11,6 +11,7 @@ type DialogProps = {
     isOpen: boolean;
     onClose?: () => void;
     classNames?: ClassNames;
+    size?: string;
   };
 
   type ClassNames = {
@@ -21,9 +22,11 @@ type DialogProps = {
     closeButton?: string;
   };
 
+  
+
 
 export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
-    const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose, classNames } = props
+    const { children, header, footer, hideCancelButton = false, closeProps, isOpen, onClose, classNames, size } = props
 
     const [isModalOpen, setModalOpen] = useState(isOpen);
     const modalRef = useRef<HTMLDialogElement | null>(null);
@@ -47,7 +50,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(( props) => {
     };
 
   return (
-      <Styled.Dialog {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
+      <Styled.Dialog $size={size} {...props} ref={modalRef} onClick={(e) => closeIfClickOutside(e)} className="modal">
           {hideCancelButton ? null : <Styled.Close className={classNames ? 'cancelButton'+ ' ' + classNames.cancelButton : 'cancelButton'} icon="close" variant="text" autoFocus onClick={handleCloseModal} /> }
            <Styled.Header className={classNames ? 'header'+ ' ' + classNames.header : 'header' }>{header ? header : ''}</Styled.Header>
           {children && <Styled.Body className={classNames ? 'body'+ ' ' + classNames.body : 'body' }>{children}</Styled.Body>}

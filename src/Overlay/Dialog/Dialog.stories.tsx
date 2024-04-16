@@ -12,15 +12,6 @@ export default meta
 
 type Story = StoryObj<typeof Dialog>
 
-// const payload = {
-//   message: 'Are you sure you want to discard your changes?',
-//   header: 'Confirmation',
-//   icon: 'pi pi-exclamation-triangle',
-//   accept: () => {
-//     setIsOpen(false)
-//     setEditorValue('')
-//   },
-// }
 
 const HeaderContent = () => (
     <div>This is title of dialog</div>
@@ -62,7 +53,8 @@ const Template = () => {
         onClose={handleCloseModal}
         closeProps={closeProps}
         hideCancelButton={false}
-        // classNames={{header: 'alert'}} 
+        // classNames={{header: 'alert'}}
+        size='sm'
       />
     </>
   )
