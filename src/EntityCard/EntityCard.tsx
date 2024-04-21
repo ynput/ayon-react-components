@@ -98,7 +98,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     }
 
     const handleImageLoad = () => {
-      console.log('image load')
       setIsImageLoading(false)
     }
 
