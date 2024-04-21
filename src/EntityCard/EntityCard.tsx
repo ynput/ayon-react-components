@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
@@ -92,14 +92,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const [isImageError, setIsImageError] = useState(!imageUrl)
     const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
 
-    // reset image loading state
-    useEffect(() => {
-      setIsImageError(!imageUrl)
-      setIsImageLoading(!!imageUrl)
-    }, [imageUrl])
-
     const handleImageError = () => {
       setIsImageError(true)
+      setIsImageLoading(false)
+    }
+
+    const handleImageLoad = () => {
+      console.log('image load')
       setIsImageLoading(false)
     }
 
@@ -160,7 +159,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             <Styled.Image
               src={imageUrl}
               onError={handleImageError}
-              onLoad={() => setIsImageLoading(false)}
+              onLoad={handleImageLoad}
               className={clsx({ loading: isImageLoading })}
             />
           )}
