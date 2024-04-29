@@ -6,7 +6,7 @@ export interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement
   canToggle?: boolean;
 }
 
-export const InputPassword = forwardRef<HTMLInputElement, PasswordInputProps>(({ canToggle, ...props}, ref) => {
+export const InputPassword = forwardRef<HTMLInputElement, PasswordInputProps>(({ canToggle = true, ...props}, ref) => {
 
     const [isVisible, setIsVisible] = useState(false)
     const resolveIcon = isVisible ? 'visibility_off' : 'visibility'
