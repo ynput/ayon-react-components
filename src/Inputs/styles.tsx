@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
-const StyledInput = styled.input`
+export const StyledInput = styled.input<{ $isHidden?: boolean }>`
   color: var(--md-sys-color-on-surface);
   border: 1px solid var(--md-sys-color-outline-variant);
   background-color: var(--md-sys-color-surface-container-low);
@@ -8,6 +8,9 @@ const StyledInput = styled.input`
   min-height: var(--base-input-size);
   max-height: var(--base-input-size);
   padding: 0 8px;
+
+  // Password-like conversion of characters to full circles for input type="text"
+  ${({ $isHidden }) => $isHidden && `-webkit-text-security: disc;`}
 
   &:focus {
     outline: 1px solid var(--md-sys-color-primary);
@@ -34,4 +37,18 @@ const StyledInput = styled.input`
   }
 `
 
-export default StyledInput
+export const StyledToggleInput = styled.div`
+  display: flex;
+
+  > input {
+    width: 180px;
+    padding-right: 32px;
+  }
+  > .eyeIcon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    right: 28px;
+    cursor: pointer;
+  }
+`

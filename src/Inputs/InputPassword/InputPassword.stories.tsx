@@ -12,6 +12,7 @@ type Story = StoryObj<typeof InputPassword>
 
 export const Default: Story = {
   args: {
+    canToggle: true,
     placeholder: 'Enter your password',
     disabled: false,
     onChange: () => console.log('Password Changed'),
