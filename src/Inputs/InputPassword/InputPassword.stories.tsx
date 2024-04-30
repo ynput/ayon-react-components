@@ -12,6 +12,8 @@ type Story = StoryObj<typeof InputPassword>
 
 export const Default: Story = {
   args: {
+    value: 'Hello World',
+    canRevealPassword: true,
     placeholder: 'Enter your password',
     disabled: false,
     onChange: () => console.log('Password Changed'),
