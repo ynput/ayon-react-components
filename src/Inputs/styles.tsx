@@ -39,16 +39,22 @@ export const StyledInput = styled.input<{ $isHidden?: boolean }>`
 
 export const StyledToggleInput = styled.div`
   display: flex;
-
+  
   > input {
     width: 180px;
     padding-right: 32px;
   }
+
   > .eyeIcon {
     position: relative;
     display: flex;
     align-items: center;
     right: 28px;
     cursor: pointer;
+    user-select: none;
+    color: var(--md-sys-color-outline);
+    &:hover { 
+      color: var(--md-sys-color-on-surface);
+    }
   }
 `
