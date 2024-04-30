@@ -10,6 +10,7 @@ import { DefaultValueTemplate } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
+import { matchSorter } from 'match-sorter'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -70,6 +71,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   isChanged?: boolean
   isMultiple?: boolean
   onChange?: (v: (string | number)[]) => void
+  onSelectionChange?: (v: (string | number)[]) => void
   maxOptionsShown?: number
   style?: CSSProperties
   className?: string
@@ -82,8 +84,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   minSelected?: number
   maxSelected?: number
   dropIcon?: IconType
-  onClear?: (value: null | []) => void
-  onClearNullValue?: boolean // show clear button when no value and changes icon to clear null
+  onClear?: (value: []) => void
+  onClearNull?: (value: null) => void
   nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
@@ -119,6 +121,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       disabled,
       onClose,
       onChange,
+      onSelectionChange,
       onOpen,
       widthExpand = true,
       align = 'left',
@@ -140,7 +143,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
-      onClearNullValue,
+      onClearNull,
       nullPlaceholder,
       editable,
       maxHeight = 300,
@@ -307,11 +310,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     if ((search || editable) && searchForm) {
       // filter out search matches
-      options = options.filter((o) =>
-        searchFields.some(
-          (key) => o[key] && String(o[key])?.toLowerCase()?.includes(searchForm.toLowerCase()),
-        ),
-      )
+      options = matchSorter(options, searchForm, { keys: searchFields })
     }
 
     // HANDLERS
@@ -410,6 +409,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         searchRef.current?.focus()
       }
 
+      // send on selection changed event
+      onSelectionChange && onSelectionChange(newSelected)
+
       // update temp value
       // update state
       setSelected(newSelected)
@@ -420,14 +422,19 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
-    const handleClear = (value: null | []) => {
+    const handleClear = () => {
       if (!onClear) return
 
-      if ((selected?.length || 0) > minSelected || onClearNullValue) {
-        setSelected([])
-        onClear(value)
-        setIsOpen(false)
-      }
+      setSelected([])
+      onClear([])
+      setIsOpen(false)
+    }
+    const handleClearNull = () => {
+      if (!onClearNull) return
+
+      setSelected([])
+      onClearNull(null)
+      setIsOpen(false)
     }
 
     const handleOpen = (
@@ -437,10 +444,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // check if onClear was clicked
       if ((e.target as HTMLDivElement).id === 'clear') {
         if (focus) return
-        else return handleClear([])
+        else return handleClear()
       } else if ((e.target as HTMLDivElement).id === 'backspace') {
         if (focus) return
-        else return handleClear(null)
+        else return handleClearNull()
       }
       if (isOpen) {
         return handleClose()
@@ -510,6 +517,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         e.code === 'NumpadEnter' ||
         e.code === 'Tab'
       ) {
+        // check we are not searching and pressing space
+        if (e.code === 'Space' && search) return
+
         // prevent reloads
         if (e.code !== 'Tab') e.preventDefault()
 
@@ -520,19 +530,29 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (!isOpen) {
           // check not clear button
           if ((e.target as HTMLDivElement).id === 'clear') {
-            return handleClear([])
+            return handleClear()
           } else if ((e.target as HTMLDivElement).id === 'backspace') {
-            return handleClear(null)
+            return handleClearNull()
           }
           return setIsOpen(true)
         }
 
         if (multiSelect) {
-          selectedValue && handleChange(selectedValue, activeIndex || 0)
+          if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
 
-          // nothing selected and only one option and not nullable
-          if (options.length === 1 || (options.length === 2 && editable && !onClearNullValue)) {
-            handleClose(undefined, selected ? [...selected] : [], options[0][dataKey])
+          let selectedValues = [options[0][dataKey]]
+          // if editable, split by comma
+          if (editable && searchForm) {
+            selectedValues = searchForm.split(',').map((s) => s.trim())
+          }
+
+          // filter out already selected
+          selectedValues = selectedValues.filter((s) => !selected?.includes(s))
+
+          // nothing selected take first option
+          if (options.length === 1 || editable) {
+            const newSelected = [...(selected || []), ...selectedValues]
+            handleClose(undefined, newSelected, ...selectedValues)
           }
         } else {
           // convert selectedValue to array
@@ -603,8 +623,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       isMultiple,
       dropIcon,
       displayIcon,
-      onClear: onClear ? handleClear : undefined,
-      onClearNullValue,
+      onClear: onClear && handleClear,
+      onClearNull: onClearNull && handleClearNull,
       nullPlaceholder,
       style: valueStyle,
       placeholder,
@@ -622,7 +642,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       value,
       isOpen,
       onClear,
-      onClearNullValue,
+      onClearNull,
       selected,
       handleClear,
       isMultiple,

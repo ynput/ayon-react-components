@@ -39,6 +39,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
       styleDropdown,
       width = 300,
       valueProps,
+      isMultiple,
       ...props
     },
     ref,
@@ -75,6 +76,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
             {...valueProps}
             tags={tags}
             editor={editor}
+            isMultiple={isMultiple}
           />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (

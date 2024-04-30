@@ -14,6 +14,7 @@ const StackedStyled = styled.div`
 export interface User {
   avatarUrl?: string
   fullName?: string
+  name: string
   self?: boolean
 }
 
@@ -33,18 +34,22 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
 
     // show extras
     if (length > max) {
-      users.push({ fullName: `+ ${length - max > 9 ? '+' : length - max}` })
+      users.push({
+        fullName: `+ ${length - max > 9 ? '+' : length - max}`,
+        name: `+ ${length - max > 9 ? '+' : length - max}`
+      })
     }
 
     return (
       <StackedStyled $gap={(gap * 30) / 2} {...props} ref={ref}>
-        {users.map((user, i) => (
+        {users.map(({ avatarUrl, name, fullName, self }, i) => (
           <UserImage
-            src={user.avatarUrl}
+            src={avatarUrl}
             key={i}
-            fullName={user.fullName || ''}
+            name={name}
+            fullName={fullName || ''}
             style={{ zIndex: -i, width: size, height: size, ...userStyle }}
-            highlight={user.self}
+            highlight={self}
             size={size}
           />
         ))}

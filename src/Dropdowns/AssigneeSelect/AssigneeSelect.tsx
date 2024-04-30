@@ -50,6 +50,17 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       [value, options],
     )
 
+    // sort options by fullName || name
+    const sortedOptions = useMemo(
+      () =>
+        [...options].sort((a, b) => {
+          const aName = a.fullName || a.name
+          const bName = b.fullName || b.name
+          return aName.localeCompare(bName)
+        }),
+      [options],
+    )
+
     const assigneeFieldProps = {
       value: assignedUsers,
       disabled,
@@ -75,7 +86,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
             }
           />
         )}
-        options={options}
+        options={sortedOptions}
         dataKey={'name'}
         disabled={disabled}
         itemTemplate={(ops, isActive, isSelected) => (
@@ -86,7 +97,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         align={align}
         multiSelect
         search
-        searchFields={['name', 'fullName', 'email']}
+        searchFields={['fullName', 'name', 'email']}
         ref={ref}
         {...props}
       />

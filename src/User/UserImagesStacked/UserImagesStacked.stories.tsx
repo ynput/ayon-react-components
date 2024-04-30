@@ -17,6 +17,7 @@ type Story = StoryObj<typeof UserImagesStacked>
 const users = Array.from({ length: 10 }, (_, i) => ({
   avatarUrl: `https://repo.imm.cz/avatars/demouser${i + 10}.jpg`,
   fullName: `User ${i + 1}`,
+  name: `Name ${i + 1}`,
   self: i === 0,
 }))
 
