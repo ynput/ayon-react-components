@@ -39,11 +39,6 @@ export const StyledInput = styled.input<{ $isHidden?: boolean }>`
 
 export const StyledToggleInput = styled.div`
   display: flex;
-  
-  > input {
-    width: 180px;
-    padding-right: 32px;
-  }
 
   > .eyeIcon {
     position: relative;
