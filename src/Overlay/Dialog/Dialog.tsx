@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 import * as Styled from './Dialog.styled'
 import { Button, ButtonProps } from '../../Button'
+import clsx from 'clsx'
 
 export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement>, 'open'> {
   header?: React.ReactNode
@@ -31,6 +32,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     closeProps,
     isOpen,
     onClose,
+    className,
     classNames,
     size,
   } = props
@@ -58,10 +60,10 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
   return (
     <Styled.Dialog
       $size={size}
-      {...props}
       ref={modalRef}
       onClick={(e) => closeIfClickOutside(e)}
-      className="modal"
+      className={clsx('modal', className)}
+      {...props}
     >
       {hideCancelButton ? null : (
         <Styled.Close
