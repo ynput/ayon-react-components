@@ -3,17 +3,17 @@ import { StyledInput, StyledToggleInput } from '../styles'
 import { Icon } from '../../Icon'
 
 export interface PasswordInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  canToggle?: boolean;
+  canRevealPassword?: boolean;
 }
 
-export const InputPassword = forwardRef<HTMLInputElement, PasswordInputProps>(({ canToggle = true, ...props}, ref) => {
+export const InputPassword = forwardRef<HTMLInputElement, PasswordInputProps>(({ canRevealPassword = true, ...props}, ref) => {
 
     const [isVisible, setIsVisible] = useState(false)
     const resolveIcon = isVisible ? 'visibility_off' : 'visibility'
     const handleVisible = () => setIsVisible(!isVisible)
     
     return (
-      !!canToggle ?
+      !!canRevealPassword ?
       <StyledToggleInput>
         <StyledInput type={isVisible ? '' : 'password'} ref={ref} {...props} />
         <Icon className="eyeIcon" onClick={handleVisible} icon={resolveIcon}/>
