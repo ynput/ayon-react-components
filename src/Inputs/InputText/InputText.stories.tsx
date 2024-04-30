@@ -13,7 +13,6 @@ type Story = StoryObj<typeof InputText>
 export const Default: Story = {
   args: {
     value: 'Hello World',
-    canToggle: false,
     placeholder: 'Enter text here...',
     disabled: false,
     onChange: () => console.log('Text Changed'),
