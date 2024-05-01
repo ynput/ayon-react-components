@@ -80,6 +80,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
       <Styled.Footer className={clsx('footer', classNames?.footer)}>
           { footer && footer } 
           <Button
+            label={!!closeProps?.label ? closeProps.label : 'Cancel'}
             className={clsx('closeButton', classNames?.closeButton)}
             variant="text"
             onClick={handleCloseModal}
