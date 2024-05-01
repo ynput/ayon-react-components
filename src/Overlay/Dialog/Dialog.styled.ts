@@ -84,7 +84,8 @@ export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
   display: flex;
   flex-direction: column;
   padding: 16px;
-  ${({ hideCancelButton }) => !hideCancelButton && css`padding-right: 40px;`}
+  ${({ hideCancelButton }) => !hideCancelButton && css`padding-right: 32px;`}
+  ${titleLarge}
   & > * { 
     ${titleLarge}
   }
@@ -92,6 +93,8 @@ export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
 
 export const Footer = styled(BaseDialogEdge)`
   display: flex;
+  justify-content: flex-end;
+  align-items: center;
   padding: 16px;
 `
 export const Body = styled.div`
