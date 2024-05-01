@@ -46,12 +46,12 @@ const Template = () => {
         Show Modal
       </Button>
       <Dialog 
-        header={<HeaderContent/>}
+        header={'This is title'}
         children={<BodyContent />}
-        // footer={<FooterContent />}
+        footer={<FooterContent />}
         isOpen={openModal}
         onClose={handleCloseModal}
-        closeProps={closeProps}
+        // closeProps={closeProps}
         hideCancelButton={false}
         // classNames={{header: 'alert'}}
         size='full'

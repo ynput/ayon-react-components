@@ -67,8 +67,9 @@ export const Dialog = styled.dialog<{ $size?: string }>`
 
 export const Close = styled(Button)`
   position: absolute;
-  top: 8px;
   right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
 `
 
 export const BaseDialogEdge = styled.div`
@@ -78,10 +79,12 @@ export const BaseDialogEdge = styled.div`
 `
 
 
-export const Header = styled(BaseDialogEdge)`
+export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 16px;
+  ${({ hideCancelButton }) => !hideCancelButton && css`padding-right: 40px;`}
   & > * { 
     ${titleLarge}
   }
@@ -89,7 +92,6 @@ export const Header = styled(BaseDialogEdge)`
 
 export const Footer = styled(BaseDialogEdge)`
   display: flex;
-  flex-direction: row-reverse;
   padding: 16px;
 `
 export const Body = styled.div`
