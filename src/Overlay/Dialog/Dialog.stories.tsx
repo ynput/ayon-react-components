@@ -44,7 +44,7 @@ const Template = () => {
         Show Modal
       </Button>
       <Dialog 
-        header={<HeaderContent />}
+        header={<HeaderContent/>}
         children={<BodyContent />}
         footer={<FooterContent />}
         isOpen={openModal}
