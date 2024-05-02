@@ -65,35 +65,27 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
       className={clsx('modal', className)}
       {...props}
     >
-      {hideCancelButton ? null : (
-        <Styled.Close
-          className={classNames ? 'cancelButton' + ' ' + classNames.cancelButton : 'cancelButton'}
-          icon="close"
-          variant="text"
-          autoFocus
-          onClick={handleCloseModal}
-        />
-      )}
-      <Styled.Header className={classNames ? 'header' + ' ' + classNames.header : 'header'}>
-        {header ? header : ''}
+      <Styled.Header className={clsx('header', classNames?.header)}>
+          {header ? header : ''}
+          {hideCancelButton ? null : (
+            <Styled.Close 
+              className={clsx('cancelButton', classNames?.cancelButton)}
+              icon="close"
+              variant="text"
+              autoFocus
+              onClick={handleCloseModal}
+            /> )}
       </Styled.Header>
-      {children && (
-        <Styled.Body className={classNames ? 'body' + ' ' + classNames.body : 'body'}>
-          {children}
-        </Styled.Body>
-      )}
-      <Styled.Footer>
-        {footer ? (
-          footer
-        ) : (
+      {children && <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>}
+      <Styled.Footer className={clsx('footer', classNames?.footer)}>
+          { footer && footer } 
           <Button
-            className={classNames ? 'closeButton' + ' ' + classNames.closeButton : 'closeButton'}
-            {...closeProps}
+            label={!!closeProps?.label ? closeProps.label : 'Cancel'}
+            className={clsx('closeButton', classNames?.closeButton)}
             variant="text"
             onClick={handleCloseModal}
+            {...closeProps}
           />
-        )}
       </Styled.Footer>
     </Styled.Dialog>
-  )
-})
+)})

@@ -29,8 +29,6 @@ const closeProps = {
   label: 'Close'
 }
 
-
-
 const Template = () => {
 
   const [openModal, setOpenModal] = useState(false)
@@ -48,12 +46,11 @@ const Template = () => {
       <Dialog 
         header={<HeaderContent/>}
         children={<BodyContent />}
-        // footer={<FooterContent />}
+        footer={<FooterContent />}
         isOpen={openModal}
         onClose={handleCloseModal}
         closeProps={closeProps}
         hideCancelButton={false}
-        // classNames={{header: 'alert'}}
         size='full'
       />
     </>

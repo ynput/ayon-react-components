@@ -1,7 +1,7 @@
 {
   "name": "@ynput/ayon-react-components",
   "private": false,
-  "version": "1.0.1",
+  "version": "0.0.0-dev",
   "type": "module",
   "repository": {
     "type": "git",
