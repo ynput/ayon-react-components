@@ -47,22 +47,23 @@ export const Dialog = styled.dialog<{ $size?: string }>`
 
     /* Backdrop property affects inactive area around modal */
     &::backdrop {
-        background-color: rgba(0, 0, 0, 0.3);
+      background-color: rgba(0, 0, 0, 0.3);
     }
 
     /* Styles for dialogs that carry modal behavior */
     &:modal {
-      display: flex;
-    }
-
-    &:modal[open] {
-      animation: ${fadeInAnimation} 150ms ease-in-out forwards, ${fadeInAnimation} 150ms ease-in-out backwards;
-      animation-fill-mode: both;
     }
 
     /* Styles for dialogs that carry non-modal behavior */
     &:not(:modal) {
     }
+
+    &[open] {
+      display: flex;
+      animation: ${fadeInAnimation} 150ms ease-in-out forwards, ${fadeInAnimation} 150ms ease-in-out backwards;
+      animation-fill-mode: both;
+    }
+
 `
 
 export const Close = styled(Button)`

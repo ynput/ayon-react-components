@@ -52,6 +52,7 @@ const Template = () => {
         closeProps={closeProps}
         hideCancelButton={false}
         size='full'
+        variant='dialog'
       />
     </>
   )
