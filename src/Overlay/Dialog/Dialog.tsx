@@ -46,8 +46,6 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     if (e.currentTarget === e.target) handleCloseModal()
   }
 
-  console.log(variant,'variant')
-
   useEffect(() => setModalOpen(isOpen), [isOpen])
 
   useEffect(() => {
