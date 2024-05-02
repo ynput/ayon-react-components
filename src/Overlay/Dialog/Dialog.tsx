@@ -12,6 +12,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement
   isOpen: boolean
   onClose?: () => void
   classNames?: ClassNames
+  variant?: 'dialog' | 'modal'
   size?: 'sm' | 'md' | 'lg' | 'full'
 }
 
@@ -35,6 +36,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     className,
     classNames,
     size,
+    variant = 'modal'
   } = props
 
   const [isModalOpen, setModalOpen] = useState(isOpen)
@@ -49,7 +51,9 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
   useEffect(() => {
     const modalElement = modalRef.current
     if (!modalElement) return
-    isModalOpen ? modalElement.showModal() : modalElement.close()
+    const showDialog =  variant === 'dialog' && modalElement.show()
+    const showModal =  variant === 'modal' && modalElement.showModal()
+    isModalOpen ? (showDialog || showModal) : modalElement.close()
   }, [isModalOpen])
 
   const handleCloseModal = () => {
