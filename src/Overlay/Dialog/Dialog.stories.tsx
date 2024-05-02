@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Dialog } from '.'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Button } from '../../Button'
 
 const meta: Meta<typeof Dialog> = {
@@ -32,11 +32,6 @@ const closeProps = {
 const Template = () => {
 
   const [openModal, setOpenModal] = useState(false)
-
-  const handleCloseModal = () => {
-    setOpenModal(false)
-  }
-
   
   return (
     <>
@@ -48,10 +43,11 @@ const Template = () => {
         children={<BodyContent />}
         footer={<FooterContent />}
         isOpen={openModal}
-        onClose={handleCloseModal}
+        onClose={() => setOpenModal(false)}
         closeProps={closeProps}
         hideCancelButton={false}
         size='full'
+        variant='dialog'
       />
     </>
   )
