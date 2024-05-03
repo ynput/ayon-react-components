@@ -13,9 +13,7 @@ export default meta
 type Story = StoryObj<typeof Dialog>
 
 
-const HeaderContent = () => (
-    <div>This is title of dialog</div>
-)
+const HeaderContent = () => <div>This is title of dialog</div>
 
 const BodyContent = () => (
   <>
@@ -48,6 +46,7 @@ const Template = () => {
         hideCancelButton={false}
         size='full'
         variant='dialog'
+        onShow={() => console.log('test')}
       />
     </>
   )

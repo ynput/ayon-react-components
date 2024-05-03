@@ -11,6 +11,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement
   hideCancelButton?: boolean
   isOpen: boolean
   onClose?: () => void
+  onShow?: () => void
   classNames?: ClassNames
   variant?: 'dialog' | 'modal'
   size?: 'sm' | 'md' | 'lg' | 'full'
@@ -36,6 +37,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     className,
     classNames,
     size,
+    onShow,
     variant = 'modal'
   } = props
 
@@ -53,7 +55,11 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     if (!modalElement) return
     const showDialog =  variant === 'dialog' && modalElement.show()
     const showModal =  variant === 'modal' && modalElement.showModal()
-    isModalOpen ? (showDialog || showModal) : modalElement.close()
+    const showAll = () => {
+        showDialog || showModal
+        onShow && onShow()
+    }
+    isModalOpen ? showAll() : modalElement.close()
   }, [isModalOpen])
 
   const handleCloseModal = () => {
