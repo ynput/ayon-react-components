@@ -46,7 +46,7 @@ const Template = () => {
         hideCancelButton={false}
         size='full'
         variant='dialog'
-        onShow={() => console.log('test')}
+        onShow={() => console.log('test123')}
       />
     </>
   )
