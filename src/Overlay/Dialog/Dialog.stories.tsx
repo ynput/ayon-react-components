@@ -40,7 +40,6 @@ const Template = (args: Story['args']) => {
       <Dialog
         header={<HeaderContent />}
         children={<BodyContent />}
-        footer={<FooterContent />}
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
         closeProps={closeProps}
@@ -56,6 +55,14 @@ const Template = (args: Story['args']) => {
 export const Default: Story = {
   render: Template,
 }
+
+export const Footer: Story = {
+  render: Template,
+  args: {
+    footer: <FooterContent />,
+  },
+}
+
 export const DialogVariant: Story = {
   render: Template,
   args: {

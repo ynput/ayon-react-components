@@ -90,18 +90,20 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
         )}
       </Styled.Header>
       {children && <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>}
-      <Styled.Footer className={clsx('footer', classNames?.footer)}>
-        {showCloseButton && (
-          <Button
-            label={!!closeProps?.label ? closeProps.label : 'Close'}
-            className={clsx('closeButton', classNames?.closeButton)}
-            variant="text"
-            onClick={handleCloseModal}
-            {...closeProps}
-          />
-        )}
-        {footer && footer}
-      </Styled.Footer>
+      {(footer || showCloseButton) && (
+        <Styled.Footer className={clsx('footer', classNames?.footer)}>
+          {showCloseButton && (
+            <Button
+              label={!!closeProps?.label ? closeProps.label : 'Close'}
+              className={clsx('closeButton', classNames?.closeButton)}
+              variant="text"
+              onClick={handleCloseModal}
+              {...closeProps}
+            />
+          )}
+          {footer && footer}
+        </Styled.Footer>
+      )}
     </Styled.Dialog>
   )
 })
