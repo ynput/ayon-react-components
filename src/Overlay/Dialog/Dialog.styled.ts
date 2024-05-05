@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../../Button'
-import { titleLarge } from '../../theme'
+import { titleMedium } from '../../theme'
 
 const fadeInAnimation = keyframes`
   0% {
@@ -99,9 +99,9 @@ export const Header = styled(BaseDialogEdge)`
     padding-right: 16px;
   }
 
-  ${titleLarge}
+  ${titleMedium}
   & > * {
-    ${titleLarge}
+    ${titleMedium}
   }
 `
 
