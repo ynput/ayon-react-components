@@ -96,7 +96,7 @@ export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
   ${({ hideCancelButton }) =>
     !hideCancelButton &&
     css`
-      padding-right: 32px;
+      padding-right: 48px;
     `}
   ${titleLarge}
   & > * {
