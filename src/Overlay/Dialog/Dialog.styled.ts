@@ -78,8 +78,7 @@ export const Dialog = styled.dialog<{ $size?: string }>`
 export const Close = styled(Button)`
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 8px;
 `
 
 export const BaseDialogEdge = styled.div`
