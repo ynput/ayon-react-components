@@ -88,16 +88,17 @@ export const BaseDialogEdge = styled.div`
   gap: 8px;
 `
 
-export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
+export const Header = styled(BaseDialogEdge)`
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 16px;
-  ${({ hideCancelButton }) =>
-    !hideCancelButton &&
-    css`
-      padding-right: 48px;
-    `}
+  padding-right: 48px;
+
+  &.hideCancelButton {
+    padding-right: 16px;
+  }
+
   ${titleLarge}
   & > * {
     ${titleLarge}

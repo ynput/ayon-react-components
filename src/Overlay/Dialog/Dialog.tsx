@@ -77,7 +77,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
       className={clsx('modal', className)}
       {...props}
     >
-      <Styled.Header className={clsx('header', classNames?.header)}>
+      <Styled.Header className={clsx('header', { hideCancelButton }, classNames?.header)}>
         {header ? header : ''}
         {hideCancelButton ? null : (
           <Styled.Close
