@@ -56,7 +56,7 @@ export const Dialog = styled.dialog<{ $size?: string }>`
 
   /* Backdrop property affects inactive area around modal */
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   /* Styles for dialogs that carry modal behavior */
