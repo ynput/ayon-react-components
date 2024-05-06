@@ -1,7 +1,6 @@
 import styled, { css, keyframes } from 'styled-components'
 import { Button } from '../../Button'
-import { titleLarge } from '../../theme'
-
+import { titleMedium } from '../../theme'
 
 const fadeInAnimation = keyframes`
   0% {
@@ -14,63 +13,72 @@ const fadeInAnimation = keyframes`
   }
 `
 
-const widthSizes  = {
+const widthSizes = {
   sm: '400px',
   md: '600px',
   lg: '800px',
   full: '85%',
-};
+}
 
-const heightSizes  = {
+const heightSizes = {
   sm: '300px',
   md: '400px',
   lg: '500px',
   full: '85%',
-};
+}
 
-const getWidthSize = (size: string) => size ? widthSizes[size as keyof typeof widthSizes] : widthSizes.sm;
-const getHeightSize = (size: string) => size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm;
-
+const getWidthSize = (size: string) =>
+  size ? widthSizes[size as keyof typeof widthSizes] : widthSizes.sm
+const getHeightSize = (size: string) =>
+  size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm
 
 export const Dialog = styled.dialog<{ $size?: string }>`
-    background-color: var(--md-sys-color-surface-container);
-    border: none;
-    border-radius: var(--border-radius-m);
-    flex-direction: column;
-    gap: 16px;
-    padding: 0;
-    min-width: 200px;
-    min-height: 100px;
-    max-width: 85%;
-    width: ${({ $size }) => $size ? css` ${getWidthSize($size)}` : '200px'};
-    max-Height: ${({ $size }) => $size ? css` ${getHeightSize($size)}` : '100px' };
+  background-color: var(--md-sys-color-surface-container);
+  border: none;
+  border-radius: var(--border-radius-m);
+  flex-direction: column;
+  padding: 0;
+  min-width: 200px;
+  min-height: 100px;
+  max-width: 85%;
+  width: ${({ $size }) =>
+    $size
+      ? css`
+          ${getWidthSize($size)}
+        `
+      : '200px'};
+  max-height: ${({ $size }) =>
+    $size
+      ? css`
+          ${getHeightSize($size)}
+        `
+      : '100px'};
 
-    /* Backdrop property affects inactive area around modal */
-    &::backdrop {
-      background-color: rgba(0, 0, 0, 0.3);
-    }
+  /* Backdrop property affects inactive area around modal */
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
 
-    /* Styles for dialogs that carry modal behavior */
-    &:modal {
-    }
+  /* Styles for dialogs that carry modal behavior */
+  &:modal {
+  }
 
-    /* Styles for dialogs that carry non-modal behavior */
-    &:not(:modal) {
-    }
+  /* Styles for dialogs that carry non-modal behavior */
+  &:not(:modal) {
+  }
 
-    &[open] {
-      display: flex;
-      animation: ${fadeInAnimation} 150ms ease-in-out forwards, ${fadeInAnimation} 150ms ease-in-out backwards;
-      animation-fill-mode: both;
-    }
-
+  &[open] {
+    display: flex;
+    animation: ${fadeInAnimation} 150ms ease-in-out forwards,
+      ${fadeInAnimation} 150ms ease-in-out backwards;
+    animation-fill-mode: both;
+  }
 `
 
 export const Close = styled(Button)`
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 8px;
 `
 
 export const BaseDialogEdge = styled.div`
@@ -79,16 +87,20 @@ export const BaseDialogEdge = styled.div`
   gap: 8px;
 `
 
-
-export const Header = styled(BaseDialogEdge)<{ hideCancelButton?: boolean }>`
+export const Header = styled(BaseDialogEdge)`
   position: relative;
   display: flex;
   flex-direction: column;
   padding: 16px;
-  ${({ hideCancelButton }) => !hideCancelButton && css`padding-right: 32px;`}
-  ${titleLarge}
-  & > * { 
-    ${titleLarge}
+  padding-right: 48px;
+
+  &.hideCancelButton {
+    padding-right: 16px;
+  }
+
+  ${titleMedium}
+  & > * {
+    ${titleMedium}
   }
 `
 
@@ -105,4 +117,3 @@ export const Body = styled.div`
   overflow: auto;
   flex-grow: 1;
 `
-

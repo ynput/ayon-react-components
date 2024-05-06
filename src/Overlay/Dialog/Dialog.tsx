@@ -9,6 +9,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement
   footer?: React.ReactNode
   closeProps?: ButtonProps
   hideCancelButton?: boolean
+  showCloseButton?: boolean
   isOpen: boolean
   onClose?: () => void
   onShow?: () => void
@@ -31,6 +32,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     header,
     footer,
     hideCancelButton = false,
+    showCloseButton = false,
     closeProps,
     isOpen,
     onClose,
@@ -38,7 +40,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     classNames,
     size,
     onShow,
-    variant = 'modal'
+    variant = 'modal',
   } = props
 
   const [isModalOpen, setModalOpen] = useState(isOpen)
@@ -53,11 +55,11 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
   useEffect(() => {
     const modalElement = modalRef.current
     if (!modalElement) return
-    const showDialog =  variant === 'dialog' && modalElement.show()
-    const showModal =  variant === 'modal' && modalElement.showModal()
+    const showDialog = variant === 'dialog' && modalElement.show()
+    const showModal = variant === 'modal' && modalElement.showModal()
     const showAll = () => {
-        showDialog || showModal
-        onShow && onShow()
+      showDialog || showModal
+      onShow && onShow()
     }
     isModalOpen ? showAll() : modalElement.close()
   }, [isModalOpen])
@@ -75,27 +77,33 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
       className={clsx('modal', className)}
       {...props}
     >
-      <Styled.Header className={clsx('header', classNames?.header)}>
-          {header ? header : ''}
-          {hideCancelButton ? null : (
-            <Styled.Close 
-              className={clsx('cancelButton', classNames?.cancelButton)}
-              icon="close"
-              variant="text"
-              autoFocus
-              onClick={handleCloseModal}
-            /> )}
+      <Styled.Header className={clsx('header', { hideCancelButton }, classNames?.header)}>
+        {header ? header : ''}
+        {hideCancelButton ? null : (
+          <Styled.Close
+            className={clsx('cancelButton', classNames?.cancelButton)}
+            icon="close"
+            variant="text"
+            autoFocus
+            onClick={handleCloseModal}
+          />
+        )}
       </Styled.Header>
       {children && <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>}
-      <Styled.Footer className={clsx('footer', classNames?.footer)}>
-          { footer && footer } 
-          <Button
-            label={!!closeProps?.label ? closeProps.label : 'Cancel'}
-            className={clsx('closeButton', classNames?.closeButton)}
-            variant="text"
-            onClick={handleCloseModal}
-            {...closeProps}
-          />
-      </Styled.Footer>
+      {(footer || showCloseButton) && (
+        <Styled.Footer className={clsx('footer', classNames?.footer)}>
+          {showCloseButton && (
+            <Button
+              label={!!closeProps?.label ? closeProps.label : 'Close'}
+              className={clsx('closeButton', classNames?.closeButton)}
+              variant="text"
+              onClick={handleCloseModal}
+              {...closeProps}
+            />
+          )}
+          {footer && footer}
+        </Styled.Footer>
+      )}
     </Styled.Dialog>
-)})
+  )
+})
