@@ -93,7 +93,6 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   disabledValues?: (string | number)[]
   listInline?: boolean
   disableOpen?: boolean
-  isPortal?: boolean
 }
 
 export interface DropdownRef {
@@ -152,7 +151,6 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       disabledValues = [],
       listInline = false,
       disableOpen = false,
-      isPortal = true,
       ...props
     },
     ref,
@@ -661,102 +659,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         close: () => setIsOpen(false),
       }),
       [elementRef, valueRef, optionsRef, searchRef],
-
     )
-    const StyledContainer = () => (
-      <Styled.Container
-      style={{
-        opacity: isShowOptions ? 1 : 0,
-        left: pos?.left || 'unset',
-        right: pos?.right || 'unset',
-        top: pos?.y || 'unset',
-        translate: offScreen ? '0 -100%' : 'none',
-        transformOrigin: offScreen ? 'center bottom' : 'center top',
-        ...itemStyle,
-      }}
-      $message={message || ''}
-      $isOpen={true}
-      $hidden={!isShowOptions}
-      onSubmit={handleSearchSubmit}
-      ref={formRef}
-    >
-      {(search || editable) && (
-        <Styled.Search className="search">
-          <Icon icon={'search'} />
-          <InputText
-            value={searchForm}
-            onChange={(e) => setSearchForm(e.target.value)}
-            autoFocus
-            tabIndex={0}
-            ref={searchRef}
-            onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
-          />
-        </Styled.Search>
-      )}
-      <Styled.Scrollable
-        style={{ maxHeight }}
-        $message={message || ''}
-        $search={!!search || !!editable}
-        defer
-      >
-        <Styled.Options
-          style={{ minWidth, ...listStyle }}
-          className={'options'}
-          ref={optionsRef}
-        >
-          {showOptions.map((option, i) => (
-            <Styled.ListItem
-              key={`${option[dataKey]}-${i}`}
-              onClick={(e) =>
-                !disabledValues.includes(option[dataKey]) &&
-                handleChange(option[dataKey], i, e)
-              }
-              $focused={usingKeyboard && activeIndex === i}
-              $usingKeyboard={usingKeyboard}
-              tabIndex={0}
-              className={`option ${listClassName}`}
-              $disabled={disabledValues.includes(option[dataKey])}
-            >
-              {itemTemplate ? (
-                itemTemplate(
-                  option,
-                  !!value && value.includes(option[dataKey]),
-                  !!selected?.includes(option[dataKey]),
-                  i,
-                )
-              ) : (
-                <Styled.DefaultItem
-                  $isSelected={!!selected?.includes(option[dataKey])}
-                  className={`option-child ${
-                    value && value.includes(option[dataKey]) ? 'selected' : ''
-                  } ${
-                    value && value.includes(option[dataKey]) ? 'active' : ''
-                  } ${itemClassName}`}
-                  style={itemStyle}
-                >
-                  {option.icon && <Icon icon={option.icon} />}
-                  <span>{option[labelKey] || option[dataKey]}</span>
-                </Styled.DefaultItem>
-              )}
-            </Styled.ListItem>
-          ))}
-          {!!hiddenLength && (
-            <Styled.ListItem
-              onClick={handleShowMore}
-              $focused={false}
-              $usingKeyboard={false}
-              className="option"
-            >
-              <Styled.DefaultItem $isSelected={false} className="option-child hidden">
-                <span>{`Show ${50} more...`}</span>
-              </Styled.DefaultItem>
-            </Styled.ListItem>
-          )}
-        </Styled.Options>
-      </Styled.Scrollable>
-    </Styled.Container>
-    )
-
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
     return (
@@ -790,8 +693,101 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           )}
         </Styled.Button>
 
-        { isOpen && isPortal && createPortal(<StyledContainer />, document.body, )}
-        { isOpen && !isPortal && <StyledContainer />}
+        {isOpen &&
+          createPortal(
+            <Styled.Container
+              style={{
+                opacity: isShowOptions ? 1 : 0,
+                left: pos?.left || 'unset',
+                right: pos?.right || 'unset',
+                top: pos?.y || 'unset',
+                translate: offScreen ? '0 -100%' : 'none',
+                transformOrigin: offScreen ? 'center bottom' : 'center top',
+                ...itemStyle,
+              }}
+              $message={message || ''}
+              $isOpen={true}
+              $hidden={!isShowOptions}
+              onSubmit={handleSearchSubmit}
+              ref={formRef}
+            >
+              {(search || editable) && (
+                <Styled.Search className="search">
+                  <Icon icon={'search'} />
+                  <InputText
+                    value={searchForm}
+                    onChange={(e) => setSearchForm(e.target.value)}
+                    autoFocus
+                    tabIndex={0}
+                    ref={searchRef}
+                    onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
+                  />
+                </Styled.Search>
+              )}
+              <Styled.Scrollable
+                style={{ maxHeight }}
+                $message={message || ''}
+                $search={!!search || !!editable}
+                defer
+              >
+                <Styled.Options
+                  style={{ minWidth, ...listStyle }}
+                  className={'options'}
+                  ref={optionsRef}
+                >
+                  {showOptions.map((option, i) => (
+                    <Styled.ListItem
+                      key={`${option[dataKey]}-${i}`}
+                      onClick={(e) =>
+                        !disabledValues.includes(option[dataKey]) &&
+                        handleChange(option[dataKey], i, e)
+                      }
+                      $focused={usingKeyboard && activeIndex === i}
+                      $usingKeyboard={usingKeyboard}
+                      tabIndex={0}
+                      className={`option ${listClassName}`}
+                      $disabled={disabledValues.includes(option[dataKey])}
+                    >
+                      {itemTemplate ? (
+                        itemTemplate(
+                          option,
+                          !!value && value.includes(option[dataKey]),
+                          !!selected?.includes(option[dataKey]),
+                          i,
+                        )
+                      ) : (
+                        <Styled.DefaultItem
+                          $isSelected={!!selected?.includes(option[dataKey])}
+                          className={`option-child ${
+                            value && value.includes(option[dataKey]) ? 'selected' : ''
+                          } ${
+                            value && value.includes(option[dataKey]) ? 'active' : ''
+                          } ${itemClassName}`}
+                          style={itemStyle}
+                        >
+                          {option.icon && <Icon icon={option.icon} />}
+                          <span>{option[labelKey] || option[dataKey]}</span>
+                        </Styled.DefaultItem>
+                      )}
+                    </Styled.ListItem>
+                  ))}
+                  {!!hiddenLength && (
+                    <Styled.ListItem
+                      onClick={handleShowMore}
+                      $focused={false}
+                      $usingKeyboard={false}
+                      className="option"
+                    >
+                      <Styled.DefaultItem $isSelected={false} className="option-child hidden">
+                        <span>{`Show ${50} more...`}</span>
+                      </Styled.DefaultItem>
+                    </Styled.ListItem>
+                  )}
+                </Styled.Options>
+              </Styled.Scrollable>
+            </Styled.Container>,
+            document.body,
+          )}
       </Styled.Dropdown>
     )
   },
