@@ -249,23 +249,24 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // focus element
       if (usingKeyboard) {
         const optionEl = optionsRef.current
-        if (!optionEl) return
+        const parentEl = optionEl?.parentElement
+        if (!parentEl || !optionEl) return
         const childNode = optionEl.childNodes[activeIndex || 0] as HTMLLIElement
         // scroll
-        const parentHeight = optionEl.getBoundingClientRect().height || 0
+        const parentHeight = parentEl.getBoundingClientRect().height || 0
 
         const childNodeRect = childNode?.getBoundingClientRect()
-        const parentRect = optionEl.getBoundingClientRect()
+        const parentRect = parentEl.getBoundingClientRect()
 
         const childTop = childNodeRect?.top - (parentRect?.top || 0)
         const childBottom = childNodeRect?.bottom - (parentRect?.top || 0)
 
         if (childBottom > parentHeight + 1) {
           // scroll down
-          optionEl.scrollTo(0, optionEl.scrollTop + (childBottom - parentHeight))
+          parentEl.scrollTo(0, parentEl.scrollTop + (childBottom - parentHeight))
         } else if (childTop - 1 < 0) {
           // scroll up
-          optionEl.scrollTo(0, optionEl.scrollTop + childTop - 1)
+          parentEl.scrollTo(0, parentEl.scrollTop + childTop - 1)
         }
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
