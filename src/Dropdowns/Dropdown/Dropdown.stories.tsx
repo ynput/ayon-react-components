@@ -82,15 +82,6 @@ export const Basic: Story = {
   render: Template,
 }
 
-// Portal that creates dropdown outside of standard DOM instead inside parent
-export const PortalSwitch: Story = {
-  args: {
-    isPortal: true
-  },
-  render: Template,
-}
-
-
 // simple dropdown with three items
 export const Tags: Story = {
   render: Template,
@@ -219,7 +210,6 @@ export const InvalidValue: Story = {
   },
   render: Template,
 }
-
 
 // outside state synced to dropdown state
 export const SyncedState: Story = {
