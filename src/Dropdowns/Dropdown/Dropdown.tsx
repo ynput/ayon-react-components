@@ -584,6 +584,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           // focus back on button
           valueRef.current?.focus()
         }
+
+        // stop default tab behavior
+        e.preventDefault()
+        e.stopPropagation()
         handleClose()
       }
     }
