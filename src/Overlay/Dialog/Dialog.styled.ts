@@ -135,4 +135,5 @@ export const Backdrop = styled.div`
   inset: 0;
   animation: ${fadeIn} 150ms ease-in-out forwards;
   animation-fill-mode: both;
+  z-index: 999;
 `
