@@ -5,11 +5,11 @@ import { titleMedium } from '../../theme'
 const fadeInAnimation = keyframes`
   0% {
     opacity: 0.3;
-    transform: scale(0.8);
+    scale: 0.8;
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    scale: 1;
   }
 `
 
@@ -32,15 +32,13 @@ const getWidthSize = (size: string) =>
 const getHeightSize = (size: string) =>
   size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm
 
-export const Dialog = styled.dialog<{ $size?: string }>`
+export const Dialog = styled.div<{ $size?: string }>`
   background-color: var(--md-sys-color-surface-container);
   border: none;
   border-radius: var(--border-radius-m);
   flex-direction: column;
   padding: 0;
-  min-width: 200px;
-  min-height: 100px;
-  max-width: 85%;
+
   width: ${({ $size }) =>
     $size
       ? css`
@@ -54,25 +52,22 @@ export const Dialog = styled.dialog<{ $size?: string }>`
         `
       : '100px'};
 
-  /* Backdrop property affects inactive area around modal */
-  &::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
+  position: fixed;
 
-  /* Styles for dialogs that carry modal behavior */
-  &:modal {
-  }
+  min-width: 200px;
+  min-height: 100px;
+  max-width: 85%;
 
-  /* Styles for dialogs that carry non-modal behavior */
-  &:not(:modal) {
-  }
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
 
-  &[open] {
-    display: flex;
-    animation: ${fadeInAnimation} 150ms ease-in-out forwards,
-      ${fadeInAnimation} 150ms ease-in-out backwards;
-    animation-fill-mode: both;
-  }
+  display: flex;
+  animation: ${fadeInAnimation} 150ms ease-in-out forwards,
+    ${fadeInAnimation} 150ms ease-in-out backwards;
+  animation-fill-mode: both;
+
+  z-index: 1000;
 `
 
 export const Close = styled(Button)`
@@ -116,4 +111,22 @@ export const Body = styled.div`
   flex-direction: column;
   overflow: auto;
   flex-grow: 1;
+`
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+
+
+  } to {
+    opacity: 1;
+  
+  }`
+
+export const Backdrop = styled.div`
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  inset: 0;
+  animation: ${fadeIn} 150ms ease-in-out forwards;
+  animation-fill-mode: both;
 `

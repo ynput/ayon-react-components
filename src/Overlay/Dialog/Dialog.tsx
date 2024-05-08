@@ -1,9 +1,10 @@
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useEffect } from 'react'
 import * as Styled from './Dialog.styled'
 import { Button, ButtonProps } from '../../Button'
 import clsx from 'clsx'
+import { createPortal } from 'react-dom'
 
-export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement>, 'open'> {
+export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'open'> {
   header?: React.ReactNode
   children?: React.ReactNode
   footer?: React.ReactNode
@@ -11,10 +12,9 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDialogElement
   hideCancelButton?: boolean
   showCloseButton?: boolean
   isOpen: boolean
-  onClose?: () => void
+  onClose: (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void
   onShow?: () => void
   classNames?: ClassNames
-  variant?: 'dialog' | 'modal'
   size?: 'sm' | 'md' | 'lg' | 'full'
 }
 
@@ -26,7 +26,7 @@ type ClassNames = {
   closeButton?: string
 }
 
-export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
+export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
   const {
     children,
     header,
@@ -40,70 +40,74 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>((props) => {
     classNames,
     size,
     onShow,
-    variant = 'modal',
+    ...rest
   } = props
 
-  const [isModalOpen, setModalOpen] = useState(isOpen)
-  const modalRef = useRef<HTMLDialogElement | null>(null)
-
-  const closeIfClickOutside = (e: React.MouseEvent) => {
-    if (e.currentTarget === e.target) handleCloseModal()
+  const handleCloseModal = (
+    e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
+  ) => {
+    onClose && onClose(e)
   }
 
-  useEffect(() => setModalOpen(isOpen), [isOpen])
-
+  // onShow callback
   useEffect(() => {
-    const modalElement = modalRef.current
-    if (!modalElement) return
-    const showDialog = variant === 'dialog' && modalElement.show()
-    const showModal = variant === 'modal' && modalElement.showModal()
-    const showAll = () => {
-      showDialog || showModal
-      onShow && onShow()
-    }
-    isModalOpen ? showAll() : modalElement.close()
-  }, [isModalOpen])
+    if (isOpen && onShow) onShow()
+  }, [isOpen])
 
-  const handleCloseModal = () => {
-    if (onClose) onClose()
-    setModalOpen(false)
+  const closeIfClickOutside = (e: React.MouseEvent<HTMLElement>) => {
+    if (e.currentTarget === e.target) handleCloseModal(e)
   }
 
-  return (
-    <Styled.Dialog
-      $size={size}
-      ref={modalRef}
-      onClick={(e) => closeIfClickOutside(e)}
-      className={clsx('modal', className)}
-      {...props}
-    >
-      <Styled.Header className={clsx('header', { hideCancelButton }, classNames?.header)}>
-        {header ? header : ''}
-        {hideCancelButton ? null : (
-          <Styled.Close
-            className={clsx('cancelButton', classNames?.cancelButton)}
-            icon="close"
-            variant="text"
-            autoFocus
-            onClick={handleCloseModal}
-          />
-        )}
-      </Styled.Header>
-      {children && <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>}
-      {(footer || showCloseButton) && (
-        <Styled.Footer className={clsx('footer', classNames?.footer)}>
-          {showCloseButton && (
-            <Button
-              label={!!closeProps?.label ? closeProps.label : 'Close'}
-              className={clsx('closeButton', classNames?.closeButton)}
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (e.key === 'Escape') {
+      handleCloseModal(e)
+    }
+  }
+
+  if (!isOpen) return null
+
+  return createPortal(
+    <>
+      <Styled.Backdrop onClick={(e) => closeIfClickOutside(e)} />
+      <Styled.Dialog
+        $size={size}
+        ref={ref}
+        className={clsx('modal', className)}
+        onKeyDown={handleKeyDown}
+        {...rest}
+      >
+        <Styled.Header className={clsx('header', { hideCancelButton }, classNames?.header)}>
+          {header ? header : ''}
+          {hideCancelButton ? null : (
+            <Styled.Close
+              className={clsx('cancelButton', classNames?.cancelButton)}
+              icon="close"
               variant="text"
+              autoFocus
               onClick={handleCloseModal}
-              {...closeProps}
             />
           )}
-          {footer && footer}
-        </Styled.Footer>
-      )}
-    </Styled.Dialog>
+        </Styled.Header>
+        {children && (
+          <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>
+        )}
+        {(footer || showCloseButton) && (
+          <Styled.Footer className={clsx('footer', classNames?.footer)}>
+            {showCloseButton && (
+              <Button
+                label={!!closeProps?.label ? closeProps.label : 'Close'}
+                className={clsx('closeButton', classNames?.closeButton)}
+                variant="text"
+                onClick={handleCloseModal}
+                {...closeProps}
+              />
+            )}
+            {footer && footer}
+          </Styled.Footer>
+        )}
+      </Styled.Dialog>
+    </>,
+
+    document.body,
   )
 })

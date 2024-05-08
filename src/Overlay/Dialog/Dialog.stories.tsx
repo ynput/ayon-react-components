@@ -38,15 +38,15 @@ const Template = (args: Story['args']) => {
         Show Modal
       </Button>
       <Dialog
+        {...args}
         header={<HeaderContent />}
         children={<BodyContent />}
         isOpen={openModal}
         onClose={() => setOpenModal(false)}
+        onShow={() => console.log('onShow')}
         closeProps={closeProps}
         hideCancelButton={false}
-        size="full"
-        onShow={() => console.log('test123')}
-        {...args}
+        size="lg"
       />
     </>
   )
@@ -65,7 +65,4 @@ export const Footer: Story = {
 
 export const DialogVariant: Story = {
   render: Template,
-  args: {
-    variant: 'dialog',
-  },
 }
