@@ -89,10 +89,10 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
-  disableReorder?: boolean
   disabledValues?: (string | number)[]
   listInline?: boolean
   disableOpen?: boolean
+  sortBySelected?: boolean
 }
 
 export interface DropdownRef {
@@ -147,10 +147,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       nullPlaceholder,
       editable,
       maxHeight = 300,
-      disableReorder,
       disabledValues = [],
       listInline = false,
       disableOpen = false,
+      sortBySelected = false,
       ...props
     },
     ref,
@@ -287,7 +287,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
       () =>
-        disableReorder || !value || !value.length
+        !sortBySelected || !value || !value.length
           ? options
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],

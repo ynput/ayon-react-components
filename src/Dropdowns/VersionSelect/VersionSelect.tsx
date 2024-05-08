@@ -63,7 +63,6 @@ export const VersionSelect = forwardRef<DropdownRef, VersionSelectProps>(
         listStyle={{ ...props.listStyle }}
         itemStyle={{ ...props.itemStyle }}
         widthExpand
-        disableReorder
         disabledValues={disabledVersions}
         {...props}
       />
