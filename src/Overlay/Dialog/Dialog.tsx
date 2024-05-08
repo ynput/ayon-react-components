@@ -72,21 +72,25 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
       <Styled.Dialog
         $size={size}
         ref={ref}
-        className={clsx('modal', className)}
+        className={clsx('dialog', className)}
         onKeyDown={handleKeyDown}
+        tabIndex={0}
         {...rest}
       >
         <Styled.Header className={clsx('header', { hideCancelButton }, classNames?.header)}>
           {header ? header : ''}
-          {hideCancelButton ? null : (
-            <Styled.Close
-              className={clsx('cancelButton', classNames?.cancelButton)}
-              icon="close"
-              variant="text"
-              autoFocus
-              onClick={handleCloseModal}
-            />
-          )}
+
+          <Styled.Close
+            className={clsx(
+              'cancelButton',
+              { isHidden: hideCancelButton },
+              classNames?.cancelButton,
+            )}
+            icon="close"
+            variant="text"
+            onClick={handleCloseModal}
+            autoFocus
+          />
         </Styled.Header>
         {children && (
           <Styled.Body className={clsx('body', classNames?.body)}>{children}</Styled.Body>

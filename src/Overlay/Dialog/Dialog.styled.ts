@@ -74,6 +74,12 @@ export const Close = styled(Button)`
   position: absolute;
   right: 8px;
   top: 8px;
+
+  &.isHidden {
+    user-select: none;
+    opacity: 0;
+    pointer-events: none;
+  }
 `
 
 export const BaseDialogEdge = styled.div`
