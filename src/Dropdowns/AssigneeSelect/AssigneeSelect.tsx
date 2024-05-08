@@ -16,6 +16,7 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
   align?: 'left' | 'right'
   isMultiple?: boolean
   placeholder?: string
+  sortBySelected?: boolean
   emptyIcon?: AssigneeFieldProps['emptyIcon']
   emptyMessage?: AssigneeFieldProps['emptyMessage']
   size?: AssigneeFieldProps['size']
@@ -39,6 +40,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       emptyMessage: assigneeEmptyMessage,
       size,
       assigneeProps,
+      sortBySelected = true,
       onAssigneeFieldClick,
       ...props
     },
@@ -99,6 +101,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         search
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
+        sortBySelected
         {...props}
       />
     )
