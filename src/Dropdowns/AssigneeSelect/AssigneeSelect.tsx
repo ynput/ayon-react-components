@@ -101,7 +101,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         search
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
-        sortBySelected
+        sortBySelected={sortBySelected}
         {...props}
       />
     )
