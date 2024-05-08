@@ -121,6 +121,23 @@ export const Multiple: Story = {
   render: Template,
 }
 
+export const MultipleSorted: Story = {
+  args: {
+    isMultiple: true,
+    value: [options[0].value, options[1].value],
+    widthExpand: true,
+    multiSelect: true,
+    minSelected: 2,
+    align: 'right',
+    onClear: () => console.log('clear'),
+    style: {
+      width: 'unset',
+    },
+    sortBySelected: true
+  },
+  render: Template,
+}
+
 // custom item and option renderers
 // TODO: fix this!
 export const CustomTemplates: Story = {
