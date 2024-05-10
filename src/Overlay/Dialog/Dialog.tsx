@@ -16,6 +16,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   onShow?: () => void
   classNames?: ClassNames
   size?: 'sm' | 'md' | 'lg' | 'full'
+  isBackdrop?: boolean
 }
 
 type ClassNames = {
@@ -33,6 +34,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     footer,
     hideCancelButton = false,
     showCloseButton = false,
+    isBackdrop = true,
     closeProps,
     isOpen,
     onClose,
@@ -68,7 +70,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
 
   return createPortal(
     <>
-      <Styled.Backdrop onClick={(e) => closeIfClickOutside(e)} />
+      {isBackdrop && <Styled.Backdrop onClick={(e) => closeIfClickOutside(e)} />}
       <Styled.Dialog
         $size={size}
         ref={ref}

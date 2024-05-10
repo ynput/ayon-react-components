@@ -86,3 +86,11 @@ export const ColorPicker: Story = {
     children: <InputColor value={'#fff'} onChange={() => console.log('onChange')} />,
   },
 }
+
+export const NoBackdrop: Story = {
+  render: Template,
+  args: {
+    isBackdrop: false,
+    hideCancelButton: false,
+  },
+}
