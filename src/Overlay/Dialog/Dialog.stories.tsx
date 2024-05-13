@@ -86,3 +86,24 @@ export const ColorPicker: Story = {
     children: <InputColor value={'#fff'} onChange={() => console.log('onChange')} />,
   },
 }
+
+export const Scroll: Story = {
+  render: Template,
+  args: {
+    children: (
+      <>
+        {Array.from({ length: 20 }).map((_, i) => (
+          <BodyContent key={i} />
+        ))}
+      </>
+    ),
+  },
+}
+
+export const NoBackdrop: Story = {
+  render: Template,
+  args: {
+    hideBackdrop: true,
+    hideCancelButton: false,
+  },
+}
