@@ -87,7 +87,6 @@ export const ColorPicker: Story = {
   },
 }
 
-
 export const Scroll: Story = {
   render: Template,
   args: {
@@ -104,7 +103,7 @@ export const Scroll: Story = {
 export const NoBackdrop: Story = {
   render: Template,
   args: {
-    isBackdrop: false,
+    hideBackdrop: true,
     hideCancelButton: false,
   },
 }
