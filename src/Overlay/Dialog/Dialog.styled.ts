@@ -52,12 +52,15 @@ export const Dialog = styled.div<{ $size?: string }>`
         `
       : '100px'};
 
-  position: relative;
-  pointer-events: auto;
+  position: fixed;
 
   min-width: 200px;
   min-height: 100px;
   max-width: 85%;
+
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
 
   display: flex;
   animation: ${fadeInAnimation} 150ms ease-in-out forwards,
@@ -133,13 +136,4 @@ export const Backdrop = styled.div`
   animation: ${fadeIn} 150ms ease-in-out forwards;
   animation-fill-mode: both;
   z-index: 999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &.hideBackdrop {
-    pointer-events: none;
-    background-color: unset;
-  }
 `
