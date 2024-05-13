@@ -34,7 +34,7 @@ const closeProps = {
 const defaultArgs: Story['args'] = {
   header: <HeaderContent />,
   children: <BodyContent />,
-  size: 'full',
+  size: 'md',
   onShow: () => console.log('onShow'),
   closeProps: closeProps,
   hideCancelButton: true,
@@ -87,10 +87,30 @@ export const ColorPicker: Story = {
   },
 }
 
+export const Scroll: Story = {
+  render: Template,
+  args: {
+    children: (
+      <>
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+        <BodyContent />
+      </>
+    ),
+  },
+}
+
 export const NoBackdrop: Story = {
   render: Template,
   args: {
-    isBackdrop: false,
+    hideBackdrop: true,
     hideCancelButton: false,
   },
 }
