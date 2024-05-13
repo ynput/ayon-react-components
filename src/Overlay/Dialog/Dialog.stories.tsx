@@ -87,6 +87,20 @@ export const ColorPicker: Story = {
   },
 }
 
+
+export const Scroll: Story = {
+  render: Template,
+  args: {
+    children: (
+      <>
+        {Array.from({ length: 20 }).map((_, i) => (
+          <BodyContent key={i} />
+        ))}
+      </>
+    ),
+  },
+}
+
 export const NoBackdrop: Story = {
   render: Template,
   args: {
