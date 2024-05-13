@@ -17,6 +17,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   classNames?: ClassNames
   size?: 'sm' | 'md' | 'lg' | 'full'
   hideBackdrop?: boolean
+  portalRef?: HTMLElement
 }
 
 type ClassNames = {
@@ -42,6 +43,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     classNames,
     size,
     onShow,
+    portalRef,
     ...rest
   } = props
 
@@ -112,6 +114,6 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
         )}
       </Styled.Dialog>
     </Styled.Backdrop>,
-    document.body,
+    portalRef || document.getElementById('root') || document.body,
   )
 })
