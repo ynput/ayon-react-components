@@ -92,16 +92,9 @@ export const Scroll: Story = {
   args: {
     children: (
       <>
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
-        <BodyContent />
+        {Array.from({ length: 20 }).map((_, i) => (
+          <BodyContent key={i} />
+        ))}
       </>
     ),
   },
