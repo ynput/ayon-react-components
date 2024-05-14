@@ -85,7 +85,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   maxSelected?: number
   dropIcon?: IconType
   onClear?: (value: []) => void
+  clearTooltip?: string
   onClearNull?: (value: null) => void
+  clearNullTooltip?: string
   nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
@@ -143,7 +145,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       maxSelected,
       dropIcon = 'expand_more',
       onClear,
+      clearTooltip = 'Clear to no value',
       onClearNull,
+      clearNullTooltip = 'Clear to empty list',
       nullPlaceholder,
       editable,
       maxHeight = 300,
@@ -629,7 +633,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       dropIcon,
       displayIcon,
       onClear: onClear && handleClear,
+      clearTooltip,
       onClearNull: onClearNull && handleClearNull,
+      clearNullTooltip,
       nullPlaceholder,
       style: valueStyle,
       placeholder,

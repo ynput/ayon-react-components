@@ -59,6 +59,8 @@ export interface DefaultValueTemplateProps
     | 'onClearNull'
     | 'nullPlaceholder'
     | 'placeholder'
+    | 'clearTooltip'
+    | 'clearNullTooltip'
   > {
   displayIcon?: string
   style?: React.CSSProperties
@@ -75,7 +77,9 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   dropIcon = 'expand_more',
   displayIcon,
   onClear,
+  clearTooltip,
   onClearNull,
+  clearNullTooltip,
   nullPlaceholder,
   children,
   style,
@@ -85,6 +89,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   className,
   childrenCustom,
 }) => {
+  console.log(clearNullTooltip)
   const noValue = !value?.length
 
   return (
@@ -107,7 +112,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               id={'backspace'}
               className="control"
               tabIndex={0}
-              data-tooltip={'Set to Inherit (null)'}
+              data-tooltip={clearNullTooltip}
             />
           )}
           {onClear && (
@@ -117,7 +122,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               id={'clear'}
               className="control"
               tabIndex={0}
-              data-tooltip={'Clear to empty list'}
+              data-tooltip={clearTooltip}
             />
           )}
         </>
@@ -136,7 +141,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               id={'backspace'}
               className="control"
               tabIndex={0}
-              data-tooltip={'Set to Inherit (null)'}
+              data-tooltip={clearNullTooltip}
             />
           )}
           {onClear && (
@@ -146,7 +151,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               id="clear"
               className="control"
               tabIndex={0}
-              data-tooltip={'Clear to empty list'}
+              data-tooltip={clearTooltip}
             />
           )}
         </>
