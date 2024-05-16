@@ -89,7 +89,6 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   className,
   childrenCustom,
 }) => {
-  console.log(clearNullTooltip)
   const noValue = !value?.length
 
   return (

@@ -691,7 +691,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           style={buttonStyle}
           className={`button ${buttonClassName}`}
         >
-          {valueTemplateNode ? (
+          {valueTemplateNode && valueTemplateNode(value || [], selected || [], isOpen) ? (
             valueTemplateNode(value || [], selected || [], isOpen)
           ) : (
             <DefaultValueTemplate {...DefaultValueTemplateProps}>
