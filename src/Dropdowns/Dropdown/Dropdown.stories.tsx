@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Dropdown, DropdownProps, DropdownRef } from '.'
+import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '.'
 import { useRef, useState } from 'react'
 import { Button } from '../../Button'
-import { IconType } from '../../Icon'
+import { Icon, IconType } from '../../Icon'
 import { InputText } from '../../Inputs/InputText'
 import { Toolbar } from '../../Layout/Toolbar'
 import { Panel } from '../../Panels/Panel'
@@ -133,7 +133,7 @@ export const MultipleSorted: Story = {
     style: {
       width: 'unset',
     },
-    sortBySelected: true
+    sortBySelected: true,
   },
   render: Template,
 }
@@ -258,4 +258,32 @@ export const SyncedState: Story = {
       </>
     )
   },
+}
+
+const optionsWithIcons = options.map((option) => ({ ...option, icon: option.value }))
+
+const initialIconsAtThreeValuesArgs: Story['args'] = {
+  options: optionsWithIcons,
+  multiSelect: true,
+  minSelected: 1,
+  widthExpand: true,
+}
+
+export const IconsAtThreeValues: Story = {
+  args: {
+    ...initialIconsAtThreeValuesArgs,
+    valueTemplate: (value, selected, isOpen) =>
+      selected.length >= 3 ? (
+        <DefaultValueTemplate {...{ value, selected, isOpen }} {...initialIconsAtThreeValuesArgs}>
+          <div style={{ display: 'flex', gap: 2 }}>
+            {optionsWithIcons
+              .filter((option) => selected.includes(option.value))
+              .map((option) => (
+                <Icon icon={option.icon as IconType} />
+              ))}
+          </div>
+        </DefaultValueTemplate>
+      ) : null,
+  },
+  render: Template,
 }
