@@ -39,18 +39,16 @@ const getRandomUsers = (number = 2) => {
 
 const selectedUsers = getRandomUsers().map((user) => user.name)
 
+const initArgs: AssigneeSelectProps = {
+  value: selectedUsers,
+  options: allUsers,
+  editor: true,
+}
+
 const Template = (args: AssigneeSelectProps) => {
   const [value, setValue] = useState(args.value)
 
-  return (
-    <AssigneeSelect
-      {...args}
-      options={allUsers}
-      value={value}
-      onChange={(names) => setValue(names)}
-      editor
-    />
-  )
+  return <AssigneeSelect {...initArgs} {...args} onChange={(names) => setValue(names)} />
 }
 
 export const Default: Story = {
@@ -65,5 +63,14 @@ export const Custom: Story = {
     emptyMessage: 'Assignees',
     emptyIcon: 'group',
     value: [],
+  },
+}
+export const ReadOnly: Story = {
+  render: Template,
+  args: {
+    emptyMessage: 'Assignees',
+    emptyIcon: 'group',
+    value: [selectedUsers[0]],
+    editor: false,
   },
 }

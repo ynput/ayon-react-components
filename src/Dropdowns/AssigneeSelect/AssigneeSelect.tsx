@@ -75,7 +75,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       ...assigneeProps,
     }
 
-    if (!editor) return <AssigneeField {...assigneeFieldProps} />
+    if (!editor) return <AssigneeField {...props} {...assigneeFieldProps} />
 
     return (
       <Dropdown
