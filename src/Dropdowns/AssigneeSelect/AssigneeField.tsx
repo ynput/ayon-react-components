@@ -68,7 +68,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       disabled,
       isMultiple,
       placeholder,
-      emptyIcon = 'add_circle',
+      emptyIcon = 'person_add',
       emptyMessage = '',
       size = 21,
       ...props
