@@ -11,10 +11,12 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   user-select: none;
   display: flex;
   align-items: center;
-  height: 30px;
+  justify-content: center;
+  min-width: 32px;
   gap: 4px;
+  display: flex;
 
-  span:not(.user-image) {
+  .name {
     position: relative;
     top: 1px;
     white-space: nowrap;
@@ -95,7 +97,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
                   maxWidth: size,
                 }}
               />
-              {value.length < 2 && <span>{value[0]?.fullName}</span>}
+              {value.length < 2 && <span className="name">{value[0]?.fullName}</span>}
             </>
           ) : (
             <>
