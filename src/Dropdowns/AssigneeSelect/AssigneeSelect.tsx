@@ -97,7 +97,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         onChange={(names) => onChange && onChange(names.map((name) => name.toString() as string))}
         widthExpand={widthExpand}
         align={align}
-        multiSelect
+        multiSelect={!!value.length}
         search
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
