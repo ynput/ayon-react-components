@@ -48,13 +48,15 @@ const initArgs: AssigneeSelectProps = {
 const Template = (args: AssigneeSelectProps) => {
   const [value, setValue] = useState(args.value)
 
-  return <AssigneeSelect {...initArgs} {...args} onChange={(names) => setValue(names)} />
+  return (
+    <AssigneeSelect {...initArgs} {...args} value={value} onChange={(names) => setValue(names)} />
+  )
 }
 
 export const Default: Story = {
   render: Template,
   args: {
-    value: selectedUsers,
+    value: [],
   },
 }
 export const Custom: Story = {
