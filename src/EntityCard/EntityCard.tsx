@@ -159,7 +159,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               src={imageUrl}
               onError={handleImageError}
               onLoad={handleImageLoad}
-              className={clsx({ loading: isImageLoading || imageUrl || isImageError })}
+              className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
             />
           )}
 
