@@ -313,6 +313,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
 
 // IMAGE
 export const Image = styled.img`
+  background-color: var(--md-sys-color-surface-container);
   z-index: 10;
   position: absolute;
   inset: 0;
