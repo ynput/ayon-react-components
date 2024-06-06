@@ -89,7 +89,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideDescription = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
-    const [isImageError, setIsImageError] = useState(!imageUrl)
+    const [isImageError, setIsImageError] = useState(false)
     const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
 
     const handleImageError = () => {
@@ -154,12 +154,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               className={clsx('no-image', { loading: isImageLoading })}
             />
           )}
-          {!isLoading && imageUrl && !isImageError && (
+          {!isLoading && (
             <Styled.Image
               src={imageUrl}
               onError={handleImageError}
               onLoad={handleImageLoad}
-              className={clsx({ loading: isImageLoading })}
+              className={clsx({ loading: isImageLoading || imageUrl || isImageError })}
             />
           )}
 
