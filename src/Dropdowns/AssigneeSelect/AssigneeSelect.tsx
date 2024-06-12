@@ -9,7 +9,7 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
     fullName?: string
     avatarUrl?: string
   }[]
-  editor?: boolean
+  readOnly?: boolean
   onChange?: (names: string[]) => void
   widthExpand?: boolean
   disabled?: boolean
@@ -32,7 +32,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       onChange,
       widthExpand,
       disabled,
-      editor,
+      readOnly,
       align,
       isMultiple,
       placeholder,
@@ -72,10 +72,12 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       onClick: onAssigneeFieldClick,
       emptyMessage: assigneeEmptyMessage,
       size,
+      align,
+      widthExpand,
       ...assigneeProps,
     }
 
-    if (!editor) return <AssigneeField {...props} {...assigneeFieldProps} />
+    if (readOnly) return <AssigneeField {...props} {...assigneeFieldProps} />
 
     return (
       <Dropdown
