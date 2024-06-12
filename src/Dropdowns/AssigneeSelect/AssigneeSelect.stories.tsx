@@ -42,7 +42,6 @@ const selectedUsers = getRandomUsers().map((user) => user.name)
 const initArgs: AssigneeSelectProps = {
   value: selectedUsers,
   options: allUsers,
-  editor: true,
 }
 
 const Template = (args: AssigneeSelectProps) => {
@@ -73,7 +72,7 @@ export const ReadOnly: Story = {
     emptyMessage: 'Assignees',
     emptyIcon: 'group',
     value: [selectedUsers[0]],
-    editor: false,
+    readOnly: true,
     align: 'left',
   },
 }
