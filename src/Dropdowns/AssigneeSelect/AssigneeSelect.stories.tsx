@@ -74,5 +74,6 @@ export const ReadOnly: Story = {
     emptyIcon: 'group',
     value: [selectedUsers[0]],
     editor: false,
+    align: 'left',
   },
 }

@@ -72,6 +72,8 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       onClick: onAssigneeFieldClick,
       emptyMessage: assigneeEmptyMessage,
       size,
+      align,
+      widthExpand,
       ...assigneeProps,
     }
 

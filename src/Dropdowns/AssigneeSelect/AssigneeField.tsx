@@ -3,7 +3,11 @@ import { UserImagesStacked } from '../../User/UserImagesStacked'
 import { forwardRef } from 'react'
 import { Icon, IconType } from '../../Icon'
 
-const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
+const FieldStyled = styled.div<{
+  disabled?: boolean
+  isMultiple?: boolean
+  $align?: 'left' | 'right'
+}>`
   position: relative;
   padding: 4px;
   border-radius: 4px;
@@ -13,6 +17,7 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
   align-items: center;
   justify-content: center;
   min-width: 32px;
+  width: fit-content;
   gap: 4px;
   display: flex;
 
@@ -43,6 +48,18 @@ const FieldStyled = styled.div<{ disabled?: boolean; isMultiple?: boolean }>`
         margin-left: 4px;
       }
     `}
+
+  ${({ $align }) =>
+    $align === 'left' &&
+    css`
+      justify-content: flex-start;
+    `}
+
+  ${({ $align }) =>
+    $align === 'right' &&
+    css`
+      justify-content: flex-end;
+    `}
 `
 
 export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -58,6 +75,7 @@ export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement>
   emptyMessage?: string
   emptyIcon?: IconType | null
   size?: number
+  align?: 'left' | 'right'
 }
 
 export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
@@ -71,6 +89,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       emptyIcon = 'person_add',
       emptyMessage = '',
       size = 21,
+      align,
       ...props
     },
     ref,
@@ -80,6 +99,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
         onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
         disabled={disabled}
         isMultiple={isMultiple && (!disabled || !placeholder)}
+        $align={align}
         {...props}
         ref={ref}
       >
