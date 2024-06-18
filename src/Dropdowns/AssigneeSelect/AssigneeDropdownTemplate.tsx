@@ -25,6 +25,7 @@ export interface AssigneeDropdownProps {
   onClick?: () => void
   size?: number
   selectAll?: string | boolean
+  allSelected?: boolean
 }
 
 export const AssigneeDropdownTemplate = ({
@@ -35,12 +36,13 @@ export const AssigneeDropdownTemplate = ({
   onClick,
   size = 21,
   selectAll,
+  allSelected,
 }: AssigneeDropdownProps) => {
   if (selectAll === name) {
     return (
       <RowStyled {...{ isSelected, onClick }}>
         <Icon icon="done_all" />
-        Select All
+        {allSelected ? 'Deselect All' : 'Select All'}
       </RowStyled>
     )
   }

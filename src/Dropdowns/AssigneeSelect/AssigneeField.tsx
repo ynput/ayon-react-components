@@ -77,7 +77,7 @@ export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement>
   emptyIcon?: IconType | null
   size?: number
   align?: 'left' | 'right'
-  selectAll?: string
+  allSelected?: boolean
 }
 
 export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
@@ -93,12 +93,12 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       emptyMessage = '',
       size = 21,
       align,
-      selectAll,
+      allSelected,
       ...props
     },
     ref,
   ) => {
-    if (selectAll && value?.includes(selectAll))
+    if (allSelected)
       return (
         <FieldStyled
           onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
@@ -107,7 +107,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
           {...props}
           ref={ref}
         >
-          <Icon icon="done_all" /> All Selected
+          <Icon icon="done_all" /> All Users
         </FieldStyled>
       )
 

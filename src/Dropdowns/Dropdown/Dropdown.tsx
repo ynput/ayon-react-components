@@ -95,6 +95,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
+  closeOnFirstSelect?: boolean
   onSelectAll?: ((value: string[]) => void) | true
   selectAllKey?: string
 }
@@ -157,6 +158,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       listInline = false,
       disableOpen = false,
       sortBySelected = false,
+      closeOnFirstSelect,
       onSelectAll,
       selectAllKey = '__all__',
       ...props
@@ -439,7 +441,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       const addingNew = editable && index === 0
 
-      if (!multiSelect) {
+      // close on first select
+      const closeMultiSelect = closeOnFirstSelect && newSelected.length === 0
+
+      if (!multiSelect || closeMultiSelect) {
         // replace current value with new one
         newSelected = [value]
       } else {
