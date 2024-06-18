@@ -58,6 +58,15 @@ export const Default: Story = {
     value: [],
   },
 }
+export const SelectAll: Story = {
+  render: Template,
+  args: {
+    value: [],
+    onSelectAll: () => {
+      console.log('selected all users')
+    },
+  },
+}
 export const Custom: Story = {
   render: Template,
   args: {

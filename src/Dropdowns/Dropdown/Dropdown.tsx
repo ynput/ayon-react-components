@@ -95,6 +95,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
+  onSelectAll?: (() => void) | true
+  selectAllKey?: string
 }
 
 export interface DropdownRef {
@@ -155,6 +157,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       listInline = false,
       disableOpen = false,
       sortBySelected = false,
+      onSelectAll,
+      selectAllKey = '__all__',
       ...props
     },
     ref,
@@ -279,7 +283,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     options = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
-        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
+        value?.filter((s) => !options.some((o) => o[dataKey] === s || s === selectAllKey)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
@@ -296,6 +300,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
     )
+
+    // if onSelectAll, add to options
+    options = useMemo(() => {
+      if (onSelectAll) {
+        return [{ [labelKey]: 'Select All', [dataKey]: selectAllKey }, ...options]
+      }
+      return options
+    }, [onSelectAll, options])
 
     // if editable, merge current search into showOptions
     options = useMemo(() => {
@@ -367,6 +379,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
+    const submitChange = (selected: (string | number)[], close?: boolean) => {
+      // send on selection changed event
+      onSelectionChange && onSelectionChange(selected)
+
+      // update temp value
+      // update state
+      setSelected(selected)
+
+      if (close) {
+        setValue(selected)
+        handleClose(undefined, selected)
+      }
+    }
+
     const handleChange = (
       value: string | number,
       index: number,
@@ -375,7 +401,21 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
+      // selecting all just sets __all value and that's it
+      if (selectAllKey === value) {
+        // check selectAll is active
+        if (onSelectAll) {
+          submitChange([selectAllKey], true)
+          return
+        }
+      }
+
       let newSelected = selected ? [...selected] : []
+
+      if (onSelectAll && newSelected.includes(selectAllKey)) {
+        // selecting an actual value, remove selectAll
+        newSelected = newSelected.filter((s) => s !== selectAllKey)
+      }
 
       const addingNew = editable && index === 0
 
@@ -414,17 +454,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         searchRef.current?.focus()
       }
 
-      // send on selection changed event
-      onSelectionChange && onSelectionChange(newSelected)
-
-      // update temp value
-      // update state
-      setSelected(newSelected)
       // if not multi or multiSelectClose then close
-      if (!multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose) {
-        setValue(newSelected)
-        handleClose(undefined, newSelected)
-      }
+      const close =
+        !multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose
+
+      submitChange(newSelected, !!close)
     }
 
     const handleClear = () => {
@@ -673,6 +707,18 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     )
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
+
+    let valueChildren
+    if (!labels.length && disabled && placeholder) {
+      valueChildren = placeholder
+    } else if (onSelectAll && value?.includes(selectAllKey)) {
+      valueChildren = 'All selected'
+    } else if (labels.length) {
+      valueChildren = labels.join(', ')
+    } else {
+      valueChildren = emptyMessage
+    }
+
     return (
       <Styled.Dropdown
         onKeyDown={handleKeyPress}
@@ -695,11 +741,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
             valueTemplateNode(value || [], selected || [], isOpen)
           ) : (
             <DefaultValueTemplate {...DefaultValueTemplateProps}>
-              {!labels.length && disabled && placeholder
-                ? placeholder
-                : labels.length
-                ? labels.join(', ')
-                : emptyMessage}
+              {valueChildren}
             </DefaultValueTemplate>
           )}
         </Styled.Button>

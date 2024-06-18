@@ -22,6 +22,7 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
   size?: AssigneeFieldProps['size']
   assigneeProps?: AssigneeFieldProps
   onAssigneeFieldClick?: AssigneeFieldProps['onClick']
+  selectAllKey?: string
 }
 
 export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
@@ -42,6 +43,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       assigneeProps,
       sortBySelected = true,
       onAssigneeFieldClick,
+      selectAllKey = '__all__',
       ...props
     },
     ref,
@@ -64,7 +66,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
     )
 
     const assigneeFieldProps = {
-      value: assignedUsers,
+      users: assignedUsers,
       disabled,
       isMultiple,
       placeholder,
@@ -85,16 +87,22 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         valueTemplate={(value, selected, isOpen) => (
           <AssigneeField
             {...assigneeFieldProps}
-            value={
+            users={
               isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
             }
+            value={value}
+            selectAll={props.onSelectAll && selectAllKey}
           />
         )}
         options={sortedOptions}
         dataKey={'name'}
         disabled={disabled}
         itemTemplate={(ops, isActive, isSelected) => (
-          <AssigneeDropdownTemplate {...ops} isSelected={isSelected} />
+          <AssigneeDropdownTemplate
+            {...ops}
+            isSelected={isSelected}
+            selectAll={props.onSelectAll && selectAllKey}
+          />
         )}
         onChange={(names) => onChange && onChange(names.map((name) => name.toString() as string))}
         widthExpand={widthExpand}
@@ -104,6 +112,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
         sortBySelected={sortBySelected}
+        selectAllKey={selectAllKey}
         {...props}
       />
     )

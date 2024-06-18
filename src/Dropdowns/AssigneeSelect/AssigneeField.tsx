@@ -63,11 +63,12 @@ const FieldStyled = styled.div<{
 `
 
 export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: {
+  users: {
     name: string
     fullName?: string
     avatarUrl?: string
   }[]
+  value?: (string | number)[]
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
   disabled?: boolean
   isMultiple?: boolean
@@ -76,11 +77,13 @@ export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement>
   emptyIcon?: IconType | null
   size?: number
   align?: 'left' | 'right'
+  selectAll?: string
 }
 
 export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
   (
     {
+      users = [],
       value = [],
       onClick,
       disabled,
@@ -90,10 +93,24 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       emptyMessage = '',
       size = 21,
       align,
+      selectAll,
       ...props
     },
     ref,
   ) => {
+    if (selectAll && value?.includes(selectAll))
+      return (
+        <FieldStyled
+          onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
+          disabled={disabled}
+          $align={align}
+          {...props}
+          ref={ref}
+        >
+          <Icon icon="done_all" /> All Selected
+        </FieldStyled>
+      )
+
     return (
       <FieldStyled
         onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
@@ -104,10 +121,10 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
         ref={ref}
       >
         {!(disabled && placeholder) ? (
-          value.length ? (
+          users.length ? (
             <>
               <UserImagesStacked
-                users={value}
+                users={users}
                 size={size}
                 gap={-0.3}
                 userStyle={{
@@ -117,7 +134,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
                   maxWidth: size,
                 }}
               />
-              {value.length < 2 && <span className="name">{value[0]?.fullName}</span>}
+              {users.length < 2 && <span className="name">{users[0]?.fullName}</span>}
             </>
           ) : (
             <>
