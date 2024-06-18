@@ -284,7 +284,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // select all only works with multiSelect
     const showSelectAll = onSelectAll && multiSelect
     // are all options selected
-    const isAllSelected = useMemo(() => value?.length === options.length, [value, options])
+    const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     // if editable, merge current search into showOptions
     options = useMemo(() => {

@@ -82,6 +82,8 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
 
     if (readOnly) return <AssigneeField {...props} {...assigneeFieldProps} />
 
+    const isAllSelected = value.length >= options.length
+
     return (
       <Dropdown
         value={value}
@@ -92,7 +94,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
               isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
             }
             value={value}
-            allSelected={!!(value.length === options.length && props.onSelectAll)}
+            allSelected={!!(isAllSelected && props.onSelectAll)}
           />
         )}
         options={sortedOptions}
@@ -103,7 +105,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
             {...ops}
             isSelected={isSelected}
             selectAll={props.onSelectAll && selectAllKey}
-            allSelected={!!(value.length === options.length && props.onSelectAll)}
+            allSelected={!!(isAllSelected && props.onSelectAll)}
           />
         )}
         onChange={(names) => onChange && onChange(names.map((name) => name.toString() as string))}
