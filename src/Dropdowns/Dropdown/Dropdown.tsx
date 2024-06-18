@@ -95,7 +95,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
-  onSelectAll?: (() => void) | true
+  onSelectAll?: ((value: string[]) => void) | true
   selectAllKey?: string
 }
 
@@ -279,11 +279,16 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
 
+    // select all only works with multiSelect
+    const showSelectAll = onSelectAll && multiSelect
+    // are all options selected
+    const isAllSelected = useMemo(() => value?.length === options.length, [value, options])
+
     // if editable, merge current search into showOptions
     options = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
-        value?.filter((s) => !options.some((o) => o[dataKey] === s || s === selectAllKey)) || []
+        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
@@ -303,11 +308,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // if onSelectAll, add to options
     options = useMemo(() => {
-      if (onSelectAll) {
-        return [{ [labelKey]: 'Select All', [dataKey]: selectAllKey }, ...options]
+      if (showSelectAll) {
+        return [
+          { [labelKey]: isAllSelected ? 'Deselect All' : 'Select All', [dataKey]: selectAllKey },
+          ...options,
+        ]
       }
       return options
-    }, [onSelectAll, options])
+    }, [isAllSelected, showSelectAll, options])
 
     // if editable, merge current search into showOptions
     options = useMemo(() => {
@@ -401,13 +409,25 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
-      // selecting all just sets __all value and that's it
-      if (selectAllKey === value) {
-        // check selectAll is active
-        if (onSelectAll) {
-          submitChange([selectAllKey], true)
+      // selecting all just sets __all__ value and that's it
+      // check selectAll is active
+      if (selectAllKey === value && onSelectAll) {
+        if (isAllSelected) {
+          // deselect all
+          submitChange([], false)
           return
         }
+
+        // select all values from options
+        const allSelected = options
+          .map((o) => o[dataKey])
+          .filter((o) => !disabledValues.includes(o))
+          .filter((o) => o !== selectAllKey)
+
+        submitChange(allSelected, true)
+
+        if (typeof onSelectAll === 'function') onSelectAll(allSelected)
+        return
       }
 
       let newSelected = selected ? [...selected] : []

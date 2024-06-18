@@ -15,9 +15,6 @@ type Story = StoryObj<typeof AssigneeSelect>
 // randomly attach an image to the user
 const allUsers = usersData.map((user, i) => {
   let avatarUrl
-  if (Math.random() < 0.1) {
-    avatarUrl = 'broken-url'
-  }
 
   if (Math.random() > 0.5) {
     avatarUrl = `https://repo.imm.cz/avatars/demouser${i + 10}.jpg`
