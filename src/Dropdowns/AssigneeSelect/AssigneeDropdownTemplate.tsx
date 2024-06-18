@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { UserImage } from '../../User/UserImage'
+import { Icon } from '../../Icon'
 
 const RowStyled = styled.span`
   cursor: pointer;
@@ -23,6 +24,8 @@ export interface AssigneeDropdownProps {
   isSelected?: boolean
   onClick?: () => void
   size?: number
+  selectAll?: string | boolean
+  allSelected?: boolean
 }
 
 export const AssigneeDropdownTemplate = ({
@@ -32,7 +35,18 @@ export const AssigneeDropdownTemplate = ({
   isSelected,
   onClick,
   size = 21,
+  selectAll,
+  allSelected,
 }: AssigneeDropdownProps) => {
+  if (selectAll === name) {
+    return (
+      <RowStyled {...{ isSelected, onClick }}>
+        <Icon icon="done_all" />
+        {allSelected ? 'Deselect All' : 'Select All'}
+      </RowStyled>
+    )
+  }
+
   return (
     <RowStyled {...{ isSelected, onClick }}>
       <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
