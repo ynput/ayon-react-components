@@ -42,6 +42,9 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       assigneeProps,
       sortBySelected = true,
       onAssigneeFieldClick,
+      selectAllKey = '__all__',
+      closeOnFirstSelect = true,
+      multiSelect = true,
       ...props
     },
     ref,
@@ -64,7 +67,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
     )
 
     const assigneeFieldProps = {
-      value: assignedUsers,
+      users: assignedUsers,
       disabled,
       isMultiple,
       placeholder,
@@ -85,25 +88,34 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         valueTemplate={(value, selected, isOpen) => (
           <AssigneeField
             {...assigneeFieldProps}
-            value={
+            users={
               isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
             }
+            value={value}
+            allSelected={!!(value.length === options.length && props.onSelectAll)}
           />
         )}
         options={sortedOptions}
         dataKey={'name'}
         disabled={disabled}
         itemTemplate={(ops, isActive, isSelected) => (
-          <AssigneeDropdownTemplate {...ops} isSelected={isSelected} />
+          <AssigneeDropdownTemplate
+            {...ops}
+            isSelected={isSelected}
+            selectAll={props.onSelectAll && selectAllKey}
+            allSelected={!!(value.length === options.length && props.onSelectAll)}
+          />
         )}
         onChange={(names) => onChange && onChange(names.map((name) => name.toString() as string))}
         widthExpand={widthExpand}
         align={align}
-        multiSelect={!!value.length}
+        multiSelect={multiSelect}
+        closeOnFirstSelect={closeOnFirstSelect}
         search
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
         sortBySelected={sortBySelected}
+        selectAllKey={selectAllKey}
         {...props}
       />
     )

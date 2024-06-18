@@ -95,6 +95,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
+  closeOnFirstSelect?: boolean
+  onSelectAll?: ((value: string[]) => void) | true
+  selectAllKey?: string
 }
 
 export interface DropdownRef {
@@ -155,6 +158,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       listInline = false,
       disableOpen = false,
       sortBySelected = false,
+      closeOnFirstSelect,
+      onSelectAll,
+      selectAllKey = '__all__',
       ...props
     },
     ref,
@@ -275,6 +281,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
 
+    // select all only works with multiSelect
+    const showSelectAll = onSelectAll && multiSelect
+    // are all options selected
+    const isAllSelected = useMemo(() => value?.length === options.length, [value, options])
+
     // if editable, merge current search into showOptions
     options = useMemo(() => {
       // add in any values that are not in options
@@ -296,6 +307,17 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
     )
+
+    // if onSelectAll, add to options
+    options = useMemo(() => {
+      if (showSelectAll) {
+        return [
+          { [labelKey]: isAllSelected ? 'Deselect All' : 'Select All', [dataKey]: selectAllKey },
+          ...options,
+        ]
+      }
+      return options
+    }, [isAllSelected, showSelectAll, options])
 
     // if editable, merge current search into showOptions
     options = useMemo(() => {
@@ -367,6 +389,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
+    const submitChange = (selected: (string | number)[], close?: boolean) => {
+      // send on selection changed event
+      onSelectionChange && onSelectionChange(selected)
+
+      // update temp value
+      // update state
+      setSelected(selected)
+
+      if (close) {
+        setValue(selected)
+        handleClose(undefined, selected)
+      }
+    }
+
     const handleChange = (
       value: string | number,
       index: number,
@@ -375,11 +411,40 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
+      // selecting all just sets __all__ value and that's it
+      // check selectAll is active
+      if (selectAllKey === value && onSelectAll) {
+        if (isAllSelected) {
+          // deselect all
+          submitChange([], false)
+          return
+        }
+
+        // select all values from options
+        const allSelected = options
+          .map((o) => o[dataKey])
+          .filter((o) => !disabledValues.includes(o))
+          .filter((o) => o !== selectAllKey)
+
+        submitChange(allSelected, true)
+
+        if (typeof onSelectAll === 'function') onSelectAll(allSelected)
+        return
+      }
+
       let newSelected = selected ? [...selected] : []
+
+      if (onSelectAll && newSelected.includes(selectAllKey)) {
+        // selecting an actual value, remove selectAll
+        newSelected = newSelected.filter((s) => s !== selectAllKey)
+      }
 
       const addingNew = editable && index === 0
 
-      if (!multiSelect) {
+      // close on first select
+      const closeMultiSelect = closeOnFirstSelect && newSelected.length === 0
+
+      if (!multiSelect || closeMultiSelect) {
         // replace current value with new one
         newSelected = [value]
       } else {
@@ -414,17 +479,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         searchRef.current?.focus()
       }
 
-      // send on selection changed event
-      onSelectionChange && onSelectionChange(newSelected)
-
-      // update temp value
-      // update state
-      setSelected(newSelected)
       // if not multi or multiSelectClose then close
-      if (!multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose) {
-        setValue(newSelected)
-        handleClose(undefined, newSelected)
-      }
+      const close =
+        !multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose
+
+      submitChange(newSelected, !!close)
     }
 
     const handleClear = () => {
@@ -673,6 +732,18 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     )
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
+
+    let valueChildren
+    if (!labels.length && disabled && placeholder) {
+      valueChildren = placeholder
+    } else if (onSelectAll && value?.includes(selectAllKey)) {
+      valueChildren = 'All selected'
+    } else if (labels.length) {
+      valueChildren = labels.join(', ')
+    } else {
+      valueChildren = emptyMessage
+    }
+
     return (
       <Styled.Dropdown
         onKeyDown={handleKeyPress}
@@ -695,11 +766,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
             valueTemplateNode(value || [], selected || [], isOpen)
           ) : (
             <DefaultValueTemplate {...DefaultValueTemplateProps}>
-              {!labels.length && disabled && placeholder
-                ? placeholder
-                : labels.length
-                ? labels.join(', ')
-                : emptyMessage}
+              {valueChildren}
             </DefaultValueTemplate>
           )}
         </Styled.Button>

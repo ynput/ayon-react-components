@@ -101,19 +101,20 @@ export const Search: Story = {
     onClear: undefined,
     placeholder: 'Selected an Icon...',
     value: [],
+    onSelectAll: () => console.log('selected all'),
   },
   render: Template,
 }
 
 export const Multiple: Story = {
   args: {
-    isMultiple: true,
     value: [options[0].value, options[1].value],
     widthExpand: true,
     multiSelect: true,
     minSelected: 2,
     align: 'right',
     onClear: () => console.log('clear'),
+    onSelectAll: true,
     style: {
       width: 'unset',
     },
