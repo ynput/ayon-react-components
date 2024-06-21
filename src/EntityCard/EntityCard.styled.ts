@@ -35,6 +35,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   --selection-color-hover: var(--md-sys-color-primary-container-hover);
   --selection-color-active: var(--md-sys-color-primary-container-active);
   --selection-color-text: var(--md-sys-color-on-primary-container);
+  --primary-color: var(--md-sys-color-primary);
 
   &.isHover {
     --hover-transition: 0ms;
@@ -46,6 +47,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
     --selection-color-active: var(--md-sys-color-tertiary-container-active);
     --selection-color-text: var(--md-sys-color-on-tertiary-container);
+    --primary-color: var(--md-sys-color-tertiary);
   }
 
   /* layout */
@@ -94,6 +96,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   /* style */
   border-radius: var(--border-radius-xxl);
   background-color: var(--md-sys-color-surface-container-high);
+  box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high);
 
   &:hover {
     ${cardHoverStyles}
@@ -124,6 +127,8 @@ export const Card = styled.div<StyledEntityCardProps>`
     color: var(--selection-color-text);
     /* show drag handle cursor */
     cursor: grab;
+
+    box-shadow: inset 0 0 0 2px var(--primary-color);
 
     /* description stays open */
     .description {
