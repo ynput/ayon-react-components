@@ -45,6 +45,7 @@ const SaveButtonTemplate = (args: Story['args']) => {
 export const Default: Story = {
   args: {
     label: 'Save',
+    icon: 'save_as',
   },
   render: SaveButtonTemplate,
 }
