@@ -43,7 +43,6 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       sortBySelected = true,
       onAssigneeFieldClick,
       selectAllKey = '__all__',
-      closeOnFirstSelect = true,
       multiSelect = true,
       ...props
     },
@@ -112,7 +111,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         widthExpand={widthExpand}
         align={align}
         multiSelect={multiSelect}
-        closeOnFirstSelect={closeOnFirstSelect}
+        multiSelectClose={value.length === 0}
         search
         searchFields={['fullName', 'name', 'email']}
         ref={ref}
