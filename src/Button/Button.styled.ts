@@ -43,6 +43,11 @@ export const Button = styled.button<ButtonProps>`
   cursor: pointer;
   white-space: nowrap;
 
+  /* reduce height of the shortcut */
+  .shortcut {
+    margin: -2px 0;
+  }
+
   /* DEFAULTS */
   background-color: var(--md-sys-color-surface-container-highest);
   color: var(--md-sys-color-on-surface);
@@ -112,6 +117,11 @@ export const Button = styled.button<ButtonProps>`
       background-color: var(--md-sys-color-primary);
       color: var(--md-sys-color-on-primary);
 
+      .shortcut {
+        background-color: var(--md-sys-color-on-primary);
+        color: var(--md-sys-color-primary);
+      }
+
       &:hover {
         background-color: var(--md-sys-color-primary-hover);
       }
@@ -179,6 +189,11 @@ export const Button = styled.button<ButtonProps>`
       background-color: var(--md-sys-color-tertiary);
       color: var(--md-sys-color-on-tertiary);
 
+      .shortcut {
+        background-color: var(--md-sys-color-on-tertiary);
+        color: var(--md-sys-color-tertiary);
+      }
+
       &:hover {
         background-color: var(--md-sys-color-tertiary-hover);
       }
@@ -214,6 +229,11 @@ export const Button = styled.button<ButtonProps>`
     css`
       background-color: var(--md-sys-color-error-container);
       color: var(--md-sys-color-on-error-container);
+
+      .shortcut {
+        background-color: var(--md-sys-color-on-error-container);
+        color: var(--md-sys-color-error-container);
+      }
 
       &:hover {
         background-color: var(--md-sys-color-error-container-hover);
