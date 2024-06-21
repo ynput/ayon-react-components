@@ -444,7 +444,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         newSelected = [value]
       } else {
         if (!addingNew || searchForm) {
-          // add/remove from selected
+          // add or remove from selected
           if (newSelected.includes(value)) {
             if (newSelected.length > minSelected) {
               // remove
