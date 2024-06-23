@@ -50,8 +50,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         $link={link}
         $icon={!!icon}
         $variant={variant}
-        $selected={!!selected}
-        className={clsx(className, variant, Typography.labelLarge, selected && 'selected')}
+        className={clsx(className, variant, Typography.labelLarge, { selected })}
         {...props}
         ref={ref}
       >

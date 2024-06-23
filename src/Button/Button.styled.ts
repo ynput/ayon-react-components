@@ -6,7 +6,6 @@ export type ButtonProps = {
   $link?: boolean
   $icon?: boolean
   $variant: 'surface' | 'tonal' | 'filled' | 'text' | 'tertiary' | 'nav' | 'danger'
-  $selected: boolean
 }
 
 // STYLES
@@ -137,7 +136,7 @@ export const Button = styled.button<ButtonProps>`
     `}
 
   /* NAV = primary */
-  ${({ $variant, $selected }) =>
+  ${({ $variant }) =>
     $variant === 'nav' &&
     css`
       border: 1px solid transparent;
@@ -157,11 +156,10 @@ export const Button = styled.button<ButtonProps>`
         color: var(--md-sys-color-on-surface);
       }
 
-      ${$selected &&
-      css`
+      &.selected {
         background-color: var(--md-sys-color-background);
         border-color: var(--md-sys-color-outline-variant);
-      `}
+      }
 
       &:disabled {
         border: 1px solid transparent;
@@ -188,7 +186,7 @@ export const Button = styled.button<ButtonProps>`
     `}
 
   /* TERTIARY = secondary-container */
-  ${({ $variant, $selected }) =>
+  ${({ $variant }) =>
     $variant === 'tertiary' &&
     css`
       background-color: var(--md-sys-color-tertiary);
@@ -209,8 +207,7 @@ export const Button = styled.button<ButtonProps>`
         outline-color: white;
       }
 
-      ${$selected &&
-      css`
+      &.selected {
         background-color: var(--md-sys-color-tertiary-container);
         color: var(--md-sys-color-on-tertiary-container);
 
@@ -221,7 +218,7 @@ export const Button = styled.button<ButtonProps>`
         &:active {
           background-color: var(--md-sys-color-tertiary-container-active);
         }
-      `}
+      }
 
       &:disabled {
         background-color: var(--md-sys-color-tertiary);
@@ -252,26 +249,27 @@ export const Button = styled.button<ButtonProps>`
       }
     `}
 
-  /* selection */
-  ${({ $variant, $selected }) =>
-    $selected &&
-    ['surface', 'tonal', 'filled', 'text'].includes($variant) &&
-    css`
-      background-color: var(--md-sys-color-primary-container);
-      color: var(--md-sys-color-on-primary-container);
+    &.selected {
+    /* selection */
+    ${({ $variant }) =>
+      ['surface', 'tonal', 'filled', 'text'].includes($variant) &&
+      css`
+        background-color: var(--md-sys-color-primary-container);
+        color: var(--md-sys-color-on-primary-container);
 
-      &:hover {
-        background-color: var(--md-sys-color-primary-container-hover);
-      }
-      &:active {
-        background-color: var(--md-sys-color-primary-container-active);
-      }
+        &:hover {
+          background-color: var(--md-sys-color-primary-container-hover);
+        }
+        &:active {
+          background-color: var(--md-sys-color-primary-container-active);
+        }
 
-      .shortcut {
-        background-color: var(--md-sys-color-primary);
-        color: var(--md-sys-color-on-primary);
-      }
-    `}
+        .shortcut {
+          background-color: var(--md-sys-color-primary);
+          color: var(--md-sys-color-on-primary);
+        }
+      `}
+  }
 
   /* icon color should inherit color */
   .icon {
