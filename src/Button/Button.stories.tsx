@@ -44,7 +44,7 @@ const AllButtons = (args: Story['args']) => {
             variant={variant}
             label={variant + ' button'}
             selected={selected.includes(variant)}
-            icon="magic_button"
+            icon="star"
             onClick={() =>
               setSelected((selected) =>
                 selected.includes(variant)
@@ -86,7 +86,7 @@ const AllIcons = (args: Story['args']) => {
             {...args}
             variant={variant}
             selected={selected.includes(variant)}
-            icon="magic_button"
+            icon="star"
             onClick={() =>
               setSelected((selected) =>
                 selected.includes(variant)
@@ -109,4 +109,61 @@ const AllIcons = (args: Story['args']) => {
 
 export const Icons: Story = {
   render: AllIcons,
+}
+
+const AllShortcuts = (args: Story['args']) => {
+  const [selected, setSelected] = useState(variants)
+  return (
+    <Panel>
+      <h2>Shortcut</h2>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        {variants.map((variant) => (
+          <Button
+            {...args}
+            variant={variant}
+            icon={'check_box'}
+            shortcut={{ children: 'Ctrl + S' }}
+            label="Save"
+          />
+        ))}
+      </div>
+      <h2>Selected (click to toggle selection)</h2>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        {variants.map((variant) => (
+          <Button
+            {...args}
+            variant={variant}
+            selected={selected.includes(variant)}
+            icon={'check_box'}
+            shortcut={{ children: 'Ctrl + S' }}
+            label="Save"
+            onClick={() =>
+              setSelected((selected) =>
+                selected.includes(variant)
+                  ? selected.filter((v) => v !== variant)
+                  : [...selected, variant],
+              )
+            }
+          />
+        ))}
+      </div>
+      <h2>Disabled</h2>
+      <div style={{ display: 'flex', gap: '1rem' }}>
+        {variants.map((variant) => (
+          <Button
+            {...args}
+            variant={variant}
+            disabled
+            icon={'check_box'}
+            shortcut={{ children: 'Ctrl + S' }}
+            label="Save"
+          />
+        ))}
+      </div>
+    </Panel>
+  )
+}
+
+export const Shortcuts: Story = {
+  render: AllShortcuts,
 }

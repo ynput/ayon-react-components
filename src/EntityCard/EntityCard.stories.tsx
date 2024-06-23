@@ -128,6 +128,19 @@ export const Default: Story = {
   render: Template,
 }
 
+export const Grid: Story = {
+  args: {
+    ...initData,
+    variant: 'full',
+    notification: undefined,
+    isSecondary: false,
+    disabled: false,
+    isFullHighlight: true,
+    description: undefined,
+  },
+  render: Template,
+}
+
 const columns = [
   { id: '1', items: ['1'] },
   { id: '2', items: ['2', '3'] },

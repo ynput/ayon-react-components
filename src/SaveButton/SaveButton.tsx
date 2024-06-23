@@ -70,7 +70,7 @@ export const SaveButton = forwardRef(
       <StyledSaveButton
         ref={ref}
         disabled={!active}
-        icon={icon || (saving ? 'sync' : 'check')}
+        icon={saving ? 'sync' : icon || 'check'}
         $active={active}
         $saving={saving}
         variant={variant}
