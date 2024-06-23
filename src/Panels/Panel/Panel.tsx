@@ -1,7 +1,7 @@
 import { HTMLAttributes, forwardRef } from 'react'
 import styled from 'styled-components'
 
-type PanelProps = HTMLAttributes<HTMLDivElement> & {
+export type PanelProps = HTMLAttributes<HTMLDivElement> & {
   direction?: 'row' | 'column'
 }
 

@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { HTMLAttributes, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
-type SectionProps = HTMLAttributes<HTMLElement> & {
+export type SectionProps = HTMLAttributes<HTMLElement> & {
   direction?: 'row' | 'column'
   wrap?: boolean
 }
