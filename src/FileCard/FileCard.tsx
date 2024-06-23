@@ -105,7 +105,7 @@ export const FileCard: FC<FileCardProps> = ({
         disabled={splitDisabled || isFetching || disabled}
         variant="text"
         $variant="text"
-        $selected={false}
+        selected={false}
         className="sequence-split-button"
       />
       {!readOnly && (
@@ -113,7 +113,7 @@ export const FileCard: FC<FileCardProps> = ({
           icon="close"
           variant="text"
           $variant="text"
-          $selected={false}
+          selected={false}
           onClick={onRemove}
           disabled={isFetching || disabled}
           className="sequence-remove-button"
