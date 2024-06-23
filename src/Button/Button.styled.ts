@@ -152,6 +152,11 @@ export const Button = styled.button<ButtonProps>`
         border-color: var(--md-sys-color-outline-variant);
       }
 
+      .shortcut {
+        background-color: var(--md-sys-color-surface-container-highest);
+        color: var(--md-sys-color-on-surface);
+      }
+
       ${$selected &&
       css`
         background-color: var(--md-sys-color-background);
@@ -260,6 +265,11 @@ export const Button = styled.button<ButtonProps>`
       }
       &:active {
         background-color: var(--md-sys-color-primary-container-active);
+      }
+
+      .shortcut {
+        background-color: var(--md-sys-color-primary);
+        color: var(--md-sys-color-on-primary);
       }
     `}
 
