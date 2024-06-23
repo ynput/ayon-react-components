@@ -3,8 +3,6 @@ import styled, { css } from 'styled-components'
 // TYPES
 export type ButtonProps = {
   label?: string
-  $link?: boolean
-  $icon?: boolean
   $variant: 'surface' | 'tonal' | 'filled' | 'text' | 'tertiary' | 'nav' | 'danger'
 }
 
@@ -27,14 +25,17 @@ export const Button = styled.button<ButtonProps>`
 
   /* padding */
   padding: 6px 16px;
-  padding-left: ${({ $icon }) => ($icon ? '12px' : '16px')};
-  /* icon only */
-  ${({ $icon, label }) =>
-    $icon &&
-    !label &&
-    css`
-      padding: 6px;
-    `}
+
+  &.icon {
+    padding-left: 12px;
+
+    /* icon only */
+    ${({ label }) =>
+      !label &&
+      css`
+        padding: 6px;
+      `}
+  }
 
   /* border radius */
   border-radius: var(--base-input-border-radius);

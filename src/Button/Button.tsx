@@ -47,10 +47,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Styled.Button
         title={tooltip}
-        $link={link}
-        $icon={!!icon}
         $variant={variant}
-        className={clsx(className, variant, Typography.labelLarge, { selected })}
+        className={clsx(className, variant, Typography.labelLarge, {
+          selected,
+          link,
+          icon: !!icon,
+        })}
         {...props}
         ref={ref}
       >
