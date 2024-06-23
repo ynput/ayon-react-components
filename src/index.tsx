@@ -31,6 +31,8 @@ export { SortingDropdown } from './Dropdowns/SortingDropdown'
 export { Button } from './Button'
 export { SaveButton } from './SaveButton'
 
+export { ShortcutTag } from './ShortcutTag'
+
 // dropdown
 export { Dropdown, DefaultValueTemplate } from './Dropdowns/Dropdown'
 
