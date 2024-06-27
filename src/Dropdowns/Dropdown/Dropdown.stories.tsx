@@ -83,6 +83,15 @@ export const Basic: Story = {
 }
 
 // simple dropdown with three items
+export const Disabled: Story = {
+  render: Template,
+  args: {
+    options: options.map((option, i) => ({ ...option, disabled: i === 0 })),
+    disabledValues: ['add', 'add_circle'],
+  },
+}
+
+// simple dropdown with three items
 export const Tags: Story = {
   render: Template,
   args: {

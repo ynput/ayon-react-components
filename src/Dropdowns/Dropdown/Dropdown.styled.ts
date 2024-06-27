@@ -198,47 +198,45 @@ export const Options = styled.ul`
 `
 
 export const ListItem = styled.li<{
-  $focused: boolean
   $usingKeyboard: boolean
-  $disabled?: boolean
 }>`
   cursor: pointer;
   user-select: none;
 
-  ${({ $usingKeyboard, $disabled }) =>
+  ${({ $usingKeyboard }) =>
     !$usingKeyboard &&
-    (!$disabled
-      ? css`
-          &:hover {
-            background-color: var(--md-sys-color-surface-container-low-hover);
-          }
-          &:active {
-            background-color: var(--md-sys-color-surface-container-low-active);
-          }
-        `
-      : css`
-          text-decoration: line-through;
-          background-color: var(--md-sys-color-surface-container-low-hover);
-          &,
-          & > * {
-            cursor: not-allowed;
-          }
-          opacity: 0.3;
-        `)}
-
-  /* $focused */
-    outline-offset: -1px;
-  ${({ $focused }) =>
-    $focused &&
     css`
-      background-color: var(--md-sys-color-surface-container-low-hover);
-
-      & > * {
-        outline: solid var(--focus-color) 1px;
-        outline-offset: -1px;
-        border-radius: var(--border-radius-m);
+      &:hover {
+        background-color: var(--md-sys-color-surface-container-low-hover);
+      }
+      &:active {
+        background-color: var(--md-sys-color-surface-container-low-active);
       }
     `}
+
+  &.disabled {
+    .option-child {
+      background-color: var(--md-sys-color-surface-container-low) !important;
+      color: var(--md-sys-color-outline);
+    }
+    /* remove hover affect */
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-low);
+    }
+    cursor: default;
+  }
+
+  /* $focused */
+  outline-offset: -1px;
+  &.focused {
+    background-color: var(--md-sys-color-surface-container-low-hover);
+
+    & > * {
+      outline: solid var(--focus-color) 1px;
+      outline-offset: -1px;
+      border-radius: var(--border-radius-m);
+    }
+  }
 `
 
 export const DefaultItem = styled.span<{

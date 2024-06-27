@@ -11,6 +11,7 @@ import TagsValueTemplate from './TagsValueTemplate'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
 import { matchSorter } from 'match-sorter'
+import clsx from 'clsx'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -523,17 +524,31 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
 
+    // validate next index is not disabled
+    const validateNextIndex = (index: number, down: boolean): number | undefined => {
+      const isValid = (i: number) =>
+        !options[i]?.disabled && !disabledValues.includes(options[i][dataKey])
+
+      if (isValid(index)) return index
+
+      const step = down ? 1 : -1
+      for (let i = index + step; i >= 0 && i < options.length; i += step) {
+        if (isValid(i)) return i
+      }
+    }
+
     // KEY BOARD CONTROL
     const handleKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      let newIndex: undefined | number = undefined
       // NAVIGATE DOWN
       if (e.code === 'ArrowDown' || e.code === 'ArrowRight') {
         let length = options.length
         if (activeIndex === null || activeIndex >= length - 1) {
           // got to top
-          setActiveIndex(0)
+          newIndex = validateNextIndex(0, true)
         } else {
           // go down one
-          setActiveIndex((isNull(activeIndex) ? -1 : activeIndex) + 1)
+          newIndex = validateNextIndex((isNull(activeIndex) ? -1 : activeIndex) + 1, true)
         }
       }
 
@@ -541,11 +556,15 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       if ((e.code === 'ArrowUp' || e.code === 'ArrowLeft') && activeIndex !== null) {
         if (activeIndex === 0) {
           // go to bottom
-          setActiveIndex(options.length - 1)
+          newIndex = validateNextIndex(options.length - 1, false)
         } else {
           // go one up
-          setActiveIndex(activeIndex - 1)
+          newIndex = validateNextIndex(activeIndex - 1, false)
         }
+      }
+
+      if (newIndex !== undefined) {
+        setActiveIndex(newIndex)
       }
 
       let selectedValue
@@ -805,21 +824,23 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               >
                 <Styled.Options
                   style={{ minWidth, ...listStyle }}
-                  className={'options'}
+                  className={clsx('options', { usingKeyboard })}
                   ref={optionsRef}
                 >
                   {showOptions.map((option, i) => (
                     <Styled.ListItem
                       key={`${option[dataKey]}-${i}`}
                       onClick={(e) =>
+                        !option.disabled &&
                         !disabledValues.includes(option[dataKey]) &&
                         handleChange(option[dataKey], i, e)
                       }
-                      $focused={usingKeyboard && activeIndex === i}
                       $usingKeyboard={usingKeyboard}
                       tabIndex={0}
-                      className={`option ${listClassName}`}
-                      $disabled={disabledValues.includes(option[dataKey])}
+                      className={clsx('option', listClassName, {
+                        disabled: option.disabled || disabledValues.includes(option[dataKey]),
+                        focused: usingKeyboard && activeIndex === i,
+                      })}
                     >
                       {itemTemplate ? (
                         itemTemplate(
@@ -847,9 +868,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   {!!hiddenLength && (
                     <Styled.ListItem
                       onClick={handleShowMore}
-                      $focused={false}
                       $usingKeyboard={false}
-                      className="option"
+                      className={clsx('option', listClassName, {
+                        focused: false,
+                      })}
                     >
                       <Styled.DefaultItem $isSelected={false} className="option-child hidden">
                         <span>{`Show ${50} more...`}</span>
