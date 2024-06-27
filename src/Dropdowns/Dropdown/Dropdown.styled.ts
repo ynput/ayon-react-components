@@ -72,6 +72,9 @@ export const Button = styled.button<{
     `}
 `
 
+// export Button as type
+export type ButtonType = typeof Button
+
 export const Dropdown = styled.div`
   position: relative;
   height: 32px;
