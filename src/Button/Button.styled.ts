@@ -26,7 +26,7 @@ export const Button = styled.button<ButtonProps>`
   /* padding */
   padding: 6px 16px;
 
-  &.icon {
+  &.hasIcon {
     padding-left: 12px;
 
     /* icon only */
