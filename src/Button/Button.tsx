@@ -51,7 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={clsx(className, variant, Typography.labelLarge, {
           selected,
           link,
-          icon: !!icon,
+          hasIcon: !!icon,
         })}
         {...props}
         ref={ref}
