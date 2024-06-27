@@ -98,6 +98,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   sortBySelected?: boolean
   onSelectAll?: ((value: string[]) => void) | true
   selectAllKey?: string
+  buttonProps?: Styled.ButtonType['defaultProps']
 }
 
 export interface DropdownRef {
@@ -160,6 +161,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       sortBySelected = false,
       onSelectAll,
       selectAllKey = '__all__',
+      buttonProps,
       ...props
     },
     ref,
@@ -773,6 +775,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           disabled={disabled}
           $isChanged={!!isChanged}
           $isOpen={isOpen}
+          {...buttonProps}
           style={buttonStyle}
           className={`button ${buttonClassName}`}
         >
