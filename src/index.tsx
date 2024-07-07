@@ -50,7 +50,7 @@ export type { DropdownProps, DefaultValueTemplateProps } from './Dropdowns/Dropd
 // FileUpload
 export { FileUpload } from './FileUpload'
 export type { FileUploadProps } from './FileUpload'
-export { FileCard, getMimeTypeIcon } from './FileCard'
+export { FileCard, getMimeTypeIcon, getFileSizeString } from './FileCard'
 export type { FileCardProps } from './FileCard'
 
 // ICONS

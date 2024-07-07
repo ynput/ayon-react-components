@@ -3,7 +3,7 @@ import { Icon, IconType } from '../Icon'
 import { Spacer } from '../Layout/Spacer'
 import * as Styled from './FileCard.styled'
 
-const getFileSizeString = (size: number) => {
+export const getFileSizeString = (size: number) => {
   // get file size in kb, mb, gb
   const kb = size / 1024
   const mb = kb / 1024
