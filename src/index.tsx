@@ -7,6 +7,7 @@ import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 import './index.scss'
 // import theme
 import './theme/theme.scss'
+import { getMimeTypeIcon } from './FileCard'
 // export theme
 export * as theme from './theme'
 
@@ -49,7 +50,7 @@ export type { DropdownProps, DefaultValueTemplateProps } from './Dropdowns/Dropd
 // FileUpload
 export { FileUpload } from './FileUpload'
 export type { FileUploadProps } from './FileUpload'
-export { FileCard } from './FileCard'
+export { FileCard, getMimeTypeIcon } from './FileCard'
 export type { FileCardProps } from './FileCard'
 
 // ICONS
