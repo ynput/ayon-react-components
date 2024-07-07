@@ -24,7 +24,7 @@ const getFileSizeString = (size: number) => {
   return `${size} B`
 }
 
-const fileIcons: {
+const mimeIcons: {
   [key: string]: IconType
 } = {
   // special cases
@@ -45,6 +45,10 @@ const fileIcons: {
   font: 'font_download',
   model: '3d_rotation',
 }
+
+export const getMimeTypeIcon = (mimeType: string) =>
+  (Object.entries(mimeIcons).find(([key]) => mimeType.includes(key))?.[1] as IconType) ??
+  'insert_drive_file'
 
 export interface FileCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title: string
@@ -78,9 +82,7 @@ export const FileCard: FC<FileCardProps> = ({
   index,
   ...props
 }) => {
-  const typeIcon =
-    (Object.entries(fileIcons).find(([key]) => type.includes(key))?.[1] as IconType) ??
-    'insert_drive_file'
+  const typeIcon = getMimeTypeIcon(type)
 
   return (
     <Styled.FileCard $isFetching={isFetching} {...props} $message={message} $first={index === 0}>
