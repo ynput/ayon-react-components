@@ -1,4 +1,4 @@
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
@@ -92,14 +92,35 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const [isImageError, setIsImageError] = useState(false)
     const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
 
-    const handleImageError = () => {
-      setIsImageError(true)
-      setIsImageLoading(false)
+    const setLoadingStates = (loading: boolean, error: boolean) => {
+      setIsImageLoading(loading)
+      setIsImageError(error)
     }
 
-    const handleImageLoad = () => {
-      setIsImageLoading(false)
-    }
+    useEffect(() => {
+      // Reset loaded and error states when src changes
+      setLoadingStates(true, false)
+
+      if (!imageUrl) return setLoadingStates(false, false)
+
+      // Function to fetch image and check status code
+      const fetchImage = async () => {
+        try {
+          const response = await fetch(imageUrl, { cache: 'force-cache' })
+          if (response.status === 200) {
+            setLoadingStates(false, false)
+          } else {
+            throw new Error('Image not OK')
+          }
+        } catch (error) {
+          setLoadingStates(false, true)
+        }
+      }
+
+      if (imageUrl) {
+        fetchImage()
+      }
+    }, [imageUrl])
 
     return (
       <Styled.Card
@@ -148,20 +169,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           }}
         >
           {/* middle Icon */}
-          {!isLoading && (
-            <Styled.NoImageIcon
-              icon={titleIcon || 'image'}
-              className={clsx('no-image', { loading: isImageLoading })}
-            />
-          )}
-          {!isLoading && (
-            <Styled.Image
-              src={imageUrl}
-              onError={handleImageError}
-              onLoad={handleImageLoad}
-              className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
-            />
-          )}
+          <Styled.NoImageIcon
+            icon={titleIcon || 'image'}
+            className={clsx('no-image', { loading: isImageLoading })}
+          />
+
+          <Styled.Image
+            src={imageUrl}
+            className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
+          />
 
           <Styled.Row className="row">
             {/* top left */}
