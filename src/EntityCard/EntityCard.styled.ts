@@ -328,7 +328,7 @@ export const Image = styled.img`
 
   /* loading transition */
   opacity: 1;
-  transition: opacity 200ms;
+  transition: opacity 500ms;
 
   &.loading {
     opacity: 0;
@@ -410,8 +410,7 @@ export const NoImageIcon = styled(Icon)`
 
   /* loading transition */
   opacity: 1;
-  transition: opacity 200ms;
-  transition-delay: 100ms;
+  transition: opacity 500ms;
 
   &.loading {
     opacity: 0;

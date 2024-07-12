@@ -35,6 +35,15 @@ const initData: DataProps = {
 }
 
 const Template = (props: EntityCardProps) => {
+  const [isActive, setIsActive] = useState(false)
+  return (
+    <div style={{ width: 250 }}>
+      <EntityCard {...props} isActive={isActive} onActivate={() => setIsActive(!isActive)} />
+    </div>
+  )
+}
+
+const LoadingTemplate = (props: EntityCardProps) => {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [isError, setIsError] = useState(false)
@@ -125,6 +134,19 @@ export const Default: Story = {
     disabled: false,
     ...initData,
   },
+  render: LoadingTemplate,
+}
+
+export const NoImage: Story = {
+  args: {
+    variant: 'full',
+    notification: undefined,
+    isSecondary: false,
+    disabled: false,
+    ...initData,
+    imageUrl:
+      'http://localhost:3000/api/projects/demo_Commercial/tasks/807fb5901dab11ef95ad0242ac180005/thumbnail?updatedAt=2024-07-12T11:19:27.045329+00:00',
+  },
   render: Template,
 }
 
@@ -138,7 +160,7 @@ export const Grid: Story = {
     isFullHighlight: true,
     description: undefined,
   },
-  render: Template,
+  render: LoadingTemplate,
 }
 
 const columns = [
