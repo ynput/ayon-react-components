@@ -359,7 +359,6 @@ export const Title = styled.span`
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: right;
-    direction: rtl;
     /* font size etc */
     ${Theme.labelMedium}
   }
