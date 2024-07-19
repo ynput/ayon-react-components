@@ -43,7 +43,7 @@ const Template = (args: DropdownProps) => {
   }
 
   return (
-    <Toolbar>
+    <Toolbar style={{ margin: 32 }}>
       <Dropdown
         {...args}
         value={value}
@@ -234,6 +234,18 @@ export const InvalidValue: Story = {
     value: null,
     multiSelect: true,
     nullPlaceholder: 'No value (custom placeholder)',
+  },
+  render: Template,
+}
+
+// when there are values but no options for those values
+export const MissingOptions: Story = {
+  args: {
+    value: ['pizza', 'burger', 'fries'],
+    options: [{ value: 'pizza' }, { value: 'burger' }],
+    multiSelect: true,
+    onSelectAll: undefined,
+    onClear: undefined,
   },
   render: Template,
 }

@@ -38,6 +38,7 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
+  error?: string
   itemStyle?: CSSProperties
   valueStyle?: CSSProperties
   listStyle?: CSSProperties
@@ -124,6 +125,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       searchFields = ['value'],
       valueIcon,
       message,
+      error,
       disabled,
       onClose,
       onChange,
@@ -288,17 +290,23 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     // if editable, merge current search into showOptions
-    options = useMemo(() => {
+    const [missingOptions, hasMissingOptions] = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
-        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
+        selected?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
+        error: 'Value no longer exists',
       }))
 
-      return [...selectedNotInOptionsItems, ...options]
-    }, [value, options])
+      return [[...selectedNotInOptionsItems, ...options], !!selectedNotInOptions.length]
+    }, [value, options, selected])
+
+    if (hasMissingOptions) {
+      error = 'Some values no longer exist'
+      options = missingOptions
+    }
 
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
@@ -716,6 +724,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       placeholder,
       isOpen,
       className: valueClassName,
+      error: error,
     }
 
     // filter out valueTemplate
@@ -801,6 +810,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 ...itemStyle,
               }}
               $message={message || ''}
+              $error={error || ''}
               $isOpen={true}
               $hidden={!isShowOptions}
               onSubmit={handleSearchSubmit}
@@ -854,12 +864,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         )
                       ) : (
                         <Styled.DefaultItem
-                          $isSelected={!!selected?.includes(option[dataKey])}
-                          className={`option-child ${
-                            value && value.includes(option[dataKey]) ? 'selected' : ''
-                          } ${
-                            value && value.includes(option[dataKey]) ? 'active' : ''
-                          } ${itemClassName}`}
+                          className={clsx('option-child', itemClassName, {
+                            selected: !!selected?.includes(option[dataKey]),
+                            active: value && value.includes(option[dataKey]),
+                            error: !!option.error,
+                          })}
                           style={itemStyle}
                         >
                           {option.icon && <Icon icon={option.icon} />}
@@ -876,7 +885,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         focused: false,
                       })}
                     >
-                      <Styled.DefaultItem $isSelected={false} className="option-child hidden">
+                      <Styled.DefaultItem className="option-child hidden">
                         <span>{`Show ${50} more...`}</span>
                       </Styled.DefaultItem>
                     </Styled.ListItem>

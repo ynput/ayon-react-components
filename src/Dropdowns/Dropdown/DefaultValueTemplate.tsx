@@ -2,6 +2,7 @@ import { FC } from 'react'
 import styled, { css } from 'styled-components'
 import { Icon, IconType } from '../../Icon'
 import { DropdownProps } from './Dropdown'
+import clsx from 'clsx'
 
 const DefaultValueStyled = styled.div`
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -20,6 +21,14 @@ const DefaultValueStyled = styled.div`
 
   & > * {
     position: relative;
+  }
+
+  &.error {
+    border-color: var(--md-sys-color-error);
+  }
+
+  .icon.error {
+    color: var(--md-sys-color-error);
   }
 
   .icon.control {
@@ -69,6 +78,7 @@ export interface DefaultValueTemplateProps
   isOpen?: boolean
   className?: string
   childrenCustom?: React.ReactNode
+  error?: string
 }
 
 export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
@@ -88,11 +98,16 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   isOpen,
   className,
   childrenCustom,
+  error,
 }) => {
   const noValue = !value?.length
 
   return (
-    <DefaultValueStyled style={style} $isOpen={!!isOpen} className={className}>
+    <DefaultValueStyled
+      style={style}
+      $isOpen={!!isOpen}
+      className={clsx('template-value', className, { error: !!error })}
+    >
       {noValue ? (
         <>
           <ContentStyled>
@@ -109,7 +124,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               icon={'backspace'}
               onClick={() => onClearNull(null)}
               id={'backspace'}
-              className="control"
+              className="clear-null"
               tabIndex={0}
               data-tooltip={clearNullTooltip}
             />
@@ -119,7 +134,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               icon={'close'}
               onClick={() => onClear([])}
               id={'clear'}
-              className="control"
+              className="clear"
               tabIndex={0}
               data-tooltip={clearTooltip}
             />
@@ -138,7 +153,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               icon={'backspace'}
               onClick={() => onClearNull(null)}
               id={'backspace'}
-              className="control"
+              className="clear-null"
               tabIndex={0}
               data-tooltip={clearNullTooltip}
             />
@@ -148,7 +163,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
               icon={'close'}
               onClick={() => onClear([])}
               id="clear"
-              className="control"
+              className="clear"
               tabIndex={0}
               data-tooltip={clearTooltip}
             />
@@ -156,7 +171,11 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         </>
       )}
       {childrenCustom}
-      <Icon icon={dropIcon} className="control" />
+      {!error ? (
+        <Icon icon={dropIcon} className="control" />
+      ) : (
+        <Icon icon="error" className="error" />
+      )}
     </DefaultValueStyled>
   )
 }
