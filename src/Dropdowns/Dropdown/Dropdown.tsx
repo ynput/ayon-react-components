@@ -101,6 +101,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   onSelectAll?: ((value: string[]) => void) | true
   selectAllKey?: string
   buttonProps?: Styled.ButtonType['defaultProps']
+  activateKeys?: string[]
 }
 
 export interface DropdownRef {
@@ -166,6 +167,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       onSelectAll,
       selectAllKey = '__all__',
       buttonProps,
+      activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       ...props
     },
     ref,
@@ -628,12 +630,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
 
       // SUBMIT WITH ENTER
-      if (
-        e.code === 'Enter' ||
-        e.code === 'Space' ||
-        e.code === 'NumpadEnter' ||
-        e.code === 'Tab'
-      ) {
+      if (activateKeys.includes(e.code)) {
         // check we are not searching and pressing space
         if (e.code === 'Space' && search) return
 
@@ -641,7 +638,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (e.code !== 'Tab') e.preventDefault()
 
         // if closed and pressing tab, ignore and focus next item (default)
-        if (!isOpen && e.code === 'Tab') return
+        if (e.code === 'Tab') {
+          if (!isOpen) return
+        }
 
         // open
         if (!isOpen) {
@@ -655,7 +654,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         }
 
         if (multiSelect) {
-          if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
+          if (selectedValue && e.code !== 'Tab')
+            return handleChange(selectedValue, activeIndex || 0)
 
           let selectedValues = [options[0][dataKey]]
           // if editable, split by comma
@@ -692,6 +692,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           // focus back on button
           valueRef.current?.focus()
         }
+      } else if (e.code === 'Space') {
+        // prevent space from opening dropdown if it's not in activateKeys
+        e.preventDefault()
       }
 
       // CLOSE WITH ESC or TAB
