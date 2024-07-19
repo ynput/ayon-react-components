@@ -38,7 +38,7 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
-  error?: string
+  error?: string | null | false
   itemStyle?: CSSProperties
   valueStyle?: CSSProperties
   listStyle?: CSSProperties
@@ -331,7 +331,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }, [selected, options])
 
     // has error controls the closed error state styles
-    if (hasMissingOptions) {
+    if (hasMissingOptions && error === undefined) {
       error = 'Some values no longer exist'
     }
 
