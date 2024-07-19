@@ -254,6 +254,28 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }, [isOpen, valueRef, formRef, setMinWidth, setPos])
 
+    // scroll to first selected item
+    useEffect(() => {
+      if (!isOpen) return
+
+      // find first selected item
+      const firstSelectedElement = optionsRef.current?.querySelector('.selected')
+      if (!firstSelectedElement) return
+
+      // get parent li item
+      const parentLi = firstSelectedElement.parentElement as HTMLLIElement
+      if (!parentLi) return
+
+      // scroll to selected item
+      parentLi.scrollIntoView({ block: 'center' })
+
+      if (!parentLi.parentElement?.children) return
+      // find index of selected item
+      const index = Array.from(parentLi.parentElement?.children).indexOf(parentLi)
+
+      setActiveIndex(index)
+    }, [isOpen, setActiveIndex, optionsRef])
+
     // set initial selected from value
     useEffect(() => {
       setSelected(value)
@@ -861,6 +883,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         disabled: option.disabled || disabledValues.includes(option[dataKey]),
                         focused: usingKeyboard && activeIndex === i,
                       })}
+                      data-value={option[dataKey]}
                     >
                       {itemTemplate ? (
                         itemTemplate(
