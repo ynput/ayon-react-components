@@ -316,19 +316,31 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     // if editable, merge current search into showOptions
-    const [missingOptions, hasMissingOptions] = useMemo(() => {
+    const [missingOptions, hasMissingOptions, valueNotInOptions] = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
         selected?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
+
+      // selected can be one render behind value, so also check value
+      const valueNotInOptions = !!value?.find((s) => !options.some((o) => o[dataKey] === s))
+
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
         error: 'Value no longer exists',
       }))
 
-      return [[...selectedNotInOptionsItems, ...options], !!selectedNotInOptions.length]
-    }, [value, options, selected])
+      return [
+        [...selectedNotInOptionsItems, ...options],
+        !!selectedNotInOptions.length,
+        valueNotInOptions,
+      ]
+    }, [selected, value, options])
 
+    console.log(valueNotInOptions)
+
+    // has error controls the closed error state styles
+    const hasError = !!error || valueNotInOptions
     if (hasMissingOptions) {
       error = 'Some values no longer exist'
       options = missingOptions
@@ -756,7 +768,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       placeholder,
       isOpen,
       className: valueClassName,
-      error: error,
+      hasError: hasError,
     }
 
     // filter out valueTemplate

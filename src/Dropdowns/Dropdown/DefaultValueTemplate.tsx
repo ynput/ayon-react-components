@@ -78,7 +78,7 @@ export interface DefaultValueTemplateProps
   isOpen?: boolean
   className?: string
   childrenCustom?: React.ReactNode
-  error?: string
+  hasError?: boolean
 }
 
 export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
@@ -98,7 +98,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   isOpen,
   className,
   childrenCustom,
-  error,
+  hasError,
 }) => {
   const noValue = !value?.length
 
@@ -106,7 +106,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
     <DefaultValueStyled
       style={style}
       $isOpen={!!isOpen}
-      className={clsx('template-value', className, { error: !!error })}
+      className={clsx('template-value', className, { error: hasError })}
     >
       {noValue ? (
         <>
@@ -171,7 +171,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         </>
       )}
       {childrenCustom}
-      {!error ? (
+      {!hasError ? (
         <Icon icon={dropIcon} className="control" />
       ) : (
         <Icon icon="error" className="error" />
