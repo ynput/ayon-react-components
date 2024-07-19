@@ -70,6 +70,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
     return (
       <Styled.TagSelectDropdown
         {...props}
+        error={null}
         value={value}
         valueTemplate={(v, s, o) => (
           <TagsSelectValueTemplate
