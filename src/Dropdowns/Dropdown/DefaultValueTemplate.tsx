@@ -23,12 +23,11 @@ const DefaultValueStyled = styled.div`
     position: relative;
   }
 
+  transition: border-color 0.2s;
+  transition-delay: 0.3s;
+
   &.error {
     border-color: var(--md-sys-color-error);
-  }
-
-  .icon.error {
-    color: var(--md-sys-color-error);
   }
 
   .icon.control {
@@ -171,11 +170,8 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         </>
       )}
       {childrenCustom}
-      {!hasError ? (
-        <Icon icon={dropIcon} className="control" />
-      ) : (
-        <Icon icon="error" className="error" />
-      )}
+
+      <Icon icon={dropIcon} className="control" />
     </DefaultValueStyled>
   )
 }

@@ -15,7 +15,12 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
   if (!value?.length) value?.push('Add tags')
 
   return (
-    <Styled.TagsValueTemplate {...props} valueStyle={{ gap: 4, display: 'flex' }} editor={editor}>
+    <Styled.TagsValueTemplate
+      {...props}
+      hasError={undefined}
+      valueStyle={{ gap: 4, display: 'flex' }}
+      editor={editor}
+    >
       {value?.map((v) => (
         <Styled.Tag
           key={v}

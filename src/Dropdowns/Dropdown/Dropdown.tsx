@@ -316,13 +316,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     // if editable, merge current search into showOptions
-    const [missingOptions, hasMissingOptions, valueNotInOptions] = useMemo(() => {
+    const [missingOptions, hasMissingOptions] = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
-        selected?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
-
-      // selected can be one render behind value, so also check value
-      const valueNotInOptions = !!value?.find((s) => !options.some((o) => o[dataKey] === s))
+        selected?.filter((s) => !!s && !options.some((o) => o[dataKey] === s)) || []
 
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
@@ -330,20 +327,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         error: 'Value no longer exists',
       }))
 
-      return [
-        [...selectedNotInOptionsItems, ...options],
-        !!selectedNotInOptions.length,
-        valueNotInOptions,
-      ]
-    }, [selected, value, options])
-
-    console.log(valueNotInOptions)
+      return [selectedNotInOptionsItems, !!selectedNotInOptions.length]
+    }, [selected, options])
 
     // has error controls the closed error state styles
-    const hasError = !!error || valueNotInOptions
     if (hasMissingOptions) {
       error = 'Some values no longer exist'
-      options = missingOptions
     }
 
     // reorder options to put active at the top (if not disabled)
@@ -768,7 +757,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       placeholder,
       isOpen,
       className: valueClassName,
-      hasError: hasError,
+      hasError: !!error,
     }
 
     // filter out valueTemplate
@@ -884,7 +873,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   className={clsx('options', { usingKeyboard })}
                   ref={optionsRef}
                 >
-                  {showOptions.map((option, i) => (
+                  {[...missingOptions, ...showOptions].map((option, i) => (
                     <Styled.ListItem
                       key={`${option[dataKey]}-${i}`}
                       onClick={(e) =>
