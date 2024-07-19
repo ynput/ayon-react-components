@@ -4,6 +4,7 @@ import { TagsSelectValueTemplate, TagsSelectValueTemplateProps } from './TagsSel
 import { type TagsOrderType, type TagsType } from './tags'
 import * as Styled from './TagsSelect.styled'
 import { Icon } from '../../Icon'
+import clsx from 'clsx'
 
 export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   value: string[]
@@ -81,8 +82,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <Styled.DefaultItem
-            $isSelected={isSelected}
-            className="option-child"
+            className={clsx('option-child', { selected: isSelected })}
             style={{
               color: tag.color,
               justifyContent: i ? 'center' : undefined,
