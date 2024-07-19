@@ -66,6 +66,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   multiSelect?: boolean
   multiSelectClose?: boolean
   search?: boolean
+  searchOnNumber?: number
   disabled?: boolean
   valueIcon?: string
   emptyMessage?: string
@@ -137,6 +138,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       multiSelectClose = false,
       isMultiple,
       search,
+      searchOnNumber = 20,
       placeholder = 'Select an option...',
       emptyMessage,
       isChanged,
@@ -343,6 +345,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }, [editable, searchForm, options])
 
     const nonSearchedOptions = [...options]
+
+    // if number of options is over 20 and search is not false or null, turn search on
+    if (search === undefined && searchOnNumber !== undefined) {
+      search = options.length > searchOnNumber
+    }
 
     if ((search || editable) && searchForm) {
       // filter out search matches
