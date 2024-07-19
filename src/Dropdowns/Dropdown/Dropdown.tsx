@@ -38,6 +38,7 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
+  error?: string
   itemStyle?: CSSProperties
   valueStyle?: CSSProperties
   listStyle?: CSSProperties
@@ -65,6 +66,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   multiSelect?: boolean
   multiSelectClose?: boolean
   search?: boolean
+  searchOnNumber?: number
   disabled?: boolean
   valueIcon?: string
   emptyMessage?: string
@@ -99,6 +101,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   onSelectAll?: ((value: string[]) => void) | true
   selectAllKey?: string
   buttonProps?: Styled.ButtonType['defaultProps']
+  activateKeys?: string[]
 }
 
 export interface DropdownRef {
@@ -124,6 +127,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       searchFields = ['value'],
       valueIcon,
       message,
+      error,
       disabled,
       onClose,
       onChange,
@@ -135,6 +139,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       multiSelectClose = false,
       isMultiple,
       search,
+      searchOnNumber = 20,
       placeholder = 'Select an option...',
       emptyMessage,
       isChanged,
@@ -162,6 +167,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       onSelectAll,
       selectAllKey = '__all__',
       buttonProps,
+      activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       ...props
     },
     ref,
@@ -250,6 +256,28 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }, [isOpen, valueRef, formRef, setMinWidth, setPos])
 
+    // scroll to first selected item
+    useEffect(() => {
+      if (!isOpen) return
+
+      // find first selected item
+      const firstSelectedElement = optionsRef.current?.querySelector('.selected')
+      if (!firstSelectedElement) return
+
+      // get parent li item
+      const parentLi = firstSelectedElement.parentElement as HTMLLIElement
+      if (!parentLi) return
+
+      // scroll to selected item
+      parentLi.scrollIntoView({ block: 'center' })
+
+      if (!parentLi.parentElement?.children) return
+      // find index of selected item
+      const index = Array.from(parentLi.parentElement?.children).indexOf(parentLi)
+
+      setActiveIndex(index)
+    }, [isOpen, setActiveIndex, optionsRef])
+
     // set initial selected from value
     useEffect(() => {
       setSelected(value)
@@ -288,17 +316,23 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     // if editable, merge current search into showOptions
-    options = useMemo(() => {
+    const [missingOptions, hasMissingOptions] = useMemo(() => {
       // add in any values that are not in options
       const selectedNotInOptions =
-        value?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
+        selected?.filter((s) => !options.some((o) => o[dataKey] === s)) || []
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
         [dataKey]: s,
+        error: 'Value no longer exists',
       }))
 
-      return [...selectedNotInOptionsItems, ...options]
-    }, [value, options])
+      return [[...selectedNotInOptionsItems, ...options], !!selectedNotInOptions.length]
+    }, [value, options, selected])
+
+    if (hasMissingOptions) {
+      error = 'Some values no longer exist'
+      options = missingOptions
+    }
 
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
@@ -335,6 +369,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }, [editable, searchForm, options])
 
     const nonSearchedOptions = [...options]
+
+    // if number of options is over 20 and search is not false or null, turn search on
+    if (search === undefined && searchOnNumber !== undefined) {
+      search = options.length > searchOnNumber
+    }
 
     if ((search || editable) && searchForm) {
       // filter out search matches
@@ -591,12 +630,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
 
       // SUBMIT WITH ENTER
-      if (
-        e.code === 'Enter' ||
-        e.code === 'Space' ||
-        e.code === 'NumpadEnter' ||
-        e.code === 'Tab'
-      ) {
+      if (activateKeys.includes(e.code)) {
         // check we are not searching and pressing space
         if (e.code === 'Space' && search) return
 
@@ -604,7 +638,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (e.code !== 'Tab') e.preventDefault()
 
         // if closed and pressing tab, ignore and focus next item (default)
-        if (!isOpen && e.code === 'Tab') return
+        if (e.code === 'Tab') {
+          if (!isOpen) return
+        }
 
         // open
         if (!isOpen) {
@@ -618,7 +654,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         }
 
         if (multiSelect) {
-          if (selectedValue) return handleChange(selectedValue, activeIndex || 0)
+          if (selectedValue && e.code !== 'Tab')
+            return handleChange(selectedValue, activeIndex || 0)
 
           let selectedValues = [options[0][dataKey]]
           // if editable, split by comma
@@ -655,6 +692,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           // focus back on button
           valueRef.current?.focus()
         }
+      } else if (e.code === 'Space') {
+        // prevent space from opening dropdown if it's not in activateKeys
+        e.preventDefault()
       }
 
       // CLOSE WITH ESC or TAB
@@ -716,6 +756,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       placeholder,
       isOpen,
       className: valueClassName,
+      error: error,
     }
 
     // filter out valueTemplate
@@ -801,6 +842,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 ...itemStyle,
               }}
               $message={message || ''}
+              $error={error || ''}
               $isOpen={true}
               $hidden={!isShowOptions}
               onSubmit={handleSearchSubmit}
@@ -844,6 +886,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         disabled: option.disabled || disabledValues.includes(option[dataKey]),
                         focused: usingKeyboard && activeIndex === i,
                       })}
+                      data-value={option[dataKey]}
                     >
                       {itemTemplate ? (
                         itemTemplate(
@@ -854,12 +897,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         )
                       ) : (
                         <Styled.DefaultItem
-                          $isSelected={!!selected?.includes(option[dataKey])}
-                          className={`option-child ${
-                            value && value.includes(option[dataKey]) ? 'selected' : ''
-                          } ${
-                            value && value.includes(option[dataKey]) ? 'active' : ''
-                          } ${itemClassName}`}
+                          className={clsx('option-child', itemClassName, {
+                            selected: !!selected?.includes(option[dataKey]),
+                            active: value && value.includes(option[dataKey]),
+                            error: !!option.error,
+                          })}
                           style={itemStyle}
                         >
                           {option.icon && <Icon icon={option.icon} />}
@@ -876,7 +918,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         focused: false,
                       })}
                     >
-                      <Styled.DefaultItem $isSelected={false} className="option-child hidden">
+                      <Styled.DefaultItem className="option-child hidden">
                         <span>{`Show ${50} more...`}</span>
                       </Styled.DefaultItem>
                     </Styled.ListItem>

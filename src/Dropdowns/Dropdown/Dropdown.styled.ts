@@ -104,6 +104,7 @@ export const dropdownMenuAnimation = () => keyframes`
 export const Container = styled.div<{
   $isOpen: boolean
   $message: string
+  $error: string
   $hidden: boolean
 }>`
   width: 100%;
@@ -123,25 +124,33 @@ export const Container = styled.div<{
   transform-origin: top center;
 
   /* show warning when changing multiple entities */
-  ${({ $isOpen, $message }) =>
+  ${({ $isOpen, $message, $error }) =>
     $isOpen &&
-    $message &&
+    ($error || $message) &&
     css`
       &::before {
-        content: '${$message}';
+        content: '${$error || $message}';
         top: 0;
-        translate: 0 -100%;
+        translate: 0 calc(-32px - 100%);
         position: absolute;
+
         background-color: var(--md-sys-color-surface-container-low);
-        border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
+        border-radius: var(--border-radius-m);
         z-index: 10;
         display: flex;
         align-items: center;
         padding: 4px 0;
         right: 0;
         left: 0;
-        border: 1px solid #383838;
+        border: 1px solid var(--md-sys-color-outline-variant);
         justify-content: center;
+
+        /* error styling */
+        ${$error &&
+        css`
+          color: var(--md-sys-color-on-error-container);
+          background-color: var(--md-sys-color-error-container);
+        `}
       }
     `}
 `
@@ -242,21 +251,30 @@ export const ListItem = styled.li<{
   }
 `
 
-export const DefaultItem = styled.span<{
-  $isSelected: boolean
-}>`
+export const DefaultItem = styled.span`
   display: flex;
   gap: 8px;
   align-items: center;
   height: 32px;
   padding: 0 8px;
 
-  ${({ $isSelected }) =>
-    $isSelected &&
-    css`
-      background-color: var(--md-sys-color-primary-container);
-      color: var(--md-sys-color-on-primary-container);
-    `}
+  &.selected {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+
+    &:hover {
+      background-color: var(--md-sys-color-primary-container-hover);
+    }
+
+    &.error {
+      background-color: var(--md-sys-color-error-container);
+      color: var(--md-sys-color-on-error-container);
+
+      &:hover {
+        background-color: var(--md-sys-color-error-container-hover);
+      }
+    }
+  }
 `
 
 export const Search = styled.div`
