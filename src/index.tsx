@@ -21,6 +21,9 @@ export type { AssigneeFieldProps } from './Dropdowns/AssigneeSelect/AssigneeFiel
 // assigneeSelect
 export { AssigneeSelect } from './Dropdowns/AssigneeSelect/AssigneeSelect'
 export type { AssigneeSelectProps } from './Dropdowns/AssigneeSelect/AssigneeSelect'
+// watcherSelect
+export { WatcherSelect } from './Dropdowns/WatcherSelect'
+export type { WatcherSelectProps } from './Dropdowns/WatcherSelect'
 // tagsSelect
 export { TagsSelect } from './Dropdowns/TagsSelect'
 export type { TagsSelectProps } from './Dropdowns/TagsSelect'
