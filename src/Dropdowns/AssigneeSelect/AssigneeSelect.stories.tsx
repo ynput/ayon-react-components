@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { AssigneeSelect, AssigneeSelectProps } from '.'
 import { useState } from 'react'
 import usersData from './users.json'
+import { Panel } from '../../Panels/Panel'
 
 const meta: Meta<typeof AssigneeSelect> = {
   component: AssigneeSelect,
@@ -26,7 +27,9 @@ const allUsers = usersData.map((user, i) => {
   }
 })
 
-const getRandomUsers = (number = 2) => {
+const getRandomUsers = (number?: number) => {
+  // if no number, create random between 1 and 5
+  number = number || Math.floor(Math.random() * 5) + 1
   const randomUsers = []
   for (let i = 0; i < number; i++) {
     randomUsers.push(allUsers[Math.floor(Math.random() * allUsers.length)])
@@ -45,14 +48,16 @@ const Template = (args: AssigneeSelectProps) => {
   const [value, setValue] = useState(args.value)
 
   return (
-    <AssigneeSelect {...initArgs} {...args} value={value} onChange={(names) => setValue(names)} />
+    <Panel style={{ margin: 32, maxWidth: 200, padding: 16 }}>
+      <AssigneeSelect {...initArgs} {...args} value={value} onChange={(names) => setValue(names)} />
+    </Panel>
   )
 }
 
 export const Default: Story = {
   render: Template,
   args: {
-    value: [],
+    value: selectedUsers,
   },
 }
 export const SelectAll: Story = {
@@ -62,6 +67,13 @@ export const SelectAll: Story = {
     onSelectAll: () => {
       console.log('selected all users')
     },
+  },
+}
+export const MissingUser: Story = {
+  render: Template,
+  args: {
+    value: [...selectedUsers, 'jack.will'],
+    onSelectAll: undefined,
   },
 }
 export const Custom: Story = {
