@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { Panel } from '../../Panels/Panel'
 import { WatcherSelect, WatcherSelectProps } from './WatcherSelect'
-import { allUsers, selectedUsers } from '../AssigneeSelect/AssigneeSelect.stories'
+import { allUsers, selectedUsers } from '../helpers'
 
 const meta: Meta<typeof WatcherSelect> = {
   component: WatcherSelect,
