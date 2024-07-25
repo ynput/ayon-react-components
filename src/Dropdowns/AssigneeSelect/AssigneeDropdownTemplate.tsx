@@ -53,7 +53,7 @@ export const AssigneeDropdownTemplate = ({
   error,
 }: AssigneeDropdownProps) => {
   // SELECT ALL ROW
-  if (selectAll === name) {
+  if (selectAll && name && selectAll === name) {
     return (
       <RowStyled {...{ isSelected, onClick }}>
         <Icon icon="done_all" />
@@ -61,6 +61,8 @@ export const AssigneeDropdownTemplate = ({
       </RowStyled>
     )
   }
+
+  if (!name) return null
 
   // USER ROW
   return (
