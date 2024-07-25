@@ -277,6 +277,14 @@ export const DefaultItem = styled.span`
   }
 `
 
+export const StartContent = styled.div`
+  background-color: var(--md-sys-color-surface-container-low);
+  border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-bottom: none;
+  padding: 4px;
+`
+
 export const Search = styled.div`
   /* put to top of list */
   order: -2;
@@ -306,6 +314,12 @@ export const Search = styled.div`
     &:focus {
       outline-offset: -1px;
       z-index: 30;
+    }
+  }
+
+  &.startContent {
+    input {
+      border-radius: 0;
     }
   }
 `

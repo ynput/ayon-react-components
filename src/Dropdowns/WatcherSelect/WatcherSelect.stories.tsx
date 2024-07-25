@@ -13,9 +13,12 @@ export default meta
 
 type Story = StoryObj<typeof WatcherSelect>
 
+const currentUser = allUsers[0].name
+
 const initArgs: WatcherSelectProps = {
-  value: selectedUsers,
   options: allUsers,
+  value: selectedUsers,
+  currentUser,
 }
 
 const Template = (args: WatcherSelectProps) => {
@@ -32,6 +35,5 @@ export const Default: Story = {
   render: Template,
   args: {
     value: selectedUsers,
-    isWatching: true,
   },
 }
