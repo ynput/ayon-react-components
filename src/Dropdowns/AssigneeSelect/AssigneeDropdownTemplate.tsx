@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { UserImage } from '../../User/UserImage'
 import { Icon } from '../../Icon'
+import clsx from 'clsx'
 
 const RowStyled = styled.span`
   cursor: pointer;
@@ -9,12 +10,23 @@ const RowStyled = styled.span`
   gap: 4px;
   padding: 4px;
 
-  ${({ isSelected }: { isSelected?: boolean }) =>
-    isSelected &&
-    css`
-      background-color: var(--md-sys-color-primary-container);
-      color: var(--md-sys-color-on-primary-container);
-    `}
+  &.selected {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+
+    &:hover {
+      background-color: var(--md-sys-color-primary-container-hover);
+    }
+  }
+
+  &.error {
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+
+    &:hover {
+      background-color: var(--md-sys-color-error-container-hover);
+    }
+  }
 `
 
 export interface AssigneeDropdownProps {
@@ -26,6 +38,7 @@ export interface AssigneeDropdownProps {
   size?: number
   selectAll?: string | boolean
   allSelected?: boolean
+  error?: string
 }
 
 export const AssigneeDropdownTemplate = ({
@@ -37,7 +50,9 @@ export const AssigneeDropdownTemplate = ({
   size = 21,
   selectAll,
   allSelected,
+  error,
 }: AssigneeDropdownProps) => {
+  // SELECT ALL ROW
   if (selectAll === name) {
     return (
       <RowStyled {...{ isSelected, onClick }}>
@@ -47,10 +62,12 @@ export const AssigneeDropdownTemplate = ({
     )
   }
 
+  // USER ROW
   return (
-    <RowStyled {...{ isSelected, onClick }}>
+    <RowStyled onClick={onClick} className={clsx({ selected: isSelected, error: !!error })}>
       <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
       {fullName || name}
+      {!!error && ' (missing)'}
     </RowStyled>
   )
 }
