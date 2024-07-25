@@ -7,7 +7,6 @@ import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 import './index.scss'
 // import theme
 import './theme/theme.scss'
-import { getMimeTypeIcon } from './FileCard'
 // export theme
 export * as theme from './theme'
 
@@ -21,6 +20,9 @@ export type { AssigneeFieldProps } from './Dropdowns/AssigneeSelect/AssigneeFiel
 // assigneeSelect
 export { AssigneeSelect } from './Dropdowns/AssigneeSelect/AssigneeSelect'
 export type { AssigneeSelectProps } from './Dropdowns/AssigneeSelect/AssigneeSelect'
+// watcherSelect
+export { WatcherSelect } from './Dropdowns/WatcherSelect'
+export type { WatcherSelectProps } from './Dropdowns/WatcherSelect'
 // tagsSelect
 export { TagsSelect } from './Dropdowns/TagsSelect'
 export type { TagsSelectProps } from './Dropdowns/TagsSelect'
@@ -45,7 +47,7 @@ export type { ShortcutTagProps } from './ShortcutTag'
 
 // dropdown
 export { Dropdown, DefaultValueTemplate } from './Dropdowns/Dropdown'
-export type { DropdownProps, DefaultValueTemplateProps } from './Dropdowns/Dropdown'
+export type { DropdownProps, DefaultValueTemplateProps, DropdownRef } from './Dropdowns/Dropdown'
 
 // FileUpload
 export { FileUpload } from './FileUpload'

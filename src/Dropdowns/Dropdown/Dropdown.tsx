@@ -99,10 +99,15 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
-  onSelectAll?: ((value: string[]) => void) | true
-  selectAllKey?: string
+  onSelectAll?: ((value: string[]) => void) | boolean | null
+  selectAllKey?: string | null
   buttonProps?: Styled.ButtonType['defaultProps']
   activateKeys?: string[]
+  startContent?: (
+    value: (string | number)[],
+    selected: (string | number)[],
+    isOpen: boolean,
+  ) => React.ReactNode
 }
 
 export interface DropdownRef {
@@ -170,6 +175,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       selectAllKey = '__all__',
       buttonProps,
       activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
+      startContent,
       ...props
     },
     ref,
@@ -477,7 +483,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       let newSelected = selected ? [...selected] : []
 
-      if (onSelectAll && newSelected.includes(selectAllKey)) {
+      if (onSelectAll && selectAllKey && newSelected.includes(selectAllKey)) {
         // selecting an actual value, remove selectAll
         newSelected = newSelected.filter((s) => s !== selectAllKey)
       }
@@ -796,7 +802,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     let valueChildren
     if (!labels.length && disabled && placeholder) {
       valueChildren = placeholder
-    } else if (onSelectAll && value?.includes(selectAllKey)) {
+    } else if (onSelectAll && selectAllKey && value?.includes(selectAllKey)) {
       valueChildren = 'All selected'
     } else if (labels.length) {
       valueChildren = labels.join(', ')
@@ -851,8 +857,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               onSubmit={handleSearchSubmit}
               ref={formRef}
             >
+              {startContent && (
+                <Styled.StartContent>
+                  {startContent(value || [], selected || [], isOpen)}
+                </Styled.StartContent>
+              )}
               {(search || editable) && (
-                <Styled.Search className="search">
+                <Styled.Search className={clsx('search', { startContent: !!startContent })}>
                   <Icon icon={'search'} />
                   <InputText
                     value={searchForm}
