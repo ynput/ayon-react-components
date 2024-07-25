@@ -14,7 +14,7 @@ export default meta
 type Story = StoryObj<typeof AssigneeSelect>
 
 // randomly attach an image to the user
-const allUsers = usersData.map((user, i) => {
+export const allUsers = usersData.map((user, i) => {
   let avatarUrl
 
   if (Math.random() > 0.5) {
@@ -37,7 +37,7 @@ const getRandomUsers = (number?: number) => {
   return randomUsers
 }
 
-const selectedUsers = getRandomUsers().map((user) => user.name)
+export const selectedUsers = getRandomUsers().map((user) => user.name)
 
 const initArgs: AssigneeSelectProps = {
   value: selectedUsers,
