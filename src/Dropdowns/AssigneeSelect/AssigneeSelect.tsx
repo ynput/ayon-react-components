@@ -117,6 +117,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         ref={ref}
         sortBySelected={sortBySelected}
         selectAllKey={selectAllKey}
+        missingValueMessage={'Some users no longer exist. Click to remove.'}
         {...props}
       />
     )
