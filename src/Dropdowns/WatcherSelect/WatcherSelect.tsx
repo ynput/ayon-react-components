@@ -68,7 +68,10 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
               onClick={() => handleWatch(selected as string[])}
               data-tooltip="Notify me to changes."
             >
-              Watch
+              <div className="content">
+                <span className="title">Watch</span>
+                <span className="description">Notify me to all changes.</span>
+              </div>
             </Styled.WatchStateButton>
             <Styled.WatchStateButton
               variant="text"
@@ -77,7 +80,10 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
               onClick={() => handleUnwatch(selected as string[])}
               data-import="Notify me only on @mentions or assignment."
             >
-              Unwatch
+              <div className="content">
+                <span className="title">Unwatch</span>
+                <span className="description">Notify me only on @mentions.</span>
+              </div>
             </Styled.WatchStateButton>
           </Styled.StartContent>
         )}

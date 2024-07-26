@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components'
 import { Button } from '../../Button'
 import { AssigneeSelect as AS } from '../AssigneeSelect'
+import { theme } from '../..'
 
 export const AssigneeSelect = styled(AS)`
   button.button {
@@ -42,6 +43,21 @@ export const WatchStateButton = styled(Button)`
   &.selected {
     &:hover {
       background-color: var(--md-sys-color-primary-container);
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .title {
+      ${theme.labelLarge}
+    }
+
+    .description {
+      ${theme.labelSmall}
+      color: var(--md-sys-color-outline)
     }
   }
 
