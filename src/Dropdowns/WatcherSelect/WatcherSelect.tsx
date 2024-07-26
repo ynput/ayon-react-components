@@ -10,7 +10,7 @@ export interface WatcherSelectProps extends Omit<AssigneeSelectProps, 'emptyMess
 }
 
 export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
-  ({ currentUser, isWatching, ...props }, ref) => {
+  ({ currentUser, isWatching, onSelectionChange, ...props }, ref) => {
     // is the current user a watcher
     const currentUserWatcher = (currentUser && props.value.includes(currentUser)) || isWatching
 
@@ -34,6 +34,19 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
       }
     }
 
+    const handleSelectionChange = (selection: string[]) => {
+      // check if currentUser is in the selection
+      const currentIsNowWatcher = selection.includes(currentUser)
+      // check if this is different to the current state
+      if (currentIsNowWatcher !== currentUserWatcher) {
+        // call the appropriate function
+        currentIsNowWatcher ? handleWatch(selection) : handleUnwatch(selection)
+      }
+
+      // forward on original onSelectionChange
+      onSelectionChange && onSelectionChange(selection)
+    }
+
     return (
       <Styled.AssigneeSelect
         ref={ref}
@@ -55,7 +68,10 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
               onClick={() => handleWatch(selected as string[])}
               data-tooltip="Notify me to changes."
             >
-              Watch
+              <div className="content">
+                <span className="title">Watch</span>
+                <span className="description">Notify me to all changes.</span>
+              </div>
             </Styled.WatchStateButton>
             <Styled.WatchStateButton
               variant="text"
@@ -64,10 +80,15 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
               onClick={() => handleUnwatch(selected as string[])}
               data-import="Notify me only on @mentions or assignment."
             >
-              Unwatch
+              <div className="content">
+                <span className="title">Unwatch</span>
+                <span className="description">Notify me only on @mentions.</span>
+              </div>
             </Styled.WatchStateButton>
           </Styled.StartContent>
         )}
+        onSelectionChange={(s) => handleSelectionChange(s as string[])}
+        multiSelectClose={undefined} // remove autoclose on 1
         {...props}
       />
     )
