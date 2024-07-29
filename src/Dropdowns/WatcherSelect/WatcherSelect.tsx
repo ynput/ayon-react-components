@@ -86,7 +86,7 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
           </Styled.StartContent>
         )}
         onSelectionChange={(s) => handleSelectionChange(s as string[])}
-        multiSelectClose={undefined} // remove autoclose on 1
+        multiSelectClose={undefined}
         {...props}
       />
     )
