@@ -104,6 +104,7 @@ export const dropdownMenuAnimation = () => keyframes`
 export const Container = styled.div<{
   $isOpen: boolean
   $message: string
+  $messageOverButton?: boolean
   $error: string
   $hidden: boolean
 }>`
@@ -124,7 +125,7 @@ export const Container = styled.div<{
   transform-origin: top center;
 
   /* show warning when changing multiple entities */
-  ${({ $isOpen, $message, $error }) =>
+  ${({ $isOpen, $message, $error, $messageOverButton }) =>
     $isOpen &&
     ($error || $message) &&
     css`
@@ -151,22 +152,26 @@ export const Container = styled.div<{
           color: var(--md-sys-color-on-error-container);
           background-color: var(--md-sys-color-error-container);
         `}
+
+        /* position message */
+        ${$messageOverButton &&
+        css`
+          translate: 0 -100%;
+          border-bottom: 0;
+          border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
+        `}
       }
     `}
 `
 
-type ScrollableProps = {
-  $message: string
-  $search: boolean
-}
-
-export const Scrollable = styled(OverlayScrollbarsComponent)<ScrollableProps>`
+export const Scrollable = styled(OverlayScrollbarsComponent)`
   border: 1px solid var(--md-sys-color-outline-variant);
   background-color: var(--md-sys-color-surface-container-low);
-  border-radius: ${({ $message, $search }) =>
-    $message || $search
-      ? '0 0 var(--border-radius-m) var(--border-radius-m)'
-      : 'var(--border-radius-m)'};
+
+  border-radius: var(--border-radius-m);
+  &.no-top-radius {
+    border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
+  }
 
   box-shadow: 0 1px 16px rgb(0 0 0 / 20%);
 
