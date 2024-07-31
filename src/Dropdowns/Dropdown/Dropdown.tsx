@@ -38,6 +38,7 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
+  messageOverButton?: boolean
   error?: string | null | false
   missingValueMessage?: string | null | undefined
   itemStyle?: CSSProperties
@@ -133,6 +134,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       searchFields = ['value'],
       valueIcon,
       message,
+      messageOverButton,
       error,
       missingValueMessage = 'Some values no longer exist',
       disabled,
@@ -851,11 +853,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 ...itemStyle,
               }}
               $message={message || ''}
+              $messageOverButton={messageOverButton}
               $error={error || ''}
               $isOpen={true}
               $hidden={!isShowOptions}
               onSubmit={handleSearchSubmit}
               ref={formRef}
+              className={'container'}
             >
               {startContent && (
                 <Styled.StartContent>
@@ -877,8 +881,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               )}
               <Styled.Scrollable
                 style={{ maxHeight }}
-                $message={message || ''}
-                $search={!!search || !!editable}
+                className={clsx({
+                  ['no-top-radius']: (messageOverButton && !!message) || !!search || !!editable,
+                })}
                 defer
               >
                 <Styled.Options
