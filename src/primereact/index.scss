@@ -45,10 +45,21 @@ $prime-button-background: $color-grey-03;
   margin-bottom: 40px; // to move the scrollbar at least a little bit lower
 }
 
-.p-treetable,
-.p-datatable {
-  td {
-    padding: 1px !important;
+// table cell padding
+.p-datatable .p-datatable-tbody > tr,
+.p-treetable .p-treetable-tbody > tr {
+  & > td {
+    padding: 4px;
+    border: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    height: 2rem;
+    .p-treetable-toggler {
+      vertical-align: baseline;
+    }
+
     * {
       vertical-align: middle !important;
       &.material-symbols-outlined {
@@ -58,85 +69,70 @@ $prime-button-background: $color-grey-03;
         font-size: 1.5rem !important;
       }
     }
-  }
-}
 
-.p-treetable .p-treetable-thead > tr > th {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    & > th {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  --border-left: 4px solid transparent;
+
+  &.changed {
+    --border-left: 4px solid var(--color-changed);
+  }
+
+  &.changed-studio {
+    --border-left: 4px solid var(--color-hl-studio);
+  }
+
+  &.changed-project {
+    --border-left: 4px solid var(--color-hl-project);
+  }
+
+  // SET THE BORDER LEFT FOR THE FIRST CELL
+  td:first-child {
+    border-left: var(--border-left);
+  }
+
+  &.italic {
+    font-style: italic;
+  }
+
+  &.deleted {
+    .editor-field,
+    .cell-with-icon-text {
+      text-decoration: line-through;
+      text-decoration-color: red;
+      text-decoration-thickness: 3px;
+    }
+  }
+
+  &:nth-child(odd) {
+    background: var(--md-sys-color-surface-container-low);
+  }
+
+  &:nth-child(even) {
+    background: var(--md-sys-color-surface-container-low-hover);
+  }
+
+  &.p-highlight {
+    background: var(--md-sys-color-primary-container) !important;
+    &:hover {
+      background: var(--md-sys-color-primary-container-hover) !important;
+    }
+  }
+
+  &:hover {
+    background: var(--md-sys-color-surface-container-low-active) !important;
+    color: white;
+  }
 }
 
 .p-datatable,
 .p-treetable {
   user-select: none;
-
-  td {
-    border: 0 !important;
-    white-space: nowrap;
-    border-bottom: 0 !important;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .p-datatable-tbody > tr,
-  .p-treetable-tbody > tr {
-    border-bottom: 1px solid transparent;
-
-    &.changed {
-      border-left: 4px solid var(--color-changed) !important;
-    }
-
-    &.italic {
-      font-style: italic;
-    }
-
-    &.changed-studio {
-      border-left: 4px solid var(--color-hl-studio) !important;
-    }
-
-    &.changed-project {
-      border-left: 4px solid var(--color-hl-project) !important;
-    }
-
-    &.deleted {
-      .editor-field,
-      .cell-with-icon-text {
-        text-decoration: line-through;
-        text-decoration-color: red;
-        text-decoration-thickness: 3px;
-      }
-    }
-
-    &:nth-child(odd) {
-      background: var(--md-sys-color-surface-container-low);
-      border-left: 4px solid var(--md-sys-color-surface-container-low);
-    }
-
-    &:nth-child(even) {
-      background: var(--md-sys-color-surface-container-low-hover);
-      border-left: 4px solid var(--md-sys-color-surface-container-low-hover);
-    }
-
-    &.p-highlight {
-      background: var(--md-sys-color-primary-container) !important;
-      &:hover {
-        background: var(--md-sys-color-primary-container-hover) !important;
-      }
-    }
-
-    &:hover {
-      background: var(--md-sys-color-surface-container-low-active) !important;
-      color: white;
-    }
-
-    td {
-      height: 2rem;
-      .p-treetable-toggler {
-        vertical-align: baseline;
-      }
-    }
-  }
 
   .p-datatable-thead > tr > th,
   .p-treetable-thead > tr > th {
