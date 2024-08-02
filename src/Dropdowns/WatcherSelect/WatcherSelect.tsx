@@ -52,12 +52,9 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
       <Styled.AssigneeSelect
         ref={ref}
         valueTemplate={(value, selected, isOpen) => (
-          <Styled.WatcherButton
-            variant="text"
-            selected={isOpen}
-            icon={currentUserWatcher ? 'notifications_active' : 'notifications'}
-            className={clsx({ watching: currentUserWatcher })}
-          />
+          <Styled.WatcherButton className={clsx({ watching: currentUserWatcher, open: isOpen })}>
+            <Icon icon={currentUserWatcher ? 'notifications_active' : 'notifications'} />
+          </Styled.WatcherButton>
         )}
         selectAllKey={null}
         startContent={(value, selected) => (
