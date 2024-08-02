@@ -9,23 +9,43 @@ export const AssigneeSelect = styled(AS)`
   }
 `
 
-export const WatcherButton = styled(Button)`
+export const WatcherButton = styled.div`
+  user-select: none;
+  /* button reset */
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: none;
+  height: max-content;
+
+  /* layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: var(--base-gap-large);
+  /* padding */
+  padding: 6px;
+
+  /* border radius */
+  border-radius: var(--base-input-border-radius);
+
+  cursor: pointer;
+  white-space: nowrap;
+
   &.text {
     width: fit-content;
   }
 
   &.watching {
     background-color: unset;
-    color: var(--md-sys-color-primary);
-    &:hover {
-      color: var(--md-sys-color-primary-hover);
-    }
     .icon {
+      color: var(--md-sys-color-primary);
       font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
     }
   }
 
-  &.selected {
+  &.open {
     background-color: var(--md-sys-color-primary-container-hover);
   }
 `
