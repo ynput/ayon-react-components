@@ -36,11 +36,38 @@ export const StartContent = styled.div`
   gap: var(--base-gap-small);
 `
 
-export const WatchStateButton = styled(Button)`
+export const WatchStateButton = styled.div`
+  display: flex;
   justify-content: flex-start;
-  background-color: unset;
+  align-items: center;
+  gap: var(--base-gap-large);
+
+  /* padding */
+  padding: 6px 12px;
+
+  /* border radius */
+  border-radius: var(--base-input-border-radius);
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: var(--md-sys-color-surface-container-hover);
+  }
+
+  &:active {
+    background-color: var(--md-sys-color-surface-container-active);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--md-sys-color-primary);
+  }
 
   &.selected {
+    background-color: var(--md-sys-color-primary-container);
+    &,
+    .icon {
+      color: var(--md-sys-color-on-primary-container);
+    }
     &:hover {
       background-color: var(--md-sys-color-primary-container);
     }

@@ -3,6 +3,7 @@ import { DropdownRef } from '../Dropdown'
 import { forwardRef } from 'react'
 import * as Styled from './WatcherSelect.styled'
 import clsx from 'clsx'
+import { Icon } from '../../Icon'
 
 export interface WatcherSelectProps extends Omit<AssigneeSelectProps, 'emptyMessage'> {
   currentUser: string
@@ -62,22 +63,22 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
         startContent={(value, selected) => (
           <Styled.StartContent>
             <Styled.WatchStateButton
-              variant="text"
-              icon="notifications_active"
-              selected={currentUserWatcher}
+              className={clsx({ selected: currentUserWatcher })}
               onClick={() => handleWatch(selected as string[])}
+              tabIndex={0}
             >
+              <Icon icon="notifications_active" />
               <div className="content">
                 <span className="title">Watch</span>
                 <span className="description">Notify me to all changes.</span>
               </div>
             </Styled.WatchStateButton>
             <Styled.WatchStateButton
-              variant="text"
-              icon="notifications_off"
-              selected={!currentUserWatcher}
+              className={clsx({ selected: !currentUserWatcher })}
               onClick={() => handleUnwatch(selected as string[])}
+              tabIndex={0}
             >
+              <Icon icon="notifications_off" />
               <div className="content">
                 <span className="title">Unwatch</span>
                 <span className="description">Notify me only on @mentions.</span>
