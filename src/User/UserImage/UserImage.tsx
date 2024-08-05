@@ -1,6 +1,18 @@
 import { forwardRef } from 'react'
 import * as Styled from './UserImage.styled'
 
+const createInitials = (nameData: string) => {
+  if (!nameData) return 'N/A'
+  if (nameData === '++') return '++'
+  // regex handles different type of whitespaces
+  const words = nameData.trim().split(/\s+/)
+  const mappedInitials = words
+    .slice(0, 2)
+    .map((word) => word[0].toUpperCase())
+    .join('')
+  return mappedInitials
+}
+
 export interface UserImageProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string
   fullName?: string
@@ -11,17 +23,11 @@ export interface UserImageProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export const UserImage = forwardRef<HTMLSpanElement, UserImageProps>(
   ({ src, name, fullName, size = 30, highlight, className, ...props }, ref) => {
-    const fontSize = Math.round((13 / 30) * size)  
+    const fontSize = Math.round((13 / 30) * size)
     const nameData = fullName || name
     const hasNameData = !!nameData
 
-    const createInitials = (nameData: string) => {
-      // regex handles different type of whitespaces 
-      const words = nameData.trim().split(/\s+/)
-      const mappedInitials = words.slice(0, 2).map(word => word[0].toUpperCase()).join('')
-      return mappedInitials;
-    }
-    const initials = hasNameData ? createInitials(nameData) : 'N/A'
+    const initials = createInitials(nameData)
 
     return (
       <Styled.CircleImage
