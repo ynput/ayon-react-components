@@ -188,7 +188,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {!hideTitles && (
               <Styled.Title className="inner-card title">
                 {titleIcon && <Icon icon={titleIcon} />}
-                {title && <span className="title">{title}</span>}
+                {title && <span className="inner-text">{title}</span>}
               </Styled.Title>
             )}
             {/* top right icon */}
@@ -202,7 +202,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom left */}
             {!hideTitles && (
               <Styled.Title className="inner-card subTitle">
-                <span>{subTitle}</span>
+                <span className="inner-text">{subTitle}</span>
                 {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
               </Styled.Title>
             )}
