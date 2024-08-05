@@ -24,10 +24,12 @@ const initData: DataProps = {
   subTitle: 'sc0120sh0130',
   description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
   imageUrl: getRandomImage(),
+  isPlayable: Math.random() > 0.5,
   icon: 'visibility',
   iconColor: '#FF982E',
   assignees: [
     { fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() },
+    { fullName: 'John Doe', name: 'john' },
     { fullName: 'John Doe', name: 'john' },
   ],
   isFullHighlight: false,

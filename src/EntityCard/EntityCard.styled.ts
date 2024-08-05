@@ -377,8 +377,10 @@ export const Title = styled.span`
     font-size: 20px;
   }
 
-  &.subtitle {
-    padding: 4px 6px;
+  &.subTitle {
+    .inner-text {
+      direction: rtl;
+    }
   }
 `
 

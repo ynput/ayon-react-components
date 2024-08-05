@@ -30,6 +30,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string
   titleIcon?: IconType
   subTitle?: string
+  subTitleIcon?: IconType
+  isPlayable?: boolean // shows subtitle icon
   description?: string
   imageUrl?: string
   imageAlt?: string
@@ -57,6 +59,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     {
       title = '',
       titleIcon,
+      subTitleIcon,
+      isPlayable,
       subTitle,
       description,
       imageUrl,
@@ -184,7 +188,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {!hideTitles && (
               <Styled.Title className="inner-card title">
                 {titleIcon && <Icon icon={titleIcon} />}
-                {title && <span className="title">{title}</span>}
+                {title && <span className="inner-text">{title}</span>}
               </Styled.Title>
             )}
             {/* top right icon */}
@@ -198,7 +202,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom left */}
             {!hideTitles && (
               <Styled.Title className="inner-card subTitle">
-                <span>{subTitle}</span>
+                <span className="inner-text">{subTitle}</span>
+                {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
               </Styled.Title>
             )}
             {/* bottom right icon */}
@@ -210,7 +215,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom right assignees */}
             {!!assignees?.length && (
               <Styled.Title className="inner-card assignees">
-                <UserImagesStacked users={assignees} size={26} gap={-0.5} />
+                <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
               </Styled.Title>
             )}
           </Styled.Row>
