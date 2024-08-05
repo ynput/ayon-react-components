@@ -30,6 +30,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string
   titleIcon?: IconType
   subTitle?: string
+  subTitleIcon?: IconType
+  isPlayable?: boolean // shows subtitle icon
   description?: string
   imageUrl?: string
   imageAlt?: string
@@ -57,6 +59,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     {
       title = '',
       titleIcon,
+      subTitleIcon,
+      isPlayable,
       subTitle,
       description,
       imageUrl,
@@ -199,6 +203,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {!hideTitles && (
               <Styled.Title className="inner-card subTitle">
                 <span>{subTitle}</span>
+                {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
               </Styled.Title>
             )}
             {/* bottom right icon */}
