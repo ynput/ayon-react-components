@@ -215,7 +215,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom right assignees */}
             {!!assignees?.length && (
               <Styled.Title className="inner-card assignees">
-                <UserImagesStacked users={assignees} size={26} gap={-0.5} />
+                <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
               </Styled.Title>
             )}
           </Styled.Row>

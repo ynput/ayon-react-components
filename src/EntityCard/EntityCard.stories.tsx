@@ -30,6 +30,7 @@ const initData: DataProps = {
   assignees: [
     { fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() },
     { fullName: 'John Doe', name: 'john' },
+    { fullName: 'John Doe', name: 'john' },
   ],
   isFullHighlight: false,
   isActiveAnimate: false,
