@@ -380,6 +380,7 @@ export const Title = styled.span`
   &.subTitle {
     .inner-text {
       direction: rtl;
+      unicode-bidi: plaintext;
     }
   }
 `

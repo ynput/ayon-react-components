@@ -21,7 +21,7 @@ interface DataProps extends EntityCardProps {}
 const initData: DataProps = {
   title: 'Lighting',
   titleIcon: 'lightbulb',
-  subTitle: 'sc0120sh0130',
+  subTitle: '100_200',
   description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
   imageUrl: getRandomImage(),
   isPlayable: Math.random() > 0.5,
