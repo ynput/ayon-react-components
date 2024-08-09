@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EntityCard, EntityCardProps } from '.'
+import { EntityCard, EntityCardProps, StatusType } from '.'
 import { useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
@@ -18,20 +18,32 @@ type Story = StoryObj<typeof EntityCard>
 
 interface DataProps extends EntityCardProps {}
 
+const statuses: { [name: string]: StatusType } = {
+  ready: { label: 'Ready to start', color: 'rgb(186, 186, 186)', icon: 'timer' },
+  progress: { label: 'In progress', color: 'rgb(52, 152, 219)', icon: 'clock_loader_40' },
+  approved: { label: 'Approved', color: 'rgb(0, 240, 180)', icon: 'task_alt' },
+  omitted: { label: 'Omitted', color: 'rgb(203, 26, 26)', icon: 'block' },
+}
+
+const priorities: { [name: string]: StatusType } = {
+  low: { label: 'Low', color: 'rgb(186, 186, 186)', icon: 'keyboard_arrow_down' },
+  medium: { label: 'Medium', color: 'rgb(52, 152, 219)', icon: 'check_indeterminate_small' },
+  high: { label: 'High', color: 'rgb(0, 240, 180)', icon: 'keyboard_arrow_up' },
+  urgent: { label: 'Critical', color: 'rgb(203, 26, 26)', icon: 'keyboard_double_arrow_up' },
+}
+
 const initData: DataProps = {
+  header: 'ep103sq002',
+  path: 'ep103',
   title: 'Lighting',
   titleIcon: 'lightbulb',
-  subTitle: '100_200',
-  description: 'demo_Big_Episodic/episodes/ep103/ep103sq002',
+  isPlayable: true,
+  assignees: [{ fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() }],
+  status: statuses.approved,
+  priority: priorities.urgent,
   imageUrl: getRandomImage(),
-  isPlayable: Math.random() > 0.5,
   icon: 'visibility',
   iconColor: '#FF982E',
-  assignees: [
-    { fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() },
-    { fullName: 'John Doe', name: 'john' },
-    { fullName: 'John Doe', name: 'john' },
-  ],
   isFullHighlight: false,
   isActiveAnimate: false,
 }
@@ -160,7 +172,6 @@ export const Grid: Story = {
     isSecondary: false,
     disabled: false,
     isFullHighlight: true,
-    description: undefined,
   },
   render: LoadingTemplate,
 }

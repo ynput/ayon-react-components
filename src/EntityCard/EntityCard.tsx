@@ -26,13 +26,27 @@ const notifications: {
   },
 }
 
+export type StatusType = {
+  label: string
+  color: string
+  icon: IconType
+}
+
+export type PriorityType = {
+  label: string
+  color: string
+  icon: IconType
+}
+
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string
-  titleIcon?: IconType
-  subTitle?: string
-  subTitleIcon?: IconType
-  isPlayable?: boolean // shows subtitle icon
-  description?: string
+  header?: string // top header
+  path?: string // top header
+  title?: string // top left
+  titleIcon?: IconType // top left
+  isPlayable?: boolean // top right - play icon
+  assignees?: User[] // bottom left
+  status?: StatusType // bottom center
+  priority?: PriorityType // bottom right
   imageUrl?: string
   imageAlt?: string
   icon?: IconType
@@ -46,7 +60,6 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isDragging?: boolean
   isDraggable?: boolean
   disabled?: boolean
-  assignees?: User[]
   variant?: 'thumbnail' | 'basic' | 'full'
   isFullHighlight?: boolean
   isActiveAnimate?: boolean
@@ -57,12 +70,14 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
   (
     {
+      header,
+      path,
       title = '',
       titleIcon,
-      subTitleIcon,
       isPlayable,
-      subTitle,
-      description,
+      assignees,
+      status,
+      priority,
       imageUrl,
       imageAlt,
       icon,
@@ -81,7 +96,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isActiveAnimate = false,
       onThumbnailKeyDown,
       onActivate,
-      assignees,
       ...props
     },
     ref,
@@ -90,7 +104,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
     // variants
     const hideIcons = variant === 'basic' || variant === 'thumbnail'
-    const hideDescription = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
     const [isImageError, setIsImageError] = useState(false)
@@ -142,6 +155,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             isDraggable,
             isFullHighlight,
             isActiveAnimate,
+            variant,
           },
           'entity-card',
           props.className,
@@ -160,6 +174,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           }
         }}
       >
+        {header && (
+          <Styled.Header className="header">
+            {path && <span className="path">... / {path} / </span>}
+            <span className="shot">{header}</span>
+          </Styled.Header>
+        )}
         <Styled.Thumbnail
           className={clsx('thumbnail', { loading: isLoading })}
           tabIndex={isDraggable ? 0 : undefined}
@@ -182,49 +202,47 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             src={imageUrl}
             className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
           />
-
-          <Styled.Row className="row loading-visible">
+          {/* TOP ROW */}
+          <Styled.Row className="row header">
             {/* top left */}
-            {!hideTitles && (
-              <Styled.Title className={clsx('inner-card title', { loading: isLoading })}>
-                {titleIcon && <Icon icon={titleIcon} />}
-                {title && <span className="inner-text">{title}</span>}
-              </Styled.Title>
-            )}
-            {/* top right icon */}
-            {!hideIcons && (
-              <Styled.Title className={clsx('inner-card status', { loading: isLoading })}>
-                {icon && <Icon icon={icon} style={{ color: iconColor }} />}
-              </Styled.Title>
+            <Styled.Tag className={clsx('inner-card title', { loading: isLoading })}>
+              {titleIcon && <Icon icon={titleIcon} />}
+              {title && <span className="inner-text">{title}</span>}
+            </Styled.Tag>
+
+            {/* top right */}
+            {isPlayable && (
+              <Styled.Tag className={clsx('inner-card playable', { loading: isLoading })}>
+                <Icon icon={'play_circle'} />
+              </Styled.Tag>
             )}
           </Styled.Row>
-          <Styled.Row className="row loading-visible">
-            {/* bottom left */}
-            {!hideTitles && (
-              <Styled.Title className={clsx('inner-card subTitle', { loading: isLoading })}>
-                <span className="inner-text">{subTitle}</span>
-                {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
-              </Styled.Title>
-            )}
-            {/* bottom right icon */}
-            {notificationIcon && !hideIcons && !assignees?.length && (
-              <Styled.Title className="notification">
-                <Icon icon={notificationIcon?.icon} style={{ color: notificationIcon?.color }} />
-              </Styled.Title>
-            )}
-            {/* bottom right assignees */}
-            {!!assignees?.length && (
-              <Styled.Title className={clsx('inner-card assignees', { loading: isLoading })}>
+          {/* BOTTOM ROW */}
+          <Styled.Row className="row footer">
+            {/* bottom left - assignees */}
+            {assignees && (
+              <Styled.Tag className={clsx('inner-card assignees', { loading: isLoading })}>
                 <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
-              </Styled.Title>
+              </Styled.Tag>
+            )}
+
+            {/* bottom center - status */}
+            {status && (
+              <Styled.Tag className={clsx('inner-card status', { loading: isLoading })}>
+                <Icon icon={status.icon} style={{ color: status.color }} />
+              </Styled.Tag>
+            )}
+
+            {/* bottom right - notification */}
+
+            {/* bottom right - priority */}
+            {priority && (
+              <Styled.Tag className={clsx('inner-card', { loading: isLoading })}>
+                <Icon icon={priority.icon} />
+              </Styled.Tag>
             )}
           </Styled.Row>
         </Styled.Thumbnail>
-        {description && !hideDescription && (
-          <Styled.Description className="description">
-            <span>{description}</span>
-          </Styled.Description>
-        )}
       </Styled.Card>
     )
   },

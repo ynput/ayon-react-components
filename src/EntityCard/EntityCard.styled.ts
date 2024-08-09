@@ -9,13 +9,11 @@ interface StyledEntityCardProps {
 
 const cardHoverStyles = css`
   background-color: var(--md-sys-color-surface-container-high-hover);
+  box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high-hover);
 
-  /* hover to show description */
-  .description {
-    grid-template-rows: 1fr;
-    /* transition-delay: 100ms; */
-    padding: 2px;
-    padding-bottom: 0;
+  /* show full path */
+  .header {
+    grid-template-columns: auto 1fr;
   }
 `
 const blueTitleStyles = css`
@@ -58,19 +56,13 @@ export const Card = styled.div<StyledEntityCardProps>`
   /* size */
   min-width: 208px;
   height: auto;
+
   aspect-ratio: 16 / 9;
+  &:has(.header) {
+    aspect-ratio: 16 / 10.5;
+  }
 
   padding: 2px;
-
-  &,
-  .thumbnail {
-    transition: padding 100ms ease;
-
-    padding: 2px;
-    &.isActive.isActiveAnimate {
-      padding: 4px;
-    }
-  }
 
   /* thumbnail variant no padding */
   ${({ $variant }) =>
@@ -129,19 +121,16 @@ export const Card = styled.div<StyledEntityCardProps>`
 
     box-shadow: inset 0 0 0 2px var(--primary-color);
 
-    /* description stays open */
-    .description {
-      grid-template-rows: 1fr;
-      padding: 2px;
-      padding-bottom: 0;
-      transition-delay: 0;
-    }
-
     &:hover {
       background-color: var(--selection-color-hover);
     }
     &:active {
       background-color: var(--selection-color-active);
+    }
+
+    /* show full path */
+    .header {
+      grid-template-columns: auto 1fr;
     }
 
     &.isDraggable {
@@ -170,10 +159,9 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   .assignees {
-    padding: 1px;
+    background-color: unset;
     border-radius: 14px;
     min-width: max-content;
-    color: red;
 
     .user-image {
       border-color: var(--md-sys-color-surface-container-high);
@@ -185,28 +173,11 @@ export const Card = styled.div<StyledEntityCardProps>`
     pointer-events: none;
     /* title card loading styles */
     .row > span {
-      /* change color of cards */
-      opacity: 1;
-      min-width: 50%;
-      position: relative;
-
       &.status,
       &.notification,
       &.assignees {
         min-width: 28px;
       }
-      /* hide all text and icons */
-      & > * {
-        opacity: 0;
-        user-select: none;
-        pointer-events: none;
-      }
-    }
-
-    /* hide description */
-    .description {
-      grid-template-rows: 0fr !important;
-      padding-top: 0 !important;
     }
   }
 
@@ -264,17 +235,34 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   transition: rotate 100ms;
 
-  /* if we are dragging, hide description and rotate */
+  /* if we are dragging, rotate */
   &.isDragging {
     /* box shadow */
     box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
     rotate: 5deg;
     cursor: grabbing;
+  }
+`
 
-    .description {
-      grid-template-rows: 0fr !important;
-      padding-top: 0 !important;
-    }
+export const Header = styled.div`
+  width: 100%;
+  height: 20px;
+  padding: 0px 4px;
+  display: grid;
+  grid-template-columns: 0 auto;
+  grid-template-rows: 1;
+  gap: 4px;
+
+  transition: grid-template-columns 200ms;
+
+  span {
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .shot {
+    ${Theme.labelLarge}
   }
 `
 
@@ -284,7 +272,6 @@ interface StyledThumbnailProps {}
 export const Thumbnail = styled.div<StyledThumbnailProps>`
   position: relative;
   display: flex;
-  padding: 2px;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
@@ -321,18 +308,34 @@ export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
   z-index: 100;
   gap: 4px;
+
+  position: absolute;
+  left: 2px;
+  right: 2px;
+
+  &.header {
+    top: 2px;
+  }
+
+  &.footer {
+    bottom: 2px;
+  }
 `
 
 // little tags inside the thumbnail
-export const Title = styled.span`
+export const Tag = styled.span`
+  --size: 28px;
+  max-height: var(--size);
+  min-height: var(--size);
+  min-width: var(--size);
+  padding: 2px;
+
   display: flex;
-  padding: 4px;
-  gap: 4px;
   align-items: center;
-  min-height: 28px;
+  justify-content: center;
+  gap: 4px;
   overflow: hidden;
 
   span:not(.icon) {
@@ -342,17 +345,13 @@ export const Title = styled.span`
     text-align: right;
     /* font size etc */
     ${Theme.labelMedium}
+    padding-right: 2px;
   }
 
   border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container-high);
   /* opacity transition for loading styles */
   transition: opacity var(--loading-transition);
-
-  &.status,
-  &.description {
-    min-width: 28px;
-  }
 
   .icon {
     font-size: 20px;
@@ -363,22 +362,6 @@ export const Title = styled.span`
       direction: rtl;
       unicode-bidi: plaintext;
     }
-  }
-`
-
-export const Description = styled.div`
-  /* use the 1 row grid animation trick */
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--hover-transition), padding var(--hover-transition);
-  max-height: 42%;
-
-  span {
-    word-break: break-all;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* font size etc */
-    ${Theme.labelMedium}
   }
 `
 
