@@ -161,7 +161,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         }}
       >
         <Styled.Thumbnail
-          className="thumbnail"
+          className={clsx('thumbnail', { loading: isLoading })}
           tabIndex={isDraggable ? 0 : undefined}
           onKeyDown={(e) => {
             if (!isDraggable) return
@@ -183,25 +183,25 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
           />
 
-          <Styled.Row className="row">
+          <Styled.Row className="row loading-visible">
             {/* top left */}
             {!hideTitles && (
-              <Styled.Title className="inner-card title">
+              <Styled.Title className={clsx('inner-card title', { loading: isLoading })}>
                 {titleIcon && <Icon icon={titleIcon} />}
                 {title && <span className="inner-text">{title}</span>}
               </Styled.Title>
             )}
             {/* top right icon */}
             {!hideIcons && (
-              <Styled.Title className="inner-card status">
+              <Styled.Title className={clsx('inner-card status', { loading: isLoading })}>
                 {icon && <Icon icon={icon} style={{ color: iconColor }} />}
               </Styled.Title>
             )}
           </Styled.Row>
-          <Styled.Row className="row">
+          <Styled.Row className="row loading-visible">
             {/* bottom left */}
             {!hideTitles && (
-              <Styled.Title className="inner-card subTitle">
+              <Styled.Title className={clsx('inner-card subTitle', { loading: isLoading })}>
                 <span className="inner-text">{subTitle}</span>
                 {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
               </Styled.Title>
@@ -214,7 +214,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
             {/* bottom right assignees */}
             {!!assignees?.length && (
-              <Styled.Title className="inner-card assignees">
+              <Styled.Title className={clsx('inner-card assignees', { loading: isLoading })}>
                 <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
               </Styled.Title>
             )}
