@@ -176,7 +176,11 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       >
         {header && (
           <Styled.Header className="header">
-            {path && <span className="path">... / {path} / </span>}
+            {path && (
+              <div className="expander">
+                <span className="path">... / {path} / </span>
+              </div>
+            )}
             <span className="shot">{header}</span>
           </Styled.Header>
         )}

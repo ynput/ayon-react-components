@@ -3,6 +3,16 @@ import { EntityCardProps } from './EntityCard'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
 
+const showFullPath = css`
+  /* show full path */
+  .header .expander {
+    grid-template-columns: 1fr;
+    .path {
+      padding-right: 4px;
+    }
+  }
+`
+
 interface StyledEntityCardProps {
   $variant?: EntityCardProps['variant']
 }
@@ -11,10 +21,7 @@ const cardHoverStyles = css`
   background-color: var(--md-sys-color-surface-container-high-hover);
   box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high-hover);
 
-  /* show full path */
-  .header {
-    grid-template-columns: auto 1fr;
-  }
+  ${showFullPath}
 `
 const blueTitleStyles = css`
   .inner-card {
@@ -128,10 +135,7 @@ export const Card = styled.div<StyledEntityCardProps>`
       background-color: var(--selection-color-active);
     }
 
-    /* show full path */
-    .header {
-      grid-template-columns: auto 1fr;
-    }
+    ${showFullPath}
 
     &.isDraggable {
       &:focus-visible,
@@ -248,12 +252,21 @@ export const Header = styled.div`
   width: 100%;
   height: 20px;
   padding: 0px 4px;
-  display: grid;
-  grid-template-columns: 0 auto;
-  grid-template-rows: 1;
-  gap: 4px;
+  display: flex;
 
-  transition: grid-template-columns 200ms;
+  /* CSS trick to expand width with transition */
+  .expander {
+    display: grid;
+    grid-template-columns: 0fr;
+    transition: grid-template-columns 130ms;
+    overflow: hidden;
+  }
+
+  .path {
+    min-width: 0;
+    padding-right: 0px;
+    transition: padding-right 130ms;
+  }
 
   span {
     word-break: break-all;
