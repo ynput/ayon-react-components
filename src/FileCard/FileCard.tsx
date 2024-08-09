@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Icon, IconType } from '../Icon'
 import { Spacer } from '../Layout/Spacer'
 import * as Styled from './FileCard.styled'
+import clsx from 'clsx'
 
 export const getFileSizeString = (size: number) => {
   // get file size in kb, mb, gb
@@ -85,7 +86,12 @@ export const FileCard: FC<FileCardProps> = ({
   const typeIcon = getMimeTypeIcon(type)
 
   return (
-    <Styled.FileCard $isFetching={isFetching} {...props} $message={message} $first={index === 0}>
+    <Styled.FileCard
+      className={clsx({ loading: isFetching }, props.className)}
+      {...props}
+      $message={message}
+      $first={index === 0}
+    >
       {preview ? (
         <img src={preview} className="preview image" />
       ) : (

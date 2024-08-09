@@ -1,5 +1,4 @@
 import styled, { css, keyframes } from 'styled-components'
-import getShimmerStyles from '../helpers/getShimmerStyles'
 import { Button } from '../Button'
 import { ButtonProps } from '../Button/Button.styled'
 
@@ -17,7 +16,6 @@ const messageAnimation = keyframes`
 `
 
 interface FileCardProps {
-  $isFetching: boolean
   $message?: string
   $first?: boolean
 }
@@ -57,23 +55,6 @@ export const FileCard = styled.div<FileCardProps>`
     object-fit: cover;
     border-radius: 4px;
   }
-
-  ${({ $isFetching }) =>
-    $isFetching &&
-    css`
-      user-select: none;
-      pointer-events: none;
-
-      & > * {
-        opacity: 0.5;
-      }
-
-      ${getShimmerStyles(undefined, undefined, {
-        // random number between 0.2 and 1.5
-        delay: Math.random() * (1.5 - 0.2) + 0.2,
-        speed: 1,
-      })}
-    `}
 
   ${({ $message, $first }) =>
     $message &&

@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components'
 import { EntityCardProps } from './EntityCard'
-import getShimmerStyles from '../helpers/getShimmerStyles'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
 
@@ -161,15 +160,6 @@ export const Card = styled.div<StyledEntityCardProps>`
     }
   }
 
-  ${getShimmerStyles(
-    'var(--md-sys-color-surface-container-high)',
-    'var(--md-sys-color-surface-container-highest)',
-    {
-      opacity: 0.5,
-      speed: 1.5,
-    },
-  )}
-
   &::after {
     transition: opacity var(--loading-transition);
   }
@@ -199,19 +189,10 @@ export const Card = styled.div<StyledEntityCardProps>`
       opacity: 1;
       min-width: 50%;
       position: relative;
-      /* shimmer */
-      ${getShimmerStyles(
-        'var(--md-sys-color-surface-container-high)',
-        'var(--md-sys-color-surface-container-highest)',
-        {
-          opacity: 0.5,
-          speed: 1.5,
-        },
-      )}
 
       &.status,
-            &.notification,
-            &.assignees {
+      &.notification,
+      &.assignees {
         min-width: 28px;
       }
       /* hide all text and icons */
