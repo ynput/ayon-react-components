@@ -41,7 +41,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   --selection-color-text: var(--md-sys-color-on-primary-container);
   --primary-color: var(--md-sys-color-primary);
 
-  &.isHover {
+  &.hover {
     --hover-transition: 0ms;
   }
 
@@ -96,7 +96,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   /* for keyboard selection when in dragging mode */
-  &.isDraggable {
+  &.draggable {
     &:has(:focus-visible),
     &:focus-visible {
       ${cardHoverStyles}
@@ -120,7 +120,7 @@ export const Card = styled.div<StyledEntityCardProps>`
       background-color: var(--selection-color-active);
     }
 
-    &.isDraggable {
+    &.draggable {
       &:focus-visible,
       &:has(:focus-visible) {
         background-color: var(--selection-color);
@@ -171,13 +171,13 @@ export const Card = styled.div<StyledEntityCardProps>`
     }
   }
 
-  &.isError {
+  &.error {
     &,
     &:hover {
       background-color: var(--md-sys-color-error-container);
     }
 
-    &.isDraggable {
+    &.draggable {
       &:focus-visible,
       &:has(:focus-visible) {
         background-color: var(--md-sys-color-error-container);
@@ -219,7 +219,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   transition: rotate 100ms;
 
   /* if we are dragging, rotate */
-  &.isDragging {
+  &.dragging {
     /* box shadow */
     box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
     rotate: 5deg;

@@ -114,13 +114,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         ref={ref}
         className={clsx(
           {
-            isActive,
             isLoading,
-            isError,
+            active: isActive,
+            error: isError,
+            hover: isHover,
+            dragging: isDragging,
+            draggable: isDraggable,
             disabled,
-            isHover,
-            isDragging,
-            isDraggable,
             variant,
           },
           'entity-card',
