@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components'
-import { EntityCardProps } from './EntityCard'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
 
@@ -11,29 +10,24 @@ const showFullPath = css`
   }
 `
 
-interface StyledEntityCardProps {
-  $variant?: EntityCardProps['variant']
-}
+const boxShadowSizes = `inset 0 0 0 2px`
 
 const cardHoverStyles = css`
   background-color: var(--md-sys-color-surface-container-high-hover);
-  box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high-hover);
+  box-shadow: ${boxShadowSizes} var(--md-sys-color-surface-container-high-hover);
 
   .header .expander {
     ${showFullPath}
   }
 `
-const blueTitleStyles = css`
-  .inner-card {
-    background-color: var(--selection-color);
-  }
-  &:hover .inner-card {
-    background-color: var(--selection-color-hover);
-  }
-`
 
-export const Card = styled.div<StyledEntityCardProps>`
-  --hover-transition: 150ms;
+type CardProps = {
+  $statusColor?: string
+}
+
+export const Card = styled.div<CardProps>`
+  --hover-duration: 150ms;
+  --hover-transition: var(--hover-duration);
   --selection-color: var(--md-sys-color-primary-container);
   --selection-color-hover: var(--md-sys-color-primary-container-hover);
   --selection-color-active: var(--md-sys-color-primary-container-active);
@@ -61,21 +55,6 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   padding: 2px;
 
-  /* thumbnail variant no padding */
-  ${({ $variant }) =>
-    $variant === 'thumbnail' &&
-    css`
-      padding: 0;
-
-      /* lighten thumbnail */
-      &:hover .thumbnail::after {
-        transition-duration: var(--hover-transition);
-        transition-delay: 0;
-        background-color: white;
-        opacity: 0.2;
-      }
-    `}
-
   flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
@@ -84,7 +63,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   /* style */
   border-radius: var(--border-radius-xxl);
   background-color: var(--md-sys-color-surface-container-high);
-  box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high);
+  box-shadow: ${boxShadowSizes} var(--md-sys-color-surface-container-high);
 
   &:hover {
     ${cardHoverStyles}
@@ -110,7 +89,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     /* show drag handle cursor */
     cursor: grab;
 
-    box-shadow: inset 0 0 0 2px var(--primary-color);
+    box-shadow: ${boxShadowSizes} var(--primary-color);
 
     &:hover {
       background-color: var(--selection-color-hover);
@@ -125,9 +104,6 @@ export const Card = styled.div<StyledEntityCardProps>`
         background-color: var(--selection-color);
       }
     }
-
-    /* $variant = 'basic' titles are blue */
-    ${({ $variant }) => $variant === 'basic' && blueTitleStyles}
   }
 
   .users {
@@ -186,6 +162,59 @@ export const Card = styled.div<StyledEntityCardProps>`
     /* fade out text */
     .row > * > * {
       opacity: 0.5;
+    }
+  }
+
+  /* VARIANT */
+  &.status {
+    /* change bg colour and box shadow color */
+    box-shadow: ${boxShadowSizes} ${(props) => props.$statusColor};
+    background-color: ${(props) => props.$statusColor};
+
+    .status {
+      background-color: ${(props) => props.$statusColor};
+      /* targets label and icon */
+      span {
+        color: var(--md-sys-color-inverse-on-surface) !important;
+      }
+    }
+
+    /* on hover show status label */
+    &:hover,
+    &.active {
+      .status-label.expander {
+        padding: 0 2px;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &.active {
+      .thumbnail {
+        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+      }
+
+      .row-bottom {
+        .tag {
+          background-color: ${(props) => props.$statusColor};
+        }
+        .users .user-image {
+          border-color: ${(props) => props.$statusColor};
+        }
+
+        /* priority icon */
+        .icon {
+          color: var(--md-sys-color-inverse-on-surface) !important;
+        }
+      }
+      /* expand status full width */
+      /* hide icon */
+      .status {
+        border-radius: 0px;
+        width: 100%;
+        bottom: 0;
+        min-height: calc(var(--size) + 4px);
+        max-height: calc(var(--size) + 4px);
+      }
     }
   }
 
@@ -273,10 +302,8 @@ export const Header = styled.div`
   }
 `
 
-interface StyledThumbnailProps {}
-
 // THUMBNAIL
-export const Thumbnail = styled.div<StyledThumbnailProps>`
+export const Thumbnail = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -288,6 +315,7 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   z-index: 50;
 
   border-radius: var(--border-radius-xl);
+  transition: border-radius var(--hover-duration);
   background-color: var(--md-sys-color-surface-container);
 `
 
@@ -327,7 +355,10 @@ export const Row = styled.div`
   }
 
   &.row-bottom {
-    bottom: 2px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 2px;
   }
 `
 
@@ -344,8 +375,10 @@ export const Tag = styled.span`
   justify-content: center;
   gap: 4px;
   overflow: hidden;
+  z-index: 10;
+  transition: all var(--hover-duration);
 
-  span:not(.icon) {
+  &.title span:not(.icon) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -355,15 +388,8 @@ export const Tag = styled.span`
     padding-right: 2px;
   }
 
-  &:not(:has(.icon)) span {
+  &:not(:has(.icon)) {
     padding: 0 2px;
-  }
-
-  /* center status always */
-  &.status {
-    position: absolute;
-    left: 50%;
-    translate: -50% 0;
   }
 
   border-radius: var(--border-radius-l);
@@ -377,6 +403,38 @@ export const Tag = styled.span`
     .inner-text {
       direction: rtl;
       unicode-bidi: plaintext;
+    }
+  }
+`
+
+export const StatusWrapper = styled.div`
+  z-index: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  min-height: calc(var(--size) + 4px);
+  max-height: calc(var(--size) + 4px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  .status {
+    transition: all var(--hover-duration);
+    position: relative;
+    bottom: 2px;
+    gap: 0px;
+
+    /* CSS trick to expand width with transition */
+    .status-label.expander {
+      padding: 0;
+      display: grid;
+      grid-template-columns: 0fr;
+      transition: all 130ms;
+      span {
+        overflow: hidden;
+      }
     }
   }
 `

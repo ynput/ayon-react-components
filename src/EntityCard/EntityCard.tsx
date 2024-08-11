@@ -61,7 +61,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isDragging?: boolean
   isDraggable?: boolean
   disabled?: boolean
-  variant?: 'thumbnail' | 'basic' | 'full'
+  variant?: 'default' | 'status'
+  isCollapsed?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -87,7 +88,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isError = false,
       isHover = false,
       disabled = false,
-      variant = 'full',
+      variant = 'default',
+      isCollapsed = false,
       isDragging = false,
       isDraggable = false,
       onThumbnailKeyDown,
@@ -96,17 +98,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     },
     ref,
   ) => {
-    const notificationIcon = notification && notifications[notification]
-
-    // variants
-    const hideIcons = variant === 'basic' || variant === 'thumbnail'
-    const hideTitles = variant === 'thumbnail'
-
     // check thumbnail image
     const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
     // check first and second user images
     const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
       useUserImagesLoader(users)
+    const statusBGColor = variant === 'status' && status?.color ? status.color : undefined
 
     return (
       <Styled.Card
@@ -121,12 +118,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             dragging: isDragging,
             draggable: isDraggable,
             disabled,
-            variant,
+            collapsed: isCollapsed,
           },
           'entity-card',
+          variant,
           props.className,
         )}
-        $variant={variant}
+        $statusColor={statusBGColor}
         tabIndex={0}
         onClick={(e) => {
           onActivate && onActivate()
@@ -175,14 +173,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           {/* TOP ROW */}
           <Styled.Row className="row row-top">
             {/* top left */}
-            <Styled.Tag className={clsx('inner-card title', { loading: isLoading })}>
+            <Styled.Tag className={clsx('tag title', { loading: isLoading })}>
               {titleIcon && <Icon icon={titleIcon} />}
               {title && <span className="inner-text">{title}</span>}
             </Styled.Tag>
 
             {/* top right */}
             {isPlayable && (
-              <Styled.Tag className={clsx('inner-card playable', { loading: isLoading })}>
+              <Styled.Tag className={clsx('tag playable', { loading: isLoading })}>
                 <Icon icon={'play_circle'} />
               </Styled.Tag>
             )}
@@ -192,7 +190,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom left - users */}
             {users && (
               <Styled.Tag
-                className={clsx('inner-card users', { loading: isLoading || isUserImagesLoading })}
+                className={clsx('tag users', { loading: isLoading || isUserImagesLoading })}
               >
                 <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.5} max={2} />
               </Styled.Tag>
@@ -200,16 +198,19 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
             {/* bottom center - status */}
             {status && (
-              <Styled.Tag className={clsx('inner-card status', { loading: isLoading })}>
-                <Icon icon={status.icon} style={{ color: status.color }} />
-              </Styled.Tag>
+              <Styled.StatusWrapper>
+                <Styled.Tag className={clsx('tag status', { loading: isLoading })}>
+                  <Icon icon={status.icon} style={{ color: status.color }} />
+                  <span className="expander status-label">
+                    <span>{status.label}</span>
+                  </span>
+                </Styled.Tag>
+              </Styled.StatusWrapper>
             )}
-
-            {/* bottom right - notification */}
 
             {/* bottom right - priority */}
             {priority && (
-              <Styled.Tag className={clsx('inner-card', { loading: isLoading })}>
+              <Styled.Tag className={clsx('tag', { loading: isLoading })}>
                 <Icon icon={priority.icon} />
               </Styled.Tag>
             )}

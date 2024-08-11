@@ -138,7 +138,6 @@ const LoadingTemplate = (props: EntityCardProps) => {
 
 export const Default: Story = {
   args: {
-    variant: 'full',
     notification: undefined,
     disabled: false,
     ...initData,
@@ -146,9 +145,21 @@ export const Default: Story = {
   render: LoadingTemplate,
 }
 
+export const TaskStatus: Story = {
+  args: {
+    variant: 'status',
+    notification: undefined,
+    disabled: false,
+    ...initData,
+    header: undefined,
+    path: undefined,
+    // isActive: true,
+  },
+  render: LoadingTemplate,
+}
+
 export const NoImage: Story = {
   args: {
-    variant: 'full',
     notification: undefined,
     disabled: false,
     ...initData,
@@ -161,7 +172,6 @@ export const NoImage: Story = {
 export const Grid: Story = {
   args: {
     ...initData,
-    variant: 'full',
     notification: undefined,
     disabled: false,
   },
