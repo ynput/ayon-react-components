@@ -5,11 +5,9 @@ import * as Theme from '../theme'
 
 const showFullPath = css`
   /* show full path */
-  .header .expander {
-    grid-template-columns: 1fr;
-    .path {
-      padding-right: 4px;
-    }
+  grid-template-columns: 1fr;
+  .path {
+    padding-right: 4px;
   }
 `
 
@@ -21,7 +19,9 @@ const cardHoverStyles = css`
   background-color: var(--md-sys-color-surface-container-high-hover);
   box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high-hover);
 
-  ${showFullPath}
+  .header .expander {
+    ${showFullPath}
+  }
 `
 const blueTitleStyles = css`
   .inner-card {
@@ -239,6 +239,11 @@ export const Header = styled.div`
     grid-template-columns: 0fr;
     transition: grid-template-columns 130ms;
     overflow: hidden;
+
+    /* always show path */
+    &.show {
+      ${showFullPath}
+    }
   }
 
   .path {
@@ -343,6 +348,13 @@ export const Tag = styled.span`
 
   &:not(:has(.icon)) span {
     padding: 0 2px;
+  }
+
+  /* center status always */
+  &.status {
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
   }
 
   border-radius: var(--border-radius-l);

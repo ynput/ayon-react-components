@@ -43,6 +43,7 @@ export type PriorityType = {
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: string // top header
   path?: string // top header
+  showPath?: boolean // always show path
   title?: string // top left
   titleIcon?: IconType // top left
   isPlayable?: boolean // top right - play icon
@@ -70,6 +71,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     {
       header,
       path,
+      showPath,
       title = '',
       titleIcon,
       isPlayable,
@@ -141,7 +143,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         {header && (
           <Styled.Header className="header">
             {path && (
-              <div className="expander">
+              <div className={clsx('expander', { show: showPath })}>
                 <span className="path">... / {path} / </span>
               </div>
             )}
