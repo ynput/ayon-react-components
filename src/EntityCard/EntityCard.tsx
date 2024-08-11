@@ -51,8 +51,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   priority?: PriorityType // bottom right
   imageUrl?: string
   imageAlt?: string
-  icon?: IconType
-  iconColor?: string
+  imageIcon?: IconType
   notification?: NotificationType
   isActive?: boolean
   isLoading?: boolean
@@ -79,8 +78,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       priority,
       imageUrl,
       imageAlt,
-      icon,
-      iconColor,
+      imageIcon,
       notification,
       isActive = false,
       isLoading = false,
@@ -164,7 +162,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         >
           {/* middle Icon */}
           <Styled.NoImageIcon
-            icon={titleIcon || 'image'}
+            icon={imageIcon || 'image'}
             className={clsx('no-image', { loading: isThumbnailLoading })}
           />
 

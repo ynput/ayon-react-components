@@ -42,8 +42,6 @@ const initData: DataProps = {
   status: statuses.approved,
   priority: priorities.urgent,
   imageUrl: getRandomImage(),
-  icon: 'visibility',
-  iconColor: '#FF982E',
 }
 
 const Template = (props: EntityCardProps) => {
