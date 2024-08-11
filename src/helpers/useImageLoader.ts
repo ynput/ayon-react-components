@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useImageLoader = (imageUrl: string | null | undefined, force = false) => {
+const useImageLoader = (imageUrl: string | null | undefined) => {
   const [isError, setIsError] = useState(false)
   const [isLoading, setIsLoading] = useState(!!imageUrl)
 
@@ -18,7 +18,7 @@ const useImageLoader = (imageUrl: string | null | undefined, force = false) => {
     // Function to fetch image and check status code
     const fetchImage = async () => {
       try {
-        const response = await fetch(imageUrl, { cache: force ? 'force-cache' : 'default' })
+        const response = await fetch(imageUrl, { cache: 'force-cache' })
         if (response.status === 200) {
           setLoadingStates(false, false)
         } else {
