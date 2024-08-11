@@ -341,6 +341,10 @@ export const Tag = styled.span`
     padding-right: 2px;
   }
 
+  &:not(:has(.icon)) span {
+    padding: 0 2px;
+  }
+
   border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container-high);
   /* opacity transition for loading styles */
