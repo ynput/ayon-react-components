@@ -33,7 +33,6 @@ const blueTitleStyles = css`
 `
 
 export const Card = styled.div<StyledEntityCardProps>`
-  --loading-transition: 200ms;
   --hover-transition: 150ms;
   --selection-color: var(--md-sys-color-primary-container);
   --selection-color-hover: var(--md-sys-color-primary-container-hover);
@@ -52,8 +51,8 @@ export const Card = styled.div<StyledEntityCardProps>`
   position: relative;
 
   /* size */
-  min-width: 208px;
   height: auto;
+  min-height: 110px;
 
   aspect-ratio: 16 / 9;
   &:has(.header) {
@@ -131,15 +130,6 @@ export const Card = styled.div<StyledEntityCardProps>`
     ${({ $variant }) => $variant === 'basic' && blueTitleStyles}
   }
 
-  &::after {
-    transition: opacity var(--loading-transition);
-  }
-
-  /* transition text/icons opacity for loading */
-  .row > span > * {
-    transition: opacity var(--loading-transition);
-  }
-
   .users {
     background-color: unset;
     border-radius: 14px;
@@ -152,22 +142,12 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   &.isLoading {
-    /* LOADING ACTIVE */
-    pointer-events: none;
-    /* title card loading styles */
     .row > span {
       &.status,
       &.notification,
       &.users {
         min-width: 28px;
       }
-    }
-  }
-
-  &:not(.isLoading) {
-    /* LOADING FINISHED */
-    &::after {
-      opacity: 0;
     }
   }
 
@@ -207,13 +187,6 @@ export const Card = styled.div<StyledEntityCardProps>`
     .row > * > * {
       opacity: 0.5;
     }
-
-    /* fade out image */
-    .thumbnail {
-      ::after {
-        opacity: 0.75;
-      }
-    }
   }
 
   transition: rotate 100ms;
@@ -224,6 +197,42 @@ export const Card = styled.div<StyledEntityCardProps>`
     box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
     rotate: 5deg;
     cursor: grabbing;
+  }
+
+  container-name: card;
+  container-type: inline-size;
+  /* use container query for when the card gets smaller */
+  @container card (inline-size < 150px) {
+    .playable {
+      display: none;
+    }
+    .title {
+      .icon {
+        display: none;
+      }
+      .inner-text {
+        padding: 0 2px;
+      }
+    }
+  }
+  @container card (inline-size < 100px) {
+    .playable {
+      display: none;
+    }
+    /* hide title text but show icon */
+    .title {
+      .icon {
+        display: block;
+      }
+      .inner-text {
+        display: none;
+      }
+    }
+
+    /* hide status */
+    .status {
+      display: none;
+    }
   }
 `
 
@@ -359,8 +368,6 @@ export const Tag = styled.span`
 
   border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container-high);
-  /* opacity transition for loading styles */
-  transition: opacity var(--loading-transition);
 
   .icon {
     font-size: 20px;

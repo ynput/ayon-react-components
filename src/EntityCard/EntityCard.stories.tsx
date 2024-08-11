@@ -127,7 +127,7 @@ const LoadingTemplate = (props: EntityCardProps) => {
           isError,
           isActive,
         }}
-        style={{ width: 225 }}
+        style={{ width: 210 }}
         {...props}
         {...data}
         onActivate={() => setIsActive(!isActive)}
