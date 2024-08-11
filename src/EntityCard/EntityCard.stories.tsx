@@ -142,7 +142,6 @@ export const Default: Story = {
   args: {
     variant: 'full',
     notification: undefined,
-    isSecondary: false,
     disabled: false,
     ...initData,
   },
@@ -153,7 +152,6 @@ export const NoImage: Story = {
   args: {
     variant: 'full',
     notification: undefined,
-    isSecondary: false,
     disabled: false,
     ...initData,
     imageUrl:
@@ -167,7 +165,6 @@ export const Grid: Story = {
     ...initData,
     variant: 'full',
     notification: undefined,
-    isSecondary: false,
     disabled: false,
   },
   render: LoadingTemplate,

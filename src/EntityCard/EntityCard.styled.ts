@@ -45,15 +45,6 @@ export const Card = styled.div<StyledEntityCardProps>`
     --hover-transition: 0ms;
   }
 
-  /* if $isSecondary, use secondary color */
-  &.isSecondary {
-    --selection-color: var(--md-sys-color-tertiary-container);
-    --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
-    --selection-color-active: var(--md-sys-color-tertiary-container-active);
-    --selection-color-text: var(--md-sys-color-on-tertiary-container);
-    --primary-color: var(--md-sys-color-tertiary);
-  }
-
   /* layout */
   display: flex;
   flex-direction: column;
@@ -113,7 +104,7 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   /* when active, set background color */
-  &.isActive {
+  &.active {
     /* set backgrounds */
     background-color: var(--selection-color);
     color: var(--selection-color-text);
