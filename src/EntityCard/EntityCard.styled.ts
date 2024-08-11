@@ -98,12 +98,6 @@ export const Card = styled.div<StyledEntityCardProps>`
 
   &:hover {
     ${cardHoverStyles}
-
-    &.isFullHighlight {
-      .inner-card {
-        background-color: var(--md-sys-color-surface-container-high-hover);
-      }
-    }
   }
 
   &:active {
@@ -135,8 +129,6 @@ export const Card = styled.div<StyledEntityCardProps>`
       background-color: var(--selection-color-active);
     }
 
-    ${showFullPath}
-
     &.isDraggable {
       &:focus-visible,
       &:has(:focus-visible) {
@@ -146,11 +138,6 @@ export const Card = styled.div<StyledEntityCardProps>`
 
     /* $variant = 'basic' titles are blue */
     ${({ $variant }) => $variant === 'basic' && blueTitleStyles}
-
-    /* isFullHighlight title are blue */
-    &.isFullHighlight {
-      ${blueTitleStyles}
-    }
   }
 
   &::after {
@@ -162,13 +149,14 @@ export const Card = styled.div<StyledEntityCardProps>`
     transition: opacity var(--loading-transition);
   }
 
-  .assignees {
+  .users {
     background-color: unset;
     border-radius: 14px;
     min-width: max-content;
 
     .user-image {
       border-color: var(--md-sys-color-surface-container-high);
+      padding: 0px;
     }
   }
 
@@ -179,7 +167,7 @@ export const Card = styled.div<StyledEntityCardProps>`
     .row > span {
       &.status,
       &.notification,
-      &.assignees {
+      &.users {
         min-width: 28px;
       }
     }
@@ -214,7 +202,7 @@ export const Card = styled.div<StyledEntityCardProps>`
 
       &.status,
       &.notification,
-      &.assignees {
+      &.users {
         min-width: 28px;
       }
     }
@@ -276,6 +264,7 @@ export const Header = styled.div`
 
   .shot {
     ${Theme.labelLarge}
+    flex: 1;
   }
 `
 
@@ -328,11 +317,11 @@ export const Row = styled.div`
   left: 2px;
   right: 2px;
 
-  &.header {
+  &.row-top {
     top: 2px;
   }
 
-  &.footer {
+  &.row-bottom {
     bottom: 2px;
   }
 `

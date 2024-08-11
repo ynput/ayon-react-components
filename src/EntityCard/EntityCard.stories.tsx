@@ -38,14 +38,12 @@ const initData: DataProps = {
   title: 'Lighting',
   titleIcon: 'lightbulb',
   isPlayable: true,
-  assignees: [{ fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() }],
+  users: [{ fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() }],
   status: statuses.approved,
   priority: priorities.urgent,
   imageUrl: getRandomImage(),
   icon: 'visibility',
   iconColor: '#FF982E',
-  isFullHighlight: false,
-  isActiveAnimate: false,
 }
 
 const Template = (props: EntityCardProps) => {
@@ -171,7 +169,6 @@ export const Grid: Story = {
     notification: undefined,
     isSecondary: false,
     disabled: false,
-    isFullHighlight: true,
   },
   render: LoadingTemplate,
 }

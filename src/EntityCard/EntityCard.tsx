@@ -1,8 +1,10 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
 import clsx from 'clsx'
+import useImageLoader from '../helpers/useImageLoader'
+import useUserImagesLoader from './useUserImagesLoader'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -44,7 +46,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string // top left
   titleIcon?: IconType // top left
   isPlayable?: boolean // top right - play icon
-  assignees?: User[] // bottom left
+  users?: User[] // bottom left
   status?: StatusType // bottom center
   priority?: PriorityType // bottom right
   imageUrl?: string
@@ -61,8 +63,6 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isDraggable?: boolean
   disabled?: boolean
   variant?: 'thumbnail' | 'basic' | 'full'
-  isFullHighlight?: boolean
-  isActiveAnimate?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -75,7 +75,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       title = '',
       titleIcon,
       isPlayable,
-      assignees,
+      users,
       status,
       priority,
       imageUrl,
@@ -92,8 +92,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       variant = 'full',
       isDragging = false,
       isDraggable = false,
-      isFullHighlight = false,
-      isActiveAnimate = false,
       onThumbnailKeyDown,
       onActivate,
       ...props
@@ -106,38 +104,11 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const hideIcons = variant === 'basic' || variant === 'thumbnail'
     const hideTitles = variant === 'thumbnail'
 
-    const [isImageError, setIsImageError] = useState(false)
-    const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
-
-    const setLoadingStates = (loading: boolean, error: boolean) => {
-      setIsImageLoading(loading)
-      setIsImageError(error)
-    }
-
-    useEffect(() => {
-      // Reset loaded and error states when src changes
-      setLoadingStates(true, false)
-
-      if (!imageUrl) return setLoadingStates(false, false)
-
-      // Function to fetch image and check status code
-      const fetchImage = async () => {
-        try {
-          const response = await fetch(imageUrl, { cache: 'force-cache' })
-          if (response.status === 200) {
-            setLoadingStates(false, false)
-          } else {
-            throw new Error('Image not OK')
-          }
-        } catch (error) {
-          setLoadingStates(false, true)
-        }
-      }
-
-      if (imageUrl) {
-        fetchImage()
-      }
-    }, [imageUrl])
+    // check thumbnail image
+    const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
+    // check first and second user images
+    const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
+      useUserImagesLoader(users)
 
     return (
       <Styled.Card
@@ -153,8 +124,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             isHover,
             isDragging,
             isDraggable,
-            isFullHighlight,
-            isActiveAnimate,
             variant,
           },
           'entity-card',
@@ -199,15 +168,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           {/* middle Icon */}
           <Styled.NoImageIcon
             icon={titleIcon || 'image'}
-            className={clsx('no-image', { loading: isImageLoading })}
+            className={clsx('no-image', { loading: isThumbnailLoading })}
           />
 
           <Styled.Image
             src={imageUrl}
-            className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
+            className={clsx({ loading: isThumbnailLoading || !imageUrl || isThumbnailError })}
           />
           {/* TOP ROW */}
-          <Styled.Row className="row header">
+          <Styled.Row className="row row-top">
             {/* top left */}
             <Styled.Tag className={clsx('inner-card title', { loading: isLoading })}>
               {titleIcon && <Icon icon={titleIcon} />}
@@ -222,11 +191,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
           </Styled.Row>
           {/* BOTTOM ROW */}
-          <Styled.Row className="row footer">
-            {/* bottom left - assignees */}
-            {assignees && (
-              <Styled.Tag className={clsx('inner-card assignees', { loading: isLoading })}>
-                <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
+          <Styled.Row className="row row-bottom">
+            {/* bottom left - users */}
+            {users && (
+              <Styled.Tag
+                className={clsx('inner-card users', { loading: isLoading || isUserImagesLoading })}
+              >
+                <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.5} max={2} />
               </Styled.Tag>
             )}
 
