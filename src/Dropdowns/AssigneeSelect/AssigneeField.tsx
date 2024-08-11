@@ -2,10 +2,10 @@ import styled, { css } from 'styled-components'
 import { UserImagesStacked } from '../../User/UserImagesStacked'
 import { forwardRef } from 'react'
 import { Icon, IconType } from '../../Icon'
+import clsx from 'clsx'
 
 const FieldStyled = styled.div<{
   disabled?: boolean
-  isMultiple?: boolean
   $align?: 'left' | 'right'
 }>`
   position: relative;
@@ -35,19 +35,17 @@ const FieldStyled = styled.div<{
       opacity: 0.7;
     `}
 
-  ${({ isMultiple }) =>
-    isMultiple &&
-    css`
-      ::before {
-        content: 'Mixed (';
-        margin-right: 4px;
-      }
+  &.multiple {
+    ::before {
+      content: 'Mixed (';
+      margin-right: 4px;
+    }
 
-      ::after {
-        content: ')';
-        margin-left: 4px;
-      }
-    `}
+    ::after {
+      content: ')';
+      margin-left: 4px;
+    }
+  }
 
   ${({ $align }) =>
     $align === 'left' &&
@@ -115,10 +113,12 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       <FieldStyled
         onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
         disabled={disabled}
-        isMultiple={isMultiple && (!disabled || !placeholder)}
         $align={align}
         {...props}
         ref={ref}
+        className={clsx('assignee-field', props.className, {
+          multiple: isMultiple && (!disabled || !placeholder),
+        })}
       >
         {!(disabled && placeholder) ? (
           users.length ? (

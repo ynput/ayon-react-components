@@ -15,12 +15,12 @@ export const AttributeTableRow = styled.div`
   }
 `
 
-export const Title = styled.span`
+export const Title = styled.span<{ $tooltip?: string }>`
   white-space: nowrap;
   position: relative;
 
   /* when tooltip not null */
-  ${({ $tooltip }: { $tooltip?: string }) =>
+  ${({ $tooltip }) =>
     $tooltip &&
     css`
       /* show $tooltip on hover as ::after */

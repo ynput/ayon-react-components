@@ -110,7 +110,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         editable
         align={align}
         style={styleDropdown}
-        width={width}
+        $width={width}
         sortBySelected
       />
     )

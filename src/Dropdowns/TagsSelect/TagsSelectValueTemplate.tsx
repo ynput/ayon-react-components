@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { DefaultValueTemplateProps } from '../Dropdown'
 import * as Styled from './TagsSelect.styled'
 import { type TagsType } from './tags'
+import clsx from 'clsx'
 
 export interface TagsSelectValueTemplateProps extends Omit<DefaultValueTemplateProps, 'children'> {
   tags: TagsType
@@ -19,7 +20,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
       {...props}
       hasError={undefined}
       valueStyle={{ gap: 4, display: 'flex' }}
-      editor={editor}
+      className={clsx({ editor }, props.className)}
     >
       {value?.map((v) => (
         <Styled.Tag

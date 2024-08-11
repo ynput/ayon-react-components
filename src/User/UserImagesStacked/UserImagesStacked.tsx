@@ -2,12 +2,12 @@ import styled from 'styled-components'
 import { UserImage } from '../UserImage'
 import { forwardRef } from 'react'
 
-const StackedStyled = styled.div`
+const StackedStyled = styled.div<{ $gap: number }>`
   position: relative;
   display: flex;
   z-index: 10;
   & > * + * {
-    margin-left: ${({ $gap }: { $gap: number }) => `${$gap}px`};
+    margin-left: ${({ $gap }) => `${$gap}px`};
   }
 `
 
