@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, KeyboardEvent, MouseEvent } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
@@ -65,6 +65,10 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   isCollapsed?: boolean
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
+  // editing options
+  assigneeOptions?: User[]
+  statusOptions?: StatusType[]
+  priorityOptions?: PriorityType[]
 }
 
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
@@ -94,6 +98,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       isDraggable = false,
       onThumbnailKeyDown,
       onActivate,
+      assigneeOptions,
+      statusOptions,
+      priorityOptions,
       ...props
     },
     ref,
@@ -127,14 +134,16 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         $statusColor={statusBGColor}
         tabIndex={0}
         onClick={(e) => {
-          onActivate && onActivate()
+          if (!clickedEditableElement(e)) {
+            onActivate && onActivate()
+          }
           props.onClick && props.onClick(e)
         }}
         onKeyDown={(e) => {
           props.onKeyDown && props.onKeyDown(e)
           if (isDraggable) return
           if (e.code === 'Enter' || e.code === 'Space') {
-            onActivate && onActivate()
+            if (!clickedEditableElement(e)) onActivate && onActivate()
           }
         }}
       >
@@ -190,7 +199,10 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom left - users */}
             {users && (
               <Styled.Tag
-                className={clsx('tag users', { loading: isLoading || isUserImagesLoading })}
+                className={clsx('tag users', {
+                  loading: isLoading || isUserImagesLoading,
+                  editable: assigneeOptions,
+                })}
               >
                 <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.5} max={2} />
               </Styled.Tag>
@@ -198,19 +210,29 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
             {/* bottom center - status */}
             {status && (
-              <Styled.StatusWrapper>
-                <Styled.Tag className={clsx('tag status', { loading: isLoading })}>
-                  {status.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
-                  <span className="expander status-label">
-                    <span>{status.label}</span>
-                  </span>
-                </Styled.Tag>
-              </Styled.StatusWrapper>
+              <Styled.StatusContainer>
+                <div className="status-wrapper">
+                  <Styled.Tag
+                    className={clsx('tag status', {
+                      loading: isLoading,
+
+                      editable: statusOptions,
+                    })}
+                  >
+                    {status.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
+                    <span className="expander status-label">
+                      <span>{status.label}</span>
+                    </span>
+                  </Styled.Tag>
+                </div>
+              </Styled.StatusContainer>
             )}
 
             {/* bottom right - priority */}
             {priority && (
-              <Styled.Tag className={clsx('tag', { loading: isLoading })}>
+              <Styled.Tag
+                className={clsx('tag', { loading: isLoading, editable: priorityOptions })}
+              >
                 <Icon icon={priority.icon} />
               </Styled.Tag>
             )}
@@ -220,3 +242,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     )
   },
 )
+
+// if the element has editable class, then it is editable
+const clickedEditableElement = (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
+  const target = e.target as HTMLElement
+  return target.closest('.editable')
+}

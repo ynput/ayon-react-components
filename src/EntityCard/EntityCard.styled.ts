@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
+import adjustHexBrightness from '../helpers/adjustHexBrightness'
 
 const showFullPath = css`
   /* show full path */
@@ -13,8 +14,8 @@ const showFullPath = css`
 const boxShadowSizes = `inset 0 0 0 2px`
 
 const cardHoverStyles = css`
-  background-color: var(--md-sys-color-surface-container-high-hover);
-  box-shadow: ${boxShadowSizes} var(--md-sys-color-surface-container-high-hover);
+  background-color: var(--default-color-hover);
+  box-shadow: ${boxShadowSizes} var(--default-color-hover);
 
   .header .expander {
     ${showFullPath}
@@ -26,13 +27,17 @@ type CardProps = {
 }
 
 export const Card = styled.div<CardProps>`
+  --size: 28px;
   --hover-duration: 150ms;
   --hover-transition: var(--hover-duration);
-  --selection-color: var(--md-sys-color-primary-container);
-  --selection-color-hover: var(--md-sys-color-primary-container-hover);
-  --selection-color-active: var(--md-sys-color-primary-container-active);
-  --selection-color-text: var(--md-sys-color-on-primary-container);
-  --primary-color: var(--md-sys-color-primary);
+  --default-color: var(--md-sys-color-surface-container-high);
+  --default-color-hover: var(--md-sys-color-surface-container-high-hover);
+  --default-color-active: var(--md-sys-color-surface-container-high-active);
+  --active-color: var(--md-sys-color-primary-container);
+  --active-color-hover: var(--md-sys-color-primary-container-hover);
+  --active-color-active: var(--md-sys-color-primary-container-active);
+  --active-color-text: var(--md-sys-color-on-primary-container);
+  --active-border-color: var(--md-sys-color-primary);
 
   &.hover {
     --hover-transition: 0ms;
@@ -62,20 +67,45 @@ export const Card = styled.div<CardProps>`
   cursor: pointer;
   user-select: none;
 
+  /* change bg color based on variant */
+  &.status {
+    /* change bg colour and box shadow color */
+    --default-color: ${(props) => props.$statusColor};
+
+    --default-color-lighter: ${(props) =>
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, 10) : undefined};
+    --default-color-darker: ${(props) =>
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, -10) : undefined};
+
+    --default-color-hover: var(--default-color-lighter);
+    --default-color-active: ${(props) => props.$statusColor};
+    /* Active is the same as default */
+    --active-color: var(--default-color);
+    --active-color-hover: var(--default-color-hover);
+    --active-color-active: var(--default-color-active);
+    --active-border-color: var(--active-color);
+    &:hover {
+      --active-border-color: var(--active-color-hover);
+    }
+    &:active {
+      --active-border-color: var(--active-color-active);
+    }
+  }
+
   /* style */
   border-radius: var(--border-radius-xxl);
-  background-color: var(--md-sys-color-surface-container-high);
-  box-shadow: ${boxShadowSizes} var(--md-sys-color-surface-container-high);
+  background-color: var(--default-color);
+  box-shadow: ${boxShadowSizes} var(--default-color);
 
   &:hover {
     ${cardHoverStyles}
   }
 
   &:active {
-    background-color: var(--md-sys-color-surface-container-high-active);
+    background-color: var(--default-color-active);
   }
 
-  /* for keyboard selection when in dragging mode */
+  /* for keyboard active when in dragging mode */
   &.draggable {
     &:has(:focus-visible),
     &:focus-visible {
@@ -86,36 +116,25 @@ export const Card = styled.div<CardProps>`
   /* when active, set background color */
   &.active {
     /* set backgrounds */
-    background-color: var(--selection-color);
-    color: var(--selection-color-text);
-    /* show drag handle cursor */
-    cursor: grab;
+    background-color: var(--active-color);
+    color: var(--active-color-text);
 
-    box-shadow: ${boxShadowSizes} var(--primary-color);
+    box-shadow: ${boxShadowSizes} var(--active-border-color);
 
     &:hover {
-      background-color: var(--selection-color-hover);
+      background-color: var(--active-color-hover);
     }
     &:active {
-      background-color: var(--selection-color-active);
+      background-color: var(--active-color-active);
     }
 
     &.draggable {
+      /* show drag handle cursor */
+      cursor: grab;
       &:focus-visible,
       &:has(:focus-visible) {
-        background-color: var(--selection-color);
+        background-color: var(--active-color);
       }
-    }
-  }
-
-  .users {
-    background-color: unset;
-    border-radius: 14px;
-    min-width: max-content;
-
-    .user-image {
-      border-color: var(--md-sys-color-surface-container-high);
-      padding: 0px;
     }
   }
 
@@ -169,15 +188,18 @@ export const Card = styled.div<CardProps>`
 
   /* VARIANT */
   &.status {
-    /* change bg colour and box shadow color */
-    box-shadow: ${boxShadowSizes} ${(props) => props.$statusColor};
-    background-color: ${(props) => props.$statusColor};
-
-    .status {
-      background-color: ${(props) => props.$statusColor};
+    .tag.status {
+      background-color: var(--active-color);
       /* targets label and icon */
       span {
         color: var(--md-sys-color-inverse-on-surface) !important;
+      }
+    }
+
+    /* hover but not active */
+    &:not(.active):hover {
+      .tag.status {
+        background-color: var(--active-color-hover);
       }
     }
 
@@ -197,10 +219,12 @@ export const Card = styled.div<CardProps>`
 
       .row-bottom {
         .tag {
-          background-color: ${(props) => props.$statusColor};
+          background-color: var(--default-color);
         }
-        .users .user-image {
-          border-color: ${(props) => props.$statusColor};
+        .users {
+          .user-image {
+            border-color: var(--default-color);
+          }
         }
 
         /* priority icon */
@@ -210,12 +234,18 @@ export const Card = styled.div<CardProps>`
       }
       /* expand status full width */
       /* hide icon */
-      .status {
+      .status-wrapper {
+        background-color: var(--default-color);
         border-radius: 0px;
         width: 100%;
         bottom: 0;
         min-height: calc(var(--size) + 4px);
         max-height: calc(var(--size) + 4px);
+      }
+
+      &:hover {
+        /* remove shadow (border) hover */
+        box-shadow: ${boxShadowSizes} var(--default-color);
       }
     }
   }
@@ -232,9 +262,13 @@ export const Card = styled.div<CardProps>`
         border-top-right-radius var(--hover-duration) var(--hover-duration),
         border-top-top-radius var(--hover-duration) var(--hover-duration);
     }
+
+    .row.row-bottom {
+      bottom: -1px;
+    }
   }
 
-  transition: rotate 100ms, max-height 150ms, min-height 150ms, aspect-ratio 150ms;
+  transition: rotate 100ms, max-height 150ms, min-height 150ms, aspect-ratio 150ms, box-shadow 150ms;
 
   /* if we are dragging, rotate */
   &.dragging {
@@ -378,12 +412,12 @@ export const Row = styled.div`
     left: 0px;
     right: 0px;
     padding: 2px;
+    transition: bottom var(--hover-transition);
   }
 `
 
 // little tags inside the thumbnail
 export const Tag = styled.span`
-  --size: 28px;
   max-height: var(--size);
   min-height: var(--size);
   min-width: var(--size);
@@ -395,7 +429,6 @@ export const Tag = styled.span`
   gap: 4px;
   overflow: hidden;
   z-index: 10;
-  transition: all var(--hover-duration);
 
   &.title span:not(.icon) {
     overflow: hidden;
@@ -418,15 +451,36 @@ export const Tag = styled.span`
     font-size: 20px;
   }
 
+  /* user image overrides */
+  &.users {
+    padding: 0 1px;
+    background-color: unset;
+    min-width: max-content;
+
+    .user-image {
+      border-color: var(--md-sys-color-surface-container-high);
+      padding: 0px;
+    }
+  }
+
   &.subTitle {
     .inner-text {
       direction: rtl;
       unicode-bidi: plaintext;
     }
   }
+
+  &.tag.editable:hover {
+    background-color: var(--default-color-darker) !important;
+  }
+
+  &.tag.editable.users:hover .user-image {
+    border-color: var(--default-color-darker) !important;
+  }
 `
 
-export const StatusWrapper = styled.div`
+// container is always full width
+export const StatusContainer = styled.div`
   z-index: 0;
   position: absolute;
   left: 0;
@@ -439,12 +493,24 @@ export const StatusWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  .status {
-    transition: all var(--hover-duration);
+
+  /* the wrapper is the element that expands full width */
+  .status-wrapper {
+    max-height: var(--size);
+    min-height: var(--size);
+    min-width: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     position: relative;
     bottom: 2px;
     gap: 0px;
+    border-radius: var(--border-radius-l);
+  }
 
+  .status {
+    gap: 0px;
     /* CSS trick to expand width with transition */
     .status-label.expander {
       padding: 0;

@@ -1,11 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EntityCard, EntityCardProps, StatusType } from '.'
-import { useEffect, useState } from 'react'
+import { EntityCard, EntityCardProps, PriorityType, StatusType } from '.'
+import { MouseEvent, useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
 import { Panel } from '../Panels/Panel'
 import DnDTemplate from './DnD/DnDTemplate'
 import getRandomImage from '../helpers/getRandomImage'
+import styled from 'styled-components'
+import clsx from 'clsx'
+import { allUsers } from '../Dropdowns/helpers'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -25,12 +28,16 @@ const statuses: { [name: string]: StatusType } = {
   omitted: { label: 'Omitted', color: 'rgb(203, 26, 26)', icon: 'block' },
 }
 
-const priorities: { [name: string]: StatusType } = {
+const statusOptions: StatusType[] = Object.values(statuses)
+
+const priorities: { [name: string]: PriorityType } = {
   low: { label: 'Low', color: 'rgb(186, 186, 186)', icon: 'keyboard_arrow_down' },
   medium: { label: 'Medium', color: 'rgb(52, 152, 219)', icon: 'check_indeterminate_small' },
   high: { label: 'High', color: 'rgb(0, 240, 180)', icon: 'keyboard_arrow_up' },
   urgent: { label: 'Critical', color: 'rgb(203, 26, 26)', icon: 'keyboard_double_arrow_up' },
 }
+
+const priorityOptions: PriorityType[] = Object.values(priorities)
 
 const initData: DataProps = {
   header: 'ep103sq002',
@@ -44,29 +51,22 @@ const initData: DataProps = {
   imageUrl: getRandomImage(),
 }
 
-type TemplateProps = DataProps & { collapsible?: boolean }
+type TemplateProps = DataProps
 
-const Template = (props: TemplateProps) => {
+const Template = ({ onActivate, ...props }: TemplateProps) => {
   const [isActive, setIsActive] = useState(false)
-  const [isCollapsed, setIsCollapsed] = useState(false)
   return (
     <div style={{ display: 'flex', gap: 16 }}>
       <div style={{ width: 250 }}>
         <EntityCard
           isActive={isActive}
-          isCollapsed={isCollapsed}
-          onActivate={() => setIsActive(!isActive)}
+          onActivate={() => {
+            setIsActive(!isActive)
+            onActivate && onActivate()
+          }}
           {...props}
         />
       </div>
-      {props.collapsible && (
-        <Button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          icon={isCollapsed ? 'expand_all' : 'collapse_all'}
-        >
-          Collapse Toggle: {isCollapsed ? 'Collapsed' : 'Expanded'}
-        </Button>
-      )}
     </div>
   )
 }
@@ -154,6 +154,65 @@ const LoadingTemplate = (props: EntityCardProps) => {
   )
 }
 
+const StatusWrapper = styled.div`
+  display: flex;
+  gap: 16px;
+`
+
+const StyledCell = styled.div`
+  padding: 8px;
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  &:hover {
+    background-color: var(--md-sys-color-secondary-container);
+    border: 1px solid var(--md-sys-color-outline);
+  }
+  &.selected {
+    background-color: var(--md-sys-color-primary-container);
+    border-color: var(--md-sys-color-primary);
+  }
+`
+
+const StatusTemplate = (props: TemplateProps) => {
+  const [cellSelected, setCellSelected] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const handleCellClick = (e: MouseEvent<HTMLDivElement>) => {
+    // check if the click is editable item
+    const target = e.target as HTMLElement
+    if (target.closest('.editable')) {
+      return
+    }
+    setCellSelected(!cellSelected)
+  }
+
+  let editingProps = {
+    assigneeOptions: props.assigneeOptions,
+    statusOptions: props.statusOptions,
+    priorityOptions: props.priorityOptions,
+  }
+  if (!cellSelected)
+    editingProps = {
+      assigneeOptions: undefined,
+      statusOptions: undefined,
+      priorityOptions: undefined,
+    }
+
+  return (
+    <StatusWrapper>
+      <StyledCell onClick={handleCellClick} className={clsx({ selected: cellSelected })}>
+        <Template {...props} isCollapsed={isCollapsed} {...editingProps} />
+      </StyledCell>
+      <Button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        icon={isCollapsed ? 'expand_all' : 'collapse_all'}
+      >
+        Collapse Toggle: {isCollapsed ? 'Collapsed' : 'Expanded'}
+      </Button>
+    </StatusWrapper>
+  )
+}
+
 export const Default: Story = {
   args: {
     notification: undefined,
@@ -169,11 +228,24 @@ export const TaskStatus: Story = {
     notification: undefined,
     disabled: false,
     ...initData,
+    isPlayable: false,
     header: undefined,
     path: undefined,
-    isActive: true,
+    isDraggable: false,
   },
-  render: (args) => <Template {...args} collapsible />,
+  render: (args) => <Template {...args} />,
+}
+
+export const ProgressView: Story = {
+  args: {
+    ...TaskStatus.args,
+    variant: 'status',
+    isActive: true,
+    priorityOptions: priorityOptions,
+    assigneeOptions: allUsers,
+    statusOptions: statusOptions,
+  },
+  render: (args) => <StatusTemplate {...args} />,
 }
 
 export const NoImage: Story = {
