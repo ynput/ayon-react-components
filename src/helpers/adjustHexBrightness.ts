@@ -1,4 +1,4 @@
-import rgbToHsl from './rgbToHSL'
+import rgbToHsl from './rgbToHsl'
 import validateHexColor from './validateHexColor'
 import validateRGB from './validateRgb'
 
