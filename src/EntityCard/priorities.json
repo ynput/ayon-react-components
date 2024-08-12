@@ -1,0 +1,27 @@
+[
+  {
+    "label": "Critical",
+    "color": "rgb(203, 26, 26)",
+    "icon": "keyboard_double_arrow_up",
+    "name": "urgent"
+  },
+
+  {
+    "label": "High",
+    "color": "rgb(0, 240, 180)",
+    "icon": "keyboard_arrow_up",
+    "name": "high"
+  },
+  {
+    "label": "Medium",
+    "color": "rgb(52, 152, 219)",
+    "icon": "check_indeterminate_small",
+    "name": "medium"
+  },
+  {
+    "label": "Low",
+    "color": "rgb(186, 186, 186)",
+    "icon": "keyboard_double_arrow_down",
+    "name": "low"
+  }
+]

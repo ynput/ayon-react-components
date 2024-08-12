@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EntityCard, EntityCardProps, PriorityType, StatusType } from '.'
+import { EntityCard, EntityCardProps, PriorityType } from '.'
 import { MouseEvent, useEffect, useState } from 'react'
 import { Toolbar } from '../Layout/Toolbar'
 import { Button } from '../Button'
@@ -9,6 +9,8 @@ import getRandomImage from '../helpers/getRandomImage'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { allUsers } from '../Dropdowns/helpers'
+import prioritiesData from './priorities.json'
+import { randomStatus, statuses } from '../Dropdowns/StatusSelect'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -21,34 +23,26 @@ type Story = StoryObj<typeof EntityCard>
 
 interface DataProps extends EntityCardProps {}
 
-const statuses: { [name: string]: StatusType } = {
-  ready: { label: 'Ready to start', color: 'rgb(186, 186, 186)', icon: 'timer' },
-  progress: { label: 'In progress', color: 'rgb(52, 152, 219)', icon: 'clock_loader_40' },
-  approved: { label: 'Approved', color: 'rgb(0, 240, 180)', icon: 'task_alt' },
-  omitted: { label: 'Omitted', color: 'rgb(203, 26, 26)', icon: 'block' },
-}
+const priorities = prioritiesData as PriorityType[]
 
-const statusOptions: StatusType[] = Object.values(statuses)
+// pick 1 - 3 users randomly from the array
+const randomUsers = allUsers
+  .sort(() => 0.5 - Math.random())
+  .slice(0, Math.floor(Math.random() * 3) + 1)
 
-const priorities: { [name: string]: PriorityType } = {
-  low: { label: 'Low', color: 'rgb(186, 186, 186)', icon: 'keyboard_arrow_down' },
-  medium: { label: 'Medium', color: 'rgb(52, 152, 219)', icon: 'check_indeterminate_small' },
-  high: { label: 'High', color: 'rgb(0, 240, 180)', icon: 'keyboard_arrow_up' },
-  urgent: { label: 'Critical', color: 'rgb(203, 26, 26)', icon: 'keyboard_double_arrow_up' },
-}
-
-const priorityOptions: PriorityType[] = Object.values(priorities)
+const randomPriority = priorities[Math.floor(Math.random() * priorities.length)]
 
 const initData: DataProps = {
   header: 'ep103sq002',
   path: 'ep103',
   title: 'Lighting',
   titleIcon: 'lightbulb',
+  imageIcon: 'lightbulb',
   isPlayable: true,
-  users: [{ fullName: 'John Doe', name: 'john', avatarUrl: getRandomImage() }],
-  status: statuses.approved,
-  priority: priorities.urgent,
-  imageUrl: getRandomImage(),
+  users: randomUsers,
+  status: randomStatus,
+  priority: randomPriority,
+  imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
 }
 
 type TemplateProps = DataProps
@@ -177,6 +171,18 @@ const StatusTemplate = (props: TemplateProps) => {
   const [cellSelected, setCellSelected] = useState(false)
   const [isCollapsed, setIsCollapsed] = useState(false)
 
+  const [selectedUsers, setSelectedUsers] = useState(props.users?.map((u) => u.name) || [])
+  const [selectedStatus, setSelectedStatus] = useState(props.status?.name)
+  const [selectedPriority, setSelectedPriority] = useState(props.priority?.name)
+
+  const handleChange = (change: any, key: string) => {
+    console.log('changed:', change, key)
+  }
+
+  const users = props.assigneeOptions?.filter((u) => selectedUsers.includes(u.name)) || []
+  const status = statuses.find((s) => s.name === selectedStatus)
+  const priority = priorities.find((p) => p.name === selectedPriority)
+
   const handleCellClick = (e: MouseEvent<HTMLDivElement>) => {
     // check if the click is editable item
     const target = e.target as HTMLElement
@@ -198,17 +204,44 @@ const StatusTemplate = (props: TemplateProps) => {
       priorityOptions: undefined,
     }
 
+  const handleAssigneeChange = (value: string[]) => {
+    setSelectedUsers(value)
+    handleChange(value, 'users')
+  }
+
+  const handleStatusChange = (value: string) => {
+    setSelectedStatus(value)
+    handleChange(value, 'status')
+  }
+
+  const handlePriorityChange = (value: string) => {
+    setSelectedPriority(value)
+    handleChange(value, 'priority')
+  }
+
   return (
     <StatusWrapper>
-      <StyledCell onClick={handleCellClick} className={clsx({ selected: cellSelected })}>
-        <Template {...props} isCollapsed={isCollapsed} {...editingProps} />
-      </StyledCell>
       <Button
         onClick={() => setIsCollapsed(!isCollapsed)}
         icon={isCollapsed ? 'expand_all' : 'collapse_all'}
       >
         Collapse Toggle: {isCollapsed ? 'Collapsed' : 'Expanded'}
       </Button>
+      <StyledCell onClick={handleCellClick} className={clsx({ selected: cellSelected })}>
+        <Template
+          {...props}
+          isCollapsed={isCollapsed}
+          {...editingProps}
+          {...{
+            users,
+            status,
+            priority,
+          }}
+          onAssigneeChange={handleAssigneeChange}
+          onStatusChange={handleStatusChange}
+          onPriorityChange={handlePriorityChange}
+        />
+      </StyledCell>
     </StatusWrapper>
   )
 }
@@ -241,9 +274,9 @@ export const ProgressView: Story = {
     ...TaskStatus.args,
     variant: 'status',
     isActive: true,
-    priorityOptions: priorityOptions,
+    priorityOptions: priorities,
     assigneeOptions: allUsers,
-    statusOptions: statusOptions,
+    statusOptions: statuses,
   },
   render: (args) => <StatusTemplate {...args} />,
 }

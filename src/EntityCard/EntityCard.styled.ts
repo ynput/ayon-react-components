@@ -73,9 +73,9 @@ export const Card = styled.div<CardProps>`
     --default-color: ${(props) => props.$statusColor};
 
     --default-color-lighter: ${(props) =>
-      props.$statusColor ? adjustHexBrightness(props.$statusColor, 10) : undefined};
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, 8) : undefined};
     --default-color-darker: ${(props) =>
-      props.$statusColor ? adjustHexBrightness(props.$statusColor, -10) : undefined};
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, -8) : undefined};
 
     --default-color-hover: var(--default-color-lighter);
     --default-color-active: ${(props) => props.$statusColor};
@@ -540,4 +540,37 @@ export const NoImageIcon = styled(Icon)`
   &.loading {
     opacity: 0;
   }
+`
+
+export const Editor = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 32px;
+
+  display: grid;
+  grid-template-columns: 1fr; /* Single column */
+  grid-template-rows: 1fr;
+
+  .dropdown {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    width: 100%;
+    visibility: hidden;
+    z-index: 0;
+
+    /* hide everything inside */
+    & > * > * {
+      display: none;
+    }
+  }
+`
+
+export const EditorLeaveZone = styled.div`
+  position: absolute;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
+  top: -6px;
 `

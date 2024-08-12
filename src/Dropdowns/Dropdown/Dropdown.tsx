@@ -115,7 +115,7 @@ export interface DropdownRef {
   getElement: () => HTMLDivElement | null
   getOptions: () => HTMLUListElement | null
   open: () => void
-  close: () => void
+  close: (save?: boolean) => void
   toggle: () => void
   isOpen: boolean
 }
@@ -796,11 +796,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         getElement: () => elementRef.current,
         getOptions: () => optionsRef.current,
         open: () => setIsOpen(true),
-        close: () => setIsOpen(false),
+        close: (save) => (save ? handleClose() : setIsOpen(false)),
         toggle: () => setIsOpen(!isOpen),
         isOpen,
       }),
-      [elementRef, valueRef, optionsRef, searchRef, isOpen],
+      [elementRef, valueRef, optionsRef, searchRef, isOpen, handleClose, selected],
     )
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
