@@ -116,6 +116,8 @@ export interface DropdownRef {
   getOptions: () => HTMLUListElement | null
   open: () => void
   close: () => void
+  toggle: () => void
+  isOpen: boolean
 }
 
 export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
@@ -795,8 +797,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         getOptions: () => optionsRef.current,
         open: () => setIsOpen(true),
         close: () => setIsOpen(false),
+        toggle: () => setIsOpen(!isOpen),
+        isOpen,
       }),
-      [elementRef, valueRef, optionsRef, searchRef],
+      [elementRef, valueRef, optionsRef, searchRef, isOpen],
     )
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
@@ -876,6 +880,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                     tabIndex={0}
                     ref={searchRef}
                     onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </Styled.Search>
               )}
