@@ -44,11 +44,29 @@ const initData: DataProps = {
   imageUrl: getRandomImage(),
 }
 
-const Template = (props: EntityCardProps) => {
+type TemplateProps = DataProps & { collapsible?: boolean }
+
+const Template = (props: TemplateProps) => {
   const [isActive, setIsActive] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false)
   return (
-    <div style={{ width: 250 }}>
-      <EntityCard {...props} isActive={isActive} onActivate={() => setIsActive(!isActive)} />
+    <div style={{ display: 'flex', gap: 16 }}>
+      <div style={{ width: 250 }}>
+        <EntityCard
+          isActive={isActive}
+          isCollapsed={isCollapsed}
+          onActivate={() => setIsActive(!isActive)}
+          {...props}
+        />
+      </div>
+      {props.collapsible && (
+        <Button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          icon={isCollapsed ? 'expand_all' : 'collapse_all'}
+        >
+          Collapse Toggle: {isCollapsed ? 'Collapsed' : 'Expanded'}
+        </Button>
+      )}
     </div>
   )
 }
@@ -153,9 +171,9 @@ export const TaskStatus: Story = {
     ...initData,
     header: undefined,
     path: undefined,
-    // isActive: true,
+    isActive: true,
   },
-  render: LoadingTemplate,
+  render: (args) => <Template {...args} collapsible />,
 }
 
 export const NoImage: Story = {

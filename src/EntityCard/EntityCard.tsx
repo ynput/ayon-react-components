@@ -200,7 +200,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {status && (
               <Styled.StatusWrapper>
                 <Styled.Tag className={clsx('tag status', { loading: isLoading })}>
-                  <Icon icon={status.icon} style={{ color: status.color }} />
+                  {status.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
                   <span className="expander status-label">
                     <span>{status.label}</span>
                   </span>

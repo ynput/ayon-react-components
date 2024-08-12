@@ -47,6 +47,8 @@ export const Card = styled.div<CardProps>`
   /* size */
   height: auto;
   min-height: 110px;
+  max-height: 170px;
+  width: 100%;
 
   aspect-ratio: 16 / 9;
   &:has(.header) {
@@ -218,7 +220,21 @@ export const Card = styled.div<CardProps>`
     }
   }
 
-  transition: rotate 100ms;
+  /* COLLAPSED (mostly for status variant) */
+  &.collapsed {
+    min-height: 34px;
+    max-height: 34px;
+
+    .thumbnail {
+      border-radius: 0 !important;
+      transition: border-bottom-left-radius var(--hover-duration),
+        border-bottom-right-radius var(--hover-duration),
+        border-top-right-radius var(--hover-duration) var(--hover-duration),
+        border-top-top-radius var(--hover-duration) var(--hover-duration);
+    }
+  }
+
+  transition: rotate 100ms, max-height 150ms, min-height 150ms, aspect-ratio 150ms;
 
   /* if we are dragging, rotate */
   &.dragging {
@@ -315,7 +331,10 @@ export const Thumbnail = styled.div`
   z-index: 50;
 
   border-radius: var(--border-radius-xl);
-  transition: border-radius var(--hover-duration);
+
+  transition: border-bottom-left-radius var(--hover-duration),
+    border-bottom-right-radius var(--hover-duration);
+
   background-color: var(--md-sys-color-surface-container);
 `
 
