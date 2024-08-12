@@ -511,6 +511,9 @@ export const StatusContainer = styled.div`
 
   .status {
     gap: 0px;
+    .status-label {
+      white-space: nowrap;
+    }
     /* CSS trick to expand width with transition */
     .status-label.expander {
       padding: 0;
