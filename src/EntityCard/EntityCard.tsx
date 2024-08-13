@@ -38,6 +38,8 @@ export type PriorityType = {
   name: string
 }
 
+type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
+
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: string // top header
   path?: string // top header
@@ -54,6 +56,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   notification?: NotificationType
   isActive?: boolean
   isLoading?: boolean
+  loadingSections?: Section[]
   isError?: boolean
   isHover?: boolean
   isDragging?: boolean
@@ -92,6 +95,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       notification,
       isActive = false,
       isLoading = false,
+      loadingSections = ['title'],
       isError = false,
       isHover = false,
       disabled = false,
@@ -114,6 +118,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const assigneesEditable = users && assigneeOptions && !!onAssigneeChange
     const statusEditable = status && statusOptions && !!onStatusChange
     const priorityEditable = priority && priorityOptions && !!onPriorityChange
+    const atLeastOneEditable = assigneesEditable || statusEditable || priorityEditable
 
     const priorityDropdownRef = useRef<DropdownRef>(null)
     const assigneesDropdownRef = useRef<DropdownRef>(null)
@@ -164,6 +169,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       useUserImagesLoader(users)
     const statusBGColor = variant === 'status' && status?.color ? status.color : undefined
 
+    const shouldShowTag = (value: any, name: Section) =>
+      (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
+
     return (
       <Styled.Card
         {...props}
@@ -200,14 +208,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         }}
         onMouseLeave={closeEditors}
       >
-        {header && (
-          <Styled.Header className="header">
+        {shouldShowTag(header, 'header') && (
+          <Styled.Header className={'header loading-visible'}>
             {path && (
               <div className={clsx('expander', { show: showPath })}>
                 <span className="path">... / {path} / </span>
               </div>
             )}
-            <span className="shot">{header}</span>
+            <span className="shot">{isLoading ? '' : header}</span>
           </Styled.Header>
         )}
         <Styled.Thumbnail
@@ -235,62 +243,74 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             onMouseEnter={closeEditors}
           />
           {/* TOP ROW */}
-          <Styled.Row className="row row-top">
+          <Styled.Row className="row row-top loading-visible">
             {/* top left */}
-            <Styled.Tag className={clsx('tag title', { loading: isLoading })}>
-              {titleIcon && <Icon icon={titleIcon} />}
-              {title && <span className="inner-text">{title}</span>}
-            </Styled.Tag>
+            {(!isLoading || loadingSections.includes('title')) && (
+              <Styled.Tag className={clsx('tag title', { isLoading })}>
+                {isLoading ? (
+                  'loading card...'
+                ) : (
+                  <>
+                    {titleIcon && <Icon icon={titleIcon} />}
+                    {title && <span className="inner-text">{title}</span>}
+                  </>
+                )}
+              </Styled.Tag>
+            )}
 
             {/* top right */}
             {isPlayable && (
-              <Styled.Tag className={clsx('tag playable', { loading: isLoading })}>
+              <Styled.Tag className={clsx('tag playable')}>
                 <Icon icon={'play_circle'} />
               </Styled.Tag>
             )}
           </Styled.Row>
           {/* BOTTOM ROW */}
-          <Styled.Row className="row row-bottom">
-            {/* EDITORS */}
-            <Styled.EditorLeaveZone className="block-leave" />
+          <Styled.Row className="row row-bottom loading-visible">
+            {atLeastOneEditable && (
+              <>
+                {/* EDITORS */}
+                <Styled.EditorLeaveZone className="block-leave" />
 
-            <Styled.Editor className="editor">
-              {/* assignees dropdown */}
-              {assigneesEditable && (
-                <AssigneeSelect
-                  value={users.map((user) => user.name)}
-                  options={assigneeOptions}
-                  ref={assigneesDropdownRef}
-                  onChange={(value) => onAssigneeChange(value)}
-                />
-              )}
+                <Styled.Editor className="editor">
+                  {/* assignees dropdown */}
+                  {assigneesEditable && (
+                    <AssigneeSelect
+                      value={users.map((user) => user.name)}
+                      options={assigneeOptions}
+                      ref={assigneesDropdownRef}
+                      onChange={(value) => onAssigneeChange(value)}
+                    />
+                  )}
 
-              {statusEditable && (
-                <StatusSelect
-                  value={[status.name]}
-                  options={statusOptions}
-                  ref={statusDropdownRef}
-                  onChange={(value) => onStatusChange(value)}
-                />
-              )}
+                  {statusEditable && (
+                    <StatusSelect
+                      value={[status.name]}
+                      options={statusOptions}
+                      ref={statusDropdownRef}
+                      onChange={(value) => onStatusChange(value)}
+                    />
+                  )}
 
-              {/* priority dropdown */}
-              {priorityEditable && (
-                <Dropdown
-                  value={[priority.name]}
-                  options={priorityOptions}
-                  dataKey="name"
-                  ref={priorityDropdownRef}
-                  onChange={(value) => onPriorityChange(value[0]?.toString())}
-                />
-              )}
-            </Styled.Editor>
+                  {/* priority dropdown */}
+                  {priorityEditable && (
+                    <Dropdown
+                      value={[priority.name]}
+                      options={priorityOptions}
+                      dataKey="name"
+                      ref={priorityDropdownRef}
+                      onChange={(value) => onPriorityChange(value[0]?.toString())}
+                    />
+                  )}
+                </Styled.Editor>
+              </>
+            )}
 
             {/* bottom left - users */}
-            {users && (
+            {shouldShowTag(users, 'users') && (
               <Styled.Tag
                 className={clsx('tag users', {
-                  loading: isLoading || isUserImagesLoading,
+                  isLoading: isUserImagesLoading || isLoading,
                   editable: assigneesEditable,
                 })}
                 onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
@@ -301,34 +321,36 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
 
             {/* bottom center - status */}
-            {status && (
+            {shouldShowTag(status, 'status') && (
               <Styled.StatusContainer>
                 <div className="status-wrapper">
                   <Styled.Tag
                     className={clsx('tag status', {
-                      loading: isLoading,
                       editable: statusEditable,
+                      isLoading,
                     })}
                     onMouseEnter={(e) => handleEditableHover(e, 'status')}
                     onClick={(e) => handleEditableHover(e, 'status')}
                   >
-                    {status.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
-                    <span className="expander status-label">
-                      <span>{status.name}</span>
-                    </span>
+                    {status?.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
+                    {status?.name && (
+                      <span className="expander status-label">
+                        <span>{status.name}</span>
+                      </span>
+                    )}
                   </Styled.Tag>
                 </div>
               </Styled.StatusContainer>
             )}
 
             {/* bottom right - priority */}
-            {priority && (
+            {shouldShowTag(priority, 'priority') && (
               <Styled.Tag
-                className={clsx('tag', { loading: isLoading, editable: priorityEditable })}
+                className={clsx('tag', { editable: priorityEditable, isLoading })}
                 onMouseEnter={(e) => handleEditableHover(e, 'priority')}
                 onClick={(e) => handleEditableHover(e, 'priority')}
               >
-                <Icon icon={priority.icon} />
+                {priority?.icon && <Icon icon={priority.icon} />}
               </Styled.Tag>
             )}
           </Styled.Row>

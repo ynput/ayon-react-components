@@ -92,6 +92,12 @@ export const Card = styled.div<CardProps>`
     }
   }
 
+  &.isLoading {
+    --default-color: var(--md-sys-color-surface-container);
+    --default-color-hover: var(--md-sys-color-surface-container);
+    --default-color-active: var(--md-sys-color-surface-container);
+  }
+
   /* style */
   border-radius: var(--border-radius-xxl);
   background-color: var(--default-color);
@@ -114,7 +120,7 @@ export const Card = styled.div<CardProps>`
   }
 
   /* when active, set background color */
-  &.active {
+  &.active:not(.isLoading) {
     /* set backgrounds */
     background-color: var(--active-color);
     color: var(--active-color-text);
@@ -134,16 +140,6 @@ export const Card = styled.div<CardProps>`
       &:focus-visible,
       &:has(:focus-visible) {
         background-color: var(--active-color);
-      }
-    }
-  }
-
-  &.isLoading {
-    .row > span {
-      &.status,
-      &.notification,
-      &.users {
-        min-width: 28px;
       }
     }
   }
@@ -451,11 +447,18 @@ export const Tag = styled.span`
     font-size: 20px;
   }
 
+  &.isLoading {
+    opacity: 0.2;
+    background-color: var(--md-sys-color-surface-container-high) !important;
+    & > * {
+      visibility: hidden;
+    }
+  }
+
   /* user image overrides */
   &.users {
     padding: 0 1px;
     background-color: unset;
-    min-width: max-content;
 
     .user-image {
       border-color: var(--md-sys-color-surface-container-high);
