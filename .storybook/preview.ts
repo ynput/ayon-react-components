@@ -8,6 +8,8 @@ import '../src/fonts/NunitoSans_10pt-Italic.ttf'
 import '../src/index.scss'
 // import theme
 import '../src/theme/theme.scss'
+// loading shimmer
+import './loadingShimmer.scss'
 
 import AyonTheme from './AyonTheme'
 
