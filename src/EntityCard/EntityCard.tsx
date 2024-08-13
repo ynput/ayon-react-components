@@ -237,11 +237,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             onMouseEnter={closeEditors}
           />
 
-          <Styled.Image
-            src={imageUrl}
-            className={clsx({ loading: isThumbnailLoading || !imageUrl || isThumbnailError })}
-            onMouseEnter={closeEditors}
-          />
+          {imageUrl && (
+            <Styled.Image
+              src={imageUrl}
+              className={clsx({ loading: isThumbnailLoading || isThumbnailError })}
+              onMouseEnter={closeEditors}
+            />
+          )}
           {/* TOP ROW */}
           <Styled.Row className="row row-top loading-visible">
             {/* top left */}
