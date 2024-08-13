@@ -109,6 +109,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
     selected: (string | number)[],
     isOpen: boolean,
   ) => React.ReactNode
+  editor?: boolean
 }
 
 export interface DropdownRef {
@@ -180,6 +181,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       buttonProps,
       activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       startContent,
+      editor,
       ...props
     },
     ref,
@@ -776,7 +778,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const valueTemplateNode = useMemo(() => {
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
-        return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
+        return () => <TagsValueTemplate {...DefaultValueTemplateProps} editor={editor} />
     }, [
       valueTemplate,
       value,

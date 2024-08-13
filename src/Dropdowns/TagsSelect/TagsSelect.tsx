@@ -79,6 +79,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
             tags={tags}
             editor={editor}
             isMultiple={isMultiple}
+            isOpen={o}
           />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (

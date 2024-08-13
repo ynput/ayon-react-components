@@ -69,6 +69,7 @@ export interface DefaultValueTemplateProps
     | 'placeholder'
     | 'clearTooltip'
     | 'clearNullTooltip'
+    | 'editor'
   > {
   displayIcon?: string
   style?: React.CSSProperties
