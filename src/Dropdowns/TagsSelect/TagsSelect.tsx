@@ -79,6 +79,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
             tags={tags}
             editor={editor}
             isMultiple={isMultiple}
+            isOpen={o}
           />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
@@ -110,7 +111,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         editable
         align={align}
         style={styleDropdown}
-        width={width}
+        $width={width}
         sortBySelected
       />
     )

@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import * as Styled from './UserImage.styled'
+import clsx from 'clsx'
 
 const createInitials = (nameData: string) => {
   if (!nameData || typeof nameData !== 'string') return ''
@@ -31,9 +32,8 @@ export const UserImage = forwardRef<HTMLSpanElement, UserImageProps>(
     return (
       <Styled.CircleImage
         style={{ width: size, maxHeight: size, minHeight: size, ...props.style }}
-        $highlight={highlight}
         ref={ref}
-        className={`${className ? className : ''} ${src ? '' : 'initials'} user-image`}
+        className={clsx(className, { initials: !src, highlight }, 'user-image')}
         {...props}
       >
         {src ? <img src={src} /> : <span style={{ fontSize: `${fontSize}px` }}>{initials}</span>}

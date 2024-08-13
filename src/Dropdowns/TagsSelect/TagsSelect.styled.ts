@@ -2,10 +2,10 @@ import styled, { css } from 'styled-components'
 import { DefaultValueTemplate, Dropdown } from '../Dropdown'
 export { DefaultItem } from '../Dropdown/Dropdown.styled'
 
-export const TagSelectDropdown = styled(Dropdown)`
+export const TagSelectDropdown = styled(Dropdown)<{ $width: number }>`
   .options {
     flex-direction: row;
-    width: ${({ width }: { width?: number }) => (width ? `${width}px` : '100%')};
+    width: ${({ $width }) => ($width ? `${$width}px` : '100%')};
     flex-wrap: wrap;
     gap: 4px;
     padding: 4px;
@@ -41,14 +41,12 @@ export const Tag = styled.span`
 export const TagsValueTemplate = styled(DefaultValueTemplate)`
   padding: 0 4px;
 
-  ${({ editor }: { editor?: boolean }) =>
-    !editor &&
-    css`
-      /* remove border */
-      border: none;
-      /* remove icon */
-      .icon {
-        display: none;
-      }
-    `}
+  &.editor {
+    /* remove border */
+    border: none;
+    /* remove icon */
+    .icon {
+      display: none;
+    }
+  }
 `

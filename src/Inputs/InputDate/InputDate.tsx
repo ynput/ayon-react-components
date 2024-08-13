@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import 'react-datepicker/dist/react-datepicker.css'
 import './InputDate.scss'
 
-const StyledInputDate = styled(ReactDatePicker)`
+const StyledInputDate = styled(ReactDatePicker)<{ style?: any }>`
   width: 100%;
 
   color: var(--md-sys-color-on-surface);
@@ -30,7 +30,7 @@ const StyledInputDate = styled(ReactDatePicker)`
   }
 
   /* spread style */
-  ${({ style }: { style?: any }) => style}
+  ${({ style }) => style}
 `
 
 export interface InputDateProps extends ReactDatePickerProps {

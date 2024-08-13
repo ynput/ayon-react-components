@@ -1,52 +1,46 @@
 import styled, { css } from 'styled-components'
-import { EntityCardProps } from './EntityCard'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
+import adjustHexBrightness from '../helpers/adjustHexBrightness'
 
-interface StyledEntityCardProps {
-  $variant?: EntityCardProps['variant']
-}
+const showFullPath = css`
+  /* show full path */
+  grid-template-columns: 1fr;
+  .path {
+    padding-right: 4px;
+  }
+`
+
+const boxShadowSizes = `inset 0 0 0 2px`
 
 const cardHoverStyles = css`
-  background-color: var(--md-sys-color-surface-container-high-hover);
+  background-color: var(--default-color-hover);
+  box-shadow: ${boxShadowSizes} var(--default-color-hover);
 
-  /* hover to show description */
-  .description {
-    grid-template-rows: 1fr;
-    /* transition-delay: 100ms; */
-    padding: 2px;
-    padding-bottom: 0;
-  }
-`
-const blueTitleStyles = css`
-  .inner-card {
-    background-color: var(--selection-color);
-  }
-  &:hover .inner-card {
-    background-color: var(--selection-color-hover);
+  .header .expander {
+    ${showFullPath}
   }
 `
 
-export const Card = styled.div<StyledEntityCardProps>`
-  --loading-transition: 200ms;
-  --hover-transition: 150ms;
-  --selection-color: var(--md-sys-color-primary-container);
-  --selection-color-hover: var(--md-sys-color-primary-container-hover);
-  --selection-color-active: var(--md-sys-color-primary-container-active);
-  --selection-color-text: var(--md-sys-color-on-primary-container);
-  --primary-color: var(--md-sys-color-primary);
+type CardProps = {
+  $statusColor?: string
+}
 
-  &.isHover {
+export const Card = styled.div<CardProps>`
+  --size: 28px;
+  --hover-duration: 150ms;
+  --hover-transition: var(--hover-duration);
+  --default-color: var(--md-sys-color-surface-container-high);
+  --default-color-hover: var(--md-sys-color-surface-container-high-hover);
+  --default-color-active: var(--md-sys-color-surface-container-high-active);
+  --active-color: var(--md-sys-color-primary-container);
+  --active-color-hover: var(--md-sys-color-primary-container-hover);
+  --active-color-active: var(--md-sys-color-primary-container-active);
+  --active-color-text: var(--md-sys-color-on-primary-container);
+  --active-border-color: var(--md-sys-color-primary);
+
+  &.hover {
     --hover-transition: 0ms;
-  }
-
-  /* if $isSecondary, use secondary color */
-  &.isSecondary {
-    --selection-color: var(--md-sys-color-tertiary-container);
-    --selection-color-hover: var(--md-sys-color-tertiary-container-hover);
-    --selection-color-active: var(--md-sys-color-tertiary-container-active);
-    --selection-color-text: var(--md-sys-color-on-tertiary-container);
-    --primary-color: var(--md-sys-color-tertiary);
   }
 
   /* layout */
@@ -56,63 +50,69 @@ export const Card = styled.div<StyledEntityCardProps>`
   position: relative;
 
   /* size */
-  min-width: 208px;
   height: auto;
+  min-height: 110px;
+  max-height: 170px;
+  width: 100%;
+
   aspect-ratio: 16 / 9;
-
-  padding: 2px;
-
-  &,
-  .thumbnail {
-    transition: padding 100ms ease;
-
-    padding: 2px;
-    &.isActive.isActiveAnimate {
-      padding: 4px;
-    }
+  &:has(.header) {
+    aspect-ratio: 16 / 10.5;
   }
 
-  /* thumbnail variant no padding */
-  ${({ $variant }) =>
-    $variant === 'thumbnail' &&
-    css`
-      padding: 0;
-
-      /* lighten thumbnail */
-      &:hover .thumbnail::after {
-        transition-duration: var(--hover-transition);
-        transition-delay: 0;
-        background-color: white;
-        opacity: 0.2;
-      }
-    `}
+  padding: 2px;
 
   flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
   user-select: none;
 
-  /* style */
-  border-radius: var(--border-radius-xxl);
-  background-color: var(--md-sys-color-surface-container-high);
-  box-shadow: inset 0 0 0 2px var(--md-sys-color-surface-container-high);
+  /* change bg color based on variant */
+  &.status {
+    /* change bg colour and box shadow color */
+    --default-color: ${(props) => props.$statusColor};
 
-  &:hover {
-    ${cardHoverStyles}
+    --default-color-lighter: ${(props) =>
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, 8) : undefined};
+    --default-color-darker: ${(props) =>
+      props.$statusColor ? adjustHexBrightness(props.$statusColor, -8) : undefined};
 
-    &.isFullHighlight {
-      .inner-card {
-        background-color: var(--md-sys-color-surface-container-high-hover);
-      }
+    --default-color-hover: var(--default-color-lighter);
+    --default-color-active: ${(props) => props.$statusColor};
+    /* Active is the same as default */
+    --active-color: var(--default-color);
+    --active-color-hover: var(--default-color-hover);
+    --active-color-active: var(--default-color-active);
+    --active-border-color: var(--active-color);
+    &:hover {
+      --active-border-color: var(--active-color-hover);
+    }
+    &:active {
+      --active-border-color: var(--active-color-active);
     }
   }
 
-  &:active {
-    background-color: var(--md-sys-color-surface-container-high-active);
+  &.isLoading {
+    --default-color: var(--md-sys-color-surface-container);
+    --default-color-hover: var(--md-sys-color-surface-container);
+    --default-color-active: var(--md-sys-color-surface-container);
   }
 
-  /* for keyboard selection when in dragging mode */
-  &.isDraggable {
+  /* style */
+  border-radius: var(--border-radius-xxl);
+  background-color: var(--default-color);
+  box-shadow: ${boxShadowSizes} var(--default-color);
+
+  &:hover {
+    ${cardHoverStyles}
+  }
+
+  &:active {
+    background-color: var(--default-color-active);
+  }
+
+  /* for keyboard active when in dragging mode */
+  &.draggable {
     &:has(:focus-visible),
     &:focus-visible {
       ${cardHoverStyles}
@@ -120,110 +120,37 @@ export const Card = styled.div<StyledEntityCardProps>`
   }
 
   /* when active, set background color */
-  &.isActive {
+  &.active:not(.isLoading) {
     /* set backgrounds */
-    background-color: var(--selection-color);
-    color: var(--selection-color-text);
-    /* show drag handle cursor */
-    cursor: grab;
+    background-color: var(--active-color);
+    color: var(--active-color-text);
 
-    box-shadow: inset 0 0 0 2px var(--primary-color);
-
-    /* description stays open */
-    .description {
-      grid-template-rows: 1fr;
-      padding: 2px;
-      padding-bottom: 0;
-      transition-delay: 0;
-    }
+    box-shadow: ${boxShadowSizes} var(--active-border-color);
 
     &:hover {
-      background-color: var(--selection-color-hover);
+      background-color: var(--active-color-hover);
     }
     &:active {
-      background-color: var(--selection-color-active);
+      background-color: var(--active-color-active);
     }
 
-    &.isDraggable {
+    &.draggable {
+      /* show drag handle cursor */
+      cursor: grab;
       &:focus-visible,
       &:has(:focus-visible) {
-        background-color: var(--selection-color);
+        background-color: var(--active-color);
       }
     }
-
-    /* $variant = 'basic' titles are blue */
-    ${({ $variant }) => $variant === 'basic' && blueTitleStyles}
-
-    /* isFullHighlight title are blue */
-    &.isFullHighlight {
-      ${blueTitleStyles}
-    }
   }
 
-  &::after {
-    transition: opacity var(--loading-transition);
-  }
-
-  /* transition text/icons opacity for loading */
-  .row > span > * {
-    transition: opacity var(--loading-transition);
-  }
-
-  .assignees {
-    padding: 1px;
-    border-radius: 14px;
-    min-width: max-content;
-    color: red;
-
-    .user-image {
-      border-color: var(--md-sys-color-surface-container-high);
-    }
-  }
-
-  &.isLoading {
-    /* LOADING ACTIVE */
-    pointer-events: none;
-    /* title card loading styles */
-    .row > span {
-      /* change color of cards */
-      opacity: 1;
-      min-width: 50%;
-      position: relative;
-
-      &.status,
-      &.notification,
-      &.assignees {
-        min-width: 28px;
-      }
-      /* hide all text and icons */
-      & > * {
-        opacity: 0;
-        user-select: none;
-        pointer-events: none;
-      }
-    }
-
-    /* hide description */
-    .description {
-      grid-template-rows: 0fr !important;
-      padding-top: 0 !important;
-    }
-  }
-
-  &:not(.isLoading) {
-    /* LOADING FINISHED */
-    &::after {
-      opacity: 0;
-    }
-  }
-
-  &.isError {
+  &.error {
     &,
     &:hover {
       background-color: var(--md-sys-color-error-container);
     }
 
-    &.isDraggable {
+    &.draggable {
       &:focus-visible,
       &:has(:focus-visible) {
         background-color: var(--md-sys-color-error-container);
@@ -239,7 +166,7 @@ export const Card = styled.div<StyledEntityCardProps>`
 
       &.status,
       &.notification,
-      &.assignees {
+      &.users {
         min-width: 28px;
       }
     }
@@ -253,38 +180,178 @@ export const Card = styled.div<StyledEntityCardProps>`
     .row > * > * {
       opacity: 0.5;
     }
+  }
 
-    /* fade out image */
-    .thumbnail {
-      ::after {
-        opacity: 0.75;
+  /* VARIANT */
+  &.status {
+    .tag.status {
+      background-color: var(--active-color);
+      /* targets label and icon */
+      span {
+        color: var(--md-sys-color-inverse-on-surface) !important;
+      }
+    }
+
+    /* hover but not active */
+    &:not(.active):hover {
+      .tag.status {
+        background-color: var(--active-color-hover);
+      }
+    }
+
+    /* on hover show status label */
+    &:hover,
+    &.active {
+      .status-label.expander {
+        padding: 0 2px;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    &.active {
+      .thumbnail {
+        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+      }
+
+      .row-bottom {
+        .tag {
+          background-color: var(--default-color);
+        }
+        .users {
+          .user-image {
+            border-color: var(--default-color);
+          }
+        }
+
+        /* priority icon */
+        .icon {
+          color: var(--md-sys-color-inverse-on-surface) !important;
+        }
+      }
+      /* expand status full width */
+      /* hide icon */
+      .status-wrapper {
+        background-color: var(--default-color);
+        border-radius: 0px;
+        width: 100%;
+        bottom: 0;
+        min-height: calc(var(--size) + 4px);
+        max-height: calc(var(--size) + 4px);
+      }
+
+      &:hover {
+        /* remove shadow (border) hover */
+        box-shadow: ${boxShadowSizes} var(--default-color);
       }
     }
   }
 
-  transition: rotate 100ms;
+  /* COLLAPSED (mostly for status variant) */
+  &.collapsed {
+    min-height: 34px;
+    max-height: 34px;
 
-  /* if we are dragging, hide description and rotate */
-  &.isDragging {
+    .thumbnail {
+      border-radius: 0 !important;
+      transition: border-bottom-left-radius var(--hover-duration),
+        border-bottom-right-radius var(--hover-duration),
+        border-top-right-radius var(--hover-duration) var(--hover-duration),
+        border-top-top-radius var(--hover-duration) var(--hover-duration);
+    }
+
+    .row.row-bottom {
+      bottom: -1px;
+    }
+  }
+
+  transition: rotate 100ms, max-height 150ms, min-height 150ms, aspect-ratio 150ms, box-shadow 150ms;
+
+  /* if we are dragging, rotate */
+  &.dragging {
     /* box shadow */
     box-shadow: 0 0 20px 0px rgb(0 0 0 / 30%);
     rotate: 5deg;
     cursor: grabbing;
+  }
 
-    .description {
-      grid-template-rows: 0fr !important;
-      padding-top: 0 !important;
+  container-name: card;
+  container-type: inline-size;
+  /* use container query for when the card gets smaller */
+  @container card (inline-size < 150px) {
+    .playable {
+      display: none;
+    }
+    .title {
+      .icon {
+        display: none;
+      }
+      .inner-text {
+        padding: 0 2px;
+      }
+    }
+  }
+  @container card (inline-size < 100px) {
+    .playable {
+      display: none;
+    }
+    /* hide title text but show icon */
+    .title {
+      .icon {
+        display: block;
+      }
+      .inner-text {
+        display: none;
+      }
+    }
+
+    /* hide status */
+    .status {
+      display: none;
     }
   }
 `
 
-interface StyledThumbnailProps {}
+export const Header = styled.div`
+  width: 100%;
+  height: 20px;
+  padding: 0px 4px;
+  display: flex;
+
+  /* CSS trick to expand width with transition */
+  .expander {
+    display: grid;
+    grid-template-columns: 0fr;
+    transition: grid-template-columns 130ms;
+    overflow: hidden;
+
+    /* always show path */
+    &.show {
+      ${showFullPath}
+    }
+  }
+
+  .path {
+    min-width: 0;
+    padding-right: 0px;
+    transition: padding-right 130ms;
+  }
+
+  span {
+    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .shot {
+    ${Theme.labelLarge}
+    flex: 1;
+  }
+`
 
 // THUMBNAIL
-export const Thumbnail = styled.div<StyledThumbnailProps>`
+export const Thumbnail = styled.div`
   position: relative;
   display: flex;
-  padding: 2px;
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
@@ -294,6 +361,10 @@ export const Thumbnail = styled.div<StyledThumbnailProps>`
   z-index: 50;
 
   border-radius: var(--border-radius-xl);
+
+  transition: border-bottom-left-radius var(--hover-duration),
+    border-bottom-right-radius var(--hover-duration);
+
   background-color: var(--md-sys-color-surface-container);
 `
 
@@ -321,41 +392,78 @@ export const Row = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
   z-index: 100;
   gap: 4px;
+
+  position: absolute;
+  left: 2px;
+  right: 2px;
+
+  &.row-top {
+    top: 2px;
+  }
+
+  &.row-bottom {
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 2px;
+    transition: bottom var(--hover-transition);
+  }
 `
 
 // little tags inside the thumbnail
-export const Title = styled.span`
-  display: flex;
-  padding: 4px;
-  gap: 4px;
-  align-items: center;
-  min-height: 28px;
-  overflow: hidden;
+export const Tag = styled.span`
+  max-height: var(--size);
+  min-height: var(--size);
+  min-width: var(--size);
+  padding: 2px;
 
-  span:not(.icon) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  overflow: hidden;
+  z-index: 10;
+
+  &.title span:not(.icon) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     text-align: right;
     /* font size etc */
     ${Theme.labelMedium}
+    padding-right: 2px;
+  }
+
+  &:not(:has(.icon)) {
+    padding: 0 2px;
   }
 
   border-radius: var(--border-radius-l);
   background-color: var(--md-sys-color-surface-container-high);
-  /* opacity transition for loading styles */
-  transition: opacity var(--loading-transition);
-
-  &.status,
-  &.description {
-    min-width: 28px;
-  }
 
   .icon {
     font-size: 20px;
+  }
+
+  &.isLoading {
+    opacity: 0.2;
+    background-color: var(--md-sys-color-surface-container-high) !important;
+    & > * {
+      visibility: hidden;
+    }
+  }
+
+  /* user image overrides */
+  &.users {
+    padding: 0 1px;
+    background-color: unset;
+
+    .user-image {
+      border-color: var(--md-sys-color-surface-container-high);
+      padding: 0px;
+    }
   }
 
   &.subTitle {
@@ -364,21 +472,61 @@ export const Title = styled.span`
       unicode-bidi: plaintext;
     }
   }
+
+  &.tag.editable:hover {
+    background-color: var(--default-color-darker) !important;
+  }
+
+  &.tag.editable.users:hover .user-image {
+    border-color: var(--default-color-darker) !important;
+  }
 `
 
-export const Description = styled.div`
-  /* use the 1 row grid animation trick */
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--hover-transition), padding var(--hover-transition);
-  max-height: 42%;
+// container is always full width
+export const StatusContainer = styled.div`
+  z-index: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  span {
-    word-break: break-all;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* font size etc */
-    ${Theme.labelMedium}
+  min-height: calc(var(--size) + 4px);
+  max-height: calc(var(--size) + 4px);
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  /* the wrapper is the element that expands full width */
+  .status-wrapper {
+    max-height: var(--size);
+    min-height: var(--size);
+    min-width: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: relative;
+    bottom: 2px;
+    gap: 0px;
+    border-radius: var(--border-radius-l);
+  }
+
+  .status {
+    gap: 0px;
+    .status-label {
+      white-space: nowrap;
+    }
+    /* CSS trick to expand width with transition */
+    .status-label.expander {
+      padding: 0;
+      display: grid;
+      grid-template-columns: 0fr;
+      transition: all 130ms;
+      span {
+        overflow: hidden;
+      }
+    }
   }
 `
 
@@ -398,4 +546,37 @@ export const NoImageIcon = styled(Icon)`
   &.loading {
     opacity: 0;
   }
+`
+
+export const Editor = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 32px;
+
+  display: grid;
+  grid-template-columns: 1fr; /* Single column */
+  grid-template-rows: 1fr;
+
+  .dropdown {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+    width: 100%;
+    visibility: hidden;
+    z-index: 0;
+
+    /* hide everything inside */
+    & > * > * {
+      display: none;
+    }
+  }
+`
+
+export const EditorLeaveZone = styled.div`
+  position: absolute;
+  bottom: -6px;
+  left: -6px;
+  right: -6px;
+  top: -6px;
 `

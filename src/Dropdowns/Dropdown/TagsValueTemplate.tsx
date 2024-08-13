@@ -10,7 +10,6 @@ const TagStyled = styled.span`
 
 const TagsValueTemplate: FC<Omit<DefaultValueTemplateProps, 'children'>> = (props) => {
   const { value } = props
-
   return (
     <DefaultValueTemplate
       {...props}

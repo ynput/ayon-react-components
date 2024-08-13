@@ -1,8 +1,13 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, KeyboardEvent, MouseEvent, useRef } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
 import clsx from 'clsx'
+import useImageLoader from '../helpers/useImageLoader'
+import useUserImagesLoader from './useUserImagesLoader'
+import { Dropdown, DropdownRef } from '../Dropdowns/Dropdown'
+import { AssigneeSelect } from '../Dropdowns/AssigneeSelect'
+import { Status, StatusSelect } from '../Dropdowns/StatusSelect'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -26,30 +31,48 @@ const notifications: {
   },
 }
 
+export type PriorityType = {
+  label: string
+  color: string
+  icon: IconType
+  name: string
+}
+
+type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
+
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title?: string
-  titleIcon?: IconType
-  subTitle?: string
-  subTitleIcon?: IconType
-  isPlayable?: boolean // shows subtitle icon
-  description?: string
+  header?: string // top header
+  path?: string // top header
+  showPath?: boolean // always show path
+  title?: string // top left
+  titleIcon?: IconType // top left
+  isPlayable?: boolean // top right - play icon
+  users?: User[] // bottom left
+  status?: Status // bottom center
+  priority?: PriorityType // bottom right
   imageUrl?: string
   imageAlt?: string
-  icon?: IconType
-  iconColor?: string
+  imageIcon?: IconType
   notification?: NotificationType
   isActive?: boolean
-  isSecondary?: boolean
   isLoading?: boolean
+  loadingSections?: Section[]
   isError?: boolean
   isHover?: boolean
   isDragging?: boolean
   isDraggable?: boolean
   disabled?: boolean
-  assignees?: User[]
-  variant?: 'thumbnail' | 'basic' | 'full'
-  isFullHighlight?: boolean
-  isActiveAnimate?: boolean
+  variant?: 'default' | 'status'
+  isCollapsed?: boolean
+  // editing options
+  assigneeOptions?: User[]
+  statusOptions?: Status[]
+  priorityOptions?: PriorityType[]
+  // editing callbacks
+  onAssigneeChange?: (users: string[]) => void
+  onStatusChange?: (status: string) => void
+  onPriorityChange?: (priority: string) => void
+  // other functions
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
 }
@@ -57,74 +80,97 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
   (
     {
+      header,
+      path,
+      showPath,
       title = '',
       titleIcon,
-      subTitleIcon,
       isPlayable,
-      subTitle,
-      description,
+      users,
+      status,
+      priority,
       imageUrl,
       imageAlt,
-      icon,
-      iconColor,
+      imageIcon,
       notification,
       isActive = false,
-      isSecondary = false,
       isLoading = false,
+      loadingSections = ['title'],
       isError = false,
       isHover = false,
       disabled = false,
-      variant = 'full',
+      variant = 'default',
+      isCollapsed = false,
       isDragging = false,
       isDraggable = false,
-      isFullHighlight = false,
-      isActiveAnimate = false,
+      assigneeOptions,
+      statusOptions,
+      priorityOptions,
+      onAssigneeChange,
+      onStatusChange,
+      onPriorityChange,
       onThumbnailKeyDown,
       onActivate,
-      assignees,
       ...props
     },
     ref,
   ) => {
-    const notificationIcon = notification && notifications[notification]
+    const assigneesEditable = users && assigneeOptions && !!onAssigneeChange
+    const statusEditable = status && statusOptions && !!onStatusChange
+    const priorityEditable = priority && priorityOptions && !!onPriorityChange
+    const atLeastOneEditable = assigneesEditable || statusEditable || priorityEditable
 
-    // variants
-    const hideIcons = variant === 'basic' || variant === 'thumbnail'
-    const hideDescription = variant === 'basic' || variant === 'thumbnail'
-    const hideTitles = variant === 'thumbnail'
+    const priorityDropdownRef = useRef<DropdownRef>(null)
+    const assigneesDropdownRef = useRef<DropdownRef>(null)
+    const statusDropdownRef = useRef<DropdownRef>(null)
 
-    const [isImageError, setIsImageError] = useState(false)
-    const [isImageLoading, setIsImageLoading] = useState(!!imageUrl)
+    const dropdownRefs = useRef({
+      priority: priorityDropdownRef,
+      assignees: assigneesDropdownRef,
+      status: statusDropdownRef,
+    })
 
-    const setLoadingStates = (loading: boolean, error: boolean) => {
-      setIsImageLoading(loading)
-      setIsImageError(error)
+    const closeEditors = () => {
+      Object.values(dropdownRefs.current).forEach((r) => {
+        if (r.current?.isOpen) {
+          r.current.close(true)
+        }
+      })
     }
 
-    useEffect(() => {
-      // Reset loaded and error states when src changes
-      setLoadingStates(true, false)
+    const handleEditableHover = (
+      _e: MouseEvent<HTMLSpanElement>,
+      key: 'assignees' | 'priority' | 'status',
+    ) => {
+      const ref = dropdownRefs.current[key].current
+      // get other refs
+      const otherRefs = Object.entries(dropdownRefs.current)
+        .filter(([k]) => k !== key)
+        .map(([key, ref]) => ({ key, ref: ref.current }))
 
-      if (!imageUrl) return setLoadingStates(false, false)
-
-      // Function to fetch image and check status code
-      const fetchImage = async () => {
-        try {
-          const response = await fetch(imageUrl, { cache: 'force-cache' })
-          if (response.status === 200) {
-            setLoadingStates(false, false)
-          } else {
-            throw new Error('Image not OK')
-          }
-        } catch (error) {
-          setLoadingStates(false, true)
+      // check if any other open and close
+      otherRefs.forEach(({ key, ref }) => {
+        if (ref?.isOpen) {
+          const saveOnClose = key === 'assignees'
+          ref.close(saveOnClose)
         }
-      }
+      })
 
-      if (imageUrl) {
-        fetchImage()
+      // open ref
+      if (ref) {
+        ref.open()
       }
-    }, [imageUrl])
+    }
+
+    // check thumbnail image
+    const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
+    // check first and second user images
+    const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
+      useUserImagesLoader(users)
+    const statusBGColor = variant === 'status' && status?.color ? status.color : undefined
+
+    const shouldShowTag = (value: any, name: Section) =>
+      (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
 
     return (
       <Styled.Card
@@ -132,34 +178,46 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         ref={ref}
         className={clsx(
           {
-            isActive,
-            isSecondary,
             isLoading,
-            isError,
+            active: isActive,
+            error: isError,
+            hover: isHover,
+            dragging: isDragging,
+            draggable: isDraggable,
             disabled,
-            isHover,
-            isDragging,
-            isDraggable,
-            isFullHighlight,
-            isActiveAnimate,
+            collapsed: isCollapsed,
           },
           'entity-card',
+          variant,
           props.className,
         )}
-        $variant={variant}
+        $statusColor={statusBGColor}
         tabIndex={0}
         onClick={(e) => {
-          onActivate && onActivate()
+          if (!clickedEditableElement(e)) {
+            onActivate && onActivate()
+          }
           props.onClick && props.onClick(e)
         }}
         onKeyDown={(e) => {
           props.onKeyDown && props.onKeyDown(e)
           if (isDraggable) return
           if (e.code === 'Enter' || e.code === 'Space') {
-            onActivate && onActivate()
+            if (!clickedEditableElement(e)) onActivate && onActivate()
           }
         }}
+        onMouseLeave={closeEditors}
       >
+        {shouldShowTag(header, 'header') && (
+          <Styled.Header className={'header loading-visible'}>
+            {path && (
+              <div className={clsx('expander', { show: showPath })}>
+                <span className="path">... / {path} / </span>
+              </div>
+            )}
+            <span className="shot">{isLoading ? '' : header}</span>
+          </Styled.Header>
+        )}
         <Styled.Thumbnail
           className={clsx('thumbnail', { loading: isLoading })}
           tabIndex={isDraggable ? 0 : undefined}
@@ -174,58 +232,138 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         >
           {/* middle Icon */}
           <Styled.NoImageIcon
-            icon={titleIcon || 'image'}
-            className={clsx('no-image', { loading: isImageLoading })}
+            icon={imageIcon || 'image'}
+            className={clsx('no-image', { loading: isThumbnailLoading })}
+            onMouseEnter={closeEditors}
           />
 
-          <Styled.Image
-            src={imageUrl}
-            className={clsx({ loading: isImageLoading || !imageUrl || isImageError })}
-          />
-
-          <Styled.Row className="row loading-visible">
+          {imageUrl && (
+            <Styled.Image
+              src={imageUrl}
+              className={clsx({ loading: isThumbnailLoading || isThumbnailError })}
+              onMouseEnter={closeEditors}
+            />
+          )}
+          {/* TOP ROW */}
+          <Styled.Row className="row row-top loading-visible">
             {/* top left */}
-            {!hideTitles && (
-              <Styled.Title className={clsx('inner-card title', { loading: isLoading })}>
-                {titleIcon && <Icon icon={titleIcon} />}
-                {title && <span className="inner-text">{title}</span>}
-              </Styled.Title>
+            {(!isLoading || loadingSections.includes('title')) && (
+              <Styled.Tag className={clsx('tag title', { isLoading })}>
+                {isLoading ? (
+                  'loading card...'
+                ) : (
+                  <>
+                    {titleIcon && <Icon icon={titleIcon} />}
+                    {title && <span className="inner-text">{title}</span>}
+                  </>
+                )}
+              </Styled.Tag>
             )}
-            {/* top right icon */}
-            {!hideIcons && (
-              <Styled.Title className={clsx('inner-card status', { loading: isLoading })}>
-                {icon && <Icon icon={icon} style={{ color: iconColor }} />}
-              </Styled.Title>
+
+            {/* top right */}
+            {isPlayable && (
+              <Styled.Tag className={clsx('tag playable')}>
+                <Icon icon={'play_circle'} />
+              </Styled.Tag>
             )}
           </Styled.Row>
-          <Styled.Row className="row loading-visible">
-            {/* bottom left */}
-            {!hideTitles && (
-              <Styled.Title className={clsx('inner-card subTitle', { loading: isLoading })}>
-                <span className="inner-text">{subTitle}</span>
-                {(subTitleIcon || isPlayable) && <Icon icon={subTitleIcon || 'play_circle'} />}
-              </Styled.Title>
+          {/* BOTTOM ROW */}
+          <Styled.Row className="row row-bottom loading-visible">
+            {atLeastOneEditable && (
+              <>
+                {/* EDITORS */}
+                <Styled.EditorLeaveZone className="block-leave" />
+
+                <Styled.Editor className="editor">
+                  {/* assignees dropdown */}
+                  {assigneesEditable && (
+                    <AssigneeSelect
+                      value={users.map((user) => user.name)}
+                      options={assigneeOptions}
+                      ref={assigneesDropdownRef}
+                      onChange={(value) => onAssigneeChange(value)}
+                    />
+                  )}
+
+                  {statusEditable && (
+                    <StatusSelect
+                      value={[status.name]}
+                      options={statusOptions}
+                      ref={statusDropdownRef}
+                      onChange={(value) => onStatusChange(value)}
+                    />
+                  )}
+
+                  {/* priority dropdown */}
+                  {priorityEditable && (
+                    <Dropdown
+                      value={[priority.name]}
+                      options={priorityOptions}
+                      dataKey="name"
+                      ref={priorityDropdownRef}
+                      onChange={(value) => onPriorityChange(value[0]?.toString())}
+                    />
+                  )}
+                </Styled.Editor>
+              </>
             )}
-            {/* bottom right icon */}
-            {notificationIcon && !hideIcons && !assignees?.length && (
-              <Styled.Title className="notification">
-                <Icon icon={notificationIcon?.icon} style={{ color: notificationIcon?.color }} />
-              </Styled.Title>
+
+            {/* bottom left - users */}
+            {shouldShowTag(users, 'users') && (
+              <Styled.Tag
+                className={clsx('tag users', {
+                  isLoading: isUserImagesLoading || isLoading,
+                  editable: assigneesEditable,
+                })}
+                onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
+                onClick={(e) => handleEditableHover(e, 'assignees')}
+              >
+                <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.5} max={2} />
+              </Styled.Tag>
             )}
-            {/* bottom right assignees */}
-            {!!assignees?.length && (
-              <Styled.Title className={clsx('inner-card assignees', { loading: isLoading })}>
-                <UserImagesStacked users={assignees} size={26} gap={-0.5} max={2} />
-              </Styled.Title>
+
+            {/* bottom center - status */}
+            {shouldShowTag(status, 'status') && (
+              <Styled.StatusContainer>
+                <div className="status-wrapper">
+                  <Styled.Tag
+                    className={clsx('tag status', {
+                      editable: statusEditable,
+                      isLoading,
+                    })}
+                    onMouseEnter={(e) => handleEditableHover(e, 'status')}
+                    onClick={(e) => handleEditableHover(e, 'status')}
+                  >
+                    {status?.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
+                    {status?.name && (
+                      <span className="expander status-label">
+                        <span>{status.name}</span>
+                      </span>
+                    )}
+                  </Styled.Tag>
+                </div>
+              </Styled.StatusContainer>
+            )}
+
+            {/* bottom right - priority */}
+            {shouldShowTag(priority, 'priority') && (
+              <Styled.Tag
+                className={clsx('tag', { editable: priorityEditable, isLoading })}
+                onMouseEnter={(e) => handleEditableHover(e, 'priority')}
+                onClick={(e) => handleEditableHover(e, 'priority')}
+              >
+                {priority?.icon && <Icon icon={priority.icon} />}
+              </Styled.Tag>
             )}
           </Styled.Row>
         </Styled.Thumbnail>
-        {description && !hideDescription && (
-          <Styled.Description className="description">
-            <span>{description}</span>
-          </Styled.Description>
-        )}
       </Styled.Card>
     )
   },
 )
+
+// if the element has editable class, then it is editable
+const clickedEditableElement = (e: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>) => {
+  const target = e.target as HTMLElement
+  return target.closest('.editable')
+}

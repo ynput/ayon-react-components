@@ -23,10 +23,7 @@ export const CircleImage = styled.span`
     object-fit: cover;
   }
 
-  /* if highlight true make border green */
-  ${({ $highlight }: { $highlight?: boolean }) =>
-    $highlight &&
-    css`
-      border-color: var(--md-sys-color-tertiary);
-    `}
+  &.highlight {
+    border-color: var(--md-sys-color-tertiary);
+  }
 `
