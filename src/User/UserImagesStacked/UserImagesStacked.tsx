@@ -13,7 +13,7 @@ const StackedStyled = styled.div<{ $gap: number }>`
 
 export interface User {
   avatarUrl?: string
-  fullName?: string
+  fullName?: string | null
   name: string
   self?: boolean
 }
