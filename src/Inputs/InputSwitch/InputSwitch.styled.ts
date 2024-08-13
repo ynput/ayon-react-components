@@ -54,7 +54,7 @@ export const Switch = styled.div`
     /* not check styles */
     input:not(:checked) + .slider {
       background-color: var(--md-sys-color-surface-container-highest);
-      :before {
+      &:before {
         background-color: var(--md-sys-color-on-surface);
       }
 
