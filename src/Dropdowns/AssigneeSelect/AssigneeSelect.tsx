@@ -45,6 +45,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       selectAllKey = '__all__',
       multiSelect = true,
       disabledValues = [],
+      className,
       ...props
     },
     ref,
@@ -80,7 +81,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       ...assigneeProps,
     }
 
-    if (readOnly) return <AssigneeField {...assigneeFieldProps} />
+    if (readOnly) return <AssigneeField {...assigneeFieldProps} className={className} />
 
     const isAllSelected = value.length >= options.length
 
@@ -119,6 +120,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         sortBySelected={sortBySelected}
         selectAllKey={selectAllKey}
         missingValueMessage={'Some users no longer exist. Click to remove.'}
+        className={className}
         {...props}
       />
     )
