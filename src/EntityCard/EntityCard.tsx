@@ -32,8 +32,8 @@ const notifications: {
 }
 
 export type PriorityType = {
-  label: string
-  color: string
+  label?: string
+  color?: string
   icon: IconType
   name: string
 }
