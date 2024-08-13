@@ -44,6 +44,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       onAssigneeFieldClick,
       selectAllKey = '__all__',
       multiSelect = true,
+      disabledValues = [],
       ...props
     },
     ref,
@@ -79,7 +80,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       ...assigneeProps,
     }
 
-    if (readOnly) return <AssigneeField {...props} {...assigneeFieldProps} />
+    if (readOnly) return <AssigneeField {...assigneeFieldProps} />
 
     const isAllSelected = value.length >= options.length
 

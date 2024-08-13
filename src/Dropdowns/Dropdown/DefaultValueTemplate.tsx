@@ -32,14 +32,14 @@ const DefaultValueStyled = styled.div`
 
   .icon.control {
     transition: transform 0.15s;
-    /* scale and opacity goes to 0 when open  */
-    ${({ $isOpen }: { $isOpen: boolean }) =>
-      $isOpen &&
-      css`
-        &:not(#clear):not(#backspace) {
-          transform: rotate(180deg);
-        }
-      `}
+  }
+
+  &.open {
+    .icon.control {
+      &:not(#clear):not(#backspace) {
+        transform: rotate(180deg);
+      }
+    }
   }
 `
 
@@ -69,6 +69,7 @@ export interface DefaultValueTemplateProps
     | 'placeholder'
     | 'clearTooltip'
     | 'clearNullTooltip'
+    | 'editor'
   > {
   displayIcon?: string
   style?: React.CSSProperties
@@ -104,8 +105,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   return (
     <DefaultValueStyled
       style={style}
-      $isOpen={!!isOpen}
-      className={clsx('template-value', className, { error: hasError })}
+      className={clsx('template-value', className, { error: hasError, open: isOpen })}
     >
       {noValue ? (
         <>

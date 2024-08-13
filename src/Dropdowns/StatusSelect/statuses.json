@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Not ready",
+    "icon": "fiber_new",
+    "color": "#434a56",
+    "state": "not_started",
+    "shortName": "NRD"
+  },
+  {
+    "name": "Ready to start",
+    "icon": "timer",
+    "color": "#bababa",
+    "state": "not_started",
+    "shortName": "RDY"
+  },
+  {
+    "name": "In progress",
+    "icon": "play_arrow",
+    "color": "#3498db",
+    "state": "in_progress",
+    "shortName": "PRG"
+  },
+  {
+    "name": "Pending review",
+    "icon": "visibility",
+    "color": "#ff9b0a",
+    "state": "in_progress",
+    "shortName": "RVW"
+  },
+  {
+    "name": "Approved",
+    "icon": "task_alt",
+    "color": "#00f0b4",
+    "state": "done",
+    "shortName": "APP"
+  },
+  {
+    "name": "On hold",
+    "icon": "back_hand",
+    "color": "#fa6e46",
+    "state": "blocked",
+    "shortName": "HLD"
+  },
+  {
+    "name": "Omitted",
+    "icon": "block",
+    "color": "#cb1a1a",
+    "state": "blocked",
+    "shortName": "OMT"
+  }
+]

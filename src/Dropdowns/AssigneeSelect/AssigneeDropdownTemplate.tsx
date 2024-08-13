@@ -55,7 +55,7 @@ export const AssigneeDropdownTemplate = ({
   // SELECT ALL ROW
   if (selectAll && name && selectAll === name) {
     return (
-      <RowStyled {...{ isSelected, onClick }}>
+      <RowStyled {...{ onClick }} className={clsx({ selected: isSelected })}>
         <Icon icon="done_all" />
         {allSelected ? 'Deselect All' : 'Select All'}
       </RowStyled>

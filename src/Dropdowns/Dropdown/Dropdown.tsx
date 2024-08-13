@@ -109,13 +109,16 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
     selected: (string | number)[],
     isOpen: boolean,
   ) => React.ReactNode
+  editor?: boolean
 }
 
 export interface DropdownRef {
   getElement: () => HTMLDivElement | null
   getOptions: () => HTMLUListElement | null
   open: () => void
-  close: () => void
+  close: (save?: boolean) => void
+  toggle: () => void
+  isOpen: boolean
 }
 
 export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
@@ -178,6 +181,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       buttonProps,
       activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       startContent,
+      editor,
       ...props
     },
     ref,
@@ -774,7 +778,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const valueTemplateNode = useMemo(() => {
       if (typeof valueTemplate === 'function') return valueTemplate
       if (valueTemplate === 'tags')
-        return () => <TagsValueTemplate {...DefaultValueTemplateProps} />
+        return () => <TagsValueTemplate {...DefaultValueTemplateProps} editor={editor} />
     }, [
       valueTemplate,
       value,
@@ -794,9 +798,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         getElement: () => elementRef.current,
         getOptions: () => optionsRef.current,
         open: () => setIsOpen(true),
-        close: () => setIsOpen(false),
+        close: (save) => (save ? handleClose() : setIsOpen(false)),
+        toggle: () => setIsOpen(!isOpen),
+        isOpen,
       }),
-      [elementRef, valueRef, optionsRef, searchRef],
+      [elementRef, valueRef, optionsRef, searchRef, isOpen, handleClose, selected],
     )
 
     const isShowOptions = isOpen && options && (pos.y || pos.y === 0) && (!widthExpand || minWidth)
@@ -876,6 +882,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                     tabIndex={0}
                     ref={searchRef}
                     onKeyDown={(e) => e.code === 'Enter' && e.preventDefault()}
+                    onClick={(e) => e.stopPropagation()}
                   />
                 </Styled.Search>
               )}
