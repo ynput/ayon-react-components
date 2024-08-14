@@ -91,7 +91,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       title = '',
       titleIcon,
       isPlayable,
-      users = [],
+      users,
       status,
       statusMiddle,
       priority,
@@ -337,7 +337,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
 
             {/* bottom left - users */}
-            {shouldShowTag(true, 'users') && (
+            {shouldShowTag(users, 'users') && (
               <Styled.Tag
                 className={clsx('tag users', {
                   isLoading: isUserImagesLoading || isLoading,
