@@ -113,13 +113,13 @@ const StatusTemplate = (props: TemplateProps) => {
     handleChange(value, 'users')
   }
 
-  const handleStatusChange = (value: string) => {
-    setSelectedStatus(value)
+  const handleStatusChange = (value: string[]) => {
+    setSelectedStatus(value[0])
     handleChange(value, 'status')
   }
 
-  const handlePriorityChange = (value: string) => {
-    setSelectedPriority(value)
+  const handlePriorityChange = (value: string[]) => {
+    setSelectedPriority(value[0])
     handleChange(value, 'priority')
   }
 
@@ -203,6 +203,7 @@ export const ProgressView: Story = {
     assigneeOptions: allUsers,
     statusOptions: statuses,
     statusMiddle: true,
+    statusNameOnly: true,
   },
   render: (args) => <StatusTemplate {...args} />,
 }

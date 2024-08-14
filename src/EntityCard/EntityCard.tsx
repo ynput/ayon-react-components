@@ -1,4 +1,4 @@
-import { forwardRef, KeyboardEvent, MouseEvent, useRef } from 'react'
+import { forwardRef, KeyboardEvent, MouseEvent, useLayoutEffect, useRef, useState } from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User, UserImagesStacked } from '../User/UserImagesStacked'
@@ -52,6 +52,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   users?: User[] | null // bottom left
   status?: Status // bottom right
   statusMiddle?: boolean // puts status in the center and priority in the bottom right
+  statusNameOnly?: boolean // only show the status name unless it's too small to show, then use icon
   priority?: PriorityType // bottom left after users
   hidePriority?: boolean
   imageUrl?: string
@@ -74,8 +75,8 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   priorityOptions?: PriorityType[]
   // editing callbacks
   onAssigneeChange?: (users: string[]) => void
-  onStatusChange?: (status: string) => void
-  onPriorityChange?: (priority: string) => void
+  onStatusChange?: (status: string[]) => void
+  onPriorityChange?: (priority: string[]) => void
   // other functions
   onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
@@ -94,6 +95,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       users,
       status,
       statusMiddle,
+      statusNameOnly,
       priority,
       hidePriority,
       imageUrl,
@@ -168,6 +170,39 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         ref.open()
       }
     }
+
+    // used to calculate the width of the status and when to hide it
+    const bottomRowRef = useRef<HTMLDivElement>(null)
+    const [statusBreakpoints, setStatusBreakpoints] = useState<{
+      short?: number
+      icon?: number
+    }>({})
+
+    useLayoutEffect(() => {
+      if (!bottomRowRef.current || !status) return
+
+      const container = bottomRowRef.current
+      // calculate how much space things other than status take up
+      const containerPadding = 2
+      const usersWidth =
+        (container.querySelector('.tag.users') as HTMLElement)?.offsetWidth + 12 || 0
+      const priorityWidth =
+        (container.querySelector('.tag.priority') as HTMLElement)?.offsetWidth || 0
+      const takenWidth = usersWidth + priorityWidth + containerPadding * 2
+
+      // calculate the width of the status states
+      const statusTextWidth =
+        (container.querySelector('.tag.status .status-label span') as HTMLElement)?.offsetWidth || 0
+      const statusShortWidth =
+        (container.querySelector('.tag.status .status-short') as HTMLElement)?.offsetWidth || 0
+      const statusIconWidth =
+        (container.querySelector('.tag.status .status-icon') as HTMLElement)?.offsetWidth || 0
+
+      setStatusBreakpoints({
+        short: takenWidth + statusTextWidth,
+        icon: takenWidth + statusShortWidth,
+      })
+    }, [bottomRowRef.current, status])
 
     // check thumbnail image
     const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
@@ -296,6 +331,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               full: statusMiddle,
               ['hide-priority']: hidePriority,
             })}
+            ref={bottomRowRef}
           >
             {atLeastOneEditable && (
               <>
@@ -318,7 +354,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       value={[status.name]}
                       options={statusOptions}
                       ref={statusDropdownRef}
-                      onChange={(value) => onStatusChange(value)}
+                      onChange={(value) => onStatusChange([value])}
                     />
                   )}
 
@@ -329,7 +365,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       options={priorityOptions}
                       dataKey="name"
                       ref={priorityDropdownRef}
-                      onChange={(value) => onPriorityChange(value[0]?.toString())}
+                      onChange={(value) => onPriorityChange(value as string[])}
                     />
                   )}
                 </Styled.Editor>
@@ -369,7 +405,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom center - status */}
             {shouldShowTag(status, 'status') && (
               <Styled.StatusContainer
-                className={clsx('status-container', { middle: statusMiddle })}
+                className={clsx(
+                  'status-container',
+                  {
+                    middle: statusMiddle,
+                    'name-only': statusNameOnly,
+                  },
+                  `variant-${variant}`,
+                )}
+                $breakpoints={statusBreakpoints}
               >
                 <div className="status-wrapper">
                   <Styled.Tag
@@ -380,12 +424,19 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     onMouseEnter={(e) => handleEditableHover(e, 'status')}
                     onClick={(e) => handleEditableHover(e, 'status')}
                   >
-                    {status?.icon && <Icon icon={status.icon} style={{ color: status.color }} />}
+                    {status?.icon && (
+                      <Icon
+                        icon={status.icon}
+                        className="status-icon"
+                        style={{ color: status.color }}
+                      />
+                    )}
                     {status?.name && (
                       <span className="expander status-label">
                         <span>{status.name}</span>
                       </span>
                     )}
+                    {status?.shortName && <span className="status-short">{status.shortName}</span>}
                   </Styled.Tag>
                 </div>
               </Styled.StatusContainer>
@@ -394,7 +445,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* bottom right - priority */}
             {shouldShowTag(priority && !hidePriority, 'priority') && (
               <Styled.Tag
-                className={clsx('tag', { editable: priorityEditable, isLoading })}
+                className={clsx('tag priority', { editable: priorityEditable, isLoading })}
                 onMouseEnter={(e) => handleEditableHover(e, 'priority')}
                 onClick={(e) => handleEditableHover(e, 'priority')}
               >

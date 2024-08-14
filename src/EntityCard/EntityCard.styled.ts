@@ -309,11 +309,6 @@ export const Card = styled.div<CardProps>`
         display: none;
       }
     }
-
-    /* hide status */
-    .status {
-      display: none;
-    }
   }
 `
 
@@ -520,8 +515,15 @@ export const Tag = styled.span`
   }
 `
 
+type StatusProps = {
+  $breakpoints?: {
+    short?: number
+    icon?: number
+  }
+}
+
 // container is always full width
-export const StatusContainer = styled.div`
+export const StatusContainer = styled.div<StatusProps>`
   z-index: 0;
   position: absolute;
   left: 0;
@@ -572,9 +574,67 @@ export const StatusContainer = styled.div`
       padding: 0;
       display: grid;
       grid-template-columns: 0fr;
-      transition: all 130ms;
+      /* transition: all 130ms; */
+      transition: grid-template-columns 130ms, padding 130ms;
       span {
         overflow: hidden;
+      }
+    }
+
+    .status-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+    }
+
+    /* short is only shown when things are too small */
+    .status-short {
+      visibility: hidden;
+      position: absolute;
+    }
+  }
+
+  &.name-only {
+    .status {
+      .status-icon {
+        visibility: hidden;
+        position: absolute;
+      }
+    }
+  }
+
+  & {
+    /* when container gets too small we show different status sizes */
+    container-name: footer;
+    container-type: inline-size;
+  }
+  /* use container query for when the card gets smaller */
+
+  /* SHOW SHORT */
+  @container card (inline-size < ${(props) => props.$breakpoints?.short}px) {
+    .status-wrapper .status.tag {
+      /* hide full label  */
+      .status-label {
+        visibility: hidden;
+        position: absolute;
+      }
+      /* show short */
+      .status-short {
+        visibility: visible;
+        position: relative;
+      }
+    }
+  }
+  /* SHOW ICON */
+  @container card (inline-size < ${(props) => props.$breakpoints?.icon}px) {
+    .status-wrapper .status.tag {
+      /* hide short  */
+      .status-short {
+        visibility: hidden;
+        position: absolute;
+      }
+      /* show icon */
+      .status-icon {
+        visibility: visible;
+        position: relative;
       }
     }
   }
