@@ -63,7 +63,7 @@ const FieldStyled = styled.div<{
 export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement> {
   users: {
     name: string
-    fullName?: string
+    fullName?: string | null
     avatarUrl?: string
   }[]
   value?: (string | number)[]
