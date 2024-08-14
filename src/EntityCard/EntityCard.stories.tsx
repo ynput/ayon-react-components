@@ -32,20 +32,6 @@ const randomUsers = allUsers
 
 const randomPriority = priorities[Math.floor(Math.random() * priorities.length)]
 
-const initData: DataProps = {
-  header: 'ep103sq002',
-  path: 'ep103',
-  project: 'com',
-  title: 'Lighting',
-  titleIcon: 'lightbulb',
-  imageIcon: 'lightbulb',
-  isPlayable: true,
-  users: randomUsers,
-  status: randomStatus,
-  priority: randomPriority,
-  imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
-}
-
 type TemplateProps = DataProps
 
 const Template = ({ onActivate, ...props }: TemplateProps) => {
@@ -162,6 +148,22 @@ const StatusTemplate = (props: TemplateProps) => {
       </StyledCell>
     </StatusWrapper>
   )
+}
+
+const initData: DataProps = {
+  header: 'ep103sq002',
+  path: 'ep103',
+  project: 'com',
+  title: 'Lighting',
+  titleIcon: 'lightbulb',
+  imageIcon: 'lightbulb',
+  isPlayable: true,
+  users: [],
+  // users: allUsers.slice(0, 1),
+  // users: Math.random()  > 0.5 ? randomUsers : [],
+  status: randomStatus,
+  priority: randomPriority,
+  imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
 }
 
 export const Default: Story = {

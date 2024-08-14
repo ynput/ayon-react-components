@@ -8,6 +8,7 @@ import useUserImagesLoader from './useUserImagesLoader'
 import { Dropdown, DropdownRef } from '../Dropdowns/Dropdown'
 import { AssigneeSelect } from '../Dropdowns/AssigneeSelect'
 import { Status, StatusSelect } from '../Dropdowns/StatusSelect'
+import { UserImage } from '../User/UserImage'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
 
@@ -89,7 +90,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       title = '',
       titleIcon,
       isPlayable,
-      users,
+      users = [],
       status,
       statusMiddle,
       priority,
@@ -327,16 +328,32 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
 
             {/* bottom left - users */}
-            {shouldShowTag(users, 'users') && (
+            {shouldShowTag(true, 'users') && (
               <Styled.Tag
                 className={clsx('tag users', {
                   isLoading: isUserImagesLoading || isLoading,
                   editable: assigneesEditable,
+                  empty: !users.length,
                 })}
                 onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
                 onClick={(e) => handleEditableHover(e, 'assignees')}
               >
-                <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.9} max={2} />
+                {users.length ? (
+                  <Styled.Users className={clsx({ more: users.length > 2 })}>
+                    {[...userWithValidatedImages].slice(0, 2).map((user, i) => (
+                      <UserImage
+                        src={user.avatarUrl}
+                        key={i}
+                        name={user.name}
+                        style={{ zIndex: -i }}
+                        fullName={user.fullName || ''}
+                        size={26}
+                      />
+                    ))}
+                  </Styled.Users>
+                ) : (
+                  <Icon icon="person_add" />
+                )}
               </Styled.Tag>
             )}
 

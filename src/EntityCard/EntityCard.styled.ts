@@ -474,8 +474,19 @@ export const Tag = styled.span`
   /* user image overrides */
   &.users {
     padding: 0 1px;
-    background-color: unset;
-    width: 40px;
+    &:not(.empty) {
+      background-color: unset;
+    }
+    width: 34px;
+
+    .icon {
+      font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+    }
+    &:not(.editable) {
+      .icon {
+        opacity: 0.5;
+      }
+    }
 
     .user-image {
       /* border-color: var(--md-sys-color-surface-container-high); */
@@ -561,6 +572,37 @@ export const StatusContainer = styled.div`
       span {
         overflow: hidden;
       }
+    }
+  }
+`
+
+export const Users = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+  & > * + * {
+    margin-left: -18px;
+    background-color: var(--md-sys-color-surface-container);
+  }
+
+  /* add third user ring */
+  &.more {
+    left: -2px;
+    & > * + * {
+      margin-left: -20px;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      bottom: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 100%;
+      background-color: var(--md-sys-color-surface-container-low);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      z-index: -3;
     }
   }
 `
