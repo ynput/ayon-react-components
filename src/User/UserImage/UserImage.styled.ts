@@ -12,8 +12,8 @@ export const CircleImage = styled.span`
   align-items: center;
 
   overflow: hidden;
-  background-color: var(--md-sys-color-surface-container-highest);
-  border: solid 1px var(--md-sys-color-outline);
+  background-color: var(--md-sys-color-surface-container-high);
+  border: solid 1px var(--md-sys-color-outline-variant);
   user-select: none;
   color: var(--md-sys-color-on-surface);
 

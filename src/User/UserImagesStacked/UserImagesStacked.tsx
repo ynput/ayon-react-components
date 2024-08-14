@@ -13,7 +13,7 @@ const StackedStyled = styled.div<{ $gap: number }>`
 
 export interface User {
   avatarUrl?: string
-  fullName?: string
+  fullName?: string | null
   name: string
   self?: boolean
 }
@@ -32,16 +32,17 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
     // limit to 5 users
     const usersToShow = [...users].slice(0, max)
 
+    const extraCount = length - max + 1 // +1 for the user we just removed
+
     // show extras
     if (length > max) {
       // remove last user
       usersToShow.pop()
       // add a +1 user
-      const extraCount = length - max + 1 // +1 for the user we just removed
       const extraString = extraCount > 9 ? '++' : '+ ' + extraCount
       usersToShow.push({
         fullName: extraString,
-        name: extraString,
+        name: 'extra',
       })
     }
 
@@ -56,6 +57,7 @@ export const UserImagesStacked = forwardRef<HTMLDivElement, UserImagesStackedPro
             style={{ zIndex: -i, width: size, height: size, ...userStyle }}
             highlight={self}
             size={size}
+            className={name}
           />
         ))}
       </StackedStyled>

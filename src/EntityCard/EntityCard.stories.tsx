@@ -32,19 +32,6 @@ const randomUsers = allUsers
 
 const randomPriority = priorities[Math.floor(Math.random() * priorities.length)]
 
-const initData: DataProps = {
-  header: 'ep103sq002',
-  path: 'ep103',
-  title: 'Lighting',
-  titleIcon: 'lightbulb',
-  imageIcon: 'lightbulb',
-  isPlayable: true,
-  users: randomUsers,
-  status: randomStatus,
-  priority: randomPriority,
-  imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
-}
-
 type TemplateProps = DataProps
 
 const Template = ({ onActivate, ...props }: TemplateProps) => {
@@ -163,6 +150,20 @@ const StatusTemplate = (props: TemplateProps) => {
   )
 }
 
+const initData: DataProps = {
+  header: 'ep103sq002',
+  path: 'ep103',
+  project: 'com',
+  title: 'Lighting',
+  titleIcon: 'lightbulb',
+  imageIcon: 'lightbulb',
+  isPlayable: true,
+  users: Math.random() > 0.5 ? randomUsers : [],
+  status: randomStatus,
+  priority: randomPriority,
+  imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
+}
+
 export const Default: Story = {
   args: {
     ...initData,
@@ -188,6 +189,7 @@ export const TaskStatus: Story = {
     header: undefined,
     path: undefined,
     isDraggable: false,
+    statusMiddle: true,
   },
   render: (args) => <Template {...args} />,
 }
@@ -200,6 +202,7 @@ export const ProgressView: Story = {
     priorityOptions: priorities,
     assigneeOptions: allUsers,
     statusOptions: statuses,
+    statusMiddle: true,
   },
   render: (args) => <StatusTemplate {...args} />,
 }
@@ -211,6 +214,19 @@ export const NoImage: Story = {
     ...initData,
     imageUrl:
       'http://localhost:3000/api/projects/demo_Commercial/tasks/807fb5901dab11ef95ad0242ac180005/thumbnail?updatedAt=2024-07-12T11:19:27.045329+00:00',
+  },
+  render: Template,
+}
+
+export const Version: Story = {
+  args: {
+    ...initData,
+    title: 'v001',
+    titleIcon: undefined,
+    header: 'animationChar1',
+    priority: undefined,
+    hidePriority: true,
+    users: [allUsers[0]],
   },
   render: Template,
 }

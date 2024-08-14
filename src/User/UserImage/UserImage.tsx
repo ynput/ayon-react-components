@@ -23,7 +23,7 @@ export interface UserImageProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const UserImage = forwardRef<HTMLSpanElement, UserImageProps>(
-  ({ src, name, fullName, size = 30, highlight, className, ...props }, ref) => {
+  ({ src, name, fullName, size = 30, highlight, className, style, ...props }, ref) => {
     const fontSize = Math.round((13 / 30) * size)
     const nameData = fullName || name
 
@@ -31,12 +31,18 @@ export const UserImage = forwardRef<HTMLSpanElement, UserImageProps>(
 
     return (
       <Styled.CircleImage
-        style={{ width: size, maxHeight: size, minHeight: size, ...props.style }}
         ref={ref}
+        style={{ width: size, maxHeight: size, minHeight: size, ...style }}
         className={clsx(className, { initials: !src, highlight }, 'user-image')}
         {...props}
       >
-        {src ? <img src={src} /> : <span style={{ fontSize: `${fontSize}px` }}>{initials}</span>}
+        {src ? (
+          <img src={src} />
+        ) : (
+          <span style={{ fontSize: `${fontSize}px` }} className="initials">
+            {initials}
+          </span>
+        )}
       </Styled.CircleImage>
     )
   },

@@ -6,7 +6,7 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
   value: string[]
   options: {
     name: string
-    fullName?: string
+    fullName?: string | null
     avatarUrl?: string
   }[]
   readOnly?: boolean
