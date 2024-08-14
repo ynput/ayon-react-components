@@ -43,13 +43,15 @@ type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: string // top header
   path?: string // top header
+  project?: string // top header
   showPath?: boolean // always show path
   title?: string // top left
   titleIcon?: IconType // top left
   isPlayable?: boolean // top right - play icon
   users?: User[] // bottom left
-  status?: Status // bottom center
-  priority?: PriorityType // bottom right
+  status?: Status // bottom right
+  statusMiddle?: boolean // puts status in the center and priority in the bottom right
+  priority?: PriorityType // bottom left after users
   imageUrl?: string
   imageAlt?: string
   imageIcon?: IconType
@@ -82,12 +84,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     {
       header,
       path,
+      project,
       showPath,
       title = '',
       titleIcon,
       isPlayable,
       users,
       status,
+      statusMiddle,
       priority,
       imageUrl,
       imageAlt,
@@ -167,7 +171,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     // check first and second user images
     const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
       useUserImagesLoader(users)
-    const statusBGColor = variant === 'status' && status?.color ? status.color : undefined
 
     const shouldShowTag = (value: any, name: Section) =>
       (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
@@ -191,7 +194,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           variant,
           props.className,
         )}
-        $statusColor={statusBGColor}
+        $statusColor={status?.color}
         tabIndex={0}
         onClick={(e) => {
           if (!clickedEditableElement(e)) {
@@ -212,7 +215,22 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           <Styled.Header className={'header loading-visible'}>
             {path && (
               <div className={clsx('expander', { show: showPath })}>
-                <span className="path">... / {path} / </span>
+                <div className="path">
+                  {project && (
+                    <>
+                      <span>{project}</span>
+                      <span className="slash">/</span>
+                    </>
+                  )}
+                  {path && (
+                    <>
+                      <span>...</span>
+                      <span className="slash">/</span>
+                      <span>{path}</span>
+                      <span className="slash">/</span>
+                    </>
+                  )}
+                </div>
               </div>
             )}
             <span className="shot">{isLoading ? '' : header}</span>
@@ -245,7 +263,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             />
           )}
           {/* TOP ROW */}
-          <Styled.Row className="row row-top loading-visible">
+          <Styled.Row className="row row-top loading-visible full">
             {/* top left */}
             {(!isLoading || loadingSections.includes('title')) && (
               <Styled.Tag className={clsx('tag title', { isLoading })}>
@@ -268,7 +286,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
           </Styled.Row>
           {/* BOTTOM ROW */}
-          <Styled.Row className="row row-bottom loading-visible">
+          <Styled.Row className={clsx('row row-bottom loading-visible', { full: statusMiddle })}>
             {atLeastOneEditable && (
               <>
                 {/* EDITORS */}
@@ -318,13 +336,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
                 onClick={(e) => handleEditableHover(e, 'assignees')}
               >
-                <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.5} max={2} />
+                <UserImagesStacked users={userWithValidatedImages} size={26} gap={-0.9} max={2} />
               </Styled.Tag>
             )}
 
             {/* bottom center - status */}
             {shouldShowTag(status, 'status') && (
-              <Styled.StatusContainer>
+              <Styled.StatusContainer
+                className={clsx('status-container', { middle: statusMiddle })}
+              >
                 <div className="status-wrapper">
                   <Styled.Tag
                     className={clsx('tag status', {

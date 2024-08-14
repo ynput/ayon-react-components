@@ -35,6 +35,7 @@ const randomPriority = priorities[Math.floor(Math.random() * priorities.length)]
 const initData: DataProps = {
   header: 'ep103sq002',
   path: 'ep103',
+  project: 'com',
   title: 'Lighting',
   titleIcon: 'lightbulb',
   imageIcon: 'lightbulb',
@@ -188,6 +189,7 @@ export const TaskStatus: Story = {
     header: undefined,
     path: undefined,
     isDraggable: false,
+    statusMiddle: true,
   },
   render: (args) => <Template {...args} />,
 }
@@ -200,6 +202,7 @@ export const ProgressView: Story = {
     priorityOptions: priorities,
     assigneeOptions: allUsers,
     statusOptions: statuses,
+    statusMiddle: true,
   },
   render: (args) => <StatusTemplate {...args} />,
 }

@@ -7,7 +7,7 @@ const showFullPath = css`
   /* show full path */
   grid-template-columns: 1fr;
   .path {
-    padding-right: 4px;
+    padding-right: 2px;
   }
 `
 
@@ -38,6 +38,7 @@ export const Card = styled.div<CardProps>`
   --active-color-active: var(--md-sys-color-primary-container-active);
   --active-color-text: var(--md-sys-color-on-primary-container);
   --active-border-color: var(--md-sys-color-primary);
+  --status-color: ${(props) => props.$statusColor};
 
   &.hover {
     --hover-transition: 0ms;
@@ -70,7 +71,7 @@ export const Card = styled.div<CardProps>`
   /* change bg color based on variant */
   &.status {
     /* change bg colour and box shadow color */
-    --default-color: ${(props) => props.$statusColor};
+    --default-color: var(--status-color);
 
     --default-color-lighter: ${(props) =>
       props.$statusColor ? adjustHexBrightness(props.$statusColor, 8) : undefined};
@@ -184,14 +185,6 @@ export const Card = styled.div<CardProps>`
 
   /* VARIANT */
   &.status {
-    .tag.status {
-      background-color: var(--active-color);
-      /* targets label and icon */
-      span {
-        color: var(--md-sys-color-inverse-on-surface) !important;
-      }
-    }
-
     /* hover but not active */
     &:not(.active):hover {
       .tag.status {
@@ -237,6 +230,19 @@ export const Card = styled.div<CardProps>`
         bottom: 0;
         min-height: calc(var(--size) + 4px);
         max-height: calc(var(--size) + 4px);
+        justify-content: flex-end;
+        padding-right: 2px;
+      }
+
+      .status-container {
+        padding-right: 0px;
+
+        &.middle {
+          .status-wrapper {
+            justify-content: center;
+            padding-right: 0px;
+          }
+        }
       }
 
       &:hover {
@@ -321,7 +327,7 @@ export const Header = styled.div`
   .expander {
     display: grid;
     grid-template-columns: 0fr;
-    transition: grid-template-columns 130ms;
+    transition: grid-template-columns 80ms ease;
     overflow: hidden;
 
     /* always show path */
@@ -331,12 +337,14 @@ export const Header = styled.div`
   }
 
   .path {
+    display: flex;
+    gap: 2px;
     min-width: 0;
     padding-right: 0px;
     transition: padding-right 130ms;
   }
 
-  span {
+  span:not(.slash) {
     word-break: break-all;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -391,7 +399,15 @@ export const Image = styled.img`
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+
+  justify-content: flex-start;
+  &.full {
+    justify-content: space-between;
+    .tag.users {
+      width: fit-content;
+    }
+  }
+
   z-index: 100;
   gap: 4px;
 
@@ -423,7 +439,7 @@ export const Tag = styled.span`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  overflow: hidden;
+  /* overflow: hidden; */
   z-index: 10;
 
   &.title span:not(.icon) {
@@ -459,10 +475,17 @@ export const Tag = styled.span`
   &.users {
     padding: 0 1px;
     background-color: unset;
+    width: 40px;
 
     .user-image {
-      border-color: var(--md-sys-color-surface-container-high);
+      /* border-color: var(--md-sys-color-surface-container-high); */
       padding: 0px;
+
+      &.extra .initials {
+        font-size: 12px;
+        position: relative;
+        right: -5px;
+      }
     }
   }
 
@@ -494,7 +517,12 @@ export const StatusContainer = styled.div`
   max-height: calc(var(--size) + 4px);
 
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-right: 2px;
+  &.middle {
+    padding-right: 0px;
+    justify-content: center;
+  }
   align-items: flex-end;
 
   /* the wrapper is the element that expands full width */
@@ -514,6 +542,13 @@ export const StatusContainer = styled.div`
 
   .status {
     gap: 0px;
+
+    background-color: var(--status-color);
+    /* targets label and icon */
+    span {
+      color: var(--md-sys-color-inverse-on-surface) !important;
+    }
+
     .status-label {
       white-space: nowrap;
     }
