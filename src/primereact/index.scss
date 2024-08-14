@@ -109,12 +109,13 @@ $prime-button-background: $color-grey-03;
     }
   }
 
-  &:nth-child(odd) {
-    background: var(--md-sys-color-surface-container-low);
-  }
-
-  &:nth-child(even) {
+  // even background
+  & {
     background: var(--md-sys-color-surface-container-low-hover);
+  }
+  // odd background
+  &.p-row-odd {
+    background: var(--md-sys-color-surface-container-low);
   }
 
   &.p-highlight {
