@@ -49,10 +49,11 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string // top left
   titleIcon?: IconType // top left
   isPlayable?: boolean // top right - play icon
-  users?: User[] // bottom left
+  users?: User[] | null // bottom left
   status?: Status // bottom right
   statusMiddle?: boolean // puts status in the center and priority in the bottom right
   priority?: PriorityType // bottom left after users
+  hidePriority?: boolean
   imageUrl?: string
   imageAlt?: string
   imageIcon?: IconType
@@ -94,6 +95,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       status,
       statusMiddle,
       priority,
+      hidePriority,
       imageUrl,
       imageAlt,
       imageIcon,
@@ -220,12 +222,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                   {project && (
                     <>
                       <span>{project}</span>
-                      <span className="slash">/</span>
+                      <span className="slash" style={{ marginRight: -2 }}>
+                        /
+                      </span>
                     </>
                   )}
                   {path && (
                     <>
-                      <span>...</span>
+                      <span>... </span>
                       <span className="slash">/</span>
                       <span>{path}</span>
                       <span className="slash">/</span>
@@ -287,7 +291,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
           </Styled.Row>
           {/* BOTTOM ROW */}
-          <Styled.Row className={clsx('row row-bottom loading-visible', { full: statusMiddle })}>
+          <Styled.Row
+            className={clsx('row row-bottom loading-visible', {
+              full: statusMiddle,
+              ['hide-priority']: hidePriority,
+            })}
+          >
             {atLeastOneEditable && (
               <>
                 {/* EDITORS */}
@@ -333,12 +342,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 className={clsx('tag users', {
                   isLoading: isUserImagesLoading || isLoading,
                   editable: assigneesEditable,
-                  empty: !users.length,
+                  empty: !users?.length,
                 })}
                 onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
                 onClick={(e) => handleEditableHover(e, 'assignees')}
               >
-                {users.length ? (
+                {users?.length ? (
                   <Styled.Users className={clsx({ more: users.length > 2 })}>
                     {[...userWithValidatedImages].slice(0, 2).map((user, i) => (
                       <UserImage
@@ -383,7 +392,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             )}
 
             {/* bottom right - priority */}
-            {shouldShowTag(priority, 'priority') && (
+            {shouldShowTag(priority && !hidePriority, 'priority') && (
               <Styled.Tag
                 className={clsx('tag', { editable: priorityEditable, isLoading })}
                 onMouseEnter={(e) => handleEditableHover(e, 'priority')}

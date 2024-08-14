@@ -403,6 +403,10 @@ export const Row = styled.div`
   justify-content: flex-start;
   &.full {
     justify-content: space-between;
+  }
+
+  &.full,
+  &.hide-priority {
     .tag.users {
       width: fit-content;
     }
@@ -595,7 +599,7 @@ export const Users = styled.div`
     &:after {
       content: '';
       position: absolute;
-      right: -3px;
+      right: -4px;
       bottom: 0;
       width: 24px;
       height: 24px;

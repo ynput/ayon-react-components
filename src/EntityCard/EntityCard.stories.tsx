@@ -158,9 +158,7 @@ const initData: DataProps = {
   titleIcon: 'lightbulb',
   imageIcon: 'lightbulb',
   isPlayable: true,
-  users: [],
-  // users: allUsers.slice(0, 1),
-  // users: Math.random()  > 0.5 ? randomUsers : [],
+  users: Math.random() > 0.5 ? randomUsers : [],
   status: randomStatus,
   priority: randomPriority,
   imageUrl: Math.random() > 0.5 ? getRandomImage() : undefined,
@@ -216,6 +214,19 @@ export const NoImage: Story = {
     ...initData,
     imageUrl:
       'http://localhost:3000/api/projects/demo_Commercial/tasks/807fb5901dab11ef95ad0242ac180005/thumbnail?updatedAt=2024-07-12T11:19:27.045329+00:00',
+  },
+  render: Template,
+}
+
+export const Version: Story = {
+  args: {
+    ...initData,
+    title: 'v001',
+    titleIcon: undefined,
+    header: 'animationChar1',
+    priority: undefined,
+    hidePriority: true,
+    users: [allUsers[0]],
   },
   render: Template,
 }
