@@ -1,13 +1,21 @@
-import { forwardRef, KeyboardEvent, MouseEvent, useLayoutEffect, useRef, useState } from 'react'
+import {
+  forwardRef,
+  HTMLAttributes,
+  KeyboardEvent,
+  MouseEvent,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { Icon, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
-import { User, UserImagesStacked } from '../User/UserImagesStacked'
+import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
 import useImageLoader from '../helpers/useImageLoader'
 import useUserImagesLoader from './useUserImagesLoader'
-import { Dropdown, DropdownRef } from '../Dropdowns/Dropdown'
-import { AssigneeSelect } from '../Dropdowns/AssigneeSelect'
-import { Status, StatusSelect } from '../Dropdowns/StatusSelect'
+import { Dropdown, DropdownProps, DropdownRef } from '../Dropdowns/Dropdown'
+import { AssigneeSelect, AssigneeSelectProps } from '../Dropdowns/AssigneeSelect'
+import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSelect'
 import { UserImage } from '../User/UserImage'
 
 type NotificationType = 'comment' | 'due' | 'overdue'
@@ -73,13 +81,20 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   assigneeOptions?: User[]
   statusOptions?: Status[]
   priorityOptions?: PriorityType[]
+  editOnHover?: boolean
   // editing callbacks
   onAssigneeChange?: (users: string[]) => void
   onStatusChange?: (status: string[]) => void
   onPriorityChange?: (priority: string[]) => void
   // other functions
-  onThumbnailKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void
   onActivate?: () => void
+  pt?: {
+    thumbnail?: HTMLAttributes<HTMLDivElement>
+    image?: HTMLAttributes<HTMLImageElement>
+    assigneeSelect?: AssigneeSelectProps
+    statusSelect?: StatusSelectProps
+    prioritySelect?: DropdownProps
+  }
 }
 
 export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
@@ -115,11 +130,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       assigneeOptions,
       statusOptions,
       priorityOptions,
+      editOnHover,
       onAssigneeChange,
       onStatusChange,
       onPriorityChange,
-      onThumbnailKeyDown,
       onActivate,
+      pt = {},
       ...props
     },
     ref,
@@ -215,8 +231,11 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
     return (
       <Styled.Card
-        {...props}
         ref={ref}
+        $statusColor={status?.color}
+        tabIndex={0}
+        onMouseLeave={closeEditors}
+        {...props}
         className={clsx(
           {
             isLoading,
@@ -232,8 +251,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           variant,
           props.className,
         )}
-        $statusColor={status?.color}
-        tabIndex={0}
         onClick={(e) => {
           if (!clickedEditableElement(e)) {
             onActivate && onActivate()
@@ -247,7 +264,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             if (!clickedEditableElement(e)) onActivate && onActivate()
           }
         }}
-        onMouseLeave={closeEditors}
       >
         {shouldShowTag(header, 'header') && (
           <Styled.Header className={'header loading-visible'}>
@@ -277,12 +293,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           </Styled.Header>
         )}
         <Styled.Thumbnail
-          className={clsx('thumbnail', { loading: isLoading })}
+          {...pt.thumbnail}
+          className={clsx('thumbnail', { loading: isLoading }, pt?.thumbnail?.className)}
           tabIndex={isDraggable ? 0 : undefined}
           onKeyDown={(e) => {
             if (!isDraggable) return
             e.stopPropagation()
-            onThumbnailKeyDown && onThumbnailKeyDown(e)
+            pt.thumbnail?.onKeyDown && pt.thumbnail?.onKeyDown(e)
             if (e.code === 'Enter' || e.code === 'Space') {
               onActivate && onActivate()
             }
@@ -298,8 +315,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           {imageUrl && (
             <Styled.Image
               src={imageUrl}
-              className={clsx({ loading: isThumbnailLoading || isThumbnailError })}
               onMouseEnter={closeEditors}
+              {...pt.image}
+              className={clsx(
+                { loading: isThumbnailLoading || isThumbnailError },
+                pt?.image?.className,
+              )}
             />
           )}
           {/* TOP ROW */}
@@ -346,6 +367,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       options={assigneeOptions}
                       ref={assigneesDropdownRef}
                       onChange={(value) => onAssigneeChange(value)}
+                      tabIndex={0}
+                      {...pt.assigneeSelect}
                     />
                   )}
 
@@ -355,17 +378,21 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       options={statusOptions}
                       ref={statusDropdownRef}
                       onChange={(value) => onStatusChange([value])}
+                      tabIndex={0}
+                      {...pt.statusSelect}
                     />
                   )}
 
                   {/* priority dropdown */}
                   {priorityEditable && (
                     <Dropdown
-                      value={[priority.name]}
-                      options={priorityOptions}
                       dataKey="name"
                       ref={priorityDropdownRef}
                       onChange={(value) => onPriorityChange(value as string[])}
+                      value={[priority.name]}
+                      options={priorityOptions}
+                      tabIndex={0}
+                      {...pt.prioritySelect}
                     />
                   )}
                 </Styled.Editor>
@@ -380,7 +407,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                   editable: assigneesEditable,
                   empty: !users?.length,
                 })}
-                onMouseEnter={(e) => handleEditableHover(e, 'assignees')}
+                onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'assignees')}
                 onClick={(e) => handleEditableHover(e, 'assignees')}
               >
                 {users?.length ? (
@@ -421,7 +448,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       editable: statusEditable,
                       isLoading,
                     })}
-                    onMouseEnter={(e) => handleEditableHover(e, 'status')}
+                    onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'status')}
                     onClick={(e) => handleEditableHover(e, 'status')}
                   >
                     {status?.icon && (
@@ -446,7 +473,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {shouldShowTag(priority && !hidePriority, 'priority') && (
               <Styled.Tag
                 className={clsx('tag priority', { editable: priorityEditable, isLoading })}
-                onMouseEnter={(e) => handleEditableHover(e, 'priority')}
+                onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
                 onClick={(e) => handleEditableHover(e, 'priority')}
               >
                 {priority?.icon && <Icon icon={priority.icon} />}
