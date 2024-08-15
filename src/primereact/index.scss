@@ -45,6 +45,25 @@ $prime-button-background: $color-grey-03;
   margin-bottom: 40px; // to move the scrollbar at least a little bit lower
 }
 
+.p-datatable .p-datatable-tbody > tr {
+  // even background
+  background: var(--md-sys-color-surface-container-low-hover);
+
+  // odd background
+  &.p-row-odd {
+    background: var(--md-sys-color-surface-container-low);
+  }
+}
+
+.p-treetable .p-treetable-tbody > tr {
+  &:nth-child(even) {
+    background: var(--md-sys-color-surface-container-low-hover);
+  }
+  &:nth-child(odd) {
+    background: var(--md-sys-color-surface-container-low);
+  }
+}
+
 // table cell padding
 .p-datatable .p-datatable-tbody > tr,
 .p-treetable .p-treetable-tbody > tr {
@@ -107,14 +126,6 @@ $prime-button-background: $color-grey-03;
       text-decoration-color: red;
       text-decoration-thickness: 3px;
     }
-  }
-
-  &:nth-child(odd) {
-    background: var(--md-sys-color-surface-container-low);
-  }
-
-  &:nth-child(even) {
-    background: var(--md-sys-color-surface-container-low-hover);
   }
 
   &.p-highlight {
