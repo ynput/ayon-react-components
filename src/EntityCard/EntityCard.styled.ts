@@ -404,6 +404,7 @@ export const Row = styled.div`
   &.hide-priority {
     .tag.users {
       width: fit-content;
+      padding: 0 4px;
     }
   }
 
@@ -654,15 +655,17 @@ export const Users = styled.div`
   &.more {
     left: -2px;
     & > * + * {
-      margin-left: -20px;
+      margin-left: -18px;
     }
     &:after {
       content: '';
       position: absolute;
-      right: -4px;
-      bottom: 0;
-      width: 24px;
-      height: 24px;
+      right: -3px;
+      bottom: 1px;
+      width: 20px;
+      min-width: 20px;
+      max-width: 20px;
+      height: 18px;
       border-radius: 100%;
       background-color: var(--md-sys-color-surface-container-low);
       border: 1px solid var(--md-sys-color-outline-variant);
