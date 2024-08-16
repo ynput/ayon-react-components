@@ -100,7 +100,7 @@ export const Card = styled.div<CardProps>`
   }
 
   /* style */
-  border-radius: var(--border-radius-xxl);
+  border-radius: var(--border-radius-xl);
   background-color: var(--default-color);
   box-shadow: ${boxShadowSizes} var(--default-color);
 
@@ -203,7 +203,7 @@ export const Card = styled.div<CardProps>`
 
     &.active {
       .thumbnail {
-        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+        border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
       }
 
       .row-bottom {
@@ -363,7 +363,7 @@ export const Thumbnail = styled.div`
   align-self: stretch;
   z-index: 50;
 
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-l);
 
   transition: border-bottom-left-radius var(--hover-duration),
     border-bottom-right-radius var(--hover-duration);
@@ -456,7 +456,7 @@ export const Tag = styled.span`
     padding: 0 2px;
   }
 
-  border-radius: var(--border-radius-l);
+  border-radius: 6px;
   background-color: var(--md-sys-color-surface-container-high);
 
   .icon {
