@@ -21,7 +21,7 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
         // add the current user to the watchers
         const newWatchers = [...selected, currentUser]
         // call the onChange function with the new watchers
-        props.onChange && props.onChange(newWatchers)
+        props.onChange && props.onChange(newWatchers, [])
       }
     }
 
@@ -31,7 +31,7 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
         // remove the current user from the watchers
         const newWatchers = selected.filter((watcher) => watcher !== currentUser)
         // call the onChange function with the new watchers
-        props.onChange && props.onChange(newWatchers)
+        props.onChange && props.onChange(newWatchers, [])
       }
     }
 
@@ -45,7 +45,7 @@ export const WatcherSelect = forwardRef<DropdownRef, WatcherSelectProps>(
       }
 
       // forward on original onSelectionChange
-      onSelectionChange && onSelectionChange(selection)
+      onSelectionChange && onSelectionChange(selection, [])
     }
 
     return (

@@ -59,6 +59,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
     isActive: boolean,
     isSelected: boolean,
     index: number,
+    mixedSelected: string[],
   ) => React.ReactNode
   align?: 'left' | 'right'
   multiSelect?: boolean
@@ -71,8 +72,11 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   placeholder?: string
   isChanged?: boolean
   isMultiple?: boolean
-  onChange?: (v: string[]) => void
-  onSelectionChange?: (v: string[]) => void
+  multipleOverride?: boolean
+  onChange?: (added: string[], removed: string[]) => void
+  onSelectionChange?: (added: string[], removed: string[]) => void
+  onAddItem?: (v: string) => void
+  onRemoveItem?: (v: string) => void
   maxOptionsShown?: number
   style?: CSSProperties
   className?: string
@@ -136,12 +140,15 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       onClose,
       onChange,
       onSelectionChange,
+      onRemoveItem,
+      onAddItem,
       onOpen,
       widthExpand = true,
       align = 'left',
       multiSelect,
       multiSelectClose = false,
       isMultiple,
+      multipleOverride = true,
       search,
       searchOnNumber = 20,
       placeholder = 'Select an option...',
@@ -206,7 +213,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // search
     const [searchForm, setSearchForm] = useState('')
     // selection
-    const [selected, setSelected] = useState<string[] | null>([])
+    const [selected, setSelected] = useState<string[]>([])
+    // mixed selection, is it selected by at least one item
+    const [mixedSelected, setMixedSelected] = useState<string[]>([])
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -286,8 +295,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // set initial selected from value
     useEffect(() => {
-      setSelected(value)
-    }, [value, setSelected])
+      if (isMultiple && !multipleOverride) {
+        setMixedSelected(value || [])
+        setSelected([])
+      } else {
+        setMixedSelected([])
+        setSelected(value || [])
+      }
+    }, [value, setSelected, multipleOverride, isMultiple])
 
     // keyboard support
     useEffect(() => {
@@ -344,7 +359,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // reorder options to put active at the top (if not disabled)
     options = useMemo(
       () =>
-        !sortBySelected || !value || !value.length
+        (!sortBySelected && !(isMultiple && !multipleOverride)) || !value || !value.length
           ? options
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
       [value, options],
@@ -424,8 +439,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         if (outside) return
       }
 
+      // find items that have been removed (difference between mixedSelected and value)
+      const removed = value?.filter((s) => !mixedSelected.includes(s)) || []
+
       // commit changes
-      onChange && changeValue && onChange(changeValue)
+      onChange && changeValue && onChange(changeValue, removed)
       setValue(changeValue)
       //   reset selected
       // setSelected([])
@@ -437,8 +455,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
     const submitChange = (selected: string[], close?: boolean) => {
+      // find items that have been removed (difference between mixedSelected and value)
+      const removed = value?.filter((s) => !mixedSelected.includes(s)) || []
       // send on selection changed event
-      onSelectionChange && onSelectionChange(selected)
+      onSelectionChange && onSelectionChange(selected, removed)
 
       // update temp value
       // update state
@@ -457,6 +477,23 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     ): void => {
       e?.stopPropagation()
       e?.preventDefault()
+
+      if (!multipleOverride) {
+        if ((e?.target as HTMLDivElement).classList.contains('remove')) {
+          // if onRemoveItem is true then check if close icon was clicked
+          if (onRemoveItem) {
+            onRemoveItem(value)
+            // remove from mixed selected
+            setMixedSelected(mixedSelected?.filter((s) => s !== value))
+            // show there be a change event?
+            // only if the item was selected in the first place
+            if (!selected?.includes(value)) {
+              // the value was never in the selected list so no change
+              return
+            }
+          }
+        }
+      }
 
       // selecting all just sets __all__ value and that's it
       // check selectAll is active
@@ -511,6 +548,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 return
               }
             } else {
+              onAddItem && onAddItem(value)
               // add
               newSelected.push(value)
             }
@@ -632,7 +670,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (!usingKeyboard) setUsingKeyboard(true)
         } else if (!multiSelect && selectedValue) {
           // flick through options without opening
-          onChange && onChange([selectedValue])
+          onChange && onChange([selectedValue], [])
         }
       }
 
@@ -723,7 +761,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }
 
     const labels = useMemo(() => {
-      const values = isOpen ? selected : value || []
+      const values = isOpen && (!isMultiple || multipleOverride) ? selected : value || []
       let result: any[] = []
       nonSearchedOptions.forEach((o) => {
         if (values?.includes(o[dataKey])) {
@@ -750,7 +788,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
 
     const DefaultValueTemplateProps = {
-      value: isOpen ? selected : value,
+      value: isOpen && (!isMultiple || multipleOverride) ? selected : value,
       isMultiple,
       dropIcon,
       displayIcon,
@@ -912,6 +950,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                           !!value && value.includes(option[dataKey]),
                           !!selected?.includes(option[dataKey]),
                           i,
+                          mixedSelected,
                         )
                       ) : (
                         <Styled.DefaultItem
@@ -924,6 +963,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         >
                           {option.icon && <Icon icon={option.icon} />}
                           <span>{option[labelKey] || option[dataKey]}</span>
+                          {multiSelect &&
+                            !multipleOverride &&
+                            option[dataKey] !== selectAllKey &&
+                            !![...mixedSelected, ...selected]?.includes(option[dataKey]) && (
+                              <Icon icon={'close'} className="remove" />
+                            )}
                         </Styled.DefaultItem>
                       )}
                     </Styled.ListItem>

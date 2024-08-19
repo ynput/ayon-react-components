@@ -280,6 +280,11 @@ export const DefaultItem = styled.span`
       }
     }
   }
+
+  .remove {
+    margin-left: auto;
+    margin-right: 4px;
+  }
 `
 
 export const StartContent = styled.div`
