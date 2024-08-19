@@ -511,7 +511,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           .filter((o) => !disabledValues.includes(o))
           .filter((o) => o !== selectAllKey)
 
-        submitChange(allSelected, true)
+        submitChange(allSelected, multiSelectClose)
 
         if (typeof onSelectAll === 'function') onSelectAll(allSelected)
         return

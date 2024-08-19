@@ -9,10 +9,6 @@ export const StyledInput = styled.input`
   max-height: var(--base-input-size);
   padding: 0 8px;
 
-  &:focus {
-    outline: 1px solid var(--md-sys-color-primary);
-  }
-
   &.error,
   &:invalid {
     border-color: var(--md-sys-color-error);
@@ -54,7 +50,7 @@ export const StyledToggleInput = styled.div`
     top: 50%;
     transform: translateY(-50%);
     color: var(--md-sys-color-outline);
-    &:hover { 
+    &:hover {
       color: var(--md-sys-color-on-surface);
     }
   }

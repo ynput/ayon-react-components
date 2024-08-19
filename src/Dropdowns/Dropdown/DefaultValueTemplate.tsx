@@ -111,11 +111,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         <>
           <ContentStyled>
             <ValueStyled style={{ opacity: 0.5 }}>
-              {value === null
-                ? nullPlaceholder || '(no value)'
-                : onClearNull
-                ? '(empty list)'
-                : placeholder}
+              {value === null ? nullPlaceholder || '(no value)' : placeholder}
             </ValueStyled>
           </ContentStyled>
           {onClearNull && (
