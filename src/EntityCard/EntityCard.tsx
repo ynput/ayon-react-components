@@ -91,9 +91,9 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   pt?: {
     thumbnail?: HTMLAttributes<HTMLDivElement>
     image?: HTMLAttributes<HTMLImageElement>
-    assigneeSelect?: AssigneeSelectProps
-    statusSelect?: StatusSelectProps
-    prioritySelect?: DropdownProps
+    assigneeSelect?: Partial<AssigneeSelectProps>
+    statusSelect?: Partial<StatusSelectProps>
+    prioritySelect?: Partial<DropdownProps>
   }
 }
 
