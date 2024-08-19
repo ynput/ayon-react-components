@@ -109,7 +109,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
             allSelected={!!(isAllSelected && props.onSelectAll)}
           />
         )}
-        onChange={(names) => onChange && onChange(names.map((name) => name.toString() as string))}
+        onChange={(names) => onChange && onChange(names.map((name) => name))}
         widthExpand={widthExpand}
         align={align}
         multiSelect={multiSelect}

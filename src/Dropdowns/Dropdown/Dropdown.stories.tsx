@@ -32,12 +32,12 @@ const options: { value: IconType; keyword: string }[] = [
 ]
 
 const Template = (args: DropdownProps) => {
-  const [value, setValue] = useState<(string | number)[] | null>(
+  const [value, setValue] = useState<string[] | null>(
     args.value === undefined ? [options[0].value] : args.value,
   )
   const dropdownRef = useRef<DropdownRef>(null)
 
-  const handleChange = (v: (string | number)[]) => {
+  const handleChange = (v: string[]) => {
     console.log(v)
     setValue(v)
   }
@@ -254,10 +254,10 @@ export const MissingOptions: Story = {
 export const SyncedState: Story = {
   args: {},
   render: (args: DropdownProps) => {
-    const [value, setValue] = useState<(string | number)[] | null>([])
-    const [liveValue, setLiveValue] = useState<(string | number)[] | null>([])
+    const [value, setValue] = useState<string[] | null>([])
+    const [liveValue, setLiveValue] = useState<string[] | null>([])
 
-    const handleChange = (v: (string | number)[] | null) => {
+    const handleChange = (v: string[] | null) => {
       setValue(v)
       setLiveValue(v)
     }

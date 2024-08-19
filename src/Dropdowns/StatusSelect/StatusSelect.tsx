@@ -46,9 +46,9 @@ export const StatusSelect = forwardRef<DropdownRef, StatusSelectProps>(
   ) => {
     if (!value && !placeholder) return null
 
-    const handleChange = (status: (string | number)[]) => {
+    const handleChange = (status: string[]) => {
       if (!status?.length) return
-      onChange && onChange(status[0]?.toString())
+      onChange && onChange(status[0])
     }
 
     const dropdownValue = Array.isArray(value) ? uniq(value) : value ? [value] : []

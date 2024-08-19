@@ -66,7 +66,7 @@ export interface AssigneeFieldProps extends React.HTMLAttributes<HTMLDivElement>
     fullName?: string | null
     avatarUrl?: string
   }[]
-  value?: (string | number)[]
+  value?: string[]
   onClick?: (e: React.MouseEvent<HTMLDivElement>) => void
   disabled?: boolean
   isMultiple?: boolean

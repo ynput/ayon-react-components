@@ -47,13 +47,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   buttonStyle?: CSSProperties
   onOpen?: () => void
   onClose?: () => void
-  value: Array<string | number> | null
+  value: Array<string> | null
   valueTemplate?:
-    | ((
-        value: (string | number)[],
-        selected: (string | number)[],
-        isOpen: boolean,
-      ) => React.ReactNode)
+    | ((value: string[], selected: string[], isOpen: boolean) => React.ReactNode)
     | 'tags'
   dataKey?: string
   labelKey?: string
@@ -75,8 +71,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   placeholder?: string
   isChanged?: boolean
   isMultiple?: boolean
-  onChange?: (v: (string | number)[]) => void
-  onSelectionChange?: (v: (string | number)[]) => void
+  onChange?: (v: string[]) => void
+  onSelectionChange?: (v: string[]) => void
   maxOptionsShown?: number
   style?: CSSProperties
   className?: string
@@ -96,7 +92,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   nullPlaceholder?: string
   editable?: boolean
   maxHeight?: number
-  disabledValues?: (string | number)[]
+  disabledValues?: string[]
   listInline?: boolean
   disableOpen?: boolean
   sortBySelected?: boolean
@@ -104,11 +100,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   selectAllKey?: string | null
   buttonProps?: Styled.ButtonType['defaultProps']
   activateKeys?: string[]
-  startContent?: (
-    value: (string | number)[],
-    selected: (string | number)[],
-    isOpen: boolean,
-  ) => React.ReactNode
+  startContent?: (value: string[], selected: string[], isOpen: boolean) => React.ReactNode
   editor?: boolean
 }
 
@@ -186,7 +178,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     },
     ref,
   ) => {
-    const [value, setValue] = useState<(string | number)[] | null>([])
+    const [value, setValue] = useState<string[] | null>([])
 
     useEffect(() => {
       // set null if null otherwise compact array (array with no nulls or undefine)
@@ -214,7 +206,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     // search
     const [searchForm, setSearchForm] = useState('')
     // selection
-    const [selected, setSelected] = useState<(string | number)[] | null>([])
+    const [selected, setSelected] = useState<string[] | null>([])
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -234,7 +226,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const searchRef = useRef<HTMLInputElement>(null)
     const formRef = useRef<HTMLDivElement>(null)
 
-    // const [optionsWidth, setOptionsWidth] = useState<null | number>(null)
+    // const [optionsWidth, setOptionsWidth] = useState<null >(null)
 
     // USE EFFECTS
     // sets the correct position and height
@@ -399,7 +391,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     const handleClose = (
       e?: React.MouseEvent<HTMLDivElement>,
-      changeValue?: (string | number)[] | null,
+      changeValue?: string[] | null,
       outside?: boolean,
     ): void => {
       // changeValue is used on single select
@@ -444,7 +436,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
 
-    const submitChange = (selected: (string | number)[], close?: boolean) => {
+    const submitChange = (selected: string[], close?: boolean) => {
       // send on selection changed event
       onSelectionChange && onSelectionChange(selected)
 
@@ -459,7 +451,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }
 
     const handleChange = (
-      value: string | number,
+      value: string,
       index: number,
       e?: React.MouseEvent<HTMLLIElement>,
     ): void => {
@@ -703,7 +695,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
             selectedValue = value
           }
 
-          handleClose(undefined, selectedValue as (string | number)[])
+          handleClose(undefined, selectedValue as string[])
           // focus back on button
           valueRef.current?.focus()
         }
