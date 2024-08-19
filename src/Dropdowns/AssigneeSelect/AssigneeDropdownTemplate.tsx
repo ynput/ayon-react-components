@@ -27,6 +27,11 @@ const RowStyled = styled.span`
       background-color: var(--md-sys-color-error-container-hover);
     }
   }
+
+  .remove {
+    margin-left: auto;
+    padding: 0 4px;
+  }
 `
 
 export interface AssigneeDropdownProps {
@@ -34,6 +39,9 @@ export interface AssigneeDropdownProps {
   fullName?: string
   avatarUrl?: string
   isSelected?: boolean
+  mixedSelected: string[]
+  multiSelect: boolean
+  multipleOverride: boolean
   onClick?: () => void
   size?: number
   selectAll?: string | boolean
@@ -46,6 +54,9 @@ export const AssigneeDropdownTemplate = ({
   avatarUrl,
   fullName,
   isSelected,
+  mixedSelected,
+  multiSelect,
+  multipleOverride,
   onClick,
   size = 21,
   selectAll,
@@ -70,6 +81,9 @@ export const AssigneeDropdownTemplate = ({
       <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
       {fullName || name}
       {!!error && ' (missing)'}
+      {multiSelect && !multipleOverride && (mixedSelected?.includes(name) || isSelected) && (
+        <Icon icon={'close'} className="remove" />
+      )}
     </RowStyled>
   )
 }

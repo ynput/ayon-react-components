@@ -32,14 +32,15 @@ const options: { value: IconType; keyword: string }[] = [
 ]
 
 const Template = (args: DropdownProps) => {
-  const [value, setValue] = useState<(string | number)[] | null>(
+  const [value, setValue] = useState<string[] | null>(
     args.value === undefined ? [options[0].value] : args.value,
   )
   const dropdownRef = useRef<DropdownRef>(null)
 
-  const handleChange = (v: (string | number)[]) => {
+  const handleChange = (v: string[], removed: string[]) => {
     console.log(v)
     setValue(v)
+    if (args.onChange) args.onChange(v, removed)
   }
 
   return (
@@ -120,13 +121,29 @@ export const Multiple: Story = {
     value: [options[0].value, options[1].value],
     widthExpand: true,
     multiSelect: true,
-    minSelected: 2,
     align: 'right',
     onClear: () => console.log('clear'),
-    onSelectAll: true,
     style: {
       width: 'unset',
     },
+    isMultiple: true,
+  },
+  render: Template,
+}
+export const MultipleNotOverride: Story = {
+  args: {
+    value: [options[2].value, options[3].value],
+    widthExpand: true,
+    multiSelect: true,
+    align: 'right',
+    style: {
+      width: 'unset',
+    },
+    isMultiple: true,
+    multipleOverride: false,
+    onRemoveItem: (v) => console.log('remove', v),
+    onAddItem: (v) => console.log('add', v),
+    onChange: (added, removed) => console.log({ added, removed }),
   },
   render: Template,
 }
@@ -254,10 +271,10 @@ export const MissingOptions: Story = {
 export const SyncedState: Story = {
   args: {},
   render: (args: DropdownProps) => {
-    const [value, setValue] = useState<(string | number)[] | null>([])
-    const [liveValue, setLiveValue] = useState<(string | number)[] | null>([])
+    const [value, setValue] = useState<string[] | null>([])
+    const [liveValue, setLiveValue] = useState<string[] | null>([])
 
-    const handleChange = (v: (string | number)[] | null) => {
+    const handleChange = (v: string[] | null) => {
       setValue(v)
       setLiveValue(v)
     }

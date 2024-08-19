@@ -100,7 +100,7 @@ export const Card = styled.div<CardProps>`
   }
 
   /* style */
-  border-radius: var(--border-radius-xxl);
+  border-radius: var(--border-radius-xl);
   background-color: var(--default-color);
   box-shadow: ${boxShadowSizes} var(--default-color);
 
@@ -203,7 +203,7 @@ export const Card = styled.div<CardProps>`
 
     &.active {
       .thumbnail {
-        border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+        border-radius: var(--border-radius-l) var(--border-radius-l) 0 0;
       }
 
       .row-bottom {
@@ -363,7 +363,7 @@ export const Thumbnail = styled.div`
   align-self: stretch;
   z-index: 50;
 
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--border-radius-l);
 
   transition: border-bottom-left-radius var(--hover-duration),
     border-bottom-right-radius var(--hover-duration);
@@ -404,6 +404,7 @@ export const Row = styled.div`
   &.hide-priority {
     .tag.users {
       width: fit-content;
+      padding: 0 4px;
     }
   }
 
@@ -455,7 +456,7 @@ export const Tag = styled.span`
     padding: 0 2px;
   }
 
-  border-radius: var(--border-radius-l);
+  border-radius: 6px;
   background-color: var(--md-sys-color-surface-container-high);
 
   .icon {
@@ -654,15 +655,17 @@ export const Users = styled.div`
   &.more {
     left: -2px;
     & > * + * {
-      margin-left: -20px;
+      margin-left: -18px;
     }
     &:after {
       content: '';
       position: absolute;
-      right: -4px;
-      bottom: 0;
-      width: 24px;
-      height: 24px;
+      right: -3px;
+      bottom: 1px;
+      width: 20px;
+      min-width: 20px;
+      max-width: 20px;
+      height: 18px;
       border-radius: 100%;
       background-color: var(--md-sys-color-surface-container-low);
       border: 1px solid var(--md-sys-color-outline-variant);

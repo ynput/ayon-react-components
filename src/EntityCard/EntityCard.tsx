@@ -3,7 +3,7 @@ import {
   HTMLAttributes,
   KeyboardEvent,
   MouseEvent,
-  useLayoutEffect,
+  useEffect,
   useRef,
   useState,
 } from 'react'
@@ -83,7 +83,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   priorityOptions?: PriorityType[]
   editOnHover?: boolean
   // editing callbacks
-  onAssigneeChange?: (users: string[]) => void
+  onAssigneeChange?: (added: string[], removed: string[]) => void
   onStatusChange?: (status: string[]) => void
   onPriorityChange?: (priority: string[]) => void
   // other functions
@@ -91,9 +91,9 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   pt?: {
     thumbnail?: HTMLAttributes<HTMLDivElement>
     image?: HTMLAttributes<HTMLImageElement>
-    assigneeSelect?: AssigneeSelectProps
-    statusSelect?: StatusSelectProps
-    prioritySelect?: DropdownProps
+    assigneeSelect?: Partial<AssigneeSelectProps>
+    statusSelect?: Partial<StatusSelectProps>
+    prioritySelect?: Partial<DropdownProps>
   }
 }
 
@@ -194,7 +194,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       icon?: number
     }>({})
 
-    useLayoutEffect(() => {
+    useEffect(() => {
       if (!bottomRowRef.current || !status) return
 
       const container = bottomRowRef.current
@@ -203,7 +203,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       const usersWidth =
         (container.querySelector('.tag.users') as HTMLElement)?.offsetWidth + 12 || 0
       const priorityWidth =
-        (container.querySelector('.tag.priority') as HTMLElement)?.offsetWidth || 0
+        (container.querySelector('.tag.priority') as HTMLElement)?.offsetWidth ||
+        (variant === 'status' ? 28 : 0)
       const takenWidth = usersWidth + priorityWidth + containerPadding * 2
 
       // calculate the width of the status states
@@ -211,8 +212,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         (container.querySelector('.tag.status .status-label span') as HTMLElement)?.offsetWidth || 0
       const statusShortWidth =
         (container.querySelector('.tag.status .status-short') as HTMLElement)?.offsetWidth || 0
-      const statusIconWidth =
-        (container.querySelector('.tag.status .status-icon') as HTMLElement)?.offsetWidth || 0
 
       setStatusBreakpoints({
         short: takenWidth + statusTextWidth,
@@ -366,7 +365,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       value={users.map((user) => user.name)}
                       options={assigneeOptions}
                       ref={assigneesDropdownRef}
-                      onChange={(value) => onAssigneeChange(value)}
+                      onChange={(added, removed) => onAssigneeChange(added, removed)}
                       tabIndex={0}
                       {...pt.assigneeSelect}
                     />
@@ -419,7 +418,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                         name={user.name}
                         style={{ zIndex: -i }}
                         fullName={user.fullName || ''}
-                        size={26}
+                        size={22}
                       />
                     ))}
                   </Styled.Users>
