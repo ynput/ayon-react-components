@@ -2,7 +2,7 @@ import { AssigneeField, AssigneeDropdownTemplate, AssigneeFieldProps } from '.'
 import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { forwardRef, useMemo } from 'react'
 
-export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'emptyMessage'> {
+export interface AssigneeSelectProps extends Omit<DropdownProps, 'emptyMessage'> {
   value: string[]
   options: {
     name: string
@@ -10,7 +10,6 @@ export interface AssigneeSelectProps extends Omit<DropdownProps, 'onChange' | 'e
     avatarUrl?: string
   }[]
   readOnly?: boolean
-  onChange?: (names: string[]) => void
   widthExpand?: boolean
   disabled?: boolean
   align?: 'left' | 'right'
@@ -44,6 +43,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       onAssigneeFieldClick,
       selectAllKey = '__all__',
       multiSelect = true,
+      multipleOverride,
       disabledValues = [],
       className,
       ...props
@@ -101,18 +101,23 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         options={sortedOptions}
         dataKey={'name'}
         disabled={disabled}
-        itemTemplate={(ops, isActive, isSelected) => (
+        itemTemplate={(ops, isActive, isSelected, index, mixedSelected) => (
           <AssigneeDropdownTemplate
             {...ops}
             isSelected={isSelected}
             selectAll={props.onSelectAll && selectAllKey}
             allSelected={!!(isAllSelected && props.onSelectAll)}
+            mixedSelected={mixedSelected}
+            multiSelect={multiSelect}
+            multipleOverride={multipleOverride}
           />
         )}
-        onChange={(names) => onChange && onChange(names.map((name) => name))}
+        onChange={(added, removed) => onChange && onChange(added, removed)}
         widthExpand={widthExpand}
         align={align}
         multiSelect={multiSelect}
+        isMultiple={isMultiple}
+        multipleOverride={multipleOverride}
         multiSelectClose={value.length === 0}
         search
         searchFields={['fullName', 'name', 'email']}
