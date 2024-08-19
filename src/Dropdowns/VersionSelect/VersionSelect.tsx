@@ -58,7 +58,7 @@ export const VersionSelect = forwardRef<DropdownRef, VersionSelectProps>(
             $isSelected={versions.length < 2 && isSelected}
           >{`${value}`}</Styled.Item>
         )}
-        onChange={(v) => onChange(v.map((v) => v.toString()))}
+        onChange={(v) => onChange(v.map((v) => v))}
         valueStyle={{ minWidth: 100, ...props.valueStyle }}
         listStyle={{ ...props.listStyle }}
         itemStyle={{ ...props.itemStyle }}

@@ -83,7 +83,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   priorityOptions?: PriorityType[]
   editOnHover?: boolean
   // editing callbacks
-  onAssigneeChange?: (users: string[]) => void
+  onAssigneeChange?: (added: string[], removed: string[]) => void
   onStatusChange?: (status: string[]) => void
   onPriorityChange?: (priority: string[]) => void
   // other functions
@@ -365,7 +365,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                       value={users.map((user) => user.name)}
                       options={assigneeOptions}
                       ref={assigneesDropdownRef}
-                      onChange={(value) => onAssigneeChange(value)}
+                      onChange={(added, removed) => onAssigneeChange(added, removed)}
                       tabIndex={0}
                       {...pt.assigneeSelect}
                     />
