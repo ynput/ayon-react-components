@@ -338,9 +338,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // if editable, merge current search into showOptions
     const [missingOptions, hasMissingOptions] = useMemo(() => {
+      const values = Array.from(new Set([...selected, ...mixedSelected]))
       // add in any values that are not in options
       const selectedNotInOptions =
-        selected?.filter((s) => !!s && !options.some((o) => o[dataKey] === s)) || []
+        values?.filter((s) => !!s && !options.some((o) => o[dataKey] === s)) || []
 
       const selectedNotInOptionsItems = selectedNotInOptions.map((s) => ({
         [labelKey]: s,
@@ -349,7 +350,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }))
 
       return [selectedNotInOptionsItems, !!selectedNotInOptions.length]
-    }, [selected, options])
+    }, [selected, mixedSelected, options])
 
     // has error controls the closed error state styles
     if (hasMissingOptions && error === undefined) {
@@ -964,6 +965,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                           {option.icon && <Icon icon={option.icon} />}
                           <span>{option[labelKey] || option[dataKey]}</span>
                           {multiSelect &&
+                            isMultiple &&
                             !multipleOverride &&
                             option[dataKey] !== selectAllKey &&
                             !![...mixedSelected, ...selected]?.includes(option[dataKey]) && (

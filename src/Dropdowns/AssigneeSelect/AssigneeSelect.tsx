@@ -110,6 +110,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
             mixedSelected={mixedSelected}
             multiSelect={multiSelect}
             multipleOverride={multipleOverride}
+            isMultiple={isMultiple}
           />
         )}
         onChange={(added, removed) => onChange && onChange(added, removed)}
