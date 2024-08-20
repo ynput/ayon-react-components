@@ -39,6 +39,7 @@ export interface AssigneeDropdownProps {
   fullName?: string
   avatarUrl?: string
   isSelected?: boolean
+  isMultiple: boolean
   mixedSelected: string[]
   multiSelect: boolean
   multipleOverride: boolean
@@ -54,6 +55,7 @@ export const AssigneeDropdownTemplate = ({
   avatarUrl,
   fullName,
   isSelected,
+  isMultiple,
   mixedSelected,
   multiSelect,
   multipleOverride,
@@ -81,9 +83,10 @@ export const AssigneeDropdownTemplate = ({
       <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
       {fullName || name}
       {!!error && ' (missing)'}
-      {multiSelect && !multipleOverride && (mixedSelected?.includes(name) || isSelected) && (
-        <Icon icon={'close'} className="remove" />
-      )}
+      {multiSelect &&
+        isMultiple &&
+        !multipleOverride &&
+        (mixedSelected?.includes(name) || isSelected) && <Icon icon={'close'} className="remove" />}
     </RowStyled>
   )
 }

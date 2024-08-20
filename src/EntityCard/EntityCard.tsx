@@ -82,6 +82,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   statusOptions?: Status[]
   priorityOptions?: PriorityType[]
   editOnHover?: boolean
+  editAutoClose?: boolean
   // editing callbacks
   onAssigneeChange?: (added: string[], removed: string[]) => void
   onStatusChange?: (status: string[]) => void
@@ -131,6 +132,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       statusOptions,
       priorityOptions,
       editOnHover,
+      editAutoClose,
       onAssigneeChange,
       onStatusChange,
       onPriorityChange,
@@ -156,11 +158,13 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     })
 
     const closeEditors = () => {
-      Object.values(dropdownRefs.current).forEach((r) => {
-        if (r.current?.isOpen) {
-          r.current.close(true)
-        }
-      })
+      if (editAutoClose) {
+        Object.values(dropdownRefs.current).forEach((r) => {
+          if (r.current?.isOpen) {
+            r.current.close(true)
+          }
+        })
+      }
     }
 
     const handleEditableHover = (
