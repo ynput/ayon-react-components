@@ -300,13 +300,14 @@ export const Card = styled.div<CardProps>`
     .playable {
       display: none;
     }
-    /* hide title text but show icon */
-    .title {
-      .icon {
-        display: block;
-      }
-      .inner-text {
-        display: none;
+  }
+
+  /* hide everything on bottom but the status icon */
+  @container card (inline-size < 85px) {
+    .row-bottom {
+      .tag.users,
+      .tag.priority {
+        visibility: hidden;
       }
     }
   }
