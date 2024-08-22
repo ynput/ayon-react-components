@@ -262,8 +262,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         }}
         onKeyDown={(e) => {
           props.onKeyDown && props.onKeyDown(e)
-          if (isDraggable) return
-          if (e.code === 'Enter' || e.code === 'Space') {
+          if (e.code === 'Enter' || e.code === ' ') {
             if (!clickedEditableElement(e)) onActivate && onActivate()
           }
         }}
@@ -298,7 +297,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         <Styled.Thumbnail
           {...pt.thumbnail}
           className={clsx('thumbnail', { loading: isLoading }, pt?.thumbnail?.className)}
-          tabIndex={isDraggable ? 0 : undefined}
           onKeyDown={(e) => {
             if (!isDraggable) return
             e.stopPropagation()
