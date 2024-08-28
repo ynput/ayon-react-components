@@ -472,6 +472,14 @@ export const Tag = styled.span`
     }
   }
 
+  /* when title is clickable */
+  &.title.clickable {
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-highest-hover);
+      cursor: pointer;
+    }
+  }
+
   /* user image overrides */
   &.users {
     padding: 0 1px;

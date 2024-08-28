@@ -89,12 +89,20 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onPriorityChange?: (priority: string[]) => void
   // other functions
   onActivate?: () => void
+  onTitleClick?: (e: MouseEvent<HTMLDivElement>) => void
   pt?: {
     thumbnail?: HTMLAttributes<HTMLDivElement>
     image?: HTMLAttributes<HTMLImageElement>
     assigneeSelect?: Partial<AssigneeSelectProps>
     statusSelect?: Partial<StatusSelectProps>
     prioritySelect?: Partial<DropdownProps>
+    title?: HTMLAttributes<HTMLDivElement>
+    topRow?: HTMLAttributes<HTMLDivElement>
+    playableTag?: HTMLAttributes<HTMLDivElement>
+    bottomRow?: HTMLAttributes<HTMLDivElement>
+    usersTag?: HTMLAttributes<HTMLDivElement>
+    statusTag?: HTMLAttributes<HTMLDivElement>
+    priorityTag?: HTMLAttributes<HTMLDivElement>
   }
 }
 
@@ -137,6 +145,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       onStatusChange,
       onPriorityChange,
       onActivate,
+      onTitleClick,
       pt = {},
       ...props
     },
@@ -222,6 +231,15 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         icon: takenWidth + statusShortWidth,
       })
     }, [bottomRowRef.current, status])
+
+    const handleTitleClick = (e: MouseEvent<HTMLDivElement>) => {
+      if (!onTitleClick) return
+
+      // prevent the card from being clicked
+      e.stopPropagation()
+      // call the onTitleClick function
+      onTitleClick(e)
+    }
 
     // check thumbnail image
     const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
@@ -325,10 +343,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             />
           )}
           {/* TOP ROW */}
-          <Styled.Row className="row row-top loading-visible full">
+          <Styled.Row className="row row-top loading-visible full" {...pt.topRow}>
             {/* top left */}
             {(!isLoading || loadingSections.includes('title')) && (
-              <Styled.Tag className={clsx('tag title', { isLoading })}>
+              <Styled.Tag
+                className={clsx('tag title', { isLoading, clickable: !!onTitleClick })}
+                onClick={handleTitleClick}
+                {...pt.title}
+              >
                 {isLoading ? (
                   'loading card...'
                 ) : (
@@ -342,7 +364,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
             {/* top right */}
             {isPlayable && (
-              <Styled.Tag className={clsx('tag playable')}>
+              <Styled.Tag className={clsx('tag playable')} {...pt.playableTag}>
                 <Icon icon={'play_circle'} />
               </Styled.Tag>
             )}
@@ -354,6 +376,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               ['hide-priority']: hidePriority,
             })}
             ref={bottomRowRef}
+            {...pt.bottomRow}
           >
             {atLeastOneEditable && (
               <>
@@ -410,6 +433,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 })}
                 onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'assignees')}
                 onClick={(e) => handleEditableHover(e, 'assignees')}
+                {...pt.usersTag}
               >
                 {users?.length ? (
                   <Styled.Users className={clsx({ more: users.length > 2 })}>
@@ -451,6 +475,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     })}
                     onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'status')}
                     onClick={(e) => handleEditableHover(e, 'status')}
+                    {...pt.statusTag}
                   >
                     {status?.icon && (
                       <Icon
@@ -476,6 +501,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 className={clsx('tag priority', { editable: priorityEditable, isLoading })}
                 onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
                 onClick={(e) => handleEditableHover(e, 'priority')}
+                {...pt.priorityTag}
               >
                 {priority?.icon && <Icon icon={priority.icon} />}
               </Styled.Tag>
