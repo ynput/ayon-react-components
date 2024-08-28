@@ -235,7 +235,19 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
           onBlur={() => !useDialog && handleConfirmDialog()}
           ref={previewRef}
         />
-        <Dialog header={DialogTitle} onClose={() => setDialogOpen(false)} isOpen={dialogOpen} >
+        <Dialog
+          header={DialogTitle}
+          onClose={() => setDialogOpen(false)}
+          isOpen={dialogOpen}
+          size="md"
+          style={{ width: 'unset' }}
+          footer={
+            <>
+              <Button label={'Cancel'} onClick={handleCancelDialog} />
+              <Button label={'Apply'} onClick={handleConfirmDialog} />
+            </>
+          }
+        >
           <ColorInputs>
             <ColorPickerPreview
               onChange={handleColorInputOnChange}
@@ -294,10 +306,6 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
               </div>
             )}
           </ColorInputs>
-          <Confirmations>
-            <Button label={'Cancel'} onClick={handleCancelDialog} />
-            <Button label={'Apply'} onClick={handleConfirmDialog} />
-          </Confirmations>
         </Dialog>
       </div>
     )
