@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { UserImage } from '../../User/UserImage'
 import { Icon } from '../../Icon'
 import clsx from 'clsx'
@@ -39,10 +39,7 @@ export interface AssigneeDropdownProps {
   fullName?: string
   avatarUrl?: string
   isSelected?: boolean
-  isMultiple: boolean
-  mixedSelected: string[]
   multiSelect: boolean
-  multipleOverride: boolean
   onClick?: () => void
   size?: number
   selectAll?: string | boolean
@@ -55,10 +52,7 @@ export const AssigneeDropdownTemplate = ({
   avatarUrl,
   fullName,
   isSelected,
-  isMultiple,
-  mixedSelected,
   multiSelect,
-  multipleOverride,
   onClick,
   size = 21,
   selectAll,
@@ -83,10 +77,7 @@ export const AssigneeDropdownTemplate = ({
       <UserImage src={avatarUrl} fullName={fullName} name={name} size={size} />
       {fullName || name}
       {!!error && ' (missing)'}
-      {multiSelect &&
-        isMultiple &&
-        !multipleOverride &&
-        (mixedSelected?.includes(name) || isSelected) && <Icon icon={'close'} className="remove" />}
+      {multiSelect && isSelected && <Icon icon={'close'} className="remove" />}
     </RowStyled>
   )
 }

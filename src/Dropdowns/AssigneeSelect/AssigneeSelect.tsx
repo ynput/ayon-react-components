@@ -101,16 +101,13 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         options={sortedOptions}
         dataKey={'name'}
         disabled={disabled}
-        itemTemplate={(ops, isActive, isSelected, index, mixedSelected) => (
+        itemTemplate={(ops, isActive, isSelected) => (
           <AssigneeDropdownTemplate
             {...ops}
             isSelected={isSelected}
             selectAll={props.onSelectAll && selectAllKey}
             allSelected={!!(isAllSelected && props.onSelectAll)}
-            mixedSelected={mixedSelected}
             multiSelect={multiSelect}
-            multipleOverride={multipleOverride}
-            isMultiple={isMultiple}
           />
         )}
         onChange={(added, removed) => onChange && onChange(added, removed)}
