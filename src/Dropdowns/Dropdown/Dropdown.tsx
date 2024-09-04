@@ -965,7 +965,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                           {option.icon && <Icon icon={option.icon} />}
                           <span>{option[labelKey] || option[dataKey]}</span>
                           {multiSelect &&
-                            selected?.includes(option[dataKey]) &&
+                            [...selected, ...mixedSelected]?.includes(option[dataKey]) &&
                             selected.length > minSelected && (
                               <Icon icon={'close'} className="remove" />
                             )}
