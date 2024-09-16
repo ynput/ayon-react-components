@@ -84,7 +84,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   itemClassName?: string
   valueClassName?: string
   listClassName?: string
-  widthExpand?: boolean
+  widthExpand?: boolean // expand to width of button
+  widthExpandMax?: boolean // does not expand past button width
   searchFields?: string[]
   minSelected?: number
   maxSelected?: number
@@ -144,6 +145,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       onAddItem,
       onOpen,
       widthExpand = true,
+      widthExpandMax = false,
       align = 'left',
       multiSelect,
       multiSelectClose = false,
@@ -925,7 +927,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 defer
               >
                 <Styled.Options
-                  style={{ minWidth, ...listStyle }}
+                  style={{ minWidth, maxWidth: widthExpandMax ? minWidth : 'unset', ...listStyle }}
                   className={clsx('options', { usingKeyboard })}
                   ref={optionsRef}
                 >
