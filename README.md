@@ -23,9 +23,7 @@ This is an open source project. We welcome contributions.
 🙋 Need some support or want something custom? Take a look at our services.
 
 ## Get Started with Storybook
-
-Run locally: `yarn storybook`
-
-build: `yarn build-storybook`
-
-build-package: `yarn build`
+After cloning the repo, you'll need to run `yarn install`. Then, you can:
+- **Run locally:** `yarn storybook`
+- **Build:** `yarn build-storybook`
+- **Build package:** `yarn build`
