@@ -94,3 +94,33 @@ export const OnlyLabels: Story = {
   },
   render: Template,
 }
+export const MixedIconsAndColors: Story = {
+  args: {
+    ...initArgs,
+    value: [priorityValue],
+    // some options have icons, some have colors, some have both, some have neither
+    options: [
+      {
+        value: 'low',
+        label: 'Low',
+        icon: 'keyboard_double_arrow_down',
+        color: '#9FA7B1',
+      },
+      {
+        value: 'normal',
+        label: 'Normal',
+        color: '#9AC0E7',
+      },
+      {
+        value: 'high',
+        label: 'High',
+        icon: 'keyboard_arrow_up',
+      },
+      {
+        value: 'urgent',
+        label: 'Urgent',
+      },
+    ],
+  },
+  render: Template,
+}
