@@ -18,6 +18,7 @@ const Template = ({ value: initValue, featured, multiSelect, featuredOnly }: Ico
     <IconSelect
       {...{ value, featured, multiSelect, featuredOnly }}
       onChange={(value) => setValue(value)}
+      widthExpand
     />
   )
 }

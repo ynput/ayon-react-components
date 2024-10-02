@@ -1,18 +1,17 @@
 import { forwardRef, useMemo } from 'react'
 import * as Styled from './IconSelect.styled'
-import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
+import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../../Icon'
 
 export interface IconTemplateProps {
   value: IconSelectProps['value']
-  valueTemplate?: boolean
   isActive?: boolean
   isSelected?: boolean
 }
 
-const IconTemplate = ({ value, valueTemplate, isActive, isSelected }: IconTemplateProps) => {
+const IconTemplate = ({ value, isSelected }: IconTemplateProps) => {
   return (
-    <Styled.Icon $valueTemplate={valueTemplate} $isActive={isSelected}>
+    <Styled.Icon $isActive={isSelected}>
       {value?.map((icon) => (
         <Icon key={icon} icon={icon as IconType} />
       ))}
@@ -31,7 +30,10 @@ export interface IconSelectProps
 }
 
 export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
-  ({ value, onChange, featured = [], multiSelect, featuredOnly, ...props }, ref) => {
+  (
+    { value, onChange, featured = [], multiSelect, featuredOnly, widthExpand = false, ...props },
+    ref,
+  ) => {
     const dropdownOptions = useMemo(() => {
       const dropdownOptions = []
 
@@ -57,7 +59,11 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
       <Dropdown
         value={value}
         multiSelect={multiSelect}
-        valueTemplate={(v, s, o) => <IconTemplate value={(o ? s : v) || []} valueTemplate />}
+        valueTemplate={(v, s, o) => (
+          <DefaultValueTemplate value={(o ? s : v) || []} isOpen={o}>
+            <IconTemplate value={(o ? s : v) || []} />
+          </DefaultValueTemplate>
+        )}
         options={dropdownOptions}
         itemTemplate={({ value }, isActive, isSelected) => (
           <IconTemplate value={[value]} isActive={isActive} isSelected={isSelected} />
@@ -70,7 +76,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
         {...props}
         maxOptionsShown={Math.max(props.maxOptionsShown || 25, featured.length)}
         minSelected={1}
-        widthExpand={false}
+        widthExpand={widthExpand}
       />
     )
   },

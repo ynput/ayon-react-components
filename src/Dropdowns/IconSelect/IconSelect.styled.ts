@@ -12,9 +12,7 @@ export const Icon = styled.div<IconStyledProps>`
 
   gap: 8px;
   padding-left: 0.5rem;
-
-  height: 30px;
-
+  height: 32px;
   span:last-child {
     overflow: hidden;
     white-space: nowrap;
