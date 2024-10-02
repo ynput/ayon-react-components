@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { EntityCard, EntityCardProps, PriorityType } from '.'
-import { MouseEvent, useEffect, useState } from 'react'
-import { Toolbar } from '../Layout/Toolbar'
+import { MouseEvent, useState } from 'react'
 import { Button } from '../Button'
-import { Panel } from '../Panels/Panel'
 import DnDTemplate from './DnD/DnDTemplate'
 import getRandomImage from '../helpers/getRandomImage'
 import styled from 'styled-components'
@@ -38,7 +36,7 @@ const Template = ({ onActivate, ...props }: TemplateProps) => {
   const [isActive, setIsActive] = useState(false)
   return (
     <div style={{ display: 'flex', gap: 16 }}>
-      <div style={{ width: 250 }}>
+      <div style={{ width: '100%' }}>
         <EntityCard
           isActive={isActive}
           onActivate={() => {
@@ -58,6 +56,7 @@ const StatusWrapper = styled.div`
 `
 
 const StyledCell = styled.div`
+  width: 250px;
   padding: 8px;
   background-color: var(--md-sys-color-surface-container-low);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -204,6 +203,7 @@ export const ProgressView: Story = {
     statusOptions: statuses,
     statusMiddle: true,
     statusNameOnly: true,
+    isPlayable: true,
   },
   render: (args) => <StatusTemplate {...args} />,
 }

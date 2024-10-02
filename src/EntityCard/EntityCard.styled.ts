@@ -284,9 +284,6 @@ export const Card = styled.div<CardProps>`
   container-type: inline-size;
   /* use container query for when the card gets smaller */
   @container card (inline-size < 150px) {
-    .playable {
-      display: none;
-    }
     .title {
       .icon {
         display: none;
@@ -294,11 +291,6 @@ export const Card = styled.div<CardProps>`
       .inner-text {
         padding: 0 2px;
       }
-    }
-  }
-  @container card (inline-size < 100px) {
-    .playable {
-      display: none;
     }
   }
 
