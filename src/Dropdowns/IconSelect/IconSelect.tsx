@@ -31,7 +31,16 @@ export interface IconSelectProps
 
 export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
   (
-    { value, onChange, featured = [], multiSelect, featuredOnly, widthExpand = false, ...props },
+    {
+      value,
+      onChange,
+      featured = [],
+      multiSelect,
+      featuredOnly,
+      widthExpand = false,
+      sortBySelected = true,
+      ...props
+    },
     ref,
   ) => {
     const dropdownOptions = useMemo(() => {
@@ -77,6 +86,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
         maxOptionsShown={Math.max(props.maxOptionsShown || 25, featured.length)}
         minSelected={1}
         widthExpand={widthExpand}
+        sortBySelected={sortBySelected}
       />
     )
   },

@@ -1,18 +1,24 @@
-import { forwardRef, useMemo } from 'react'
+import { forwardRef } from 'react'
 import * as Styled from './EnumDropdown.styled'
-import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
+import { DefaultValueTemplateProps, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { Icon, IconType } from '../../Icon'
 import clsx from 'clsx'
 
-export interface EnumTemplateProps {
+export interface EnumTemplateProps extends Omit<DefaultValueTemplateProps, 'value'> {
   option: EnumDropdownOption | null | undefined
   isSelected?: boolean
+  isChanged?: boolean
 }
 
-const EnumTemplate = ({ option, isSelected }: EnumTemplateProps) => {
+export const EnumTemplate = ({ option, isSelected, isChanged, ...props }: EnumTemplateProps) => {
   const { value, label, icon, color } = option || {}
   return (
-    <Styled.Option className={clsx({ selected: isSelected })} id={value} $color={color}>
+    <Styled.Option
+      className={clsx({ selected: isSelected, isChanged }, props.className)}
+      id={value}
+      $color={color}
+      {...props}
+    >
       {icon && <Icon icon={icon} />}
       <span className="value-label">{label}</span>
     </Styled.Option>
@@ -43,15 +49,15 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
             <Styled.StyledDefaultValueTemplate
               isOpen={o}
               {...props}
-              $color={option?.color}
+              $color={props.isChanged ? undefined : option?.color} // use color (but not when in changed state - editor)
               className={clsx({ inverse: colorInverse })}
             >
-              <EnumTemplate option={option} />
+              <EnumTemplate option={option} isChanged={props.isChanged} />
             </Styled.StyledDefaultValueTemplate>
           )
         }}
         itemTemplate={(option, isSelected) => (
-          <EnumTemplate option={option} isSelected={isSelected} />
+          <EnumTemplate option={option} isSelected={isSelected} style={{ paddingLeft: '0.5rem' }} />
         )}
         {...props}
       />
