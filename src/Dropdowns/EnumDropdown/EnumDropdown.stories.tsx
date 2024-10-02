@@ -122,3 +122,12 @@ export const MixedIconsAndColors: Story = {
   },
   render: Template,
 }
+
+export const NoValue: Story = {
+  args: {
+    ...initArgs,
+    value: [],
+    options: priorities,
+  },
+  render: Template,
+}

@@ -31,8 +31,6 @@ const getSelectedBg = ({ $color }: IconStyledProps) => {
 }
 
 export const StyledDefaultValueTemplate = styled(DefaultValueTemplate)<IconStyledProps>`
-  padding-left: 0;
-
   &.inverse {
     ${({ $color }) => getSelectedBg({ $color })}
     border-color: ${({ $color }) => $color && 'transparent'};
@@ -42,11 +40,7 @@ export const StyledDefaultValueTemplate = styled(DefaultValueTemplate)<IconStyle
 export const Option = styled.div<IconStyledProps>`
   display: flex;
   align-items: center;
-  /* justify-content: center; */
-
   gap: 8px;
-  padding-left: 0.5rem;
-
   height: 32px;
 
   span:last-child {
@@ -64,5 +58,12 @@ export const Option = styled.div<IconStyledProps>`
 
   &.selected {
     ${({ $color }) => getSelectedBg({ $color })}
+  }
+
+  &.isChanged {
+    .value-label,
+    .icon {
+      color: var(--color-on-changed);
+    }
   }
 `
