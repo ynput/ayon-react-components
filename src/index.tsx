@@ -30,7 +30,7 @@ export type { TagsSelectProps } from './Dropdowns/TagsSelect'
 export { IconSelect } from './Dropdowns/IconSelect'
 export type { IconSelectProps } from './Dropdowns/IconSelect'
 // enumDropdown
-export { EnumDropdown } from './Dropdowns/EnumDropdown'
+export { EnumDropdown, EnumTemplate } from './Dropdowns/EnumDropdown'
 export type { EnumDropdownProps } from './Dropdowns/EnumDropdown'
 // versionSelect
 export { VersionSelect } from './Dropdowns/VersionSelect'
