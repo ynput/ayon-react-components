@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EntityCard, EntityCardProps, PriorityType } from '.'
+import { EntityCard, EntityCardProps } from '.'
 import { MouseEvent, useState } from 'react'
 import { Button } from '../Button'
 import DnDTemplate from './DnD/DnDTemplate'
@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import { allUsers } from '../Dropdowns/helpers'
 import prioritiesData from './priorities.json'
 import { randomStatus, statuses } from '../Dropdowns/StatusSelect'
+import { EnumDropdownOption } from '../Dropdowns/EnumDropdown'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -21,7 +22,7 @@ type Story = StoryObj<typeof EntityCard>
 
 interface DataProps extends EntityCardProps {}
 
-const priorities = prioritiesData as PriorityType[]
+const priorities = prioritiesData as EnumDropdownOption[]
 
 // pick 1 - 3 users randomly from the array
 const randomUsers = allUsers
@@ -76,7 +77,7 @@ const StatusTemplate = (props: TemplateProps) => {
 
   const [selectedUsers, setSelectedUsers] = useState(props.users?.map((u) => u.name) || [])
   const [selectedStatus, setSelectedStatus] = useState(props.status?.name)
-  const [selectedPriority, setSelectedPriority] = useState(props.priority?.name)
+  const [selectedPriority, setSelectedPriority] = useState(props.priority?.value)
 
   const handleChange = (change: any, key: string) => {
     console.log('changed:', change, key)
@@ -84,7 +85,7 @@ const StatusTemplate = (props: TemplateProps) => {
 
   const users = props.assigneeOptions?.filter((u) => selectedUsers.includes(u.name)) || []
   const status = statuses.find((s) => s.name === selectedStatus)
-  const priority = priorities.find((p) => p.name === selectedPriority)
+  const priority = priorities.find((p) => p.value === selectedPriority)
 
   const handleCellClick = (e: MouseEvent<HTMLDivElement>) => {
     // check if the click is editable item

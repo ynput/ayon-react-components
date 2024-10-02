@@ -13,7 +13,8 @@ import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
 import useImageLoader from '../helpers/useImageLoader'
 import useUserImagesLoader from './useUserImagesLoader'
-import { Dropdown, DropdownProps, DropdownRef } from '../Dropdowns/Dropdown'
+import { EnumDropdown, EnumDropdownOption, EnumDropdownProps } from '../Dropdowns/EnumDropdown'
+import { DropdownRef } from '../Dropdowns/Dropdown'
 import { AssigneeSelect, AssigneeSelectProps } from '../Dropdowns/AssigneeSelect'
 import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSelect'
 import { UserImage } from '../User/UserImage'
@@ -40,13 +41,6 @@ const notifications: {
   },
 }
 
-export type PriorityType = {
-  label?: string
-  color?: string
-  icon: IconType
-  name: string
-}
-
 type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
 
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -61,7 +55,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   status?: Status // bottom right
   statusMiddle?: boolean // puts status in the center and priority in the bottom right
   statusNameOnly?: boolean // only show the status name unless it's too small to show, then use icon
-  priority?: PriorityType // bottom left after users
+  priority?: EnumDropdownOption // bottom left after users
   hidePriority?: boolean
   imageUrl?: string
   imageAlt?: string
@@ -80,7 +74,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   // editing options
   assigneeOptions?: User[]
   statusOptions?: Status[]
-  priorityOptions?: PriorityType[]
+  priorityOptions?: EnumDropdownOption[]
   editOnHover?: boolean
   editAutoClose?: boolean
   // editing callbacks
@@ -95,7 +89,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
     image?: HTMLAttributes<HTMLImageElement>
     assigneeSelect?: Partial<AssigneeSelectProps>
     statusSelect?: Partial<StatusSelectProps>
-    prioritySelect?: Partial<DropdownProps>
+    prioritySelect?: Partial<EnumDropdownProps>
     title?: HTMLAttributes<HTMLDivElement>
     topRow?: HTMLAttributes<HTMLDivElement>
     playableTag?: HTMLAttributes<HTMLDivElement>
@@ -409,11 +403,11 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
                   {/* priority dropdown */}
                   {priorityEditable && (
-                    <Dropdown
+                    <EnumDropdown
                       dataKey="name"
                       ref={priorityDropdownRef}
                       onChange={(value) => onPriorityChange(value as string[])}
-                      value={[priority.name]}
+                      value={[priority.value]}
                       options={priorityOptions}
                       tabIndex={0}
                       {...pt.prioritySelect}
