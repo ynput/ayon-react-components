@@ -12,7 +12,7 @@ const getSelectedBg = ({ $color }: IconStyledProps) => {
       &:hover {
         filter: brightness(1.1);
       }
-      .label,
+      .value-label,
       .icon {
         color: var(--md-sys-color-inverse-on-surface);
       }
@@ -23,7 +23,7 @@ const getSelectedBg = ({ $color }: IconStyledProps) => {
       &:hover {
         background: var(--md-sys-color-primary-container-hover);
       }
-      .label,
+      .value-label,
       .icon {
         color: var(--md-sys-color-on-primary-container);
       }
@@ -57,7 +57,7 @@ export const Option = styled.div<IconStyledProps>`
 
   width: 100%;
 
-  .label,
+  .value-label,
   .icon {
     color: ${({ $color }) => ($color ? $color : `var(--md-sys-color-on-surface)`)};
   }

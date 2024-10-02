@@ -14,8 +14,6 @@ type Story = StoryObj<typeof EnumDropdown>
 const Template = ({ value: initValue, ...props }: EnumDropdownProps) => {
   const [value, setValue] = useState(initValue)
 
-  console.log(props.onClear)
-
   return <EnumDropdown value={value} {...props} onChange={(value) => setValue(value)} />
 }
 

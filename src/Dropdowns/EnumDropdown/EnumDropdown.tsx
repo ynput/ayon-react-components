@@ -14,7 +14,7 @@ const EnumTemplate = ({ option, isSelected }: EnumTemplateProps) => {
   return (
     <Styled.Option className={clsx({ selected: isSelected })} id={value} $color={color}>
       {icon && <Icon icon={icon} />}
-      <span className="label">{label}</span>
+      <span className="value-label">{label}</span>
     </Styled.Option>
   )
 }
