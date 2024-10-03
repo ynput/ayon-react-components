@@ -37,7 +37,7 @@ const Template = ({ onActivate, ...props }: TemplateProps) => {
   const [isActive, setIsActive] = useState(false)
   return (
     <div style={{ display: 'flex', gap: 16 }}>
-      <div style={{ width: '100%' }}>
+      <div style={{ width: '100%', maxWidth: 210 }}>
         <EntityCard
           isActive={isActive}
           onActivate={() => {
@@ -167,6 +167,7 @@ const initData: DataProps = {
 export const Default: Story = {
   args: {
     ...initData,
+    notification: { comment: true },
   },
   render: Template,
 }
@@ -182,7 +183,6 @@ export const Loading: Story = {
 export const TaskStatus: Story = {
   args: {
     variant: 'status',
-    notification: undefined,
     disabled: false,
     ...initData,
     isPlayable: false,

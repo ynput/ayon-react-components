@@ -22,6 +22,10 @@ const cardHoverStyles = css`
   }
 `
 
+export const Wrapper = styled.div`
+  position: relative;
+`
+
 type CardProps = {
   $statusColor?: string
 }

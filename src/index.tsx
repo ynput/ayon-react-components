@@ -130,8 +130,8 @@ export type { UserImagesStackedProps } from './User/UserImagesStacked'
 
 // ENTITY
 // entityCard
-export { EntityCard } from './EntityCard'
-export type { EntityCardProps } from './EntityCard'
+export { EntityCard, NotificationDot } from './EntityCard'
+export type { EntityCardProps, Notification } from './EntityCard'
 
 // export getShimmerStyles
 export { getShimmerStyles } from './helpers'
