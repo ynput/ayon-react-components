@@ -404,7 +404,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                   {/* priority dropdown */}
                   {priorityEditable && (
                     <EnumDropdown
-                      dataKey="name"
                       ref={priorityDropdownRef}
                       onChange={(value) => onPriorityChange(value as string[])}
                       value={[priority.value]}
@@ -448,7 +447,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.Tag>
             )}
 
-            {/* bottom center - status */}
+            {/* bottom right - status */}
             {shouldShowTag(status, 'status') && (
               <Styled.StatusContainer
                 className={clsx(
@@ -489,15 +488,24 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               </Styled.StatusContainer>
             )}
 
-            {/* bottom right - priority */}
+            {/* bottom left - priority */}
             {shouldShowTag(priority && !hidePriority, 'priority') && (
               <Styled.Tag
-                className={clsx('tag priority', { editable: priorityEditable, isLoading })}
                 onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
                 onClick={(e) => handleEditableHover(e, 'priority')}
                 {...pt.priorityTag}
+                className={clsx(
+                  'tag priority',
+                  { editable: priorityEditable, isLoading },
+                  pt.priorityTag?.className,
+                )}
               >
-                {priority?.icon && <Icon icon={priority.icon} />}
+                {priority?.icon && (
+                  <Icon
+                    icon={priority.icon}
+                    style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
+                  />
+                )}
               </Styled.Tag>
             )}
           </Styled.Row>
