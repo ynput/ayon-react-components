@@ -30,7 +30,7 @@ export type { TagsSelectProps } from './Dropdowns/TagsSelect'
 export { IconSelect } from './Dropdowns/IconSelect'
 export type { IconSelectProps } from './Dropdowns/IconSelect'
 // enumDropdown
-export { EnumDropdown } from './Dropdowns/EnumDropdown'
+export { EnumDropdown, EnumTemplate } from './Dropdowns/EnumDropdown'
 export type { EnumDropdownProps } from './Dropdowns/EnumDropdown'
 // versionSelect
 export { VersionSelect } from './Dropdowns/VersionSelect'
@@ -130,8 +130,8 @@ export type { UserImagesStackedProps } from './User/UserImagesStacked'
 
 // ENTITY
 // entityCard
-export { EntityCard } from './EntityCard'
-export type { EntityCardProps } from './EntityCard'
+export { EntityCard, NotificationDot } from './EntityCard'
+export type { EntityCardProps, Notification } from './EntityCard'
 
 // export getShimmerStyles
 export { getShimmerStyles } from './helpers'

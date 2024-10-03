@@ -1,9 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { EntityCard, EntityCardProps, PriorityType } from '.'
-import { MouseEvent, useEffect, useState } from 'react'
-import { Toolbar } from '../Layout/Toolbar'
+import { EntityCard, EntityCardProps } from '.'
+import { MouseEvent, useState } from 'react'
 import { Button } from '../Button'
-import { Panel } from '../Panels/Panel'
 import DnDTemplate from './DnD/DnDTemplate'
 import getRandomImage from '../helpers/getRandomImage'
 import styled from 'styled-components'
@@ -11,6 +9,7 @@ import clsx from 'clsx'
 import { allUsers } from '../Dropdowns/helpers'
 import prioritiesData from './priorities.json'
 import { randomStatus, statuses } from '../Dropdowns/StatusSelect'
+import { EnumDropdownOption } from '../Dropdowns/EnumDropdown'
 
 const meta: Meta<typeof EntityCard> = {
   component: EntityCard,
@@ -23,7 +22,7 @@ type Story = StoryObj<typeof EntityCard>
 
 interface DataProps extends EntityCardProps {}
 
-const priorities = prioritiesData as PriorityType[]
+const priorities = prioritiesData as EnumDropdownOption[]
 
 // pick 1 - 3 users randomly from the array
 const randomUsers = allUsers
@@ -38,7 +37,7 @@ const Template = ({ onActivate, ...props }: TemplateProps) => {
   const [isActive, setIsActive] = useState(false)
   return (
     <div style={{ display: 'flex', gap: 16 }}>
-      <div style={{ width: 250 }}>
+      <div style={{ width: '100%', maxWidth: 210 }}>
         <EntityCard
           isActive={isActive}
           onActivate={() => {
@@ -58,6 +57,7 @@ const StatusWrapper = styled.div`
 `
 
 const StyledCell = styled.div`
+  width: 250px;
   padding: 8px;
   background-color: var(--md-sys-color-surface-container-low);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -77,7 +77,7 @@ const StatusTemplate = (props: TemplateProps) => {
 
   const [selectedUsers, setSelectedUsers] = useState(props.users?.map((u) => u.name) || [])
   const [selectedStatus, setSelectedStatus] = useState(props.status?.name)
-  const [selectedPriority, setSelectedPriority] = useState(props.priority?.name)
+  const [selectedPriority, setSelectedPriority] = useState(props.priority?.value)
 
   const handleChange = (change: any, key: string) => {
     console.log('changed:', change, key)
@@ -85,7 +85,7 @@ const StatusTemplate = (props: TemplateProps) => {
 
   const users = props.assigneeOptions?.filter((u) => selectedUsers.includes(u.name)) || []
   const status = statuses.find((s) => s.name === selectedStatus)
-  const priority = priorities.find((p) => p.name === selectedPriority)
+  const priority = priorities.find((p) => p.value === selectedPriority)
 
   const handleCellClick = (e: MouseEvent<HTMLDivElement>) => {
     // check if the click is editable item
@@ -167,6 +167,7 @@ const initData: DataProps = {
 export const Default: Story = {
   args: {
     ...initData,
+    notification: { comment: true },
   },
   render: Template,
 }
@@ -182,7 +183,6 @@ export const Loading: Story = {
 export const TaskStatus: Story = {
   args: {
     variant: 'status',
-    notification: undefined,
     disabled: false,
     ...initData,
     isPlayable: false,
@@ -204,6 +204,7 @@ export const ProgressView: Story = {
     statusOptions: statuses,
     statusMiddle: true,
     statusNameOnly: true,
+    isPlayable: true,
   },
   render: (args) => <StatusTemplate {...args} />,
 }

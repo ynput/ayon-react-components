@@ -15,7 +15,7 @@ export const EnumTemplate = ({ option, isSelected, isChanged, ...props }: EnumTe
   return (
     <Styled.Option
       className={clsx({ selected: isSelected, isChanged }, props.className)}
-      id={value}
+      id={String(value)}
       $color={color}
       {...props}
     >
@@ -26,20 +26,21 @@ export const EnumTemplate = ({ option, isSelected, isChanged, ...props }: EnumTe
 }
 
 export type EnumDropdownOption = {
-  value: string
+  value: string | number | boolean
   label: string
   icon?: IconType
   color?: string
 }
 
 export interface EnumDropdownProps
-  extends Omit<DropdownProps, 'options' | 'valueTemplate' | 'itemTemplate' | 'ref'> {
+  extends Omit<DropdownProps, 'value' | 'options' | 'valueTemplate' | 'itemTemplate' | 'ref'> {
   options: EnumDropdownOption[]
   colorInverse?: boolean
+  value: (string | number | boolean)[]
 }
 
 export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
-  ({ colorInverse, ...props }, ref) => {
+  ({ colorInverse, value, ...props }, ref) => {
     return (
       <Dropdown
         ref={ref}
@@ -49,6 +50,7 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
             <Styled.StyledDefaultValueTemplate
               isOpen={o}
               {...props}
+              value={value?.map((v) => String(v))}
               $color={props.isChanged ? undefined : option?.color} // use color (but not when in changed state - editor)
               className={clsx({ inverse: colorInverse })}
             >
@@ -59,6 +61,7 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
         itemTemplate={(option, isSelected) => (
           <EnumTemplate option={option} isSelected={isSelected} style={{ paddingLeft: '0.5rem' }} />
         )}
+        value={value?.map((v) => String(v))}
         {...props}
       />
     )

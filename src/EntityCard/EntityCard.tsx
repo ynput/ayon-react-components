@@ -13,39 +13,12 @@ import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
 import useImageLoader from '../helpers/useImageLoader'
 import useUserImagesLoader from './useUserImagesLoader'
-import { Dropdown, DropdownProps, DropdownRef } from '../Dropdowns/Dropdown'
+import { EnumDropdown, EnumDropdownOption, EnumDropdownProps } from '../Dropdowns/EnumDropdown'
+import { DropdownRef } from '../Dropdowns/Dropdown'
 import { AssigneeSelect, AssigneeSelectProps } from '../Dropdowns/AssigneeSelect'
 import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSelect'
 import { UserImage } from '../User/UserImage'
-
-type NotificationType = 'comment' | 'due' | 'overdue'
-
-const notifications: {
-  [key in NotificationType]: {
-    color: string
-    icon: IconType
-  }
-} = {
-  comment: {
-    color: 'var(--md-sys-color-primary)',
-    icon: 'mark_unread_chat_alt',
-  },
-  due: {
-    color: 'var(--md-custom-color-warning)',
-    icon: 'schedule',
-  },
-  overdue: {
-    color: 'var(--md-sys-color-error-container)',
-    icon: 'alarm',
-  },
-}
-
-export type PriorityType = {
-  label?: string
-  color?: string
-  icon: IconType
-  name: string
-}
+import { NotificationDot, NotificationProps } from './Notification/Notification'
 
 type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
 
@@ -61,12 +34,12 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   status?: Status // bottom right
   statusMiddle?: boolean // puts status in the center and priority in the bottom right
   statusNameOnly?: boolean // only show the status name unless it's too small to show, then use icon
-  priority?: PriorityType // bottom left after users
+  priority?: EnumDropdownOption // bottom left after users
   hidePriority?: boolean
   imageUrl?: string
   imageAlt?: string
   imageIcon?: IconType
-  notification?: NotificationType
+  notification?: NotificationProps['notification']
   isActive?: boolean
   isLoading?: boolean
   loadingSections?: Section[]
@@ -80,7 +53,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   // editing options
   assigneeOptions?: User[]
   statusOptions?: Status[]
-  priorityOptions?: PriorityType[]
+  priorityOptions?: EnumDropdownOption[]
   editOnHover?: boolean
   editAutoClose?: boolean
   // editing callbacks
@@ -95,7 +68,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
     image?: HTMLAttributes<HTMLImageElement>
     assigneeSelect?: Partial<AssigneeSelectProps>
     statusSelect?: Partial<StatusSelectProps>
-    prioritySelect?: Partial<DropdownProps>
+    prioritySelect?: Partial<EnumDropdownProps>
     title?: HTMLAttributes<HTMLDivElement>
     topRow?: HTMLAttributes<HTMLDivElement>
     playableTag?: HTMLAttributes<HTMLDivElement>
@@ -103,6 +76,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
     usersTag?: HTMLAttributes<HTMLDivElement>
     statusTag?: HTMLAttributes<HTMLDivElement>
     priorityTag?: HTMLAttributes<HTMLDivElement>
+    notificationDot?: HTMLAttributes<HTMLDivElement>
   }
 }
 
@@ -251,264 +225,277 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
 
     return (
-      <Styled.Card
-        ref={ref}
-        $statusColor={status?.color}
-        tabIndex={0}
-        onMouseLeave={closeEditors}
-        {...props}
-        className={clsx(
-          {
-            isLoading,
-            active: isActive,
-            error: isError,
-            hover: isHover,
-            dragging: isDragging,
-            draggable: isDraggable,
-            disabled,
-            collapsed: isCollapsed,
-          },
-          'entity-card',
-          variant,
-          props.className,
-        )}
-        onClick={(e) => {
-          if (!clickedEditableElement(e)) {
-            onActivate && onActivate()
-          }
-          props.onClick && props.onClick(e)
-        }}
-        onKeyDown={(e) => {
-          props.onKeyDown && props.onKeyDown(e)
-          if (e.code === 'Enter' || e.code === ' ') {
-            if (!clickedEditableElement(e)) onActivate && onActivate()
-          }
-        }}
-      >
-        {shouldShowTag(header, 'header') && (
-          <Styled.Header className={'header loading-visible'}>
-            {path && (
-              <div className={clsx('expander', { show: showPath })}>
-                <div className="path">
-                  {project && (
-                    <>
-                      <span>{project}</span>
-                      <span className="slash" style={{ marginRight: -2 }}>
-                        /
-                      </span>
-                    </>
-                  )}
-                  {path && (
-                    <>
-                      <span>... </span>
-                      <span className="slash">/</span>
-                      <span>{path}</span>
-                      <span className="slash">/</span>
-                    </>
-                  )}
-                </div>
-              </div>
-            )}
-            <span className="shot">{isLoading ? '' : header}</span>
-          </Styled.Header>
-        )}
-        <Styled.Thumbnail
-          {...pt.thumbnail}
-          className={clsx('thumbnail', { loading: isLoading }, pt?.thumbnail?.className)}
-          onKeyDown={(e) => {
-            if (!isDraggable) return
-            e.stopPropagation()
-            pt.thumbnail?.onKeyDown && pt.thumbnail?.onKeyDown(e)
-            if (e.code === 'Enter' || e.code === 'Space') {
+      <Styled.Wrapper>
+        <Styled.Card
+          ref={ref}
+          $statusColor={status?.color}
+          tabIndex={0}
+          onMouseLeave={closeEditors}
+          {...props}
+          className={clsx(
+            {
+              isLoading,
+              active: isActive,
+              error: isError,
+              hover: isHover,
+              dragging: isDragging,
+              draggable: isDraggable,
+              disabled,
+              collapsed: isCollapsed,
+            },
+            'entity-card',
+            variant,
+            props.className,
+          )}
+          onClick={(e) => {
+            if (!clickedEditableElement(e)) {
               onActivate && onActivate()
+            }
+            props.onClick && props.onClick(e)
+          }}
+          onKeyDown={(e) => {
+            props.onKeyDown && props.onKeyDown(e)
+            if (e.code === 'Enter' || e.code === ' ') {
+              if (!clickedEditableElement(e)) onActivate && onActivate()
             }
           }}
         >
-          {/* middle Icon */}
-          <Styled.NoImageIcon
-            icon={imageIcon || 'image'}
-            className={clsx('no-image', { loading: isThumbnailLoading })}
-            onMouseEnter={closeEditors}
-          />
-
-          {imageUrl && (
-            <Styled.Image
-              src={imageUrl}
-              onMouseEnter={closeEditors}
-              {...pt.image}
-              className={clsx(
-                { loading: isThumbnailLoading || isThumbnailError },
-                pt?.image?.className,
-              )}
-            />
-          )}
-          {/* TOP ROW */}
-          <Styled.Row className="row row-top loading-visible full" {...pt.topRow}>
-            {/* top left */}
-            {(!isLoading || loadingSections.includes('title')) && (
-              <Styled.Tag
-                className={clsx('tag title', { isLoading, clickable: !!onTitleClick })}
-                onClick={handleTitleClick}
-                {...pt.title}
-              >
-                {isLoading ? (
-                  'loading card...'
-                ) : (
-                  <>
-                    {titleIcon && <Icon icon={titleIcon} />}
-                    {title && <span className="inner-text">{title}</span>}
-                  </>
-                )}
-              </Styled.Tag>
-            )}
-
-            {/* top right */}
-            {isPlayable && (
-              <Styled.Tag className={clsx('tag playable')} {...pt.playableTag}>
-                <Icon icon={'play_circle'} />
-              </Styled.Tag>
-            )}
-          </Styled.Row>
-          {/* BOTTOM ROW */}
-          <Styled.Row
-            className={clsx('row row-bottom loading-visible', {
-              full: statusMiddle,
-              ['hide-priority']: hidePriority,
-            })}
-            ref={bottomRowRef}
-            {...pt.bottomRow}
-          >
-            {atLeastOneEditable && (
-              <>
-                {/* EDITORS */}
-                <Styled.EditorLeaveZone className="block-leave" />
-
-                <Styled.Editor className="editor">
-                  {/* assignees dropdown */}
-                  {assigneesEditable && (
-                    <AssigneeSelect
-                      value={users.map((user) => user.name)}
-                      options={assigneeOptions}
-                      ref={assigneesDropdownRef}
-                      onChange={(added, removed) => onAssigneeChange(added, removed)}
-                      tabIndex={0}
-                      {...pt.assigneeSelect}
-                    />
-                  )}
-
-                  {statusEditable && (
-                    <StatusSelect
-                      value={[status.name]}
-                      options={statusOptions}
-                      ref={statusDropdownRef}
-                      onChange={(value) => onStatusChange([value])}
-                      tabIndex={0}
-                      {...pt.statusSelect}
-                    />
-                  )}
-
-                  {/* priority dropdown */}
-                  {priorityEditable && (
-                    <Dropdown
-                      dataKey="name"
-                      ref={priorityDropdownRef}
-                      onChange={(value) => onPriorityChange(value as string[])}
-                      value={[priority.name]}
-                      options={priorityOptions}
-                      tabIndex={0}
-                      {...pt.prioritySelect}
-                    />
-                  )}
-                </Styled.Editor>
-              </>
-            )}
-
-            {/* bottom left - users */}
-            {shouldShowTag(users, 'users') && (
-              <Styled.Tag
-                className={clsx('tag users', {
-                  isLoading: isUserImagesLoading || isLoading,
-                  editable: assigneesEditable,
-                  empty: !users?.length,
-                })}
-                onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'assignees')}
-                onClick={(e) => handleEditableHover(e, 'assignees')}
-                {...pt.usersTag}
-              >
-                {users?.length ? (
-                  <Styled.Users className={clsx({ more: users.length > 2 })}>
-                    {[...userWithValidatedImages].slice(0, 2).map((user, i) => (
-                      <UserImage
-                        src={user.avatarUrl}
-                        key={i}
-                        name={user.name}
-                        style={{ zIndex: -i }}
-                        fullName={user.fullName || ''}
-                        size={22}
-                      />
-                    ))}
-                  </Styled.Users>
-                ) : (
-                  <Icon icon="person_add" />
-                )}
-              </Styled.Tag>
-            )}
-
-            {/* bottom center - status */}
-            {shouldShowTag(status, 'status') && (
-              <Styled.StatusContainer
-                className={clsx(
-                  'status-container',
-                  {
-                    middle: statusMiddle,
-                    'name-only': statusNameOnly,
-                  },
-                  `variant-${variant}`,
-                )}
-                $breakpoints={statusBreakpoints}
-              >
-                <div className="status-wrapper">
-                  <Styled.Tag
-                    className={clsx('tag status', {
-                      editable: statusEditable,
-                      isLoading,
-                    })}
-                    onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'status')}
-                    onClick={(e) => handleEditableHover(e, 'status')}
-                    {...pt.statusTag}
-                  >
-                    {status?.icon && (
-                      <Icon
-                        icon={status.icon}
-                        className="status-icon"
-                        style={{ color: status.color }}
-                      />
+          {shouldShowTag(header, 'header') && (
+            <Styled.Header className={'header loading-visible'}>
+              {path && (
+                <div className={clsx('expander', { show: showPath })}>
+                  <div className="path">
+                    {project && (
+                      <>
+                        <span>{project}</span>
+                        <span className="slash" style={{ marginRight: -2 }}>
+                          /
+                        </span>
+                      </>
                     )}
-                    {status?.name && (
-                      <span className="expander status-label">
-                        <span>{status.name}</span>
-                      </span>
+                    {path && (
+                      <>
+                        <span>... </span>
+                        <span className="slash">/</span>
+                        <span>{path}</span>
+                        <span className="slash">/</span>
+                      </>
                     )}
-                    {status?.shortName && <span className="status-short">{status.shortName}</span>}
-                  </Styled.Tag>
+                  </div>
                 </div>
-              </Styled.StatusContainer>
-            )}
+              )}
+              <span className="shot">{isLoading ? '' : header}</span>
+            </Styled.Header>
+          )}
+          <Styled.Thumbnail
+            {...pt.thumbnail}
+            className={clsx('thumbnail', { loading: isLoading }, pt?.thumbnail?.className)}
+            onKeyDown={(e) => {
+              if (!isDraggable) return
+              e.stopPropagation()
+              pt.thumbnail?.onKeyDown && pt.thumbnail?.onKeyDown(e)
+              if (e.code === 'Enter' || e.code === 'Space') {
+                onActivate && onActivate()
+              }
+            }}
+          >
+            {/* middle Icon */}
+            <Styled.NoImageIcon
+              icon={imageIcon || 'image'}
+              className={clsx('no-image', { loading: isThumbnailLoading })}
+              onMouseEnter={closeEditors}
+            />
 
-            {/* bottom right - priority */}
-            {shouldShowTag(priority && !hidePriority, 'priority') && (
-              <Styled.Tag
-                className={clsx('tag priority', { editable: priorityEditable, isLoading })}
-                onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
-                onClick={(e) => handleEditableHover(e, 'priority')}
-                {...pt.priorityTag}
-              >
-                {priority?.icon && <Icon icon={priority.icon} />}
-              </Styled.Tag>
+            {imageUrl && (
+              <Styled.Image
+                src={imageUrl}
+                onMouseEnter={closeEditors}
+                {...pt.image}
+                className={clsx(
+                  { loading: isThumbnailLoading || isThumbnailError },
+                  pt?.image?.className,
+                )}
+              />
             )}
-          </Styled.Row>
-        </Styled.Thumbnail>
-      </Styled.Card>
+            {/* TOP ROW */}
+            <Styled.Row className="row row-top loading-visible full" {...pt.topRow}>
+              {/* top left */}
+              {(!isLoading || loadingSections.includes('title')) && (
+                <Styled.Tag
+                  className={clsx('tag title', { isLoading, clickable: !!onTitleClick })}
+                  onClick={handleTitleClick}
+                  {...pt.title}
+                >
+                  {isLoading ? (
+                    'loading card...'
+                  ) : (
+                    <>
+                      {titleIcon && <Icon icon={titleIcon} />}
+                      {title && <span className="inner-text">{title}</span>}
+                    </>
+                  )}
+                </Styled.Tag>
+              )}
+
+              {/* top right */}
+              {isPlayable && (
+                <Styled.Tag className={clsx('tag playable')} {...pt.playableTag}>
+                  <Icon icon={'play_circle'} />
+                </Styled.Tag>
+              )}
+            </Styled.Row>
+            {/* BOTTOM ROW */}
+            <Styled.Row
+              className={clsx('row row-bottom loading-visible', {
+                full: statusMiddle,
+                ['hide-priority']: hidePriority,
+              })}
+              ref={bottomRowRef}
+              {...pt.bottomRow}
+            >
+              {atLeastOneEditable && (
+                <>
+                  {/* EDITORS */}
+                  <Styled.EditorLeaveZone className="block-leave" />
+
+                  <Styled.Editor className="editor">
+                    {/* assignees dropdown */}
+                    {assigneesEditable && (
+                      <AssigneeSelect
+                        value={users.map((user) => user.name)}
+                        options={assigneeOptions}
+                        ref={assigneesDropdownRef}
+                        onChange={(added, removed) => onAssigneeChange(added, removed)}
+                        tabIndex={0}
+                        {...pt.assigneeSelect}
+                      />
+                    )}
+
+                    {statusEditable && (
+                      <StatusSelect
+                        value={[status.name]}
+                        options={statusOptions}
+                        ref={statusDropdownRef}
+                        onChange={(value) => onStatusChange([value])}
+                        tabIndex={0}
+                        {...pt.statusSelect}
+                      />
+                    )}
+
+                    {/* priority dropdown */}
+                    {priorityEditable && (
+                      <EnumDropdown
+                        ref={priorityDropdownRef}
+                        onChange={(value) => onPriorityChange(value as string[])}
+                        value={[priority.value]}
+                        options={priorityOptions}
+                        tabIndex={0}
+                        {...pt.prioritySelect}
+                      />
+                    )}
+                  </Styled.Editor>
+                </>
+              )}
+
+              {/* bottom left - users */}
+              {shouldShowTag(users, 'users') && (
+                <Styled.Tag
+                  className={clsx('tag users', {
+                    isLoading: isUserImagesLoading || isLoading,
+                    editable: assigneesEditable,
+                    empty: !users?.length,
+                  })}
+                  onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'assignees')}
+                  onClick={(e) => handleEditableHover(e, 'assignees')}
+                  {...pt.usersTag}
+                >
+                  {users?.length ? (
+                    <Styled.Users className={clsx({ more: users.length > 2 })}>
+                      {[...userWithValidatedImages].slice(0, 2).map((user, i) => (
+                        <UserImage
+                          src={user.avatarUrl}
+                          key={i}
+                          name={user.name}
+                          style={{ zIndex: -i }}
+                          fullName={user.fullName || ''}
+                          size={22}
+                        />
+                      ))}
+                    </Styled.Users>
+                  ) : (
+                    <Icon icon="person_add" />
+                  )}
+                </Styled.Tag>
+              )}
+
+              {/* bottom right - status */}
+              {shouldShowTag(status, 'status') && (
+                <Styled.StatusContainer
+                  className={clsx(
+                    'status-container',
+                    {
+                      middle: statusMiddle,
+                      'name-only': statusNameOnly,
+                    },
+                    `variant-${variant}`,
+                  )}
+                  $breakpoints={statusBreakpoints}
+                >
+                  <div className="status-wrapper">
+                    <Styled.Tag
+                      className={clsx('tag status', {
+                        editable: statusEditable,
+                        isLoading,
+                      })}
+                      onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'status')}
+                      onClick={(e) => handleEditableHover(e, 'status')}
+                      {...pt.statusTag}
+                    >
+                      {status?.icon && (
+                        <Icon
+                          icon={status.icon}
+                          className="status-icon"
+                          style={{ color: status.color }}
+                        />
+                      )}
+                      {status?.name && (
+                        <span className="expander status-label">
+                          <span>{status.name}</span>
+                        </span>
+                      )}
+                      {status?.shortName && (
+                        <span className="status-short">{status.shortName}</span>
+                      )}
+                    </Styled.Tag>
+                  </div>
+                </Styled.StatusContainer>
+              )}
+
+              {/* bottom left - priority */}
+              {shouldShowTag(priority && !hidePriority, 'priority') && (
+                <Styled.Tag
+                  onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
+                  onClick={(e) => handleEditableHover(e, 'priority')}
+                  {...pt.priorityTag}
+                  className={clsx(
+                    'tag priority',
+                    { editable: priorityEditable, isLoading },
+                    pt.priorityTag?.className,
+                  )}
+                >
+                  {priority?.icon && (
+                    <Icon
+                      icon={priority.icon}
+                      style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
+                    />
+                  )}
+                </Styled.Tag>
+              )}
+            </Styled.Row>
+          </Styled.Thumbnail>
+        </Styled.Card>
+        <NotificationDot notification={notification} {...pt.notificationDot} />
+      </Styled.Wrapper>
     )
   },
 )
