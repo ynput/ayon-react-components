@@ -69,7 +69,6 @@ export interface DefaultValueTemplateProps
     | 'placeholder'
     | 'clearTooltip'
     | 'clearNullTooltip'
-    | 'editor'
   > {
   displayIcon?: string
   style?: React.CSSProperties
@@ -110,7 +109,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
       {noValue ? (
         <>
           <ContentStyled>
-            <ValueStyled style={{ opacity: 0.5 }}>
+            <ValueStyled style={{ opacity: 0.5 }} className="placeholder">
               {value === null ? nullPlaceholder || '(no value)' : placeholder}
             </ValueStyled>
           </ContentStyled>

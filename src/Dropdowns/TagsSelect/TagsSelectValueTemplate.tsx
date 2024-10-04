@@ -3,6 +3,15 @@ import { DefaultValueTemplateProps } from '../Dropdown'
 import * as Styled from './TagsSelect.styled'
 import { type TagsType } from './tags'
 import clsx from 'clsx'
+import styled from 'styled-components'
+import { Icon } from '../../Icon'
+
+const PlaceholderTag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  padding: 0 6px;
+`
 
 export interface TagsSelectValueTemplateProps extends Omit<DefaultValueTemplateProps, 'children'> {
   tags: TagsType
@@ -13,14 +22,20 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
   const { value, tags = {}, editor = false } = props
 
   //   if value empty return placeholder tag
-  if (!value?.length) value?.push('Add tags')
+  if (!value?.length && editor)
+    return (
+      <PlaceholderTag className="placeholder">
+        <Icon icon="sell" />
+        <span>Select tags</span>
+      </PlaceholderTag>
+    )
 
   return (
     <Styled.TagsValueTemplate
       {...props}
       hasError={undefined}
       valueStyle={{ gap: 4, display: 'flex' }}
-      className={clsx({ editor }, props.className)}
+      className={clsx('tags', { editor }, props.className)}
     >
       {value?.map((v) => (
         <Styled.Tag
@@ -28,6 +43,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
           style={{
             color: tags[v]?.color,
           }}
+          className="tag"
         >
           {v}
         </Styled.Tag>
