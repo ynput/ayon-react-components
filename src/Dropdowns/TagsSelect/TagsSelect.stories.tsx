@@ -17,6 +17,7 @@ export const Default: Story = {
   args: {
     tags,
     tagsOrder,
+    editor: true,
   },
   render: (args) => {
     const [value, setValue] = useState(initValue)

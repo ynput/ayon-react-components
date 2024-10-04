@@ -40,7 +40,7 @@ export interface EnumDropdownProps
 }
 
 export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
-  ({ colorInverse, value, ...props }, ref) => {
+  ({ colorInverse, value, itemStyle, ...props }, ref) => {
     return (
       <Dropdown
         ref={ref}
@@ -59,7 +59,11 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
           )
         }}
         itemTemplate={(option, isSelected) => (
-          <EnumTemplate option={option} isSelected={isSelected} style={{ paddingLeft: '0.5rem' }} />
+          <EnumTemplate
+            option={option}
+            isSelected={isSelected}
+            style={{ paddingLeft: '0.5rem', paddingRight: '12px', ...itemStyle }}
+          />
         )}
         value={value?.map((v) => String(v))}
         {...props}
