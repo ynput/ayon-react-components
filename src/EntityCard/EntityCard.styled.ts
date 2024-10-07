@@ -240,13 +240,6 @@ export const Card = styled.div<CardProps>`
 
       .status-container {
         padding-right: 0px;
-
-        &.middle {
-          .status-wrapper {
-            justify-content: center;
-            padding-right: 0px;
-          }
-        }
       }
 
       &:hover {
@@ -297,9 +290,17 @@ export const Card = styled.div<CardProps>`
       }
     }
   }
+  /* hide the priority */
+  @container card (inline-size < 105px) {
+    .row-bottom {
+      .tag.priority {
+        visibility: hidden;
+      }
+    }
+  }
 
   /* hide everything on bottom but the status icon */
-  @container card (inline-size < 85px) {
+  @container card (inline-size < 65px) {
     .row-bottom {
       .tag.users,
       .tag.priority {
@@ -542,10 +543,6 @@ export const StatusContainer = styled.div<StatusProps>`
   display: flex;
   justify-content: flex-end;
   padding-right: 2px;
-  &.middle {
-    padding-right: 0px;
-    justify-content: center;
-  }
   align-items: flex-end;
 
   /* the wrapper is the element that expands full width */

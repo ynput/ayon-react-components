@@ -347,7 +347,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* BOTTOM ROW */}
             <Styled.Row
               className={clsx('row row-bottom loading-visible', {
-                full: statusMiddle,
                 ['hide-priority']: hidePriority,
               })}
               ref={bottomRowRef}
