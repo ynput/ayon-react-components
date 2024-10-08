@@ -108,8 +108,10 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
                     <SortCard
                       key={id}
                       {...sortValue}
-                      disabled={isOpen}
+                      id={sortValue.id}
+                      label={sortValue.label}
                       sortOrder={sortValue?.sortOrder ?? true}
+                      disabled={isOpen}
                       onSortBy={() => !isOpen && handleSortChange(id)}
                       onRemove={() => !isOpen && handleRemove(id)}
                       onKeyDown={(e) => {
