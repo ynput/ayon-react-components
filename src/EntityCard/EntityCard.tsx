@@ -179,12 +179,17 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
     const [statusBreakpoints, setStatusBreakpoints] = useState<{
       short?: number
       icon?: number
+      status?: string
     }>({})
 
     useEffect(() => {
       if (!bottomRowRef.current || !status) return
 
+      // if widths for status are already calculated, don't recalculate
+      if (statusBreakpoints.status === status.name) return
+
       const container = bottomRowRef.current
+      const containerWidth = container.offsetWidth
       // calculate how much space things other than status take up
       const containerPadding = 2
       const usersWidth =
@@ -193,6 +198,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         (container.querySelector('.tag.priority') as HTMLElement)?.offsetWidth ||
         (variant === 'status' ? 28 : 0)
       const takenWidth = usersWidth + priorityWidth + containerPadding * 2
+      const remainingSpace = containerWidth - takenWidth
 
       // calculate the width of the status states
       const statusTextWidth =
@@ -203,8 +209,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       setStatusBreakpoints({
         short: takenWidth + statusTextWidth,
         icon: takenWidth + statusShortWidth,
+        status: status?.name,
       })
-    }, [bottomRowRef.current, status])
+    }, [bottomRowRef.current, status?.name])
 
     const handleTitleClick = (e: MouseEvent<HTMLDivElement>) => {
       if (!onTitleClick) return
@@ -427,6 +434,27 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 </Styled.Tag>
               )}
 
+              {/* bottom left - priority */}
+              {shouldShowTag(priority && !hidePriority, 'priority') && (
+                <Styled.Tag
+                  onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
+                  onClick={(e) => handleEditableHover(e, 'priority')}
+                  {...pt.priorityTag}
+                  className={clsx(
+                    'tag priority',
+                    { editable: priorityEditable, isLoading },
+                    pt.priorityTag?.className,
+                  )}
+                >
+                  {priority?.icon && (
+                    <Icon
+                      icon={priority.icon}
+                      style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
+                    />
+                  )}
+                </Styled.Tag>
+              )}
+
               {/* bottom right - status */}
               {shouldShowTag(status, 'status') && (
                 <Styled.StatusContainer
@@ -468,27 +496,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     </Styled.Tag>
                   </div>
                 </Styled.StatusContainer>
-              )}
-
-              {/* bottom left - priority */}
-              {shouldShowTag(priority && !hidePriority, 'priority') && (
-                <Styled.Tag
-                  onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
-                  onClick={(e) => handleEditableHover(e, 'priority')}
-                  {...pt.priorityTag}
-                  className={clsx(
-                    'tag priority',
-                    { editable: priorityEditable, isLoading },
-                    pt.priorityTag?.className,
-                  )}
-                >
-                  {priority?.icon && (
-                    <Icon
-                      icon={priority.icon}
-                      style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
-                    />
-                  )}
-                </Styled.Tag>
               )}
             </Styled.Row>
           </Styled.Thumbnail>
