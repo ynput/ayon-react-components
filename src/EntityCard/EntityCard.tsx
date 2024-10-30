@@ -232,7 +232,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
 
     return (
-      <Styled.Wrapper>
+      <Styled.Wrapper className="entity-card-wrapper">
         <Styled.Card
           ref={ref}
           $statusColor={status?.color}
