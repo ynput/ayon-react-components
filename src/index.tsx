@@ -52,8 +52,13 @@ export { ShortcutTag } from './ShortcutTag'
 export type { ShortcutTagProps } from './ShortcutTag'
 
 // dropdown
-export { Dropdown, DefaultValueTemplate } from './Dropdowns/Dropdown'
-export type { DropdownProps, DefaultValueTemplateProps, DropdownRef } from './Dropdowns/Dropdown'
+export { Dropdown, DefaultValueTemplate, DefaultItemTemplate } from './Dropdowns/Dropdown'
+export type {
+  DropdownProps,
+  DefaultValueTemplateProps,
+  DefaultItemTemplateProps,
+  DropdownRef,
+} from './Dropdowns/Dropdown'
 
 // FileUpload
 export { FileUpload } from './FileUpload'
