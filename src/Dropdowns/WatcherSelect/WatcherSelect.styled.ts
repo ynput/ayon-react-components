@@ -1,5 +1,4 @@
-import styled, { keyframes } from 'styled-components'
-import { Button } from '../../Button'
+import styled from 'styled-components'
 import { AssigneeSelect as AS } from '../AssigneeSelect'
 import { theme } from '../..'
 

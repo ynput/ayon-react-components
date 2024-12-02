@@ -256,37 +256,6 @@ export const ListItem = styled.li<{
   }
 `
 
-export const DefaultItem = styled.span`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  height: 32px;
-  padding: 0 8px;
-
-  &.selected {
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-
-    &:hover {
-      background-color: var(--md-sys-color-primary-container-hover);
-    }
-
-    &.error {
-      background-color: var(--md-sys-color-error-container);
-      color: var(--md-sys-color-on-error-container);
-
-      &:hover {
-        background-color: var(--md-sys-color-error-container-hover);
-      }
-    }
-  }
-
-  .remove {
-    margin-left: auto;
-    margin-right: 4px;
-  }
-`
-
 export const StartContent = styled.div`
   background-color: var(--md-sys-color-surface-container-low);
   border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;

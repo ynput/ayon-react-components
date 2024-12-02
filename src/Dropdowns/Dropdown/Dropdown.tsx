@@ -6,7 +6,7 @@ import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../../Inputs/InputText'
 import { Icon, IconType } from '../../Icon'
-import { DefaultValueTemplate } from '.'
+import { DefaultValueTemplate, DefaultItemTemplate, DefaultItemStyled } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
@@ -969,22 +969,18 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                           mixedSelected,
                         )
                       ) : (
-                        <Styled.DefaultItem
-                          className={clsx('option-child', itemClassName, {
-                            selected: !!selected?.includes(option[dataKey]),
-                            active: value && value.includes(option[dataKey]),
-                            error: !!option.error,
-                          })}
-                          style={itemStyle}
-                        >
-                          {option.icon && <Icon icon={option.icon} />}
-                          <span>{option[labelKey] || option[dataKey]}</span>
-                          {multiSelect &&
-                            [...selected, ...mixedSelected]?.includes(option[dataKey]) &&
-                            selected.length > minSelected && (
-                              <Icon icon={'close'} className="remove" />
-                            )}
-                        </Styled.DefaultItem>
+                        <DefaultItemTemplate
+                          option={option}
+                          dataKey={dataKey}
+                          labelKey={labelKey}
+                          selected={selected}
+                          mixedSelected={mixedSelected}
+                          value={value}
+                          multiSelect={multiSelect}
+                          minSelected={minSelected}
+                          itemClassName={itemClassName}
+                          itemStyle={itemStyle}
+                        />
                       )}
                     </Styled.ListItem>
                   ))}
@@ -996,9 +992,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         focused: false,
                       })}
                     >
-                      <Styled.DefaultItem className="option-child hidden">
+                      <DefaultItemStyled className="option-child hidden">
                         <span>{`Show ${50} more...`}</span>
-                      </Styled.DefaultItem>
+                      </DefaultItemStyled>
                     </Styled.ListItem>
                   )}
                 </Styled.Options>

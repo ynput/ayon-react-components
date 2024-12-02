@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { DefaultValueTemplate, Dropdown } from '../Dropdown'
-export { DefaultItem } from '../Dropdown/Dropdown.styled'
+export { DefaultItemStyled as DefaultItem } from '../Dropdown'
 
 export const TagSelectDropdown = styled(Dropdown)<{ $width: number }>`
   .options {
