@@ -111,6 +111,7 @@
       "import": "./dist/ayon-react-components.es.js",
       "umd": "./dist/ayon-react-components.umd.js"
     },
+    "./package.json": "./package.json",
     "./dist/style.css": {
       "import": "./dist/style.css",
       "require": "./dist/style.css"
