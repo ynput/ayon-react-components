@@ -35,6 +35,8 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
   }, [refs, callback])
 }
 
+type OnChangeEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
@@ -73,8 +75,8 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   isChanged?: boolean
   isMultiple?: boolean
   multipleOverride?: boolean
-  onChange?: (added: string[], removed: string[]) => void
-  onSelectionChange?: (added: string[], removed: string[]) => void
+  onChange?: (added: string[], removed: string[], e?: OnChangeEvent) => void
+  onSelectionChange?: (added: string[], removed: string[], e?: OnChangeEvent) => void
   onAddItem?: (v: string) => void
   onRemoveItem?: (v: string) => void
   maxOptionsShown?: number
@@ -419,15 +421,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     // HANDLERS
 
-    const handleClose = (
-      e?: React.MouseEvent<HTMLDivElement>,
-      changeValue?: string[] | null,
-      outside?: boolean,
-    ): void => {
+    const handleClose = (changeValue?: string[] | null, outside?: boolean): void => {
       // changeValue is used on single select
       changeValue = changeValue || selected
-
-      e?.stopPropagation()
 
       // close dropdown
       setIsOpen(false)
@@ -467,13 +463,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, undefined, true))
+    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, true))
 
-    const submitChange = (selected: string[], close?: boolean) => {
+    const submitChange = (selected: string[], close?: boolean, e?: OnChangeEvent) => {
       // find items that have been removed (difference between mixedSelected and value)
       const removed = value?.filter((s) => !mixedSelected.includes(s)) || []
       // send on selection changed event
-      onSelectionChange && onSelectionChange(selected, removed)
+      onSelectionChange && onSelectionChange(selected, removed, e)
 
       // update temp value
       // update state
@@ -481,7 +477,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       if (close) {
         setValue(selected)
-        handleClose(undefined, selected)
+        handleClose(selected)
       }
     }
 
@@ -515,7 +511,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       if (selectAllKey === value && onSelectAll) {
         if (isAllSelected) {
           // deselect all
-          submitChange([], false)
+          submitChange([], false, e)
           return
         }
 
@@ -525,7 +521,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           .filter((o) => !disabledValues.includes(o))
           .filter((o) => o !== selectAllKey)
 
-        submitChange(allSelected, multiSelectClose)
+        submitChange(allSelected, multiSelectClose, e)
 
         if (typeof onSelectAll === 'function') onSelectAll(allSelected)
         return
@@ -581,7 +577,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       const close =
         !multiSelect || (addingNew && searchForm) || maxSelected === 1 || multiSelectClose
 
-      submitChange(newSelected, !!close)
+      submitChange(newSelected, !!close, e)
     }
 
     const handleClear = () => {
@@ -686,7 +682,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (!usingKeyboard) setUsingKeyboard(true)
         } else if (!multiSelect && selectedValue) {
           // flick through options without opening
-          onChange && onChange([selectedValue], [])
+          onChange && onChange([selectedValue], [], e)
         }
       }
 
@@ -730,7 +726,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           // nothing selected take first option
           if (options.length === 1 || editable) {
             const newSelected = [...(selected || []), ...selectedValues]
-            handleClose(undefined, newSelected, ...selectedValues)
+            handleClose(newSelected, ...selectedValues)
           }
         } else {
           // convert selectedValue to array
@@ -749,7 +745,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
             selectedValue = value
           }
 
-          handleClose(undefined, selectedValue as string[])
+          handleClose(selectedValue as string[])
           // focus back on button
           valueRef.current?.focus()
         }
