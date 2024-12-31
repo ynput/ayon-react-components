@@ -57,18 +57,19 @@ const formatsConfig = {
   },
 }
 
-export interface InputColorProps {
+export interface InputColorProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   value: string | number[]
   onChange: (event: { target: { value: string | number[] } }) => void
   alpha?: boolean
   format?: 'hex' | 'float' | 'uint8' | 'uint16'
-  className?: string
-  style?: HTMLAttributes<HTMLDivElement>['style']
+  pt?: {
+    preview?: HTMLAttributes<HTMLDivElement>
+  }
 }
 
 // REACT FUNCTIONAL COMPONENT
 export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
-  ({ value, onChange, alpha, format = 'hex', className, style }, ref) => {
+  ({ value, onChange, alpha, format = 'hex', pt = { preview: {} }, ...props }, ref) => {
     const isHex = format === 'hex'
 
     let initValue: string | number[]
@@ -226,8 +227,9 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
     const useDialog = alpha || ['uint16', 'float'].includes(format)
 
     return (
-      <div ref={ref} className={className} style={style}>
+      <div ref={ref} {...props}>
         <ColorPickerPreview
+          {...pt.preview}
           onClick={useDialog ? handleOpenDialog : undefined}
           backgroundColor={previewBG}
           value={hex}

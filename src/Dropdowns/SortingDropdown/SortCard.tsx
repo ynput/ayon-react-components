@@ -2,6 +2,7 @@ import { forwardRef } from 'react'
 import { SortCardType } from './SortingDropdown'
 import { Icon } from '../../Icon'
 import * as Styled from './SortCard.styled'
+import clsx from 'clsx'
 
 interface SortCardProps extends SortCardType, Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {
   onRemove: () => void
@@ -12,7 +13,13 @@ interface SortCardProps extends SortCardType, Omit<React.HTMLAttributes<HTMLDivE
 const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
   ({ id, label, sortOrder, onRemove, onSortBy, disabled, ...props }, ref) => {
     return (
-      <Styled.Card {...props} ref={ref} tabIndex={0} $disabled={!!disabled}>
+      <Styled.Card
+        {...props}
+        ref={ref}
+        tabIndex={0}
+        $disabled={!!disabled}
+        className={clsx('sort-chip', props.className)}
+      >
         <Icon
           icon="close"
           onClick={(e) => {
