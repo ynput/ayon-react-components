@@ -1,8 +1,9 @@
+import clsx from 'clsx'
 import { ChangeEvent, FC, FocusEvent, forwardRef } from 'react'
 import styled, { css } from 'styled-components'
 
 // types
-export interface ColorPickerPreviewProps {
+export interface ColorPickerPreviewProps extends React.HTMLAttributes<HTMLDivElement> {
   onClick?: () => void
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   backgroundColor?: string
@@ -68,9 +69,9 @@ const ColorButton = styled.button`
 `
 
 const ColorPickerPreview = forwardRef<HTMLDivElement, ColorPickerPreviewProps>(
-  ({ onClick, onChange, backgroundColor, value, onBlur }, ref) => {
+  ({ onClick, onChange, backgroundColor, value, onBlur, ...props }, ref) => {
     return (
-      <Wrapper ref={ref}>
+      <Wrapper ref={ref} className={clsx('color-picker-preview', props.className)} {...props}>
         <Input
           type="color"
           disabled={!onChange}
@@ -78,6 +79,7 @@ const ColorPickerPreview = forwardRef<HTMLDivElement, ColorPickerPreviewProps>(
           onChange={onChange && onChange}
           value={value}
           onBlur={onBlur}
+          className="color-picker-input"
         />
         <Checkerboard />
         <ColorButton
@@ -88,6 +90,7 @@ const ColorPickerPreview = forwardRef<HTMLDivElement, ColorPickerPreviewProps>(
           disabled={!onClick}
           tabIndex={!onClick ? -1 : 0}
           onClick={onClick}
+          className="color-picker-button"
         />
       </Wrapper>
     )
