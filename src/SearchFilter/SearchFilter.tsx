@@ -255,7 +255,6 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // remove not required fields
       delete addFilter.allowsCustomValues
       // add to filters top level
-
       onChange([...filters, addFilter])
     }
 
