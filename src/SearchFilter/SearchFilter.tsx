@@ -121,9 +121,12 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           )
         }
 
+        const operator = parentFilter.operator || 'OR'
+
         // Create a new parent filter with the updated values
         const updatedParentFilter = {
           ...parentFilter,
+          operator,
           values: updatedValues,
         }
 
@@ -332,6 +335,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           isHasValueAllowed={!!parentOption?.allowHasValue}
           isNoValueAllowed={!!parentOption?.allowNoValue}
           isInvertedAllowed={!!parentOption?.allowExcludes}
+          operatorChangeable={!!parentOption?.operatorChangeable}
           preserveOrderFields={preserveOrderFields}
           onSelect={handleOptionSelect}
           onInvert={handleInvertFilter}

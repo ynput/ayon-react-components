@@ -15,6 +15,13 @@ const options: Option[] = [
   {
     id: 'status',
     label: 'Status',
+    operator: 'OR',
+    allowExcludes: true,
+    allowHasValue: true,
+    allowNoValue: true,
+    allowsCustomValues: true,
+    operatorChangeable: true,
+
     values: [
       { id: 'waiting', label: 'Waiting', color: '#FFA500', icon: 'hourglass_empty' },
       { id: 'inProgress', label: 'In Progress', color: '#4CAF50', icon: 'play_circle' },
