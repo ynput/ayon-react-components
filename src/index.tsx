@@ -60,6 +60,9 @@ export type {
   DropdownRef,
 } from './Dropdowns/Dropdown'
 
+// SEARCH FILTER
+export * from './SearchFilter'
+
 // FileUpload
 export { FileUpload } from './FileUpload'
 export type { FileUploadProps } from './FileUpload'
