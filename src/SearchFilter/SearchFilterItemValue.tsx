@@ -37,7 +37,7 @@ const Operator = styled.span`
   align-items: center;
 `
 
-interface SearchFilterItemValueProps
+export interface SearchFilterItemValueProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id'>,
     FilterValue {
   operator?: FilterOperator
@@ -52,7 +52,11 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     return (
       <>
         {operator && <Operator>{operator.toLowerCase()}</Operator>}
-        <ValueChip {...props} ref={ref} className={clsx({ compact: isCompact, custom: isCustom })}>
+        <ValueChip
+          {...props}
+          ref={ref}
+          className={clsx(props.className, { compact: isCompact, custom: isCustom })}
+        >
           {icon && (
             <Icon
               icon={icon as IconType}

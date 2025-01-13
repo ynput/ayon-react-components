@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
-import { SearchFilterItem } from './SearchFilterItem'
+import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
 import SearchFilterDropdown, {
   getIsValueSelected,
   SearchFilterDropdownProps,
@@ -14,7 +14,7 @@ import { Icon } from '../Icon'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
-export interface SearchFilterProps {
+export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   filters: Filter[]
   onChange: (filters: Filter[]) => void
   options: Option[]
@@ -23,6 +23,12 @@ export interface SearchFilterProps {
   allowMultipleSameFilters?: boolean
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
+  pt?: {
+    dropdown?: SearchFilterDropdownProps
+    item?: SearchFilterItemProps
+    searchBar?: React.HTMLAttributes<HTMLDivElement>
+    backdrop?: React.HTMLAttributes<HTMLDivElement>
+  }
 }
 
 export const SearchFilter: FC<SearchFilterProps> = ({
@@ -34,6 +40,13 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   allowMultipleSameFilters = false,
   disabledFilters,
   preserveOrderFields,
+  pt = {
+    dropdown: {},
+    item: {},
+    searchBar: {},
+    backdrop: {},
+  },
+  ...props
 }) => {
   const filtersRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLUListElement>(null)
@@ -290,12 +303,13 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   }
 
   return (
-    <Styled.Container onKeyDown={handleContainerKeyDown}>
+    <Styled.Container onKeyDown={handleContainerKeyDown} {...props}>
       {dropdownOptions && <Styled.Backdrop onClick={() => handleClose(filters)} />}
       <Styled.SearchBar
         onClick={openInitialOptions}
         onKeyDown={handleSearchBarKeyDown}
         tabIndex={0}
+        {...pt.searchBar}
       >
         <Icon icon="search" className="search" />
         <Styled.SearchBarFilters ref={filtersRef}>
@@ -316,6 +330,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
               onEdit={handleEditFilter}
               onRemove={handleRemoveFilter}
               onInvert={handleInvertFilter}
+              {...pt.item}
             />
           ))}
         </Styled.SearchBarFilters>
@@ -343,6 +358,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           onConfirmAndClose={handleConfirmAndClose}
           onSwitchFilter={handleSwitchFilterFocus}
           ref={dropdownRef}
+          {...pt.dropdown}
         />
       )}
     </Styled.Container>

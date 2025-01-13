@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 import { Filter } from './types'
-import { SearchFilterItemValue } from './SearchFilterItemValue'
+import { SearchFilterItemValue, SearchFilterItemValueProps } from './SearchFilterItemValue'
 import clsx from 'clsx'
 import { Button, theme } from '..'
 
@@ -64,7 +64,9 @@ const ChipButton = styled(Button)`
   }
 `
 
-interface SearchFilterItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>, Filter {
+export interface SearchFilterItemProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
+    Filter {
   index?: number
   isEditing?: boolean
   isInvertedAllowed?: boolean
@@ -72,6 +74,9 @@ interface SearchFilterItemProps extends Omit<React.HTMLAttributes<HTMLDivElement
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
+  pt?: {
+    value?: SearchFilterItemValueProps
+  }
 }
 
 export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps>(
@@ -93,6 +98,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       onRemove,
       onInvert,
       onClick,
+      pt = { value: {} },
       ...props
     },
     ref,
@@ -146,7 +152,11 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onClick={handleClick}
-          className={clsx('search-filter-item', { editing: isEditing, disabled: isDisabled })}
+          {...props}
+          className={clsx('search-filter-item', props.className, {
+            editing: isEditing,
+            disabled: isDisabled,
+          })}
         >
           <ChipButton
             className={clsx('button', { disabled: !isInvertedAllowed })}
@@ -158,14 +168,15 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
           {values?.map((value, index) => (
             <SearchFilterItemValue
               key={(value.id || '') + index}
-              id={value.id}
-              label={value.label}
               img={value.img}
               icon={value.icon}
               color={value.color}
               isCustom={value.isCustom}
               operator={index > 0 ? operator : undefined}
               isCompact={values.length > 1 && (!!value.icon || !!value.img)}
+              {...pt.value}
+              id={value.id}
+              label={value.label}
             />
           ))}
           {onRemove && <ChipButton className="button remove" icon="close" onClick={handleRemove} />}

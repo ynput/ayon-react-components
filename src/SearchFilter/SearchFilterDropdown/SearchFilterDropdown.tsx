@@ -33,6 +33,10 @@ export interface SearchFilterDropdownProps {
   onOperatorChange?: (id: string, operator: FilterOperator) => void // change the operator
   onConfirmAndClose?: (filters: Filter[], config?: OnSelectConfig) => void // close the dropdown and update the filters
   onSwitchFilter?: (direction: 'left' | 'right') => void // switch to the next filter to edit
+  pt?: {
+    search?: React.HTMLAttributes<HTMLDivElement>
+    item?: React.HTMLAttributes<HTMLLIElement>
+  }
 }
 
 const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownProps>(
@@ -53,6 +57,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       onOperatorChange,
       onConfirmAndClose,
       onSwitchFilter,
+      pt = { search: {}, item: {} },
+      ...props
     },
     ref,
   ) => {
@@ -249,10 +255,10 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
     }
 
     return (
-      <Styled.OptionsContainer onKeyDown={handleKeyDown}>
+      <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
           <Styled.OptionsList ref={ref}>
-            <Styled.SearchContainer className="search">
+            <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
               <Styled.SearchInput
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
@@ -282,6 +288,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                   tabIndex={0}
                   className={clsx({ selected: isSelected })}
                   onClick={(event) => handleSelectOption(event)}
+                  {...pt.item}
                 >
                   {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                   {img && <img src={img} alt={label} />}
