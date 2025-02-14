@@ -34,6 +34,7 @@ export interface FileUploadProps extends FormProps {
   confirmLabel?: string
   saveButton?: React.ReactNode
   header?: React.ReactNode
+  extraHeaderActions?: React.ReactNode
   footer?: React.ReactNode
   onSubmit?: (files: CustomFile[]) => void
   isFetching?: boolean
@@ -65,6 +66,7 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
       confirmLabel,
       saveButton,
       header,
+      extraHeaderActions,
       footer,
       onSubmit,
       isFetching,
@@ -473,11 +475,13 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
             header || 'Uploaded ' + fileOrFiles
           ) : (
             <>
-              {title ? (
-                <h3>{title}</h3>
-              ) : (
-                <h3>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h3>
-              )}
+              {!extraHeaderActions &&
+                (title ? (
+                  <h3>{title}</h3>
+                ) : (
+                  <h3>{fileOrFiles.charAt(0).toUpperCase() + fileOrFiles.slice(1)} Uploader</h3>
+                ))}
+              {extraHeaderActions && extraHeaderActions}
               <Spacer />
               <Button
                 icon="delete"
