@@ -761,9 +761,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           valueRef.current?.focus()
         }
 
-        // stop default tab behavior
-        e.preventDefault()
-        e.stopPropagation()
+        // stop default tab behavior when closing
+        if (isOpen) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
         handleClose()
       }
     }
