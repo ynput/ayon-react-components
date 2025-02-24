@@ -4,10 +4,12 @@ import { forwardRef } from 'react'
 import { Icon, IconType } from '../../Icon'
 import clsx from 'clsx'
 
-const FieldStyled = styled.div<{
+type FieldStyledProps = {
   disabled?: boolean
   $align?: 'left' | 'right'
-}>`
+}
+
+const FieldStyled = styled.div<FieldStyledProps>`
   position: relative;
   padding: 4px;
   border-radius: 4px;
@@ -20,6 +22,18 @@ const FieldStyled = styled.div<{
   width: fit-content;
   gap: 4px;
   display: flex;
+
+  &.multiple {
+    &::before {
+      content: 'Mixed (';
+      margin-right: 4px;
+    }
+
+    &::after {
+      content: ')';
+      margin-left: 4px;
+    }
+  }
 
   .name {
     position: relative;
@@ -34,18 +48,6 @@ const FieldStyled = styled.div<{
     css`
       opacity: 0.7;
     `}
-
-  &.multiple {
-    ::before {
-      content: 'Mixed (';
-      margin-right: 4px;
-    }
-
-    ::after {
-      content: ')';
-      margin-left: 4px;
-    }
-  }
 
   ${({ $align }) =>
     $align === 'left' &&
@@ -96,7 +98,7 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
     },
     ref,
   ) => {
-    if (allSelected)
+    if (allSelected) {
       return (
         <FieldStyled
           onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
@@ -108,6 +110,9 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
           <Icon icon="done_all" /> All Users
         </FieldStyled>
       )
+    }
+
+    console.log(users)
 
     return (
       <FieldStyled
@@ -134,7 +139,9 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
                   maxWidth: size,
                 }}
               />
-              {users.length < 2 && <span className="name">{users[0]?.fullName}</span>}
+              {users.length < 2 && !isMultiple && (
+                <span className="name">{users[0]?.fullName}</span>
+              )}
             </>
           ) : (
             <>
