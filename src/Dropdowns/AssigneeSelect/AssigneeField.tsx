@@ -112,8 +112,6 @@ export const AssigneeField = forwardRef<HTMLDivElement, AssigneeFieldProps>(
       )
     }
 
-    console.log(users)
-
     return (
       <FieldStyled
         onClick={!disabled ? (e) => onClick && onClick(e) : undefined}
