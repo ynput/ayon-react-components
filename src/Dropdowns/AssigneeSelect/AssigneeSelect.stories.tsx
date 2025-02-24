@@ -53,7 +53,7 @@ export const MissingUser: Story = {
 export const Mixed: Story = {
   render: Template,
   args: {
-    value: [...selectedUsers, 'no-one'],
+    value: ['dgarcia_dev'],
     onSelectAll: undefined,
     isMultiple: true,
     multipleOverride: false,
