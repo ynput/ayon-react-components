@@ -92,7 +92,9 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
           <AssigneeField
             {...assigneeFieldProps}
             users={
-              isOpen ? options.filter((option) => selected.includes(option.name)) : assignedUsers
+              isOpen && multipleOverride
+                ? options.filter((option) => selected.includes(option.name))
+                : assignedUsers
             }
             value={value}
             allSelected={!!(isAllSelected && props.onSelectAll)}
