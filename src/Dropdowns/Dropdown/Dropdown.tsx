@@ -491,17 +491,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       if (!multipleOverride) {
         if ((e?.target as HTMLDivElement).classList.contains('remove')) {
-          // if onRemoveItem is true then check if close icon was clicked
-          if (onRemoveItem) {
-            onRemoveItem(value)
-            // remove from mixed selected
-            setMixedSelected(mixedSelected?.filter((s) => s !== value))
-            // show there be a change event?
-            // only if the item was selected in the first place
-            if (!selected?.includes(value)) {
-              // the value was never in the selected list so no change
-              return
-            }
+          onRemoveItem?.(value)
+          // remove from mixed selected
+          setMixedSelected(mixedSelected?.filter((s) => s !== value))
+          // show there be a change event?
+          // only if the item was selected in the first place
+          if (!selected?.includes(value)) {
+            // the value was never in the selected list so no change
+            return
           }
         }
       }

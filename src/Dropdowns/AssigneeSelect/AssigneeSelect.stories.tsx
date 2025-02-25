@@ -50,8 +50,40 @@ export const MissingUser: Story = {
     onSelectAll: undefined,
   },
 }
+
+const MixedTemplate = (args: AssigneeSelectProps) => {
+  const [value, setValue] = useState(args.value)
+
+  const handleChange = (added: string[], removed: string[]) => {
+    const newValue = [...value]
+
+    added.forEach((name) => {
+      if (!newValue.includes(name)) {
+        newValue.push(name)
+      }
+    })
+
+    removed.forEach((name) => {
+      const index = newValue.indexOf(name)
+      if (index !== -1) {
+        newValue.splice(index, 1)
+      }
+    })
+
+    console.log(newValue)
+
+    setValue(newValue)
+  }
+
+  return (
+    <Panel style={{ margin: 32, maxWidth: 200, padding: 16 }}>
+      <AssigneeSelect {...initArgs} {...args} value={value} onChange={handleChange} />
+    </Panel>
+  )
+}
+
 export const Mixed: Story = {
-  render: Template,
+  render: MixedTemplate,
   args: {
     value: ['dgarcia_dev'],
     onSelectAll: undefined,
