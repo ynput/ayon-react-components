@@ -1,8 +1,8 @@
 // import icons
 import 'material-symbols/outlined.css'
-// import fonts
-import '../src/fonts/NunitoSans-VariableFont.ttf'
-import '../src/fonts/NunitoSans_10pt-Italic.ttf'
+
+import './fonts.scss'
+
 // import styles here
 import './index.scss'
 // import theme

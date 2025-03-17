@@ -1,9 +1,3 @@
-@font-face {
-  font-family: 'Nunito Sans'; /*Can be any text*/
-  src: local('Nunito Sans'), url('./fonts/NunitoSans-VariableFont.ttf') format('truetype'),
-    url('./fonts/NunitoSans_10pt-Italic.ttf') format('truetype');
-}
-
 @import 'primereact/theme.sass';
 @import 'primereact/index.scss';
 
