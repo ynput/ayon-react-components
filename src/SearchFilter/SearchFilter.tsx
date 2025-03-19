@@ -19,9 +19,9 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onChange: (filters: Filter[]) => void
   options: Option[]
   onFinish?: (filters: Filter[]) => void
-  enabledGlobalSearch?: boolean
+  enableGlobalSearch?: boolean
   globalSearchLabel?: string
-  enabledMultipleSameFilters?: boolean
+  enableMultipleSameFilters?: boolean
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
   pt?: {
@@ -37,9 +37,9 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   onChange,
   onFinish,
   options: initOptions = [],
-  enabledGlobalSearch = false,
+  enableGlobalSearch = false,
   globalSearchLabel = 'Text',
-  enabledMultipleSameFilters = false,
+  enableMultipleSameFilters = false,
   disabledFilters,
   preserveOrderFields,
   pt = {
@@ -53,7 +53,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   const filtersRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLUListElement>(null)
 
-  const options = getOptionsWithSearch(initOptions, { enabledGlobalSearch, globalSearchLabel })
+  const options = getOptionsWithSearch(initOptions, { enableGlobalSearch, globalSearchLabel })
 
   const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
   const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
@@ -69,11 +69,25 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     setDropdownParentId(parentId)
   }
 
-  const openInitialOptions = () => {
-    openOptions(
-      getShownRootOptions(options, filters, enabledMultipleSameFilters, disabledFilters),
-      null,
-    )
+  type OpenInitialOptionsConfig = {
+    hidable?: boolean
+    filters?: Filter[]
+  }
+
+  const openInitialOptions = (e?: React.MouseEvent, config?: OpenInitialOptionsConfig) => {
+    const { hidable = false, filters = [] } = config || {}
+    e?.stopPropagation()
+    if (dropdownOptions?.length && hidable) {
+      // if it's already open, close it
+      closeOptions()
+    } else {
+      console.log(filters)
+      // open the initial options
+      openOptions(
+        getShownRootOptions(options, filters, enableMultipleSameFilters, disabledFilters),
+        null,
+      )
+    }
   }
 
   const closeOptions = () => {
@@ -106,7 +120,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     const { values, parentId } = option
 
     // check if the filter already exists and if we allow multiple of the same filter
-    if (!enabledMultipleSameFilters && doesFilterExist(option.id, filters)) return
+    if (!enableMultipleSameFilters && doesFilterExist(option.id, filters)) return
 
     // create new id for the filter so we can add multiple of the same filter name
     const newId = buildFilterId(option.id)
@@ -158,7 +172,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           handleClose(updatedFilters)
         } else if (config?.restart) {
           // go back to initial options
-          openInitialOptions()
+          openInitialOptions(undefined, { filters: updatedFilters })
         }
       }
     } else {
@@ -291,7 +305,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // update filters
       onChange(filters)
       // go back to initial options
-      openInitialOptions()
+      openInitialOptions(undefined, { filters })
 
       if (config.previous) {
         // find the filter element by the id and focus it
@@ -308,7 +322,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     <Styled.Container onKeyDown={handleContainerKeyDown} {...props}>
       {dropdownOptions && <Styled.Backdrop onClick={() => handleClose(filters)} />}
       <Styled.SearchBar
-        onClick={openInitialOptions}
+        onClick={(e) => openInitialOptions(e, { hidable: true, filters })}
         onKeyDown={handleSearchBarKeyDown}
         tabIndex={0}
         {...pt.searchBar}
@@ -337,9 +351,14 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           ))}
         </Styled.SearchBarFilters>
         {filters.length ? (
-          <Styled.FilterButton icon={'add'} variant="text" />
+          <Styled.FilterButton
+            icon={'add'}
+            className="add-button"
+            variant="text"
+            onClick={(e) => openInitialOptions(e, { filters })}
+          />
         ) : (
-          <span>{getEmptyPlaceholder(enabledGlobalSearch)}</span>
+          <span>{getEmptyPlaceholder(enableGlobalSearch)}</span>
         )}
       </Styled.SearchBar>
       {dropdownOptions && (
@@ -367,20 +386,20 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   )
 }
 
-const getEmptyPlaceholder = (enabledGlobalSearch: boolean) => {
-  return enabledGlobalSearch ? 'Search and filter' : 'Filter'
+const getEmptyPlaceholder = (enableGlobalSearch: boolean) => {
+  return enableGlobalSearch ? 'Search and filter' : 'Filter'
 }
 
 type GetOptionsWithSearchConfig = {
-  enabledGlobalSearch: boolean
+  enableGlobalSearch: boolean
   globalSearchLabel: string
 }
 
 const getOptionsWithSearch = (
   options: Option[],
-  { enabledGlobalSearch, globalSearchLabel }: GetOptionsWithSearchConfig,
+  { enableGlobalSearch, globalSearchLabel }: GetOptionsWithSearchConfig,
 ) => {
-  if (!enabledGlobalSearch) return options
+  if (!enableGlobalSearch) return options
   //  unshift search option
   const searchFilter: Option = {
     id: 'text',
@@ -394,16 +413,16 @@ const getOptionsWithSearch = (
   return [searchFilter, ...options]
 }
 
-// get all the top level fields that should be shown depending on the filters and enabledMultipleSameFilters and disabledFilters
+// get all the top level fields that should be shown depending on the filters and enableMultipleSameFilters and disabledFilters
 const getShownRootOptions = (
   options: Option[],
   filters: Filter[],
-  enabledMultipleSameFilters: boolean,
+  enableMultipleSameFilters: boolean,
   disabledFilters: string[] = [],
 ): Option[] => {
   return options.filter((option) => {
     if (disabledFilters.includes(option.id)) return false
-    if (!enabledMultipleSameFilters) {
+    if (!enableMultipleSameFilters) {
       return !doesFilterExist(option.id, filters)
     }
     return true

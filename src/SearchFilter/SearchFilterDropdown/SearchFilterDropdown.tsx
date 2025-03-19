@@ -143,16 +143,39 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-      // cancel on esc
-      if ([' ', 'Enter'].includes(event.key)) {
+      // enter always confirms the filter
+      // if the item is already selected, then we just confirm and close
+      // if the item is not selected, we select it and confirm
+      if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
-        if (event.key === 'Enter') {
+
+        const target = event.target as HTMLElement
+        const id = target.closest('li')?.id
+        if (!id) return
+        const option = allOptions.find((option) => option.id === id)
+        const isSelected = getIsValueSelected(id, parentId, values)
+
+        if (option && !isSelected) {
+          onSelect(option, { confirm: !isSelected, restart: event.shiftKey })
+        } else {
           //  shift + enter will confirm but keep the dropdown open
           //  any other enter will confirm and close dropdown
           onConfirmAndClose && onConfirmAndClose(values, { restart: event.shiftKey })
         }
       }
+
+      // space selected the filter item
+      if (event.key === ' ') {
+        event.preventDefault()
+        event.stopPropagation()
+        const target = event.target as HTMLElement
+        const id = target.closest('li')?.id
+        const option = allOptions.find((option) => option.id === id)
+        if (!option) return console.error('Option not found:', id)
+        onSelect(option, { confirm: false })
+      }
+
       // up arrow
       if (event.key === 'ArrowUp') {
         event.preventDefault()
@@ -216,14 +239,14 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
 
     const handleCustomSearchShortcut = () => {
       // check there is a text option
-      const hasTextOption = allOptions.some((option) => option.id === 'text')
-      if (!hasTextOption) return
+      const customTextOption = allOptions.find((option) => option.id === 'text')
+      if (!customTextOption) return
 
       const newId = buildFilterId('text')
 
       const newFilter: Filter = {
         id: newId,
-        label: 'Text',
+        label: customTextOption.label || 'Text',
         values: [{ id: search, label: search, parentId: newId, isCustom: true }],
       }
 
