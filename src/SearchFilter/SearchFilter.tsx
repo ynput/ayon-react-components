@@ -20,6 +20,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   options: Option[]
   onFinish?: (filters: Filter[]) => void
   enabledGlobalSearch?: boolean
+  globalSearchLabel?: string
   enabledMultipleSameFilters?: boolean
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
@@ -37,6 +38,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   onFinish,
   options: initOptions = [],
   enabledGlobalSearch = false,
+  globalSearchLabel = 'Text',
   enabledMultipleSameFilters = false,
   disabledFilters,
   preserveOrderFields,
@@ -51,7 +53,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   const filtersRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLUListElement>(null)
 
-  const options = getOptionsWithSearch(initOptions, enabledGlobalSearch)
+  const options = getOptionsWithSearch(initOptions, { enabledGlobalSearch, globalSearchLabel })
 
   const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
   const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
@@ -368,12 +370,21 @@ export const SearchFilter: FC<SearchFilterProps> = ({
 const getEmptyPlaceholder = (enabledGlobalSearch: boolean) => {
   return enabledGlobalSearch ? 'Search and filter' : 'Filter'
 }
-const getOptionsWithSearch = (options: Option[], enabledGlobalSearch: boolean) => {
+
+type GetOptionsWithSearchConfig = {
+  enabledGlobalSearch: boolean
+  globalSearchLabel: string
+}
+
+const getOptionsWithSearch = (
+  options: Option[],
+  { enabledGlobalSearch, globalSearchLabel }: GetOptionsWithSearchConfig,
+) => {
   if (!enabledGlobalSearch) return options
   //  unshift search option
   const searchFilter: Option = {
     id: 'text',
-    label: 'Text',
+    label: globalSearchLabel,
     icon: 'manage_search',
     inverted: false,
     values: [],
