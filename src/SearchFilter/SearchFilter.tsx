@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
@@ -20,6 +20,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   options: Option[]
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
+  enableSearchChildren?: boolean // when searching, children of the options will also be shown
+  allowedSearchChildren?: string[] // when searching, only these children will be shown
   globalSearchLabel?: string
   enableMultipleSameFilters?: boolean
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
@@ -38,6 +40,8 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   onFinish,
   options: initOptions = [],
   enableGlobalSearch = false,
+  enableSearchChildren = true,
+  allowedSearchChildren = undefined,
   globalSearchLabel = 'Text',
   enableMultipleSameFilters = false,
   disabledFilters,
@@ -62,6 +66,30 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
   )
 
+  const allOptions = useMemo(() => {
+    if (!dropdownOptions) return null
+
+    // if we don't want to show children, return the options
+    if (!enableSearchChildren) return dropdownOptions
+
+    // if we want to show children, we need to flatten the options
+    // we can limit the children to only those that are allowed if not undefined
+    const flattenedOptions = dropdownOptions
+      .filter((o) => !allowedSearchChildren || allowedSearchChildren?.includes(o.id))
+      .flatMap((option) => {
+        return (
+          option.values?.map((value) => ({
+            ...value,
+            parentId: option.id,
+            searchOnly: true,
+            searchLabel: `${option.label} - ${value.label}`,
+          })) || []
+        )
+      })
+
+    return [...dropdownOptions, ...flattenedOptions]
+  }, [dropdownOptions, enableSearchChildren, allowedSearchChildren])
+
   useFocusOptions({ ref: dropdownRef, options: dropdownOptions })
 
   const openOptions = (options: Option[], parentId: string | null) => {
@@ -81,7 +109,6 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // if it's already open, close it
       closeOptions()
     } else {
-      console.log(filters)
       // open the initial options
       openOptions(
         getShownRootOptions(options, filters, enableMultipleSameFilters, disabledFilters),
@@ -126,8 +153,21 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     const newId = buildFilterId(option.id)
     // check if there is a parent id
     if (parentId) {
-      // find the parent filter
-      const parentFilter = filters.find((filter) => filter.id === parentId)
+      // find the parent filter that's already in the filters
+      // if the option is a searchOnly filter, it's parent is in the filters state. Find the parent from the options
+      // Find or create parent filter based on option type
+      const parentFilter = option.searchOnly
+        ? (() => {
+            const parentOption = options.find((opt) => opt.id === option.parentId)
+            return parentOption
+              ? {
+                  ...parentOption,
+                  id: buildFilterId(option.parentId || ''),
+                  values: [],
+                }
+              : null
+          })()
+        : filters.find((filter) => filter.id === parentId)
 
       // add to the parent filter values
       if (parentFilter) {
@@ -164,6 +204,11 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           filter.id === parentId ? updatedParentFilter : filter,
         )
 
+        // If the parent filter is not already in the filters array, add it
+        if (!filters.some((filter) => filter.id === parentId)) {
+          updatedFilters.push(updatedParentFilter)
+        }
+
         // Call the onChange callback with the updated filters
         onChange(updatedFilters)
 
@@ -180,6 +225,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // remove not required fields
       delete addFilter.allowsCustomValues
       // add to filters top level
+
       onChange([...filters, addFilter])
     }
 
@@ -361,9 +407,9 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           <span>{getEmptyPlaceholder(enableGlobalSearch)}</span>
         )}
       </Styled.SearchBar>
-      {dropdownOptions && (
+      {allOptions && (
         <SearchFilterDropdown
-          options={dropdownOptions}
+          options={allOptions}
           values={filters}
           parentId={dropdownParentId}
           parentLabel={parentOption?.label}

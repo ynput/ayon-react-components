@@ -16,6 +16,7 @@ const options: Option[] = [
     id: 'status',
     label: 'Status',
     operator: 'OR',
+    icon: 'check_circle',
     allowExcludes: true,
     allowHasValue: true,
     allowNoValue: true,
@@ -34,6 +35,7 @@ const options: Option[] = [
   {
     id: 'priority',
     label: 'Priority',
+    icon: 'star',
     operator: 'AND',
     allowExcludes: false,
     allowHasValue: false,
@@ -58,6 +60,7 @@ const Template = (args: Story['args']) => {
       filters={filters}
       onChange={setFilters}
       enableGlobalSearch
+      allowedSearchChildren={['status']}
       globalSearchLabel="Global search"
     />
   )

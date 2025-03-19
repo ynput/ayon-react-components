@@ -135,7 +135,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       if (!option) return console.error('Option not found:', id)
 
       const closeOptions =
-        (option.id === 'hasValue' || option.id === 'noValue') && values.length === 0
+        ((option.id === 'hasValue' || option.id === 'noValue') && values.length === 0) ||
+        option.searchOnly
 
       onSelect(option, { confirm: closeOptions, restart: closeOptions })
       // clear search
@@ -301,7 +302,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                 </Styled.AddSearch>
               )}
             </Styled.SearchContainer>
-            {filteredOptions.map(({ id, parentId, label, icon, img, color }) => {
+            {filteredOptions.map(({ id, parentId, label, searchLabel, icon, img, color }) => {
               const isSelected = getIsValueSelected(id, parentId, values)
               const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
               return (
@@ -316,7 +317,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                   {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                   {img && <img src={img} alt={label} />}
                   <span className="label" style={{ color: adjustedColor }}>
-                    {label}
+                    {search && searchLabel ? searchLabel : label}
                   </span>
                   {isSelected && <Icon icon="check" className="check" />}
                 </Styled.Item>
@@ -391,8 +392,8 @@ export const getIsValueSelected = (
 const getFilteredOptions = (options: Option[], search: string) => {
   // filter out options that don't match the search in any of the fields
 
-  // no search? return all options
-  if (!search) return options
+  // no search? return all the main options
+  if (!search) return options.filter((option) => !option.searchOnly)
 
   const parsedSearch = search.toLowerCase()
 
