@@ -42,6 +42,7 @@ const options: Option[] = [
     allowNoValue: false,
     allowsCustomValues: false,
     operatorChangeable: false,
+    singleSelect: true,
     values: [
       { id: 'high', label: 'High', color: '#FF0000', icon: 'star' },
       { id: 'medium', label: 'Medium', color: '#FFA500', icon: 'star_half' },
@@ -60,8 +61,10 @@ const Template = (args: Story['args']) => {
       filters={filters}
       onChange={setFilters}
       enableGlobalSearch
+      globalSearchConfig={{
+        label: 'Global search',
+      }}
       allowedSearchChildren={['status']}
-      globalSearchLabel="Global search"
     />
   )
 }
