@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
@@ -19,8 +19,15 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onChange: (filters: Filter[]) => void
   options: Option[]
   onFinish?: (filters: Filter[]) => void
-  allowGlobalSearch?: boolean
-  allowMultipleSameFilters?: boolean
+  enableGlobalSearch?: boolean
+  globalSearchConfig?: {
+    label?: string
+    icon?: string
+    enableMultiple?: boolean
+  }
+  enableSearchChildren?: boolean // when searching, children of the options will also be shown
+  allowedSearchChildren?: string[] // when searching, only these children will be shown
+  enableMultipleSameFilters?: boolean
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
   pt?: {
@@ -36,8 +43,11 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   onChange,
   onFinish,
   options: initOptions = [],
-  allowGlobalSearch = false,
-  allowMultipleSameFilters = false,
+  enableGlobalSearch = false,
+  globalSearchConfig,
+  enableSearchChildren = true,
+  allowedSearchChildren = undefined,
+  enableMultipleSameFilters = false,
   disabledFilters,
   preserveOrderFields,
   pt = {
@@ -51,7 +61,18 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   const filtersRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLUListElement>(null)
 
-  const options = getOptionsWithSearch(initOptions, allowGlobalSearch)
+  const {
+    enableMultiple: enableGlobalSearchMultiple,
+    icon: globalSearchIcon = 'manage_search',
+    label: globalSearchLabel = 'Text',
+  } = globalSearchConfig || {}
+
+  const options = getOptionsWithSearch(initOptions, {
+    enableGlobalSearch,
+    label: globalSearchLabel,
+    icon: globalSearchIcon,
+    singleSelect: !enableGlobalSearchMultiple,
+  })
 
   const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
   const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
@@ -60,6 +81,30 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
   )
 
+  const allOptions = useMemo(() => {
+    if (!dropdownOptions) return null
+
+    // if we don't want to show children, return the options
+    if (!enableSearchChildren) return dropdownOptions
+
+    // if we want to show children, we need to flatten the options
+    // we can limit the children to only those that are allowed if not undefined
+    const flattenedOptions = dropdownOptions
+      .filter((o) => !allowedSearchChildren || allowedSearchChildren?.includes(o.id))
+      .flatMap((option) => {
+        return (
+          option.values?.map((value) => ({
+            ...value,
+            parentId: option.id,
+            searchOnly: true,
+            searchLabel: `${option.label} - ${value.label}`,
+          })) || []
+        )
+      })
+
+    return [...dropdownOptions, ...flattenedOptions]
+  }, [dropdownOptions, enableSearchChildren, allowedSearchChildren])
+
   useFocusOptions({ ref: dropdownRef, options: dropdownOptions })
 
   const openOptions = (options: Option[], parentId: string | null) => {
@@ -67,11 +112,24 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     setDropdownParentId(parentId)
   }
 
-  const openInitialOptions = () => {
-    openOptions(
-      getShownRootOptions(options, filters, allowMultipleSameFilters, disabledFilters),
-      null,
-    )
+  type OpenInitialOptionsConfig = {
+    hidable?: boolean
+    filters?: Filter[]
+  }
+
+  const openInitialOptions = (e?: React.MouseEvent, config?: OpenInitialOptionsConfig) => {
+    const { hidable = false, filters = [] } = config || {}
+    e?.stopPropagation()
+    if (dropdownOptions?.length && hidable) {
+      // if it's already open, close it
+      closeOptions()
+    } else {
+      // open the initial options
+      openOptions(
+        getShownRootOptions(options, filters, enableMultipleSameFilters, disabledFilters),
+        null,
+      )
+    }
   }
 
   const closeOptions = () => {
@@ -104,25 +162,43 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     const { values, parentId } = option
 
     // check if the filter already exists and if we allow multiple of the same filter
-    if (!allowMultipleSameFilters && doesFilterExist(option.id, filters)) return
+    if (!enableMultipleSameFilters && doesFilterExist(option.id, filters)) return
 
     // create new id for the filter so we can add multiple of the same filter name
     const newId = buildFilterId(option.id)
     // check if there is a parent id
     if (parentId) {
-      // find the parent filter
-      const parentFilter = filters.find((filter) => filter.id === parentId)
+      // find the parent filter that's already in the filters
+      // if the option is a searchOnly filter, it's parent is in the filters state. Find the parent from the options
+      // Find or create parent filter based on option type
+      const parentFilter = option.searchOnly
+        ? (() => {
+            const parentOption = options.find((opt) => opt.id === option.parentId)
+            return parentOption
+              ? {
+                  ...parentOption,
+                  id: buildFilterId(option.parentId || ''),
+                  values: [],
+                }
+              : null
+          })()
+        : filters.find((filter) => filter.id === parentId)
 
       // add to the parent filter values
       if (parentFilter) {
         const valueAlreadyExists = parentFilter.values?.some((val) => val.id === option.id)
 
-        let updatedValues =
-          valueAlreadyExists && parentFilter.values
-            ? // If the option already exists, remove it
-              parentFilter.values.filter((val) => val.id !== option.id)
-            : // Otherwise, add the new option to the values array
-              [...(parentFilter.values || []), option]
+        const singleSelect =
+          parentFilter.singleSelect ||
+          (parentFilter.id.includes('text') && !enableGlobalSearchMultiple)
+
+        let updatedValues = singleSelect
+          ? [option] // If replace is true, only add the new option
+          : valueAlreadyExists && parentFilter.values
+          ? // If the option already exists, remove it
+            parentFilter.values.filter((val) => val.id !== option.id)
+          : // Otherwise, add the new option to the values array
+            [...(parentFilter.values || []), option]
 
         // if the option is hasValue or noValue, remove all other options
         if (option.id === 'hasValue' || option.id === 'noValue') {
@@ -148,15 +224,20 @@ export const SearchFilter: FC<SearchFilterProps> = ({
           filter.id === parentId ? updatedParentFilter : filter,
         )
 
+        // If the parent filter is not already in the filters array, add it
+        if (!filters.some((filter) => filter.id === parentId)) {
+          updatedFilters.push(updatedParentFilter)
+        }
+
         // Call the onChange callback with the updated filters
         onChange(updatedFilters)
 
-        if (config?.confirm && !config.restart) {
+        if ((config?.confirm || singleSelect) && !config?.restart) {
           // close the dropdown with the new filters
           handleClose(updatedFilters)
         } else if (config?.restart) {
           // go back to initial options
-          openInitialOptions()
+          openInitialOptions(undefined, { filters: updatedFilters })
         }
       }
     } else {
@@ -164,6 +245,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // remove not required fields
       delete addFilter.allowsCustomValues
       // add to filters top level
+
       onChange([...filters, addFilter])
     }
 
@@ -289,7 +371,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       // update filters
       onChange(filters)
       // go back to initial options
-      openInitialOptions()
+      openInitialOptions(undefined, { filters })
 
       if (config.previous) {
         // find the filter element by the id and focus it
@@ -306,47 +388,56 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     <Styled.Container onKeyDown={handleContainerKeyDown} {...props}>
       {dropdownOptions && <Styled.Backdrop onClick={() => handleClose(filters)} />}
       <Styled.SearchBar
-        onClick={openInitialOptions}
+        onClick={(e) => openInitialOptions(e, { hidable: true, filters })}
         onKeyDown={handleSearchBarKeyDown}
         tabIndex={0}
         {...pt.searchBar}
       >
         <Icon icon="search" className="search" />
-        <Styled.SearchBarFilters ref={filtersRef}>
-          {filters.map((filter, index) => (
-            <SearchFilterItem
-              key={filter.id + index}
-              id={filter.id}
-              label={filter.label}
-              inverted={filter.inverted}
-              operator={filter.operator}
-              values={filter.values}
-              icon={filter.icon}
-              isCustom={filter.isCustom}
-              index={index}
-              isEditing={dropdownParentId === filter.id}
-              isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
-              isReadonly={filter.isReadonly}
-              onEdit={handleEditFilter}
-              onRemove={handleRemoveFilter}
-              onInvert={handleInvertFilter}
-              {...pt.item}
-            />
-          ))}
-        </Styled.SearchBarFilters>
+        {!!filters.length && (
+          <Styled.SearchBarFilters ref={filtersRef}>
+            {filters.map((filter, index) => (
+              <SearchFilterItem
+                key={filter.id + index}
+                id={filter.id}
+                label={filter.label}
+                inverted={filter.inverted}
+                operator={filter.operator}
+                values={filter.values}
+                icon={filter.icon}
+                isCustom={filter.isCustom}
+                index={index}
+                isEditing={dropdownParentId === filter.id}
+                isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
+                isReadonly={filter.isReadonly}
+                onEdit={handleEditFilter}
+                onRemove={handleRemoveFilter}
+                onInvert={handleInvertFilter}
+                {...pt.item}
+              />
+            ))}
+          </Styled.SearchBarFilters>
+        )}
         {filters.length ? (
-          <Styled.FilterButton icon={'add'} variant="text" />
+          <Styled.FilterButton
+            icon={'add'}
+            className="add-button"
+            variant="text"
+            onClick={(e) => openInitialOptions(e, { filters })}
+          />
         ) : (
-          <span>{getEmptyPlaceholder(allowGlobalSearch)}</span>
+          <span>{getEmptyPlaceholder(enableGlobalSearch)}</span>
         )}
       </Styled.SearchBar>
-      {dropdownOptions && (
+      {allOptions && (
         <SearchFilterDropdown
-          options={dropdownOptions}
+          options={allOptions}
           values={filters}
           parentId={dropdownParentId}
           parentLabel={parentOption?.label}
-          isCustomAllowed={!!parentOption?.allowsCustomValues}
+          isCustomAllowed={
+            !!parentOption?.allowsCustomValues || (!parentOption && !!enableGlobalSearch)
+          }
           isHasValueAllowed={!!parentOption?.allowHasValue}
           isNoValueAllowed={!!parentOption?.allowNoValue}
           isInvertedAllowed={!!parentOption?.allowExcludes}
@@ -365,34 +456,46 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   )
 }
 
-const getEmptyPlaceholder = (allowGlobalSearch: boolean) => {
-  return allowGlobalSearch ? 'Search and filter' : 'Filter'
+const getEmptyPlaceholder = (enableGlobalSearch: boolean) => {
+  return enableGlobalSearch ? 'Search and filter' : 'Filter'
 }
-const getOptionsWithSearch = (options: Option[], allowGlobalSearch: boolean) => {
-  if (!allowGlobalSearch) return options
+
+type GetOptionsWithSearchConfig = {
+  enableGlobalSearch: boolean
+  label: string
+  icon: string
+  singleSelect: boolean
+}
+
+const getOptionsWithSearch = (
+  options: Option[],
+  { enableGlobalSearch, label, icon, singleSelect }: GetOptionsWithSearchConfig,
+) => {
+  if (!enableGlobalSearch) return options
   //  unshift search option
   const searchFilter: Option = {
     id: 'text',
-    label: 'Text',
-    icon: 'manage_search',
+    label: label,
+    icon: icon,
     inverted: false,
     values: [],
     allowsCustomValues: true,
+    singleSelect: singleSelect,
   }
 
   return [searchFilter, ...options]
 }
 
-// get all the top level fields that should be shown depending on the filters and allowMultipleSameFilters and disabledFilters
+// get all the top level fields that should be shown depending on the filters and enableMultipleSameFilters and disabledFilters
 const getShownRootOptions = (
   options: Option[],
   filters: Filter[],
-  allowMultipleSameFilters: boolean,
+  enableMultipleSameFilters: boolean,
   disabledFilters: string[] = [],
 ): Option[] => {
   return options.filter((option) => {
     if (disabledFilters.includes(option.id)) return false
-    if (!allowMultipleSameFilters) {
+    if (!enableMultipleSameFilters) {
       return !doesFilterExist(option.id, filters)
     }
     return true
