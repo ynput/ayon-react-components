@@ -16,6 +16,7 @@ const options: Option[] = [
     id: 'status',
     label: 'Status',
     operator: 'OR',
+    icon: 'check_circle',
     allowExcludes: true,
     allowHasValue: true,
     allowNoValue: true,
@@ -31,12 +32,41 @@ const options: Option[] = [
       { id: 'cancelled', label: 'Cancelled', color: '#757575', icon: 'cancel' },
     ],
   },
+  {
+    id: 'priority',
+    label: 'Priority',
+    icon: 'star',
+    operator: 'AND',
+    allowExcludes: false,
+    allowHasValue: false,
+    allowNoValue: false,
+    allowsCustomValues: false,
+    operatorChangeable: false,
+    singleSelect: true,
+    values: [
+      { id: 'high', label: 'High', color: '#FF0000', icon: 'star' },
+      { id: 'medium', label: 'Medium', color: '#FFA500', icon: 'star_half' },
+      { id: 'low', label: 'Low', color: '#008000', icon: 'star_outline' },
+    ],
+  },
 ]
 
 const Template = (args: Story['args']) => {
   const [filters, setFilters] = useState<Filter[]>([])
 
-  return <SearchFilter {...args} options={options} filters={filters} onChange={setFilters} />
+  return (
+    <SearchFilter
+      {...args}
+      options={options}
+      filters={filters}
+      onChange={setFilters}
+      enableGlobalSearch
+      globalSearchConfig={{
+        label: 'Global search',
+      }}
+      allowedSearchChildren={['status']}
+    />
+  )
 }
 
 export const Default: Story = {

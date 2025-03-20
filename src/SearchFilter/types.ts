@@ -43,4 +43,6 @@ export interface Option extends Filter {
   operatorChangeable?: boolean // allows the operator to be changed
   color?: string | null // color of the filter (not used for root options)
   parentId?: string | null // parent filter id
+  searchOnly?: boolean //  It will be shown when searching but hidden usually
+  searchLabel?: string // label to be shown when searching
 }

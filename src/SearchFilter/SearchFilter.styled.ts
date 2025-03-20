@@ -21,6 +21,7 @@ export const SearchBar = styled.div`
   position: relative;
   z-index: 301;
   overflow: hidden;
+  user-select: none;
 
   cursor: pointer;
 
@@ -37,6 +38,18 @@ export const SearchBarFilters = styled.div`
   display: flex;
   gap: var(--base-gap-small);
   white-space: nowrap;
+
+  max-width: 100%;
+  overflow-x: auto;
+
+  /* margin trick to prevent borders being cutoff */
+  padding: 2px;
+  margin: -2px;
+
+  /* hide the scrollbar */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const FilterButton = styled(Button)`
