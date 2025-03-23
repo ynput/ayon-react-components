@@ -49,6 +49,32 @@ const options: Option[] = [
       { id: 'low', label: 'Low', color: '#008000', icon: 'star_outline' },
     ],
   },
+  {
+    id: 'attrib.private',
+    type: 'boolean',
+    label: 'Private',
+    operator: 'OR',
+    inverted: false,
+    values: [
+      {
+        id: 'true',
+        label: 'Yes',
+        icon: 'radio_button_checked',
+      },
+      {
+        id: 'false',
+        label: 'No',
+        icon: 'radio_button_unchecked',
+      },
+    ],
+    allowsCustomValues: true,
+    allowHasValue: false,
+    allowNoValue: false,
+    allowExcludes: false,
+    operatorChangeable: false,
+    icon: 'lock',
+    singleSelect: true,
+  },
 ]
 
 const Template = (args: Story['args']) => {
@@ -64,7 +90,7 @@ const Template = (args: Story['args']) => {
       globalSearchConfig={{
         label: 'Global search',
       }}
-      allowedSearchChildren={['status']}
+      allowedSearchChildren={['status', 'attrib.private']}
     />
   )
 }

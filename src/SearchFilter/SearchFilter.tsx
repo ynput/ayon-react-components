@@ -90,7 +90,10 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     // if we want to show children, we need to flatten the options
     // we can limit the children to only those that are allowed if not undefined
     const flattenedOptions = dropdownOptions
-      .filter((o) => !allowedSearchChildren || allowedSearchChildren?.includes(o.id))
+      .filter(
+        (o) =>
+          (!allowedSearchChildren || allowedSearchChildren?.includes(o.id)) && o.type !== 'boolean',
+      )
       .flatMap((option) => {
         return (
           option.values?.map((value) => ({
