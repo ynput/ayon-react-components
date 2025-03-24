@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from 'react'
+import { forwardRef, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -10,6 +10,7 @@ import { Icon, IconType } from '../../Icon'
 import { Button } from '../../Button'
 import { Spacer } from '../../Layout/Spacer'
 import { InputSwitch } from '../../Inputs/InputSwitch'
+import { ShortcutTag } from '../../ShortcutTag'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -64,6 +65,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
   ) => {
     const parentFilter = values.find((filter) => filter.id === parentId)
 
+    const searchRef = useRef<HTMLInputElement>(null)
     const [search, setSearch] = useState('')
 
     // sort options based on selected, skipping certain fields
@@ -170,6 +172,11 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+      // check we are not focused on the search input
+      const target = event.target as HTMLElement
+      const isSearchInput = target.closest('input')
+      if (isSearchInput) return
+
       // enter always confirms the filter
       // if the item is already selected, then we just confirm and close
       // if the item is not selected, we select it and confirm
@@ -198,9 +205,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
           onConfirmAndClose && onConfirmAndClose(values, { restart: event.shiftKey })
         }
       }
-
       // space selected the filter item
-      if (event.key === ' ') {
+      else if (event.key === ' ') {
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
@@ -211,7 +217,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       }
 
       // up arrow
-      if (event.key === 'ArrowUp') {
+      else if (event.key === 'ArrowUp') {
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
@@ -225,7 +231,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         }
       }
       // down arrow
-      if (event.key === 'ArrowDown') {
+      else if (event.key === 'ArrowDown') {
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
@@ -233,11 +239,18 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         next?.focus()
       }
       // arrow left or right
-      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
         event.preventDefault()
         event.stopPropagation()
         // trigger event to switch to next filter to edit, logic in parent
         onSwitchFilter && onSwitchFilter(event.key === 'ArrowRight' ? 'right' : 'left')
+      } else if (event.key.match(/^[a-zA-Z0-9]$/) || event.key === 'Backspace') {
+        event.preventDefault()
+        event.stopPropagation()
+        // continue search by focusing the search input
+        searchRef.current?.focus()
+        // update the search value
+        setSearch((prev) => (event.key === 'Backspace' ? prev.slice(0, -1) : prev + event.key))
       }
 
       // back key
@@ -298,7 +311,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         event.preventDefault()
         event.stopPropagation()
 
-        if (search && filteredOptions.filter((o) => o.id !== 'search').length === 0) {
+        const cmdCtrl = event.metaKey || event.ctrlKey
+        if (search && (filteredOptions.filter((o) => o.id !== 'search').length === 0 || cmdCtrl)) {
           if (parentId) {
             handleAddCustomSearchForFilter()
           } else {
@@ -321,7 +335,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
-        const next = target.parentElement?.nextElementSibling as HTMLElement
+        let next = target.parentElement?.nextElementSibling as HTMLElement
+        if (target.tagName === 'INPUT' && search) next = next.nextElementSibling as HTMLElement
         next?.focus()
       }
     }
@@ -329,9 +344,10 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
-          <Styled.OptionsList ref={ref}>
+          <Styled.OptionsList ref={ref} className={clsx({ searching: !!search })}>
             <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
               <Styled.SearchInput
+                ref={searchRef}
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 onKeyDown={handleSearchKeyDown}
@@ -340,27 +356,35 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
               />
               <Styled.SearchIcon icon={isCustomAllowed ? 'zoom_in' : 'search'} />
             </Styled.SearchContainer>
-            {filteredOptions.map(({ id, parentId, label, searchLabel, icon, img, color }) => {
-              const isSelected = getIsValueSelected(id, parentId, values)
-              const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
-              return (
-                <Styled.Item
-                  key={id}
-                  id={id}
-                  tabIndex={0}
-                  className={clsx({ selected: isSelected })}
-                  onClick={(event) => handleSelectOption(event)}
-                  {...pt.item}
-                >
-                  {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
-                  {img && <img src={img} alt={label} />}
-                  <span className="label" style={{ color: adjustedColor }}>
-                    {search && searchLabel ? searchLabel : label}
-                  </span>
-                  {isSelected && <Icon icon="check" className="check" />}
-                </Styled.Item>
-              )
-            })}
+            {filteredOptions.map(
+              ({ id, parentId, label, searchLabel, icon, img, color, isCustom }) => {
+                const isSelected = getIsValueSelected(id, parentId, values)
+                const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
+                return (
+                  <Styled.Item
+                    key={id}
+                    id={id}
+                    tabIndex={0}
+                    className={clsx({ selected: isSelected })}
+                    onClick={(event) => handleSelectOption(event)}
+                    {...pt.item}
+                  >
+                    {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
+                    {img && <img src={img} alt={label} />}
+                    <span className="label" style={{ color: adjustedColor }}>
+                      {search && searchLabel ? searchLabel : label}
+                    </span>
+                    {isSelected && <Icon icon="check" className="check" />}
+                    {!isSelected && search && isCustom && !parentFilter?.id.includes('text') && (
+                      <ShortcutTag className="search">
+                        {window.navigator.userAgent.toLowerCase().includes('mac') ? 'Cmd' : 'Ctrl'}
+                        +Enter ↵
+                      </ShortcutTag>
+                    )}
+                  </Styled.Item>
+                )
+              },
+            )}
             {filteredOptions.length === 0 && !isCustomAllowed && <span>No filters found</span>}
             {parentId && (
               <Styled.Toolbar className="toolbar">

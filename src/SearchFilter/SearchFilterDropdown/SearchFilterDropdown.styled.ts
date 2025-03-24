@@ -35,6 +35,20 @@ export const OptionsList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: var(--base-gap-small);
+
+  &.searching {
+    /* first child is highlighted only when no items have focus-visible */
+    &:not(:has(li:focus-visible)) li:nth-child(2) {
+      background-color: var(--md-sys-color-secondary-container);
+    }
+
+    &:has(li:focus-visible) {
+      /* hide custom search shortcut */
+      .search.shortcut {
+        display: none;
+      }
+    }
+  }
 `
 
 export const Item = styled.li`
@@ -54,6 +68,17 @@ export const Item = styled.li`
 
   background-color: var(--md-sys-color-surface-container-low);
 
+  img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .check {
+    margin-left: auto;
+  }
+
   &:hover {
     background-color: var(--md-sys-color-surface-container-hover);
   }
@@ -70,15 +95,13 @@ export const Item = styled.li`
     }
   }
 
-  img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    object-fit: cover;
+  &:focus-visible {
+    background-color: var(--md-sys-color-secondary-container);
+    outline: none;
   }
 
-  .check {
-    margin-left: auto;
+  .shortcut {
+    margin: -2px 0 -2px auto;
   }
 `
 
