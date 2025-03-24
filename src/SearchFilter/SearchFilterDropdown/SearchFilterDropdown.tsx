@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useMemo, useRef, useState } from 'react'
+import { forwardRef, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -9,8 +9,8 @@ import getFilterFromId from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
 import { Button } from '../../Buttons/Button'
 import { Spacer } from '../../Layout/Spacer'
+import { InputSwitch } from '../../Inputs/InputSwitch'
 import { ShortcutTag } from '../../ShortcutTag'
-import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -372,18 +372,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
               <Styled.SearchIcon icon={isCustomAllowed ? 'zoom_in' : 'search'} />
             </Styled.SearchContainer>
             {filteredOptions.map(
-              ({
-                id,
-                parentId,
-                label,
-                searchLabel,
-                icon,
-                img,
-                color,
-                isCustom,
-                contentBefore,
-                contentAfter,
-              }) => {
+              ({ id, parentId, label, searchLabel, icon, img, color, isCustom }) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
@@ -392,16 +381,14 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     id={id}
                     tabIndex={0}
                     className={clsx({ selected: isSelected })}
-                    {...pt.item}
                     onClick={(event) => handleSelectOption(event)}
+                    {...pt.item}
                   >
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
-                    {contentBefore && contentBefore}
                     <span className="label" style={{ color: adjustedColor }}>
                       {search && searchLabel ? searchLabel : label}
                     </span>
-                    {!!contentAfter && contentAfter}
                     {isSelected && <Icon icon="check" className="check" />}
                     {!isSelected && search && isCustom && !parentFilter?.id.includes('text') && (
                       <ShortcutTag className="search">
