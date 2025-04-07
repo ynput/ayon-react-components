@@ -9,8 +9,8 @@ import getFilterFromId from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
 import { Button } from '../../Buttons/Button'
 import { Spacer } from '../../Layout/Spacer'
-import { InputSwitch } from '../../Inputs/InputSwitch'
 import { ShortcutTag } from '../../ShortcutTag'
+import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -392,31 +392,30 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                   Back
                 </Button>
                 <Spacer />
-                {isInvertedAllowed && (
-                  <>
-                    <span>Excludes</span>
-                    <InputSwitch
-                      checked={parentFilter?.inverted}
-                      onChange={() => onInvert(parentId)}
+                <Styled.Operations className="operations">
+                  {isInvertedAllowed && (
+                    <SwitchButton
+                      label="Excludes"
+                      value={!!parentFilter?.inverted}
+                      onClick={() => onInvert(parentId)}
+                      variant="primary"
                     />
-                  </>
-                )}
-                {operatorChangeable && (
-                  <Styled.Operator>
-                    {['AND', 'OR'].map((operator) => (
-                      <Button
-                        key={operator}
-                        onClick={() => {
-                          onOperatorChange && onOperatorChange(parentId, operator as FilterOperator)
-                        }}
-                        selected={parentFilter?.operator === operator}
-                        icon={parentFilter?.operator === operator ? 'check' : undefined}
-                      >
-                        {operator}
-                      </Button>
-                    ))}
-                  </Styled.Operator>
-                )}
+                  )}
+                  {operatorChangeable && (
+                    <SwitchButton
+                      label="Match all"
+                      value={parentFilter?.operator === 'AND'}
+                      onClick={() => {
+                        onOperatorChange &&
+                          onOperatorChange(
+                            parentId,
+                            parentFilter?.operator === 'AND' ? 'OR' : 'AND',
+                          )
+                      }}
+                      variant="primary"
+                    />
+                  )}
+                </Styled.Operations>
                 <Button
                   variant="filled"
                   onClick={() => {

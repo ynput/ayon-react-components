@@ -157,6 +157,13 @@ export const Toolbar = styled.div`
   align-items: center;
 `
 
+export const Operations = styled.div`
+  display: flex;
+  gap: var(--base-gap-large);
+  align-items: center;
+  justify-content: center;
+`
+
 export const Operator = styled.div`
   display: flex;
   border-radius: var(--border-radius-m);
