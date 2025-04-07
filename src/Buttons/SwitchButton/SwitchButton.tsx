@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { InputSwitch, InputSwitchProps } from '../Inputs/InputSwitch'
+import { InputSwitch, InputSwitchProps } from '../../Inputs/InputSwitch'
 import * as Styled from './SwitchButton.styled'
 import { ButtonProps } from '../Button'
 import clsx from 'clsx'

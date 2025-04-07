@@ -1,9 +1,9 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react'
 import * as Styled from './Button.styled'
-import { Icon, IconProps, IconType } from '../Icon'
+import { Icon, IconProps, IconType } from '../../Icon'
 import clsx from 'clsx'
-import Typography from '../theme/typography.module.css'
-import { ShortcutTag, ShortcutTagProps } from '../ShortcutTag/ShortcutTag'
+import Typography from '../../theme/typography.module.css'
+import { ShortcutTag, ShortcutTagProps } from '../../ShortcutTag/ShortcutTag'
 
 // TYPES
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

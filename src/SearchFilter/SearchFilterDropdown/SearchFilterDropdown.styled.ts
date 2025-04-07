@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Icon } from '../../Icon'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 
 export const OptionsContainer = styled.div`
   position: absolute;

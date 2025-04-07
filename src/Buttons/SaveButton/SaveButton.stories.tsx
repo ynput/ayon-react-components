@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Panel } from '../Panels/Panel'
+import { Panel } from '../../Panels/Panel'
 import { SaveButton } from './SaveButton'
-import { FormRow } from '../Layout/FormRow'
-import { InputText } from '../Inputs/InputText'
+import { FormRow } from '../../Layout/FormRow'
+import { InputText } from '../../Inputs/InputText'
 import { Button } from '../Button'
-import { Section } from '../Layout/Section'
+import { Section } from '../../Layout/Section'
 import { useState } from 'react'
 
 const meta: Meta<typeof SaveButton> = {

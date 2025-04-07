@@ -1,6 +1,6 @@
 import { forwardRef, useEffect, useState } from 'react'
 import * as Styled from './LockedInput.styled'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 import { IconType } from '../../Icon'
 
 export interface LockedInputProps

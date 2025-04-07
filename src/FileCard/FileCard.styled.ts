@@ -1,6 +1,6 @@
 import styled, { css, keyframes } from 'styled-components'
-import { Button } from '../Button'
-import { ButtonProps } from '../Button/Button.styled'
+import { Button } from '../Buttons/Button'
+import { ButtonProps } from '../Buttons/Button/Button.styled'
 
 const messageAnimation = keyframes`
   from {
