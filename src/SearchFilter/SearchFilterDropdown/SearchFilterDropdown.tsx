@@ -9,8 +9,8 @@ import getFilterFromId from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
 import { Button } from '../../Buttons/Button'
 import { Spacer } from '../../Layout/Spacer'
-import { InputSwitch } from '../../Inputs/InputSwitch'
 import { ShortcutTag } from '../../ShortcutTag'
+import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 
 type OnSelectConfig = {
   confirm?: boolean
