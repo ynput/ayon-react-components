@@ -7,7 +7,7 @@ import toHexColor from '../../helpers/toHexColor'
 import validateHexColor from '../../helpers/validateHexColor'
 
 import floatToInt16 from '../../helpers/floatToInt16'
-import { Button } from '../../Button/Button'
+import { Button } from '../../Buttons/Button/Button'
 import { InputNumber } from '../InputNumber'
 import { InputText } from '../InputText'
 import ColorPickerPreview from './ColorPickerPreview'

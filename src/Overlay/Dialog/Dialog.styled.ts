@@ -1,5 +1,5 @@
 import styled, { css, keyframes } from 'styled-components'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 import { titleMedium } from '../../theme'
 
 const fadeInAnimation = keyframes`

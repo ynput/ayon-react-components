@@ -43,12 +43,12 @@ export { StatusSelect, StatusField } from './Dropdowns/StatusSelect'
 export type { StatusSelectProps, StatusFieldProps, Status } from './Dropdowns/StatusSelect'
 
 // BUTTONS
-export { Button } from './Button'
-export type { ButtonProps } from './Button'
-export { SaveButton } from './SaveButton'
-export type { SaveButtonProps } from './SaveButton'
-export { SwitchButton } from './SwitchButton'
-export type { SwitchButtonProps } from './SwitchButton'
+export { Button } from './Buttons/Button'
+export type { ButtonProps } from './Buttons/Button'
+export { SaveButton } from './Buttons/SaveButton'
+export type { SaveButtonProps } from './Buttons/SaveButton'
+export { SwitchButton } from './Buttons/SwitchButton'
+export type { SwitchButtonProps } from './Buttons/SwitchButton'
 
 export { ShortcutTag } from './ShortcutTag'
 export type { ShortcutTagProps } from './ShortcutTag'

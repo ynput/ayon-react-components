@@ -1,6 +1,6 @@
 import { forwardRef, useEffect } from 'react'
 import * as Styled from './Dialog.styled'
-import { Button, ButtonProps } from '../../Button'
+import { Button, ButtonProps } from '../../Buttons/Button'
 import clsx from 'clsx'
 import { createPortal } from 'react-dom'
 

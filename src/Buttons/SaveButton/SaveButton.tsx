@@ -1,7 +1,7 @@
 import React, { forwardRef, Ref } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 import { Button, ButtonProps } from '../Button'
-import { IconType } from '../Icon'
+import { IconType } from '../../Icon'
 
 const spin = keyframes`
   from {

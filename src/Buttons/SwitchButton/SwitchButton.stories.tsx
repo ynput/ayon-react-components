@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { SwitchButton, SwitchButtonProps } from './SwitchButton'
 import { useState } from 'react'
-import { Panel } from '../Panels/Panel'
+import { Panel } from '../../Panels/Panel'
 
 const meta: Meta<typeof SwitchButton> = {
   component: SwitchButton,

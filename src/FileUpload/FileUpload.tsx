@@ -1,10 +1,10 @@
 import { useState, useRef, useMemo, forwardRef, useEffect } from 'react'
 import * as Styled from './FileUpload.styled'
-import { Button } from '../Button'
+import { Button } from '../Buttons/Button'
 import { Icon, IconType } from '../Icon'
 import { FileCard } from '../FileCard'
 import { Spacer } from '../Layout/Spacer'
-import { SaveButton } from '../SaveButton'
+import { SaveButton } from '../Buttons/SaveButton'
 import { AcceptType } from './fileTypes'
 import { extractSequence, getSeqError } from './FileUploadHelpers'
 
