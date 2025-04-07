@@ -57,8 +57,10 @@
     --md-sys-color-on-primary-hover: var(--md-sys-color-on-primary-dark-hover);
     --md-sys-color-primary-container-hover: var(--md-sys-color-primary-container-dark-hover);
     --md-sys-color-secondary-hover: var(--md-sys-color-secondary-dark-hover);
+    --md-sys-color-on-secondary-hover: var(--md-sys-color-on-secondary-dark-hover);
     --md-sys-color-secondary-container-hover: var(--md-sys-color-secondary-container-dark-hover);
     --md-sys-color-tertiary-hover: var(--md-sys-color-tertiary-dark-hover);
+    --md-sys-color-on-tertiary-hover: var(--md-sys-color-on-tertiary-dark-hover);
     --md-sys-color-tertiary-container-hover: var(--md-sys-color-tertiary-container-dark-hover);
     --md-sys-color-surface-container-highest-hover: var(--md-sys-color-surface-container-highest-dark-hover);
     --md-sys-color-surface-container-high-hover: var(--md-sys-color-surface-container-high-dark-hover);

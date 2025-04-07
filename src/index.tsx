@@ -47,6 +47,8 @@ export { Button } from './Button'
 export type { ButtonProps } from './Button'
 export { SaveButton } from './SaveButton'
 export type { SaveButtonProps } from './SaveButton'
+export { SwitchButton } from './SwitchButton'
+export type { SwitchButtonProps } from './SwitchButton'
 
 export { ShortcutTag } from './ShortcutTag'
 export type { ShortcutTagProps } from './ShortcutTag'

@@ -6,9 +6,11 @@
   --md-sys-color-primary-container-dark-hover: hsl(200, 50%, 25%);
   /* secondary */
   --md-sys-color-secondary-dark-hover: hsl(208, 25%, 74%);
+  --md-sys-color-on-secondary-dark-hover: hsl(203, 25%, 22%);
   --md-sys-color-secondary-container-dark-hover: hsl(207, 19%, 33%);
   /* tertiary */
   --md-sys-color-tertiary-dark-hover: hsl(162, 74%, 46%);
+  --md-sys-color-on-tertiary-dark-hover: hsl(160, 74%, 16%);
   --md-sys-color-tertiary-container-dark-hover: hsl(162, 86%, 20%);
   /* container-surface */
   --md-sys-color-surface-container-highest-dark-hover: hsl(216, 11%, 34%);
