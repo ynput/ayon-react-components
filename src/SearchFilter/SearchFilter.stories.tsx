@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { SearchFilter } from './SearchFilter'
 import { useState } from 'react'
 import { Filter, Option } from './types'
+import { Button } from '../Buttons/Button'
 
 const meta: Meta<typeof SearchFilter> = {
   component: SearchFilter,
@@ -97,5 +98,20 @@ const Template = (args: Story['args']) => {
 
 export const Default: Story = {
   args: {},
+  render: Template,
+}
+
+export const OperationsTemplate: Story = {
+  args: {
+    pt: {
+      dropdown: {
+        operationsTemplate: (
+          <>
+            <Button>Custom</Button>
+          </>
+        ),
+      },
+    },
+  },
   render: Template,
 }

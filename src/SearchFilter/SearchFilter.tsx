@@ -31,8 +31,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
   pt?: {
-    dropdown?: SearchFilterDropdownProps
-    item?: SearchFilterItemProps
+    dropdown?: Partial<SearchFilterDropdownProps>
+    item?: Partial<SearchFilterItemProps>
     searchBar?: React.HTMLAttributes<HTMLDivElement>
     backdrop?: React.HTMLAttributes<HTMLDivElement>
   }
@@ -87,23 +87,30 @@ export const SearchFilter: FC<SearchFilterProps> = ({
     // if we don't want to show children, return the options
     if (!enableSearchChildren) return dropdownOptions
 
-    // if we want to show children, we need to flatten the options
-    // we can limit the children to only those that are allowed if not undefined
-    const flattenedOptions = dropdownOptions
-      .filter(
-        (o) =>
-          (!allowedSearchChildren || allowedSearchChildren?.includes(o.id)) && o.type !== 'boolean',
-      )
-      .flatMap((option) => {
-        return (
-          option.values?.map((value) => ({
-            ...value,
-            parentId: option.id,
-            searchOnly: true,
-            searchLabel: `${option.label} - ${value.label}`,
-          })) || []
-        )
-      })
+    // Use a for loop to process options in a single pass
+    const flattenedOptions = []
+    const addedItems = new Set() // Track added items to avoid duplicates
+
+    for (const option of dropdownOptions) {
+      if (
+        (!allowedSearchChildren || allowedSearchChildren?.includes(option.id)) &&
+        option.type !== 'boolean'
+      ) {
+        if (option.values && option.values.length > 0) {
+          for (const value of option.values) {
+            if (!addedItems.has(value.id)) {
+              addedItems.add(value.id)
+              flattenedOptions.push({
+                ...value,
+                parentId: option.id,
+                searchOnly: true,
+                searchLabel: `${option.label} - ${value.label}`,
+              })
+            }
+          }
+        }
+      }
+    }
 
     return [...dropdownOptions, ...flattenedOptions]
   }, [dropdownOptions, enableSearchChildren, allowedSearchChildren])
