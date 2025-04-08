@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { CustomFile, FileUpload, FileUploadProps } from '.'
 import { useState } from 'react'
 import { Panel } from '../Panels/Panel'
-import { Button } from '../Button'
+import { Button } from '../Buttons/Button'
 import filesData from './filesData'
 
 const getFileObjects = async (files: CustomFile[]): Promise<CustomFile[]> => {
