@@ -372,7 +372,18 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
               <Styled.SearchIcon icon={isCustomAllowed ? 'zoom_in' : 'search'} />
             </Styled.SearchContainer>
             {filteredOptions.map(
-              ({ id, parentId, label, searchLabel, icon, img, color, isCustom }) => {
+              ({
+                id,
+                parentId,
+                label,
+                searchLabel,
+                icon,
+                img,
+                color,
+                isCustom,
+                contentBefore,
+                contentAfter,
+              }) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
@@ -381,14 +392,16 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     id={id}
                     tabIndex={0}
                     className={clsx({ selected: isSelected })}
-                    onClick={(event) => handleSelectOption(event)}
                     {...pt.item}
+                    onClick={(event) => handleSelectOption(event)}
                   >
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
+                    {contentBefore && contentBefore}
                     <span className="label" style={{ color: adjustedColor }}>
                       {search && searchLabel ? searchLabel : label}
                     </span>
+                    {!!contentAfter && contentAfter}
                     {isSelected && <Icon icon="check" className="check" />}
                     {!isSelected && search && isCustom && !parentFilter?.id.includes('text') && (
                       <ShortcutTag className="search">
