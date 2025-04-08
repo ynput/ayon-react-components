@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { forwardRef, ReactNode, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -29,6 +29,7 @@ export interface SearchFilterDropdownProps {
   isInvertedAllowed?: boolean
   operatorChangeable?: boolean
   preserveOrderFields?: string[]
+  operationsTemplate?: ReactNode
   onSelect: (option: Option, config?: OnSelectConfig) => void
   onInvert: (id: string) => void // invert the filter
   onOperatorChange?: (id: string, operator: FilterOperator) => void // change the operator
@@ -53,6 +54,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       isInvertedAllowed,
       operatorChangeable,
       preserveOrderFields = [],
+      operationsTemplate,
       onSelect,
       onInvert,
       onOperatorChange,
@@ -393,27 +395,33 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                 </Button>
                 <Spacer />
                 <Styled.Operations className="operations">
-                  {isInvertedAllowed && (
-                    <SwitchButton
-                      label="Excludes"
-                      value={!!parentFilter?.inverted}
-                      onClick={() => onInvert(parentId)}
-                      variant="primary"
-                    />
-                  )}
-                  {operatorChangeable && (
-                    <SwitchButton
-                      label="Match all"
-                      value={parentFilter?.operator === 'AND'}
-                      onClick={() => {
-                        onOperatorChange &&
-                          onOperatorChange(
-                            parentId,
-                            parentFilter?.operator === 'AND' ? 'OR' : 'AND',
-                          )
-                      }}
-                      variant="primary"
-                    />
+                  {!!operationsTemplate ? (
+                    operationsTemplate
+                  ) : (
+                    <>
+                      {isInvertedAllowed && (
+                        <SwitchButton
+                          label="Excludes"
+                          value={!!parentFilter?.inverted}
+                          onClick={() => onInvert(parentId)}
+                          variant="primary"
+                        />
+                      )}
+                      {operatorChangeable && (
+                        <SwitchButton
+                          label="Match all"
+                          value={parentFilter?.operator === 'AND'}
+                          onClick={() => {
+                            onOperatorChange &&
+                              onOperatorChange(
+                                parentId,
+                                parentFilter?.operator === 'AND' ? 'OR' : 'AND',
+                              )
+                          }}
+                          variant="primary"
+                        />
+                      )}
+                    </>
                   )}
                 </Styled.Operations>
                 <Button
@@ -459,7 +467,8 @@ const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: 
   const parsedSearch = search.toLowerCase()
 
   const matched = matchSorter(options, parsedSearch, {
-    keys: ['label', 'context', 'keywords'],
+    keys: ['label'],
+    threshold: matchSorter.rankings.WORD_STARTS_WITH,
   })
 
   // if isCustomAllowed, add the custom value to the list

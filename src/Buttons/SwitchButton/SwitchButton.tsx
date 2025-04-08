@@ -9,7 +9,7 @@ export interface SwitchButtonProps
   label: React.ReactNode
   value: boolean
   disabled?: boolean
-  onClick: () => void
+  onClick?: () => void
   variant?: 'primary' | 'secondary' | 'tertiary'
   pt?: {
     switch?: InputSwitchProps
@@ -22,7 +22,7 @@ export const SwitchButton = forwardRef<HTMLButtonElement, SwitchButtonProps>(
       // prevent click events from input
       if (e.target instanceof HTMLElement && e.target.tagName === 'INPUT') return
 
-      onClick()
+      onClick?.()
     }
 
     return (

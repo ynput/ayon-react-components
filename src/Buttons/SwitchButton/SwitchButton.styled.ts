@@ -9,6 +9,8 @@ export const ButtonWrapper = styled(Button)`
   .label {
     flex: 1;
     text-align: left;
+    display: flex;
+    align-items: center;
   }
 
   /* Default unselected state is the same for all variants */
