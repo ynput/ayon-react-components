@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef, useState } from 'react'
+import { forwardRef, ReactNode, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
