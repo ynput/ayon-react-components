@@ -3,6 +3,7 @@ import { SearchFilter } from './SearchFilter'
 import { useState } from 'react'
 import { Filter, Option } from './types'
 import { Button } from '../Buttons/Button'
+import { Icon } from '../Icon'
 
 const meta: Meta<typeof SearchFilter> = {
   component: SearchFilter,
@@ -83,8 +84,8 @@ const Template = (args: Story['args']) => {
 
   return (
     <SearchFilter
-      {...args}
       options={options}
+      {...args}
       filters={filters}
       onChange={setFilters}
       enableGlobalSearch
@@ -110,6 +111,34 @@ export const OperationsTemplate: Story = {
             <Button>Custom</Button>
           </>
         ),
+      },
+    },
+  },
+  render: Template,
+}
+
+export const OptionsContent: Story = {
+  args: {
+    options: options.map((o) => ({ ...o, contentAfter: <Icon icon="circle" /> })),
+    pt: {
+      dropdown: {
+        pt: {
+          hasNoOption: {
+            contentAfter: <Icon icon="bolt" />,
+          },
+          hasSomeOption: {
+            contentAfter: <Icon icon="bolt" />,
+          },
+          item: {
+            onClick: (event) => {
+              const id = (event.target as HTMLLIElement).id
+              if (id === 'noValue' || id === 'hasValue') {
+                window.alert('You clicked on ' + id)
+                return false
+              } else return true
+            },
+          },
+        },
       },
     },
   },

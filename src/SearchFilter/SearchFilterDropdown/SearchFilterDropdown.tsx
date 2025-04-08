@@ -37,7 +37,11 @@ export interface SearchFilterDropdownProps {
   onSwitchFilter?: (direction: 'left' | 'right') => void // switch to the next filter to edit
   pt?: {
     search?: React.HTMLAttributes<HTMLDivElement>
-    item?: React.HTMLAttributes<HTMLLIElement>
+    item?: Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> & {
+      onClick?: (event: React.MouseEvent<HTMLLIElement>) => boolean
+    }
+    hasSomeOption?: Partial<Option>
+    hasNoOption?: Partial<Option>
   }
 }
 
@@ -60,7 +64,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       onOperatorChange,
       onConfirmAndClose,
       onSwitchFilter,
-      pt = { search: {}, item: {} },
+      pt = { search: {}, item: {}, hasSomeOption: {}, hasNoOption: {} },
       ...props
     },
     ref,
@@ -100,6 +104,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
             parentId,
             values: [],
             icon: 'check',
+            ...pt.hasSomeOption,
           },
           ...optionsList,
         ]
@@ -112,6 +117,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
             parentId,
             values: [],
             icon: 'unpublished',
+            ...pt.hasNoOption,
           },
           ...optionsList,
         ]
@@ -125,9 +131,16 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       [allOptions, search],
     )
 
-    const handleSelectOption = (
-      event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
-    ) => {
+    const handleSelectOption = (event: React.MouseEvent<HTMLElement>) => {
+      // check if there is a custom onClick event
+      if (!!pt.item?.onClick) {
+        const result = pt.item.onClick(
+          event as unknown as React.MouseEvent<HTMLLIElement, MouseEvent>,
+        )
+        // do not continue if the event was prevented
+        if (result === false) return
+      }
+
       event.preventDefault()
       event.stopPropagation()
 
@@ -359,7 +372,18 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
               <Styled.SearchIcon icon={isCustomAllowed ? 'zoom_in' : 'search'} />
             </Styled.SearchContainer>
             {filteredOptions.map(
-              ({ id, parentId, label, searchLabel, icon, img, color, isCustom }) => {
+              ({
+                id,
+                parentId,
+                label,
+                searchLabel,
+                icon,
+                img,
+                color,
+                isCustom,
+                contentBefore,
+                contentAfter,
+              }) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
@@ -368,14 +392,16 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     id={id}
                     tabIndex={0}
                     className={clsx({ selected: isSelected })}
-                    onClick={(event) => handleSelectOption(event)}
                     {...pt.item}
+                    onClick={(event) => handleSelectOption(event)}
                   >
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
+                    {contentBefore && contentBefore}
                     <span className="label" style={{ color: adjustedColor }}>
                       {search && searchLabel ? searchLabel : label}
                     </span>
+                    {!!contentAfter && contentAfter}
                     {isSelected && <Icon icon="check" className="check" />}
                     {!isSelected && search && isCustom && !parentFilter?.id.includes('text') && (
                       <ShortcutTag className="search">

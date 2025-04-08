@@ -45,4 +45,6 @@ export interface Option extends Filter {
   parentId?: string | null // parent filter id
   searchOnly?: boolean //  It will be shown when searching but hidden usually
   searchLabel?: string // label to be shown when searching
+  contentBefore?: React.ReactNode // content to be shown before the filter
+  contentAfter?: React.ReactNode // content to be shown after the filter
 }
