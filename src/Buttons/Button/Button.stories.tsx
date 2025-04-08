@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Button, ButtonProps } from '.'
 import { useState } from 'react'
-import { Panel } from '../Panels/Panel'
+import { Panel } from '../../Panels/Panel'
 
 const meta: Meta<typeof Button> = {
   component: Button,

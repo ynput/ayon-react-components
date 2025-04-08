@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { EntityCard, EntityCardProps } from '.'
 import { MouseEvent, useState } from 'react'
-import { Button } from '../Button'
+import { Button } from '../Buttons/Button'
 import DnDTemplate from './DnD/DnDTemplate'
 import getRandomImage from '../helpers/getRandomImage'
 import styled from 'styled-components'
