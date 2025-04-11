@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef, useState } from 'react'
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
@@ -7,10 +7,12 @@ import SearchFilterDropdown, {
   SearchFilterDropdownProps,
 } from './SearchFilterDropdown/SearchFilterDropdown'
 import { useFocusOptions } from './hooks'
+import { useCompactDisplay } from './hooks/useCompactDisplay'
 import buildFilterId from './buildFilterId'
 import getFilterFromId from './getFilterFromId'
 import doesFilterExist from './doesFilterExist'
 import { Icon } from '../Icon'
+import clsx from 'clsx'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
@@ -58,6 +60,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
   },
   ...props
 }) => {
+  const filtersBarRef = useRef<HTMLDivElement>(null)
   const filtersRef = useRef<HTMLDivElement>(null)
   const dropdownRef = useRef<HTMLUListElement>(null)
 
@@ -167,6 +170,13 @@ export const SearchFilter: FC<SearchFilterProps> = ({
       lastFilter?.focus()
     }
   }
+
+  // Replace the compact display logic with the custom hook
+  const showIconsOnly = useCompactDisplay({
+    containerRef: filtersBarRef,
+    contentRef: filtersRef,
+    dependencies: [filters],
+  })
 
   const handleOptionSelect: SearchFilterDropdownProps['onSelect'] = (option, config) => {
     const { values, parentId } = option
@@ -401,11 +411,13 @@ export const SearchFilter: FC<SearchFilterProps> = ({
         onClick={(e) => openInitialOptions(e, { hidable: true, filters })}
         onKeyDown={handleSearchBarKeyDown}
         tabIndex={0}
+        ref={filtersBarRef}
         {...pt.searchBar}
+        className={clsx('search-bar', pt.searchBar?.className)}
       >
         <Icon icon="search" className="search" />
         {!!filters.length && (
-          <Styled.SearchBarFilters ref={filtersRef}>
+          <Styled.SearchBarFilters ref={filtersRef} className="filter-values">
             {filters.map((filter, index) => (
               <SearchFilterItem
                 key={filter.id + index}
@@ -420,6 +432,7 @@ export const SearchFilter: FC<SearchFilterProps> = ({
                 isEditing={dropdownParentId === filter.id}
                 isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
                 isReadonly={filter.isReadonly}
+                isCompact={showIconsOnly}
                 onEdit={handleEditFilter}
                 onRemove={handleRemoveFilter}
                 onInvert={handleInvertFilter}
