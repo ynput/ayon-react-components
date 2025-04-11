@@ -71,6 +71,7 @@ export interface SearchFilterItemProps
   isEditing?: boolean
   isInvertedAllowed?: boolean
   isDisabled?: boolean
+  isCompact?: boolean
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
@@ -94,6 +95,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isInvertedAllowed,
       isDisabled,
       isReadonly,
+      isCompact,
       onEdit,
       onRemove,
       onInvert,
@@ -173,7 +175,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
               color={value.color}
               isCustom={value.isCustom}
               operator={index > 0 ? operator : undefined}
-              isCompact={values.length > 1 && (!!value.icon || !!value.img)}
+              isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
               {...pt.value}
               id={value.id}
               label={value.label}
