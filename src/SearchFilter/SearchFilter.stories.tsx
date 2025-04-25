@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
-import { SearchFilter } from './SearchFilter'
-import { useState } from 'react'
+import { SearchFilter, SearchFilterRef } from './SearchFilter'
+import { useState, useRef } from 'react'
 import { Filter, Option } from './types'
 import { Button } from '../Buttons/Button'
 import { Icon } from '../Icon'
@@ -100,6 +100,34 @@ const Template = (args: Story['args']) => {
 export const Default: Story = {
   args: {},
   render: Template,
+}
+
+export const WithExternalControl: Story = {
+  args: {},
+  render: (args) => {
+    const [filters, setFilters] = useState<Filter[]>([])
+    const filterRef = useRef<SearchFilterRef>(null)
+
+    return (
+      <div>
+        <div style={{ marginBottom: '20px', display: 'flex', gap: '8px' }}>
+          <Button onClick={() => filterRef.current?.open()}>Open Filter</Button>
+          <Button onClick={() => filterRef.current?.close()}>Close Filter</Button>
+        </div>
+        <SearchFilter
+          ref={filterRef}
+          options={options}
+          filters={filters}
+          onChange={setFilters}
+          enableGlobalSearch
+          globalSearchConfig={{
+            label: 'Global search',
+          }}
+          allowedSearchChildren={['status', 'attrib.private']}
+        />
+      </div>
+    )
+  },
 }
 
 export const OperationsTemplate: Story = {
