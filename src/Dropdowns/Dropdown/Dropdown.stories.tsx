@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '.'
 import { useRef, useState } from 'react'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 import { Icon, IconType } from '../../Icon'
 import { InputText } from '../../Inputs/InputText'
 import { Toolbar } from '../../Layout/Toolbar'

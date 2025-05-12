@@ -1,2 +1,4 @@
 export * from './SearchFilter'
 export * from './types'
+export * from './buildFilterId'
+export * from './getFilterFromId'

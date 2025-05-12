@@ -1,4 +1,4 @@
-import getFilterFromId from './getFilterFromId'
+import { getFilterFromId } from './getFilterFromId'
 import { Filter } from './types'
 
 const doesFilterExist = (filterId: string, filters: Filter[]) => {

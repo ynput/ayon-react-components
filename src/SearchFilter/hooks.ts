@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Option } from './types'
+import { FILTER_SEPARATOR } from './buildFilterId'
 
 type UseFocusOptions = {
   ref: React.RefObject<HTMLUListElement>
@@ -14,5 +15,5 @@ export const useFocusOptions = ({ ref, options }: UseFocusOptions) => {
     if (!ids) return
     // focus search input
     ref.current?.querySelector('input')?.focus()
-  }, [ref, ids?.join('_')])
+  }, [ref, ids?.join(FILTER_SEPARATOR)])
 }
