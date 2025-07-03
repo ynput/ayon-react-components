@@ -174,9 +174,6 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
     const handleFiles = (newFiles: FileList) => {
       if (!newFiles.length) return
 
-      // if we don't allow multiple, remove all files
-      if (!allowMultiple) setFiles([])
-
       let acceptedFiles: CustomFile[] = []
 
       // sort files by name
@@ -213,15 +210,15 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           !accept.includes('*')
         ) {
           setErrorMessage(`Invalid file type: ${extension}`)
-          // skip this file
           continue
         }
 
-        // check if file already exists
-        if (files?.find((f) => f.file.name === fileName)) {
-          setErrorMessage(`File already exists: ${fileName}`)
-          // skip this file
-          continue
+        // skip duplicate check if we are about to overwrite (allowSequence && !allowMultiple)
+        if (!(allowSequence && !allowMultiple)) {
+          if (files?.find((f) => f.file.name === fileName)) {
+            setErrorMessage(`File already exists: ${fileName}`)
+            continue
+          }
         }
 
         // check we can even have sequences
@@ -244,61 +241,42 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
 
         // if it is, add it to the sequence
         const [prefix, sequenceNumber] = seqMatch
-        // if the sequence doesn't exist, create it
         const sequenceId = prefix + extensionWithDot
 
         if (!sequences[sequenceId]) sequences[sequenceId] = { files: [], counts: [] }
         const foundSequence = sequences[sequenceId]
 
-        // add the file to the sequence
         foundSequence.files.push({ file, sequenceNumber })
 
-        // get last count
-        // if there is no last count, add the first count
-        // if the last count is not the current count - 1 (next), push the current count
-        // if the last count is the current count - 1, update the last count to the current count
-        // if the last count is the current count, do nothing
+        // sequence range logic
         const counts = [...foundSequence.counts]
         const lastCount = counts[counts.length - 1]
         if (lastCount === undefined) {
-          // console.log('no count', counts)
-          // If there is no last count, add the first count
           counts.push([sequenceNumber, sequenceNumber])
         } else if (lastCount[1] !== sequenceNumber - 1) {
-          // console.log('not next', counts)
-          // If the last count is not the current count - 1 (next), push the current count
           counts.push([sequenceNumber, sequenceNumber])
         } else {
-          // console.log('next', counts)
-          // If the last count is the current count - 1, update the last count to the current count
           counts[counts.length - 1] = [lastCount[0], sequenceNumber]
         }
-
-        // update counts
         foundSequence.counts = counts
       }
 
       // if we don't allow multiple and don't allow sequences, only accept the first file
       if (!allowMultiple && !allowSequence) {
         if (acceptedFiles.length > 1) {
-          console.log('only one file allowed')
           setErrorMessage('Only 1 file allowed')
-          // return first file
           setFiles([acceptedFiles[0]])
           return
         } else if (Object.keys(sequences).length) {
           if (Object.keys(sequences).length > 1) {
-            console.log('only one sequence allowed')
             setErrorMessage('Only 1 sequence allowed')
           }
-          // return first file from first sequence
           const firstSequence = Object.values(sequences)[0]
           if (firstSequence && firstSequence.files.length) {
             setFiles([{ ...firstSequence.files[0], sequenceId: null }])
             return
           } else {
             setErrorMessage('No files found')
-            // return no files
             setFiles([])
             return
           }
@@ -310,46 +288,39 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         if (Object.keys(sequences).length > 1) {
           setErrorMessage('Only 1 file allowed')
         }
-        // splice out all accepted files after the first
         acceptedFiles.splice(1, acceptedFiles.length - 1)
       }
 
       // for each sequence
-      for (const [id, { files, counts }] of Object.entries(sequences)) {
-        if (files.length < 2) {
+      for (const [id, { files: seqFilesArr, counts }] of Object.entries(sequences)) {
+        if (seqFilesArr.length < 2) {
           if (!onlySequences) {
-            // if there is only one file in the sequence, add it to the accepted files
-            acceptedFiles.push({ ...files[0], sequenceId: null, sequenceNumber: null })
+            acceptedFiles.push({ ...seqFilesArr[0], sequenceId: null, sequenceNumber: null })
           } else {
-            // we must have a sequence, discard if file is not part of a sequence
             setErrorMessage('Only sequences allowed')
             continue
           }
           if (!allowMultiple && allowSequence) {
-            setErrorMessage('Only 1 file allowed')
+            setErrorMessage('Only 1 sequence allowed')
             break
           } else {
             continue
           }
         }
 
-        // check if broken sequences are allow and if the sequence is broken
         if (counts.length > 1 && !allowBrokenSequence) {
           setErrorMessage('Broken sequences not allowed')
           continue
         }
 
-        // sort the files by filename
-        const sortedFiles = files.sort()
-        // create sequence Id from id and counts
+        // sort by sequenceNumber
+        const sortedFiles = seqFilesArr
+          .slice()
+          .sort((a, b) => (a.sequenceNumber ?? 0) - (b.sequenceNumber ?? 0))
         const idPrefix = id.slice(0, id.lastIndexOf('.'))
         const idExtension = id.slice(id.lastIndexOf('.'))
 
-        // filename[0001-0005][0008-0009].jpg
         let sequenceId = idPrefix
-
-        // max counts 3
-        // otherwise, use [start...end]
         if (counts.length > 3) {
           sequenceId += `[${counts[0][0]}--${counts[counts.length - 1][1]}]`
         } else {
@@ -360,7 +331,6 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
               .join(', ') +
             ']'
         }
-
         sequenceId += idExtension
 
         const seqFiles = sortedFiles.map(({ file, sequenceNumber }) => ({
@@ -369,21 +339,21 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
           sequenceId: sequenceId,
         }))
 
-        //if we allow sequences but don't allow multiple, only accept the first sequence, remove accepted files
-        // return to prevent adding more sequences
         if (!allowMultiple && allowSequence) {
           // Overwrite current files with this sequence
+          if (Object.keys(sequences).length > 1) {
+            setErrorMessage('Only 1 sequence allowed, overwriting previous sequence.')
+          }
           setFiles(seqFiles)
           return
         } else if (allowSequence) {
-          // add the sequence to the accepted files
           acceptedFiles.push(...seqFiles)
         }
       }
 
       if (!acceptedFiles.length) return
       else {
-        const newFiles = [...files]
+        const newFiles = allowMultiple || allowSequence ? [...files] : []
         for (const file of acceptedFiles) {
           newFiles.push(file)
         }
