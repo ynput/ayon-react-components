@@ -372,14 +372,10 @@ export const FileUpload = forwardRef<HTMLFormElement, FileUploadProps>(
         //if we allow sequences but don't allow multiple, only accept the first sequence, remove accepted files
         // return to prevent adding more sequences
         if (!allowMultiple && allowSequence) {
-          if (Object.entries(sequences).length > 1) {
-            setErrorMessage('Only 1 sequence allowed')
-          }
-          // use splice to remove all files and only add this sequence
-          acceptedFiles.splice(0, acceptedFiles.length, ...seqFiles)
-
-          break
-        } else {
+          // Overwrite current files with this sequence
+          setFiles(seqFiles)
+          return
+        } else if (allowSequence) {
           // add the sequence to the accepted files
           acceptedFiles.push(...seqFiles)
         }
