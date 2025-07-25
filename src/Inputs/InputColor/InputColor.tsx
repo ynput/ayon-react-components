@@ -250,7 +250,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
         
         // This does not work as expected: input type="number" does not allow us
         // to check the selection. TODO: Replace this with text input eventually
-        const allSelected = input.selectionStart === 0 && input.selectionEnd === value.length
+        const allSelected = input.selectionStart !== null && input.selectionEnd !== null && input.selectionStart === 0 && input.selectionEnd === value.length
 
         if (value === '' || allSelected) {
           const newValue = 0
