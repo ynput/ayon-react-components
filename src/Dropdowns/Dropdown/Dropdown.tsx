@@ -132,7 +132,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       itemTemplate,
       itemStyle,
       buttonStyle,
-      searchFields = ['value'],
+      searchFields = ['value', 'label'],
       valueIcon,
       message,
       messageOverButton,

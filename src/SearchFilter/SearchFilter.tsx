@@ -1,4 +1,5 @@
-import { FC, useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
+import { FC, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
+
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
@@ -8,8 +9,8 @@ import SearchFilterDropdown, {
 } from './SearchFilterDropdown/SearchFilterDropdown'
 import { useFocusOptions } from './hooks'
 import { useCompactDisplay } from './hooks/useCompactDisplay'
-import buildFilterId from './buildFilterId'
-import getFilterFromId from './getFilterFromId'
+import { buildFilterId } from './buildFilterId'
+import { getFilterFromId } from './getFilterFromId'
 import doesFilterExist from './doesFilterExist'
 import { Icon } from '../Icon'
 import clsx from 'clsx'
