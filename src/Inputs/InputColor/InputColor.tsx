@@ -226,6 +226,49 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
     // check if dialog is actually required
     const useDialog = alpha || ['uint16', 'float'].includes(format)
 
+
+    const onInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const input = e.target as HTMLInputElement
+      // if enter key is pressed, confirm dialog
+      if (e.key === 'Enter' && useDialog) {
+        e.preventDefault()
+        handleConfirmDialog()
+        return
+      }
+
+      //if escape key is pressed, cancel dialog
+      if (e.key === 'Escape' && useDialog) {
+        e.preventDefault()
+        handleCancelDialog()
+        return
+      }
+
+      // Handle decimal point being typed
+      if (e.key === '.' || e.key === ',') {
+
+        const value = input.value
+        
+        // This does not work as expected: input type="number" does not allow us
+        // to check the selection. TODO: Replace this with text input eventually
+        const allSelected = input.selectionStart !== null && input.selectionEnd !== null && input.selectionStart === 0 && input.selectionEnd === value.length
+
+        if (value === '' || allSelected) {
+          const newValue = 0
+          const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+            window.HTMLInputElement.prototype,
+            'value'
+          )?.set
+          nativeInputValueSetter?.call(input, newValue)
+
+          const event = new Event('input', { bubbles: true })
+          input.dispatchEvent(event)
+
+        }
+      }
+
+    }
+
+
     return (
       <div ref={ref} {...props}>
         <ColorPickerPreview
@@ -267,7 +310,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                   maxLength={7}
                   placeholder={formatsConfig.hex.placeholder}
                   required
-                  onKeyDown={(e) => e.key === 'Enter' && handleConfirmDialog()}
+                  onKeyDown={onInputKeyDown}
                 />
               </div>
             ) : (
@@ -285,7 +328,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                       onChange={handleOnChange}
                       placeholder={formatsConfig[format].placeholder?.toString()}
                       required
-                      onKeyDown={(e) => e.key === 'Enter' && handleConfirmDialog()}
+                      onKeyDown={onInputKeyDown}
                     />
                   </div>
                 )
@@ -303,7 +346,7 @@ export const InputColor = forwardRef<HTMLDivElement, InputColorProps>(
                   onChange={(e) => setLocalAlpha(parseFloat(e.target.value))}
                   placeholder={'0.5'}
                   required
-                  onKeyDown={(e) => e.key === 'Enter' && handleConfirmDialog()}
+                  onKeyDown={onInputKeyDown}
                 />
               </div>
             )}

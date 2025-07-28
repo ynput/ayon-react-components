@@ -1,13 +1,19 @@
-const validateHexColor = (newValue, oldValue) => {
-  // ^# first character match #
-  // [0-9a-f]{3} match exactly 3 chars between 0-9 and a-f
-  // {1,2}  match 3 chars 1 or 2 times
-  // /i ignore case
-  const hexReg = /^#([0-9a-f]{3}){1,2}$/i
-  // if fails use initValue
-  if (!hexReg.test(newValue)) newValue = oldValue
+const HEX_RE = /^#[0-9a-f]{6}$/i
+const HEX_SHORT_RE = /^#[0-9a-f]{3}$/i
 
-  return newValue
+const validateHexColor = (newValue, oldValue) => {
+  let finalValue = newValue
+
+  if (HEX_SHORT_RE.test(newValue)) {
+    // if the new value is a short hex color, convert it to long hex color
+    finalValue = `#${newValue[1]}${newValue[1]}${newValue[2]}${newValue[2]}${newValue[3]}${newValue[3]}`
+  }
+
+  // if fails use initValue
+  if (!HEX_RE.test(finalValue)) {
+    finalValue = oldValue
+  }
+  return finalValue
 }
 
 export default validateHexColor
