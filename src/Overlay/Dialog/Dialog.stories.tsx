@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Dialog } from '.'
 import { useState } from 'react'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 import { InputColor } from '../../Inputs/InputColor'
 import { Dropdown } from '../../Dropdowns/Dropdown'
 

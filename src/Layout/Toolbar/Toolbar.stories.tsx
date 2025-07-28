@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { Toolbar } from '.'
 import { Panel } from '../../Panels/Panel'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 import { useState } from 'react'
 
 const meta: Meta<typeof Toolbar> = {

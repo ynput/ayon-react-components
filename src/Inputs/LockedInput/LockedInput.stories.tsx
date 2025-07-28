@@ -3,7 +3,7 @@ import { LockedInput } from '.'
 import { useState } from 'react'
 import { Dialog } from '../../Overlay/Dialog'
 import { InputText } from '../InputText'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 
 const meta: Meta<typeof LockedInput> = {
   component: LockedInput,

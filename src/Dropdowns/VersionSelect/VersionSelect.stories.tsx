@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { useState } from 'react'
 import { VersionSelectProps, VersionSelect } from './VersionSelect'
-import { Button } from '../../Button'
+import { Button } from '../../Buttons/Button'
 
 const meta: Meta<typeof VersionSelect> = {
   component: VersionSelect,
