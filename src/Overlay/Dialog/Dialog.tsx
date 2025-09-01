@@ -17,6 +17,7 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   classNames?: ClassNames
   size?: 'sm' | 'md' | 'lg' | 'full'
   hideBackdrop?: boolean
+  enableBackdropClose?: boolean
   portalRef?: HTMLElement
   pt?: {
     backdrop?: React.HTMLAttributes<HTMLDivElement>
@@ -39,6 +40,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     hideCancelButton = false,
     showCloseButton = false,
     hideBackdrop = false,
+    enableBackdropClose = true,
     closeProps,
     isOpen,
     onClose,
@@ -63,7 +65,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
   }, [isOpen])
 
   const closeIfClickOutside = (e: React.MouseEvent<HTMLElement>) => {
-    if (e.currentTarget === e.target) handleCloseModal(e)
+    if (e.currentTarget === e.target && enableBackdropClose) handleCloseModal(e)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
