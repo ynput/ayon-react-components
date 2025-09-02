@@ -11,6 +11,7 @@ import { Button } from '../../Buttons/Button'
 import { Spacer } from '../../Layout/Spacer'
 import { ShortcutTag } from '../../ShortcutTag'
 import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
+import { SEARCH_FILTER_ID } from '../constants'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -295,22 +296,12 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       if (!(!parentId && isCustomAllowed))
         return console.error('Global search filters are not allowed')
 
-      // first check there is a text option in all options
-      let customTextFilter = allOptions.find((option) => option.id === 'text')
-      if (!customTextFilter) {
-        // check if the text filter has already been added
-        customTextFilter = values.find((option) => option.id.includes('text'))
-      }
-
-      // if there is no text filter, return
-      if (!customTextFilter) return console.error('Text option not found')
-
-      const newId = buildFilterId('text')
+      const newId = buildFilterId(SEARCH_FILTER_ID)
 
       const newFilter: Filter = {
         id: newId,
-        label: customTextFilter.label || 'Text',
-        values: [{ id: search, label: search, parentId: newId, isCustom: true }],
+        label: '',
+        values: [{ id: search, label: search, parentId: newId }],
       }
 
       // clear the search
@@ -369,7 +360,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                 placeholder={getSearchPlaceholder(isCustomAllowed, allOptions)}
                 autoFocus
               />
-              <Styled.SearchIcon icon={isCustomAllowed ? 'zoom_in' : 'search'} />
+              <Styled.SearchIcon icon={'search'} />
             </Styled.SearchContainer>
             {filteredOptions.map(
               ({
@@ -403,12 +394,17 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     </span>
                     {!!contentAfter && contentAfter}
                     {isSelected && <Icon icon="check" className="check" />}
-                    {!isSelected && search && isCustom && !parentFilter?.id.includes('text') && (
-                      <ShortcutTag className="search">
-                        {window.navigator.userAgent.toLowerCase().includes('mac') ? 'Cmd' : 'Ctrl'}
-                        +Enter ↵
-                      </ShortcutTag>
-                    )}
+                    {!isSelected &&
+                      search &&
+                      isCustom &&
+                      !parentFilter?.id.includes(SEARCH_FILTER_ID) && (
+                        <ShortcutTag className="search">
+                          {window.navigator.userAgent.toLowerCase().includes('mac')
+                            ? 'Cmd'
+                            : 'Ctrl'}
+                          +Enter ↵
+                        </ShortcutTag>
+                      )}
                   </Styled.Item>
                 )
               },
@@ -502,9 +498,9 @@ const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: 
     matched.push({
       id: 'search',
       label: search,
-      icon: 'add',
+      icon: 'search',
       values: [],
-      parentId: 'text',
+      parentId: SEARCH_FILTER_ID,
       isCustom: true,
       searchOnly: true,
     })
@@ -517,10 +513,10 @@ const getSearchPlaceholder = (isCustomAllowed: boolean, options: Option[]) => {
   const somePreMadeOptions = options.length > 0 && options.some((option) => !option.isCustom)
 
   return !somePreMadeOptions && isCustomAllowed
-    ? 'Add filter text...'
+    ? 'Search...'
     : isCustomAllowed
-    ? 'Search or add filter text...'
-    : 'Search...'
+    ? 'Search or filter...'
+    : 'Filter...'
 }
 
 const getAddOption = (

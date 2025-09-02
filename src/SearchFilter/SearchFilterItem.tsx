@@ -72,6 +72,7 @@ export interface SearchFilterItemProps
   isInvertedAllowed?: boolean
   isDisabled?: boolean
   isCompact?: boolean
+  isSearch?: boolean
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
@@ -96,6 +97,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isDisabled,
       isReadonly,
       isCompact,
+      isSearch,
       onEdit,
       onRemove,
       onInvert,
@@ -160,13 +162,17 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             disabled: isDisabled,
           })}
         >
-          <ChipButton
-            className={clsx('button', { disabled: !isInvertedAllowed })}
-            icon={inverted ? 'do_not_disturb_on' : 'check_small'}
-            onClick={handleInvert}
-            data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
-          />
-          <span className="label">{label}:</span>
+          {!isSearch && (
+            <>
+              <ChipButton
+                className={clsx('button', { disabled: !isInvertedAllowed })}
+                icon={inverted ? 'do_not_disturb_on' : 'check_small'}
+                onClick={handleInvert}
+                data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
+              />
+              <span className="label">{label}:</span>
+            </>
+          )}
           {values?.map((value, index) => (
             <SearchFilterItemValue
               key={(value.id || '') + index}

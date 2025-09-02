@@ -14,6 +14,7 @@ import { getFilterFromId } from './getFilterFromId'
 import doesFilterExist from './doesFilterExist'
 import { Icon } from '../Icon'
 import clsx from 'clsx'
+import { SEARCH_FILTER_ID } from './constants'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
@@ -24,8 +25,6 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
-    label?: string
-    icon?: string
     enableMultiple?: boolean
   }
   enableSearchChildren?: boolean // when searching, children of the options will also be shown
@@ -54,7 +53,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       filters = [],
       onChange,
       onFinish,
-      options: initOptions = [],
+      options = [],
       enableGlobalSearch = false,
       globalSearchConfig,
       enableSearchChildren = true,
@@ -77,18 +76,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const dropdownRef = useRef<HTMLUListElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
 
-    const {
-      enableMultiple: enableGlobalSearchMultiple,
-      icon: globalSearchIcon = 'manage_search',
-      label: globalSearchLabel = 'Text',
-    } = globalSearchConfig || {}
-
-    const options = getOptionsWithSearch(initOptions, {
-      enableGlobalSearch,
-      label: globalSearchLabel,
-      icon: globalSearchIcon,
-      singleSelect: !enableGlobalSearchMultiple,
-    })
+    const { enableMultiple: enableGlobalSearchMultiple } = globalSearchConfig || {}
 
     const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
     const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
@@ -223,7 +211,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
           const singleSelect =
             parentFilter.singleSelect ||
-            (parentFilter.id.includes('text') && !enableGlobalSearchMultiple)
+            (parentFilter.id.includes(SEARCH_FILTER_ID) && !enableGlobalSearchMultiple)
 
           let updatedValues = singleSelect
             ? [option] // If replace is true, only add the new option
@@ -465,6 +453,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
                   isReadonly={filter.isReadonly}
                   isCompact={showIconsOnly}
+                  isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
                   onEdit={handleEditFilter}
                   onRemove={handleRemoveFilter}
                   onInvert={handleInvertFilter}
@@ -514,32 +503,6 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
 const getEmptyPlaceholder = (enableGlobalSearch: boolean) => {
   return enableGlobalSearch ? 'Search and filter' : 'Filter'
-}
-
-type GetOptionsWithSearchConfig = {
-  enableGlobalSearch: boolean
-  label: string
-  icon: string
-  singleSelect: boolean
-}
-
-const getOptionsWithSearch = (
-  options: Option[],
-  { enableGlobalSearch, label, icon, singleSelect }: GetOptionsWithSearchConfig,
-) => {
-  if (!enableGlobalSearch) return options
-  //  unshift search option
-  const searchFilter: Option = {
-    id: 'text',
-    label: label,
-    icon: icon,
-    inverted: false,
-    values: [],
-    allowsCustomValues: true,
-    singleSelect: singleSelect,
-  }
-
-  return [searchFilter, ...options]
 }
 
 // get all the top level fields that should be shown depending on the filters and enableMultipleSameFilters and disabledFilters
