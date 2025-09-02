@@ -484,7 +484,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const handleChange = (
       value: string,
       index: number,
-      e?: React.MouseEvent<HTMLLIElement>,
+      e?: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLDivElement>,
     ): void => {
       e?.stopPropagation()
       e?.preventDefault()
@@ -709,7 +709,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
         if (multiSelect) {
           if (selectedValue && e.code !== 'Tab')
-            return handleChange(selectedValue, activeIndex || 0)
+            return handleChange(selectedValue, activeIndex || 0, e)
 
           let selectedValues = [options[0][dataKey]]
           // if editable, split by comma
@@ -838,6 +838,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       () => ({
         getElement: () => elementRef.current,
         getOptions: () => optionsRef.current,
+        getSearch: () => searchRef.current,
         open: () => setIsOpen(true),
         close: (save) => (save ? handleClose() : setIsOpen(false)),
         toggle: () => setIsOpen(!isOpen),
