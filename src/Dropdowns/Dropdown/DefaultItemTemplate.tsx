@@ -62,12 +62,13 @@ export const DefaultItemTemplate = ({
   itemStyle,
   endContent,
   startContent,
+  className,
   ...props
 }: DefaultItemTemplateProps) => {
   return (
     <DefaultItemStyled
       {...props}
-      className={clsx('option-child', itemClassName, {
+      className={clsx('option-child', className, itemClassName, {
         selected: !!selected?.includes(option[dataKey]),
         active: value && value.includes(option[dataKey]),
         error: !!option.error,
