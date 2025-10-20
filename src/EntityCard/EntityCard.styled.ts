@@ -437,7 +437,6 @@ export const Tag = styled.span`
   align-items: center;
   justify-content: center;
   gap: 4px;
-  /* overflow: hidden; */
   z-index: 10;
 
   &.title span:not(.icon) {
@@ -469,8 +468,8 @@ export const Tag = styled.span`
     }
   }
 
-  /* when title is clickable */
-  &.title.clickable {
+  /* when tag is clickable */
+  &.clickable {
     &:hover {
       background-color: var(--md-sys-color-surface-container-highest-hover);
       cursor: pointer;
@@ -519,6 +518,56 @@ export const Tag = styled.span`
 
   &.tag.editable.users:hover .user-image {
     border-color: var(--default-color-darker) !important;
+  }
+`
+
+export const Versions = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 0px;
+  --margin-delta: -22.5px;
+  --scale-delta: 0.1;
+
+  /* always expand */
+  &:hover {
+    cursor: pointer;
+
+    --scale-delta: 0.175;
+    & > * {
+      &:nth-child(2) {
+        --margin-delta: -12px;
+      }
+      &:nth-child(3) {
+        --margin-delta: -14px;
+      }
+    }
+  }
+`
+
+export const VersionItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: var(--size);
+  min-height: var(--size);
+  min-width: var(--size);
+  padding: 0 2px;
+  border-radius: 6px;
+
+  transition: margin-bottom 150ms, scale 150ms, background-color 150ms;
+
+  &:nth-child(2) {
+    background-color: var(--md-sys-color-surface-container-low-hover);
+    margin-bottom: var(--margin-delta);
+    z-index: 9;
+    scale: calc(1 - var(--scale-delta));
+  }
+  &:nth-child(3) {
+    background-color: var(--md-sys-color-surface-container-low);
+    margin-bottom: var(--margin-delta);
+    z-index: 8;
+    scale: calc(1 - (var(--scale-delta) * 2));
   }
 `
 

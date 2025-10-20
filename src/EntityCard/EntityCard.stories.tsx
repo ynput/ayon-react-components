@@ -232,6 +232,21 @@ export const Version: Story = {
   },
   render: Template,
 }
+export const Product: Story = {
+  args: {
+    ...initData,
+    title: 'workfileModeling',
+    titleIcon: 'home_repair_service',
+    hidePriority: true,
+    versions: ['v001', 'v002', 'v003', 'v004'],
+    onVersionsClick: (e) => {
+      window.alert(`versions click`)
+    },
+    priority: undefined,
+    users: undefined,
+  },
+  render: Template,
+}
 
 const columns = [
   { id: '1', items: ['1'] },

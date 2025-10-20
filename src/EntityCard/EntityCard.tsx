@@ -20,7 +20,7 @@ import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSele
 import { UserImage } from '../User/UserImage'
 import { NotificationDot, NotificationProps } from './Notification/Notification'
 
-type Section = 'title' | 'header' | 'users' | 'status' | 'priority'
+type Section = 'title' | 'header' | 'users' | 'status' | 'priority' | 'versions'
 
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: string // top header
@@ -36,6 +36,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   statusNameOnly?: boolean // only show the status name unless it's too small to show, then use icon
   priority?: EnumDropdownOption // bottom left after users
   hidePriority?: boolean
+  versions?: string[] // bottom left stack of version tags
   imageUrl?: string
   imageAlt?: string
   imageIcon?: IconType
@@ -63,6 +64,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   // other functions
   onActivate?: () => void
   onTitleClick?: (e: MouseEvent<HTMLDivElement>) => void
+  onVersionsClick?: (e: MouseEvent<HTMLDivElement>) => void
   pt?: {
     thumbnail?: HTMLAttributes<HTMLDivElement>
     image?: HTMLAttributes<HTMLImageElement>
@@ -76,6 +78,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
     usersTag?: HTMLAttributes<HTMLDivElement>
     statusTag?: HTMLAttributes<HTMLDivElement>
     priorityTag?: HTMLAttributes<HTMLDivElement>
+    versionsTag?: HTMLAttributes<HTMLDivElement>
     notificationDot?: HTMLAttributes<HTMLDivElement>
   }
 }
@@ -96,6 +99,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       statusNameOnly,
       priority,
       hidePriority,
+      versions,
       imageUrl,
       imageAlt,
       imageIcon,
@@ -120,6 +124,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       onPriorityChange,
       onActivate,
       onTitleClick,
+      onVersionsClick,
       pt = {},
       ...props
     },
@@ -453,6 +458,31 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     />
                   )}
                 </Styled.Tag>
+              )}
+
+              {/* bottom left - versions (for products) */}
+              {shouldShowTag(versions, 'versions') && (
+                <Styled.Versions
+                  className={clsx('versions')}
+                  onClick={(e) => onVersionsClick && onVersionsClick(e)}
+                  {...pt.versionsTag}
+                >
+                  {versions
+                    ?.toReversed()
+                    ?.slice(0, 3)
+                    ?.map((version, index) =>
+                      index === 0 ? (
+                        <Styled.Tag
+                          key={index}
+                          className={clsx('tag version', { clickable: !!onVersionsClick })}
+                        >
+                          {version}
+                        </Styled.Tag>
+                      ) : (
+                        <Styled.VersionItem key={index}>{version}</Styled.VersionItem>
+                      ),
+                    )}
+                </Styled.Versions>
               )}
 
               {/* bottom right - status */}
