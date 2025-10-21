@@ -152,7 +152,7 @@ const StatusTemplate = (props: TemplateProps) => {
 
 const initData: DataProps = {
   header: 'ep103sq002',
-  path: 'ep103',
+  path: ['sequences', 'ep103', 'shots'],
   project: 'com',
   title: 'Lighting',
   titleIcon: 'lightbulb',

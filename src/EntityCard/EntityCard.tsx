@@ -24,7 +24,7 @@ type Section = 'title' | 'header' | 'users' | 'status' | 'priority' | 'versions'
 
 export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   header?: string // top header
-  path?: string // top header
+  path?: string | string[] // top header
   project?: string // top header
   showPath?: boolean // always show path
   title?: string // top left
@@ -66,20 +66,21 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   onTitleClick?: (e: MouseEvent<HTMLDivElement>) => void
   onVersionsClick?: (e: MouseEvent<HTMLDivElement>) => void
   pt?: {
-    thumbnail?: HTMLAttributes<HTMLDivElement>
-    image?: HTMLAttributes<HTMLImageElement>
+    thumbnail?: Partial<HTMLAttributes<HTMLDivElement>>
+    image?: Partial<HTMLAttributes<HTMLImageElement>>
+    header?: Partial<HTMLAttributes<HTMLDivElement>>
     assigneeSelect?: Partial<AssigneeSelectProps>
     statusSelect?: Partial<StatusSelectProps>
     prioritySelect?: Partial<EnumDropdownProps>
-    title?: HTMLAttributes<HTMLDivElement>
-    topRow?: HTMLAttributes<HTMLDivElement>
-    playableTag?: HTMLAttributes<HTMLDivElement>
-    bottomRow?: HTMLAttributes<HTMLDivElement>
-    usersTag?: HTMLAttributes<HTMLDivElement>
-    statusTag?: HTMLAttributes<HTMLDivElement>
-    priorityTag?: HTMLAttributes<HTMLDivElement>
-    versionsTag?: HTMLAttributes<HTMLDivElement>
-    notificationDot?: HTMLAttributes<HTMLDivElement>
+    title?: Partial<HTMLAttributes<HTMLDivElement>>
+    topRow?: Partial<HTMLAttributes<HTMLDivElement>>
+    playableTag?: Partial<HTMLAttributes<HTMLDivElement>>
+    bottomRow?: Partial<HTMLAttributes<HTMLDivElement>>
+    usersTag?: Partial<HTMLAttributes<HTMLDivElement>>
+    statusTag?: Partial<HTMLAttributes<HTMLDivElement>>
+    priorityTag?: Partial<HTMLAttributes<HTMLDivElement>>
+    versionsTag?: Partial<HTMLAttributes<HTMLDivElement>>
+    notificationDot?: Partial<HTMLAttributes<HTMLDivElement>>
   }
 }
 
@@ -203,7 +204,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         (container.querySelector('.tag.priority') as HTMLElement)?.offsetWidth ||
         (variant === 'status' ? 28 : 0)
       const takenWidth = usersWidth + priorityWidth + containerPadding * 2
-      const remainingSpace = containerWidth - takenWidth
 
       // calculate the width of the status states
       const statusTextWidth =
@@ -235,6 +235,29 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
     const shouldShowTag = (value: any, name: Section) =>
       (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
+
+    const buildPathString = () => {
+      let fullPath = ''
+      if (project) {
+        fullPath += project + '/../'
+      }
+      if (path) {
+        if (Array.isArray(path)) {
+          fullPath += path.join('/') + '/'
+        } else {
+          fullPath += path + '/'
+        }
+      }
+
+      console.log(project, path)
+
+      // always add on header at the end
+      if (header) {
+        fullPath += header
+      }
+
+      return fullPath
+    }
 
     return (
       <Styled.Wrapper className="entity-card-wrapper">
@@ -273,30 +296,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           }}
         >
           {shouldShowTag(header, 'header') && (
-            <Styled.Header className={'header loading-visible'}>
-              {path && (
-                <div className={clsx('expander', { show: showPath })}>
-                  <div className="path">
-                    {project && (
-                      <>
-                        <span>{project}</span>
-                        <span className="slash" style={{ marginRight: -2 }}>
-                          /
-                        </span>
-                      </>
-                    )}
-                    {path && (
-                      <>
-                        <span>... </span>
-                        <span className="slash">/</span>
-                        <span>{path}</span>
-                        <span className="slash">/</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )}
-              <span className="shot">{isLoading ? '' : header}</span>
+            <Styled.Header
+              data-tooltip={buildPathString()}
+              data-tooltip-delay={0}
+              {...pt.header}
+              className={clsx('header loading-visible', pt.header?.className)}
+            >
+              <span className="path">{buildPathString()}</span>
+              <span className="label">{isLoading ? '' : header}</span>
             </Styled.Header>
           )}
           <Styled.Thumbnail

@@ -3,23 +3,55 @@ import { Icon } from '../Icon'
 import * as Theme from '../theme'
 import adjustHexBrightness from '../helpers/adjustHexBrightness'
 
-const showFullPath = css`
-  /* show full path */
-  grid-template-columns: 1fr;
+const boxShadowSizes = `inset 0 0 0 2px`
+
+export const Header = styled.div`
+  width: 100%;
+  height: 20px;
+  padding: 0px 4px;
+  display: flex;
+  ${Theme.labelLarge}
+  line-height: 1.3rem;
+
+  .label {
+    flex: 1;
+  }
+
   .path {
-    padding-right: 2px;
+    overflow: hidden;
+    word-break: break-word;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    z-index: 80;
+    background-color: var(--default-color-hover);
+    padding: 0px 4px;
+    border-radius: 9px;
+    padding-bottom: 2px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
+    /* by default path is hidden but shows on hover */
+    display: none;
+    opacity: 0;
+  }
+
+  &:hover {
+    /* hide label */
+    .label {
+      display: none;
+    }
+    /* show path */
+    .path {
+      display: block;
+      opacity: 1;
+      transition: opacity var(--hover-transition);
+    }
   }
 `
-
-const boxShadowSizes = `inset 0 0 0 2px`
 
 const cardHoverStyles = css`
   background-color: var(--default-color-hover);
   box-shadow: ${boxShadowSizes} var(--default-color-hover);
-
-  .header .expander {
-    ${showFullPath}
-  }
 `
 
 export const Wrapper = styled.div`
@@ -124,7 +156,7 @@ export const Card = styled.div<CardProps>`
     }
   }
 
-  /* when active, set background color */
+  /* when active, set background-color color */
   &.active:not(.isLoading) {
     /* set backgrounds */
     background-color: var(--active-color);
@@ -137,6 +169,10 @@ export const Card = styled.div<CardProps>`
     }
     &:active {
       background-color: var(--active-color-active);
+    }
+
+    .path {
+      background-color: var(--active-color-hover);
     }
 
     &.draggable {
@@ -307,45 +343,6 @@ export const Card = styled.div<CardProps>`
         visibility: hidden;
       }
     }
-  }
-`
-
-export const Header = styled.div`
-  width: 100%;
-  height: 20px;
-  padding: 0px 4px;
-  display: flex;
-
-  /* CSS trick to expand width with transition */
-  .expander {
-    display: grid;
-    grid-template-columns: 0fr;
-    transition: grid-template-columns 80ms ease;
-    overflow: hidden;
-
-    /* always show path */
-    &.show {
-      ${showFullPath}
-    }
-  }
-
-  .path {
-    display: flex;
-    gap: 2px;
-    min-width: 0;
-    padding-right: 0px;
-    transition: padding-right 130ms;
-  }
-
-  span:not(.slash) {
-    word-break: break-all;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .shot {
-    ${Theme.labelLarge}
-    flex: 1;
   }
 `
 
