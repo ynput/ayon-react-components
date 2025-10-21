@@ -12,6 +12,11 @@ export const Header = styled.div`
   display: flex;
   ${Theme.labelLarge}
   line-height: 1.3rem;
+  user-select: none;
+
+  & > * {
+    transition: opacity 200ms;
+  }
 
   .label {
     flex: 1;
@@ -28,23 +33,29 @@ export const Header = styled.div`
     background-color: var(--default-color-hover);
     padding: 0px 4px;
     border-radius: 9px;
-    padding-bottom: 2px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
-    /* by default path is hidden but shows on hover */
-    display: none;
     opacity: 0;
   }
 
-  &:hover {
+  &.expandable:not(.show-path):hover {
+    & * {
+      transition-delay: 100ms;
+    }
     /* hide label */
     .label {
-      display: none;
+      opacity: 0;
     }
     /* show path */
     .path {
-      display: block;
       opacity: 1;
-      transition: opacity var(--hover-transition);
+    }
+  }
+
+  /* always show path */
+  &.show-path {
+    height: auto;
+    .label {
+      word-break: break-word;
     }
   }
 `

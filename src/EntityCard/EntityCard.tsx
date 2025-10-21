@@ -249,8 +249,6 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         }
       }
 
-      console.log(project, path)
-
       // always add on header at the end
       if (header) {
         fullPath += header
@@ -297,13 +295,16 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         >
           {shouldShowTag(header, 'header') && (
             <Styled.Header
-              data-tooltip={buildPathString()}
-              data-tooltip-delay={0}
               {...pt.header}
-              className={clsx('header loading-visible', pt.header?.className)}
+              className={clsx('header loading-visible', pt.header?.className, {
+                expandable: !!project || !!path,
+                'show-path': showPath,
+              })}
             >
               <span className="path">{buildPathString()}</span>
-              <span className="label">{isLoading ? '' : header}</span>
+              <span className="label">
+                {isLoading ? '' : showPath ? buildPathString() : header}
+              </span>
             </Styled.Header>
           )}
           <Styled.Thumbnail
