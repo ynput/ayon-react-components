@@ -15,7 +15,7 @@ export const Header = styled.div`
   user-select: none;
 
   & > * {
-    transition: opacity 200ms;
+    transition: opacity 20ms;
   }
 
   .label {
@@ -35,11 +35,12 @@ export const Header = styled.div`
     border-radius: 9px;
     box-shadow: 0 2px 4px rgb(0 0 0 / 20%);
     opacity: 0;
+    pointer-events: none;
   }
 
   &.expandable:not(.show-path):hover {
     & * {
-      transition-delay: 100ms;
+      transition-delay: 50ms;
     }
     /* hide label */
     .label {
