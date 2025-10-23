@@ -395,6 +395,10 @@ export const Image = styled.img`
   &.loading {
     opacity: 0;
   }
+
+  &.error {
+    opacity: 0;
+  }
 `
 
 // for the header and footer inside the thumbnail

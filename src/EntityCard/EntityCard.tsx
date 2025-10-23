@@ -332,7 +332,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 onMouseEnter={closeEditors}
                 {...pt.image}
                 className={clsx(
-                  { loading: isThumbnailLoading || isThumbnailError },
+                  { loading: isThumbnailLoading, error: isThumbnailError },
                   pt?.image?.className,
                 )}
               />
