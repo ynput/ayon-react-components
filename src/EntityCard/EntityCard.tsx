@@ -322,7 +322,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* middle Icon */}
             <Styled.NoImageIcon
               icon={imageIcon || 'image'}
-              className={clsx('no-image', { loading: isThumbnailLoading })}
+              className={clsx('no-image')}
               onMouseEnter={closeEditors}
             />
 
@@ -331,7 +331,10 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 src={imageUrl}
                 onMouseEnter={closeEditors}
                 {...pt.image}
-                className={clsx({ loading: isThumbnailLoading }, pt?.image?.className)}
+                className={clsx(
+                  { loading: isThumbnailLoading || isThumbnailError },
+                  pt?.image?.className,
+                )}
               />
             )}
             {/* TOP ROW */}

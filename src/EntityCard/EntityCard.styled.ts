@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
 import adjustHexBrightness from '../helpers/adjustHexBrightness'
@@ -734,6 +734,15 @@ export const Users = styled.div`
   }
 `
 
+const FadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`
+
 export const NoImageIcon = styled(Icon)`
   position: absolute;
   /* center */
@@ -743,13 +752,8 @@ export const NoImageIcon = styled(Icon)`
   font-size: 40px;
   color: var(--md-sys-color-outline);
 
-  /* loading transition */
-  opacity: 1;
-  transition: opacity 500ms;
-
-  &.loading {
-    opacity: 0;
-  }
+  /* fade the icon in */
+  animation: ${FadeIn} 500ms ease-in-out;
 `
 
 export const Editor = styled.div`
