@@ -42,7 +42,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
         <Styled.Tag
           key={v}
           $backgroundColor={tags[v]?.color}
-          $color={getTextColor(tags[v]?.color)}
+          $color={getTextColor(tags[v]?.color || '#353B46')}
           className="tag"
         >
           {v}
