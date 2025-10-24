@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { DefaultValueTemplate, Dropdown } from '../Dropdown'
 export { DefaultItemStyled as DefaultItem } from '../Dropdown'
 
@@ -32,8 +32,9 @@ export const TagSelectDropdown = styled(Dropdown)<{ $width: number }>`
   }
 `
 
-export const Tag = styled.span`
-  background-color: var(--md-sys-color-surface-container-high);
+export const Tag = styled.span<{ $backgroundColor?: string }>`
+  background-color: ${({ $backgroundColor }) =>
+    $backgroundColor ?? 'var(--md-sys-color-surface-container-high)'};
   border-radius: 3px;
   padding: 2px 4px;
 `

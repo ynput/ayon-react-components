@@ -40,9 +40,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
       {value?.map((v) => (
         <Styled.Tag
           key={v}
-          style={{
-            color: tags[v]?.color,
-          }}
+          $backgroundColor={tags[v]?.color}
           className="tag"
         >
           {v}
