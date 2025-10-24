@@ -5,6 +5,7 @@ import { type TagsType } from './tags'
 import clsx from 'clsx'
 import styled from 'styled-components'
 import { Icon } from '../../Icon'
+import { getTextColor } from '../../helpers'
 
 const PlaceholderTag = styled.div`
   display: flex;
@@ -41,6 +42,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
         <Styled.Tag
           key={v}
           $backgroundColor={tags[v]?.color}
+          $color={getTextColor(tags[v]?.color || '#353B46')}
           className="tag"
         >
           {v}
