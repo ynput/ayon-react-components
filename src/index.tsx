@@ -143,5 +143,5 @@ export type { UserImagesStackedProps } from './User/UserImagesStacked'
 export { EntityCard, NotificationDot } from './EntityCard'
 export type { EntityCardProps, Notification } from './EntityCard'
 
-// export getShimmerStyles
-export { getShimmerStyles } from './helpers'
+// export helpers
+export { getShimmerStyles, getTextColor } from './helpers'

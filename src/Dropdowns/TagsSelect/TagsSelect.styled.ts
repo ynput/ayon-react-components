@@ -32,11 +32,12 @@ export const TagSelectDropdown = styled(Dropdown)<{ $width: number }>`
   }
 `
 
-export const Tag = styled.span<{ $backgroundColor?: string }>`
+export const Tag = styled.span<{ $backgroundColor?: string, $color: string }>`
   background-color: ${({ $backgroundColor }) =>
     $backgroundColor ?? 'var(--md-sys-color-surface-container-high)'};
   border-radius: 3px;
   padding: 2px 4px;
+  color: ${({ $color }) => $color};
 `
 
 export const TagsValueTemplate = styled(DefaultValueTemplate)`
