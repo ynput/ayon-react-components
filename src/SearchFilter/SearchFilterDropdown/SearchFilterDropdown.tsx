@@ -490,7 +490,7 @@ const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: 
 
   const matched = matchSorter(options, parsedSearch, {
     keys: ['label'],
-    threshold: matchSorter.rankings.WORD_STARTS_WITH,
+    threshold: matchSorter.rankings.CONTAINS,
   })
 
   // if isCustomAllowed, add the custom value to the list
