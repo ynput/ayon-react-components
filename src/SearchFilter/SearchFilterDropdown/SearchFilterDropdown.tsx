@@ -132,6 +132,18 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       [allOptions, search],
     )
 
+    const getOptionFromEventTarget = (target: EventTarget | null, optionsList: Option[]) => {
+      const li = (target as HTMLElement | null)?.closest('li')
+      const id = li?.id ?? null
+      const parentId = li?.getAttribute('data-parent') ?? null
+      const option = id
+        ? optionsList.find((item) => item.id === id && (!parentId || item.parentId === parentId)) ??
+          optionsList.find((item) => item.id === id)
+        : undefined
+
+      return { id, parentId, option }
+    }
+
     const handleSelectOption = (event: React.MouseEvent<HTMLElement>) => {
       // check if there is a custom onClick event
       if (!!pt.item?.onClick) {
@@ -145,11 +157,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       event.preventDefault()
       event.stopPropagation()
 
-      const target = event.target as HTMLElement
-      const id = target.closest('li')?.id
-
-      // get option by id
-      const option = allOptions.find((option) => option.id === id)
+      const { id, option } = getOptionFromEventTarget(event.target, allOptions)
 
       if (!option) {
         // check it's not a search
@@ -200,10 +208,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         event.preventDefault()
         event.stopPropagation()
 
-        const target = event.target as HTMLElement
-        const id = target.closest('li')?.id
+        const { id, option } = getOptionFromEventTarget(event.target, allOptions)
         if (!id) return
-        const option = allOptions.find((option) => option.id === id)
         const isSelected = getIsValueSelected(id, parentId, values)
 
         if (id === 'search') {
@@ -225,9 +231,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       else if (event.key === ' ') {
         event.preventDefault()
         event.stopPropagation()
-        const target = event.target as HTMLElement
-        const id = target.closest('li')?.id
-        const option = allOptions.find((option) => option.id === id)
+        const { id, option } = getOptionFromEventTarget(event.target, allOptions)
         if (!option) return console.error('Option not found:', id)
         onSelect(option, { confirm: false })
       }
@@ -381,6 +385,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                   <Styled.Item
                     key={id + '-' + parentId}
                     id={id}
+                    data-parent={parentId}
                     tabIndex={0}
                     className={clsx({ selected: isSelected })}
                     {...pt.item}
