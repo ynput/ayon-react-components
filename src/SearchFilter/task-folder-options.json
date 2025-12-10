@@ -1,0 +1,1680 @@
+[
+    {
+        "id": "task_taskType",
+        "type": "string",
+        "label": "Task Type - Task",
+        "icon": "check_circle",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "Story",
+                "type": "string",
+                "label": "Story",
+                "icon": "task_alt",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Art",
+                "type": "string",
+                "label": "Art",
+                "icon": "palette",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Modeling",
+                "type": "string",
+                "label": "Modeling",
+                "icon": "language",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Texture",
+                "type": "string",
+                "label": "Texture",
+                "icon": "brush",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Lookdev",
+                "type": "string",
+                "label": "Lookdev",
+                "icon": "ev_shadow",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Rigging",
+                "type": "string",
+                "label": "Rigging",
+                "icon": "construction",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Setdress",
+                "type": "string",
+                "label": "Setdress",
+                "icon": "scene",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Layout",
+                "type": "string",
+                "label": "Layout",
+                "icon": "nature_people",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Animation",
+                "type": "string",
+                "label": "Animation",
+                "icon": "directions_run",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "FX",
+                "type": "string",
+                "label": "FX",
+                "icon": "fireplace",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Lighting",
+                "type": "string",
+                "label": "Lighting",
+                "icon": "highlight",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Paint",
+                "type": "string",
+                "label": "Paint",
+                "icon": "video_stable",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Compositing",
+                "type": "string",
+                "label": "Compositing",
+                "icon": "layers",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Edit",
+                "type": "string",
+                "label": "Edit",
+                "icon": "imagesearch_roller",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            }
+        ],
+        "allowsCustomValues": false,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false
+    },
+    {
+        "id": "task_status",
+        "type": "string",
+        "label": "Status - Task",
+        "icon": "arrow_circle_right",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "Not ready",
+                "label": "Not ready",
+                "icon": "fiber_new",
+                "color": "#3d444f"
+            },
+            {
+                "id": "Ready to start",
+                "label": "Ready to start",
+                "icon": "timer",
+                "color": "#bababa"
+            },
+            {
+                "id": "In progress",
+                "label": "In progress",
+                "icon": "play_arrow",
+                "color": "#5bb8f5"
+            },
+            {
+                "id": "Pending review",
+                "label": "Pending review",
+                "icon": "visibility",
+                "color": "#ffcd19"
+            },
+            {
+                "id": "Approved",
+                "label": "Approved",
+                "icon": "task_alt",
+                "color": "#08f094"
+            },
+            {
+                "id": "On hold",
+                "label": "On hold",
+                "icon": "back_hand",
+                "color": "#fa6e47"
+            },
+            {
+                "id": "Omitted",
+                "label": "Omitted",
+                "icon": "block",
+                "color": "#cb1a1a"
+            }
+        ],
+        "allowsCustomValues": false,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false
+    },
+    {
+        "id": "task_assignees",
+        "type": "list_of_strings",
+        "label": "Assignee - Task",
+        "icon": "person",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "service",
+                "label": "service",
+                "img": "/api/users/service/avatar",
+                "icon": null
+            },
+            {
+                "id": "sara.vincent",
+                "label": "Sophia Miller",
+                "img": "/api/users/sara.vincent/avatar",
+                "icon": null
+            },
+            {
+                "id": "sacha.overwijk",
+                "label": "Isabella Davis",
+                "img": "/api/users/sacha.overwijk/avatar",
+                "icon": null
+            },
+            {
+                "id": "rosario.santiago",
+                "label": "Ava Williams",
+                "img": "/api/users/rosario.santiago/avatar",
+                "icon": null
+            },
+            {
+                "id": "ronja.hakala",
+                "label": "Ronja Hakala",
+                "img": "/api/users/ronja.hakala/avatar",
+                "icon": null
+            },
+            {
+                "id": "rasmus.olsen",
+                "label": "Jackson Wilson",
+                "img": "/api/users/rasmus.olsen/avatar",
+                "icon": null
+            },
+            {
+                "id": "prhm.khmrw",
+                "label": "Olivia Smith",
+                "img": "/api/users/prhm.khmrw/avatar",
+                "icon": null
+            },
+            {
+                "id": "poppy.wilson",
+                "label": "Poppy Wilson",
+                "img": "/api/users/poppy.wilson/avatar",
+                "icon": null
+            },
+            {
+                "id": "paul.brooks",
+                "label": "Paul Brooks",
+                "img": "/api/users/paul.brooks/avatar",
+                "icon": null
+            },
+            {
+                "id": "parcidio.barbosa",
+                "label": "Liam Johnson",
+                "img": "/api/users/parcidio.barbosa/avatar",
+                "icon": null
+            },
+            {
+                "id": "oscar.ramirez",
+                "label": "Oscar Ramirez",
+                "img": "/api/users/oscar.ramirez/avatar",
+                "icon": null
+            },
+            {
+                "id": "mrym.ysmy",
+                "label": "Noah Brown",
+                "img": "/api/users/mrym.ysmy/avatar",
+                "icon": null
+            },
+            {
+                "id": "monica.miles",
+                "label": "Monica Miles",
+                "img": "/api/users/monica.miles/avatar",
+                "icon": null
+            },
+            {
+                "id": "milan",
+                "label": "Milan Kolar",
+                "img": "/api/users/milan/avatar",
+                "icon": null
+            },
+            {
+                "id": "mary.turner",
+                "label": "Mary",
+                "img": "/api/users/mary.turner/avatar",
+                "icon": null
+            },
+            {
+                "id": "luke",
+                "label": "Luke",
+                "img": "/api/users/luke/avatar",
+                "icon": null
+            },
+            {
+                "id": "louis.tremblay",
+                "label": "Louis Tremblay",
+                "img": "/api/users/louis.tremblay/avatar",
+                "icon": null
+            },
+            {
+                "id": "creator",
+                "label": "creator",
+                "img": "/api/users/creator/avatar",
+                "icon": null
+            },
+            {
+                "id": "becky",
+                "label": "Becky",
+                "img": "/api/users/becky/avatar",
+                "icon": null
+            },
+            {
+                "id": "admin",
+                "label": "Tom",
+                "img": "/api/users/admin/avatar",
+                "icon": null
+            }
+        ],
+        "allowsCustomValues": false,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": true
+    },
+    {
+        "id": "task_tags",
+        "type": "list_of_strings",
+        "label": "Tags - Task",
+        "icon": "local_offer",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "easy",
+                "type": "string",
+                "label": "easy",
+                "values": [],
+                "color": "#cebef9",
+                "count": 1
+            },
+            {
+                "id": "hard",
+                "type": "string",
+                "label": "hard",
+                "values": [],
+                "color": "#f46262",
+                "count": 1
+            },
+            {
+                "id": "status",
+                "type": "string",
+                "label": "status",
+                "values": [],
+                "color": "#45a55d",
+                "count": 1
+            },
+            {
+                "id": "type",
+                "type": "string",
+                "label": "type",
+                "values": [],
+                "color": "#bead3c",
+                "count": 1
+            },
+            {
+                "id": "hide",
+                "type": "string",
+                "label": "hide",
+                "values": [],
+                "color": "#5b1515",
+                "count": 1
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": true
+    },
+    {
+        "id": "task_name",
+        "type": "string",
+        "label": "Name - Task",
+        "icon": "text_fields",
+        "inverted": false,
+        "operator": "OR",
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": false,
+        "operatorChangeable": false
+    },
+    {
+        "id": "task_attrib.priority",
+        "type": "string",
+        "label": "Priority - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "urgent",
+                "type": "string",
+                "label": "Urgent",
+                "values": [],
+                "icon": "keyboard_double_arrow_up",
+                "color": "#FF8585"
+            },
+            {
+                "id": "high",
+                "type": "string",
+                "label": "High",
+                "values": [],
+                "icon": "keyboard_arrow_up",
+                "color": "#FFAD66"
+            },
+            {
+                "id": "normal",
+                "type": "string",
+                "label": "Normal",
+                "values": [],
+                "icon": "check_indeterminate_small",
+                "color": "#9AC0E7"
+            },
+            {
+                "id": "low",
+                "type": "string",
+                "label": "Low",
+                "values": [],
+                "icon": "keyboard_arrow_down",
+                "color": "#9FA7B1"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "keyboard_double_arrow_up",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.fps",
+        "type": "float",
+        "label": "FPS - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "30fps_select",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.resolutionWidth",
+        "type": "integer",
+        "label": "Width - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "settings_overscan",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.resolutionHeight",
+        "type": "integer",
+        "label": "Height - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "settings_overscan",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.pixelAspect",
+        "type": "float",
+        "label": "Pixel aspect - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "stop",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.clipIn",
+        "type": "integer",
+        "label": "Clip In - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_diamond",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.clipOut",
+        "type": "integer",
+        "label": "Clip Out - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_diamond",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.frameStart",
+        "type": "integer",
+        "label": "Start frame - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_circle",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.frameEnd",
+        "type": "integer",
+        "label": "End frame - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_circle",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.handleStart",
+        "type": "integer",
+        "label": "Handle start - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_square",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.handleEnd",
+        "type": "integer",
+        "label": "Handle end - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_square",
+        "singleSelect": false
+    },
+    {
+        "id": "task_attrib.startDate",
+        "type": "datetime",
+        "label": "Start date - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "today",
+                "label": "Today",
+                "values": [
+                    {
+                        "label": "Start of day",
+                        "id": "2025-12-10T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of day",
+                        "id": "2025-12-10T23:59:59.999Z"
+                    }
+                ],
+                "icon": "today"
+            },
+            {
+                "id": "yesterday",
+                "label": "Yesterday",
+                "values": [
+                    {
+                        "label": "Start of yesterday",
+                        "id": "2025-12-09T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of yesterday",
+                        "id": "2025-12-09T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "after-now",
+                "label": "After today",
+                "values": [
+                    {
+                        "label": "After today",
+                        "id": "2025-12-11T00:59:38.369Z"
+                    },
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    }
+                ],
+                "icon": "event_upcoming"
+            },
+            {
+                "id": "before-now",
+                "label": "Before today",
+                "values": [
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    },
+                    {
+                        "label": "Before today",
+                        "id": "2025-12-10T00:59:38.369Z"
+                    }
+                ],
+                "icon": "event_busy"
+            },
+            {
+                "id": "this-week",
+                "label": "This week",
+                "values": [
+                    {
+                        "label": "Start of week",
+                        "id": "2025-12-07T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of week",
+                        "id": "2025-12-13T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "last-week",
+                "label": "Last week",
+                "values": [
+                    {
+                        "label": "Start of last week",
+                        "id": "2025-11-30T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last week",
+                        "id": "2025-12-06T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "this-month",
+                "label": "This month",
+                "values": [
+                    {
+                        "label": "Start of month",
+                        "id": "2025-12-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of month",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-month",
+                "label": "Last month",
+                "values": [
+                    {
+                        "label": "Start of last month",
+                        "id": "2025-11-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last month",
+                        "id": "2025-11-30T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "this-year",
+                "label": "This year",
+                "values": [
+                    {
+                        "label": "Start of year",
+                        "id": "2025-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of year",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-year",
+                "label": "Last year",
+                "values": [
+                    {
+                        "label": "Start of last year",
+                        "id": "2024-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last year",
+                        "id": "2024-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "calendar_month",
+        "singleSelect": true
+    },
+    {
+        "id": "task_attrib.endDate",
+        "type": "datetime",
+        "label": "End date - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "today",
+                "label": "Today",
+                "values": [
+                    {
+                        "label": "Start of day",
+                        "id": "2025-12-10T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of day",
+                        "id": "2025-12-10T23:59:59.999Z"
+                    }
+                ],
+                "icon": "today"
+            },
+            {
+                "id": "yesterday",
+                "label": "Yesterday",
+                "values": [
+                    {
+                        "label": "Start of yesterday",
+                        "id": "2025-12-09T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of yesterday",
+                        "id": "2025-12-09T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "after-now",
+                "label": "After today",
+                "values": [
+                    {
+                        "label": "After today",
+                        "id": "2025-12-11T00:59:38.369Z"
+                    },
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    }
+                ],
+                "icon": "event_upcoming"
+            },
+            {
+                "id": "before-now",
+                "label": "Before today",
+                "values": [
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    },
+                    {
+                        "label": "Before today",
+                        "id": "2025-12-10T00:59:38.369Z"
+                    }
+                ],
+                "icon": "event_busy"
+            },
+            {
+                "id": "this-week",
+                "label": "This week",
+                "values": [
+                    {
+                        "label": "Start of week",
+                        "id": "2025-12-07T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of week",
+                        "id": "2025-12-13T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "last-week",
+                "label": "Last week",
+                "values": [
+                    {
+                        "label": "Start of last week",
+                        "id": "2025-11-30T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last week",
+                        "id": "2025-12-06T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "this-month",
+                "label": "This month",
+                "values": [
+                    {
+                        "label": "Start of month",
+                        "id": "2025-12-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of month",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-month",
+                "label": "Last month",
+                "values": [
+                    {
+                        "label": "Start of last month",
+                        "id": "2025-11-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last month",
+                        "id": "2025-11-30T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "this-year",
+                "label": "This year",
+                "values": [
+                    {
+                        "label": "Start of year",
+                        "id": "2025-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of year",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-year",
+                "label": "Last year",
+                "values": [
+                    {
+                        "label": "Start of last year",
+                        "id": "2024-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last year",
+                        "id": "2024-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "calendar_month",
+        "singleSelect": true
+    },
+    {
+        "id": "task_attrib.description",
+        "type": "string",
+        "label": "Description - Task",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "description",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_folderType",
+        "type": "string",
+        "label": "Folder Type - Folder",
+        "icon": "folder",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "Folder",
+                "type": "string",
+                "label": "Folder",
+                "icon": "folder",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Library",
+                "type": "string",
+                "label": "Library",
+                "icon": "category",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Asset",
+                "type": "string",
+                "label": "Asset",
+                "icon": "smart_toy",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Sequence",
+                "type": "string",
+                "label": "Sequence",
+                "icon": "theaters",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            },
+            {
+                "id": "Shot",
+                "type": "string",
+                "label": "Shot",
+                "icon": "movie",
+                "inverted": false,
+                "values": [],
+                "allowsCustomValues": false
+            }
+        ],
+        "allowsCustomValues": false,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false
+    },
+    {
+        "id": "folder_status",
+        "type": "string",
+        "label": "Status - Folder",
+        "icon": "arrow_circle_right",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "Not ready",
+                "label": "Not ready",
+                "icon": "fiber_new",
+                "color": "#3d444f"
+            },
+            {
+                "id": "Ready to start",
+                "label": "Ready to start",
+                "icon": "timer",
+                "color": "#bababa"
+            },
+            {
+                "id": "In progress",
+                "label": "In progress",
+                "icon": "play_arrow",
+                "color": "#5bb8f5"
+            },
+            {
+                "id": "Pending review",
+                "label": "Pending review",
+                "icon": "visibility",
+                "color": "#ffcd19"
+            },
+            {
+                "id": "Approved",
+                "label": "Approved",
+                "icon": "task_alt",
+                "color": "#08f094"
+            },
+            {
+                "id": "On hold",
+                "label": "On hold",
+                "icon": "back_hand",
+                "color": "#fa6e47"
+            },
+            {
+                "id": "Omitted",
+                "label": "Omitted",
+                "icon": "block",
+                "color": "#cb1a1a"
+            }
+        ],
+        "allowsCustomValues": false,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false
+    },
+    {
+        "id": "folder_tags",
+        "type": "list_of_strings",
+        "label": "Tags - Folder",
+        "icon": "local_offer",
+        "inverted": false,
+        "operator": "OR",
+        "values": [
+            {
+                "id": "easy",
+                "type": "string",
+                "label": "easy",
+                "values": [],
+                "color": "#cebef9",
+                "count": 1
+            },
+            {
+                "id": "hard",
+                "type": "string",
+                "label": "hard",
+                "values": [],
+                "color": "#f46262",
+                "count": 1
+            },
+            {
+                "id": "status",
+                "type": "string",
+                "label": "status",
+                "values": [],
+                "color": "#45a55d",
+                "count": 1
+            },
+            {
+                "id": "type",
+                "type": "string",
+                "label": "type",
+                "values": [],
+                "color": "#bead3c",
+                "count": 1
+            },
+            {
+                "id": "hide",
+                "type": "string",
+                "label": "hide",
+                "values": [],
+                "color": "#5b1515",
+                "count": 1
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": true
+    },
+    {
+        "id": "folder_name",
+        "type": "string",
+        "label": "Name - Folder",
+        "icon": "text_fields",
+        "inverted": false,
+        "operator": "OR",
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": false,
+        "operatorChangeable": false
+    },
+    {
+        "id": "folder_attrib.priority",
+        "type": "string",
+        "label": "Priority - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "urgent",
+                "type": "string",
+                "label": "Urgent",
+                "values": [],
+                "icon": "keyboard_double_arrow_up",
+                "color": "#FF8585"
+            },
+            {
+                "id": "high",
+                "type": "string",
+                "label": "High",
+                "values": [],
+                "icon": "keyboard_arrow_up",
+                "color": "#FFAD66"
+            },
+            {
+                "id": "normal",
+                "type": "string",
+                "label": "Normal",
+                "values": [],
+                "icon": "check_indeterminate_small",
+                "color": "#9AC0E7"
+            },
+            {
+                "id": "low",
+                "type": "string",
+                "label": "Low",
+                "values": [],
+                "icon": "keyboard_arrow_down",
+                "color": "#9FA7B1"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "keyboard_double_arrow_up",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.fps",
+        "type": "float",
+        "label": "FPS - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "30fps_select",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.resolutionWidth",
+        "type": "integer",
+        "label": "Width - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "settings_overscan",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.resolutionHeight",
+        "type": "integer",
+        "label": "Height - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "settings_overscan",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.pixelAspect",
+        "type": "float",
+        "label": "Pixel aspect - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "stop",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.clipIn",
+        "type": "integer",
+        "label": "Clip In - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_diamond",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.clipOut",
+        "type": "integer",
+        "label": "Clip Out - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_diamond",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.frameStart",
+        "type": "integer",
+        "label": "Start frame - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_circle",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.frameEnd",
+        "type": "integer",
+        "label": "End frame - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_circle",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.handleStart",
+        "type": "integer",
+        "label": "Handle start - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_start_square",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.handleEnd",
+        "type": "integer",
+        "label": "Handle end - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "line_end_square",
+        "singleSelect": false
+    },
+    {
+        "id": "folder_attrib.startDate",
+        "type": "datetime",
+        "label": "Start date - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "today",
+                "label": "Today",
+                "values": [
+                    {
+                        "label": "Start of day",
+                        "id": "2025-12-10T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of day",
+                        "id": "2025-12-10T23:59:59.999Z"
+                    }
+                ],
+                "icon": "today"
+            },
+            {
+                "id": "yesterday",
+                "label": "Yesterday",
+                "values": [
+                    {
+                        "label": "Start of yesterday",
+                        "id": "2025-12-09T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of yesterday",
+                        "id": "2025-12-09T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "after-now",
+                "label": "After today",
+                "values": [
+                    {
+                        "label": "After today",
+                        "id": "2025-12-11T00:59:38.369Z"
+                    },
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    }
+                ],
+                "icon": "event_upcoming"
+            },
+            {
+                "id": "before-now",
+                "label": "Before today",
+                "values": [
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    },
+                    {
+                        "label": "Before today",
+                        "id": "2025-12-10T00:59:38.369Z"
+                    }
+                ],
+                "icon": "event_busy"
+            },
+            {
+                "id": "this-week",
+                "label": "This week",
+                "values": [
+                    {
+                        "label": "Start of week",
+                        "id": "2025-12-07T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of week",
+                        "id": "2025-12-13T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "last-week",
+                "label": "Last week",
+                "values": [
+                    {
+                        "label": "Start of last week",
+                        "id": "2025-11-30T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last week",
+                        "id": "2025-12-06T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "this-month",
+                "label": "This month",
+                "values": [
+                    {
+                        "label": "Start of month",
+                        "id": "2025-12-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of month",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-month",
+                "label": "Last month",
+                "values": [
+                    {
+                        "label": "Start of last month",
+                        "id": "2025-11-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last month",
+                        "id": "2025-11-30T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "this-year",
+                "label": "This year",
+                "values": [
+                    {
+                        "label": "Start of year",
+                        "id": "2025-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of year",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-year",
+                "label": "Last year",
+                "values": [
+                    {
+                        "label": "Start of last year",
+                        "id": "2024-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last year",
+                        "id": "2024-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "calendar_month",
+        "singleSelect": true
+    },
+    {
+        "id": "folder_attrib.endDate",
+        "type": "datetime",
+        "label": "End date - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [
+            {
+                "id": "today",
+                "label": "Today",
+                "values": [
+                    {
+                        "label": "Start of day",
+                        "id": "2025-12-10T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of day",
+                        "id": "2025-12-10T23:59:59.999Z"
+                    }
+                ],
+                "icon": "today"
+            },
+            {
+                "id": "yesterday",
+                "label": "Yesterday",
+                "values": [
+                    {
+                        "label": "Start of yesterday",
+                        "id": "2025-12-09T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of yesterday",
+                        "id": "2025-12-09T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "after-now",
+                "label": "After today",
+                "values": [
+                    {
+                        "label": "After today",
+                        "id": "2025-12-11T00:59:38.369Z"
+                    },
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    }
+                ],
+                "icon": "event_upcoming"
+            },
+            {
+                "id": "before-now",
+                "label": "Before today",
+                "values": [
+                    {
+                        "id": "no-date",
+                        "label": "no-date"
+                    },
+                    {
+                        "label": "Before today",
+                        "id": "2025-12-10T00:59:38.369Z"
+                    }
+                ],
+                "icon": "event_busy"
+            },
+            {
+                "id": "this-week",
+                "label": "This week",
+                "values": [
+                    {
+                        "label": "Start of week",
+                        "id": "2025-12-07T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of week",
+                        "id": "2025-12-13T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "last-week",
+                "label": "Last week",
+                "values": [
+                    {
+                        "label": "Start of last week",
+                        "id": "2025-11-30T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last week",
+                        "id": "2025-12-06T23:59:59.999Z"
+                    }
+                ],
+                "icon": "date_range"
+            },
+            {
+                "id": "this-month",
+                "label": "This month",
+                "values": [
+                    {
+                        "label": "Start of month",
+                        "id": "2025-12-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of month",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-month",
+                "label": "Last month",
+                "values": [
+                    {
+                        "label": "Start of last month",
+                        "id": "2025-11-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last month",
+                        "id": "2025-11-30T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "this-year",
+                "label": "This year",
+                "values": [
+                    {
+                        "label": "Start of year",
+                        "id": "2025-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of year",
+                        "id": "2025-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            },
+            {
+                "id": "last-year",
+                "label": "Last year",
+                "values": [
+                    {
+                        "label": "Start of last year",
+                        "id": "2024-01-01T00:00:00.000Z"
+                    },
+                    {
+                        "label": "End of last year",
+                        "id": "2024-12-31T23:59:59.999Z"
+                    }
+                ],
+                "icon": "calendar_month"
+            }
+        ],
+        "allowsCustomValues": true,
+        "allowHasValue": true,
+        "allowNoValue": true,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "calendar_month",
+        "singleSelect": true
+    },
+    {
+        "id": "folder_attrib.description",
+        "type": "string",
+        "label": "Description - Folder",
+        "operator": "OR",
+        "inverted": false,
+        "values": [],
+        "allowsCustomValues": true,
+        "allowHasValue": false,
+        "allowNoValue": false,
+        "allowExcludes": true,
+        "operatorChangeable": false,
+        "icon": "description",
+        "singleSelect": false
+    }
+]

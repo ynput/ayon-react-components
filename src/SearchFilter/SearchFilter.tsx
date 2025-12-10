@@ -102,8 +102,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         ) {
           if (option.values && option.values.length > 0) {
             for (const value of option.values) {
-              if (!addedItems.has(value.id)) {
-                addedItems.add(value.id)
+              // sometimes value id can be the same but for a different parent so we need to create a unique id
+              const fullId = `${option.id}-${value.id}`
+              if (!addedItems.has(fullId)) {
+                addedItems.add(fullId)
                 flattenedOptions.push({
                   ...value,
                   parentId: option.id,

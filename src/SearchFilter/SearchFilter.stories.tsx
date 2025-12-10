@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { Filter, Option } from './types'
 import { Button } from '../Buttons/Button'
 import { Icon } from '../Icon'
-
+import TaskFolderOptions from './task-folder-options.json'
 const meta: Meta<typeof SearchFilter> = {
   component: SearchFilter,
   tags: ['autodocs'],
@@ -85,7 +85,6 @@ const Template = (args: Story['args']) => {
   return (
     <SearchFilter
       options={options}
-      {...args}
       filters={filters}
       onChange={setFilters}
       enableGlobalSearch
@@ -93,12 +92,25 @@ const Template = (args: Story['args']) => {
         label: 'Global search',
       }}
       allowedSearchChildren={['status', 'attrib.private']}
+      {...args}
     />
   )
 }
 
 export const Default: Story = {
-  args: {},
+  args: {
+    options: options,
+  },
+  render: Template,
+}
+
+export const Scopes: Story = {
+  args: {
+    // @ts-ignore
+    options: TaskFolderOptions,
+    enableSearchChildren: true,
+    allowedSearchChildren: undefined,
+  },
   render: Template,
 }
 

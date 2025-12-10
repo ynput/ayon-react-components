@@ -347,6 +347,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       }
     }
 
+    console.log(filteredOptions)
+
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
@@ -379,7 +381,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
                   <Styled.Item
-                    key={id}
+                    key={id + '-' + parentId}
                     id={id}
                     tabIndex={0}
                     className={clsx({ selected: isSelected })}
