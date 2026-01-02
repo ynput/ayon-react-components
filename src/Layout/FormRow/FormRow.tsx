@@ -12,10 +12,13 @@ const StyledRow = styled.div`
     min-width: 120px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 4px;
     height: var(--base-input-size);
     line-height: var(--base-input-size);
+
+    .shortcut {
+      margin-left: 0;
+    }
   }
 
   .field {
