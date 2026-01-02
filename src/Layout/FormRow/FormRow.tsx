@@ -1,5 +1,6 @@
 import { HTMLAttributes, forwardRef } from 'react'
 import styled from 'styled-components'
+import { ShortcutTag } from '../../ShortcutTag'
 
 const StyledRow = styled.div`
   display: flex;
@@ -9,7 +10,10 @@ const StyledRow = styled.div`
 
   .label {
     min-width: 120px;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
     height: var(--base-input-size);
     line-height: var(--base-input-size);
   }
@@ -31,15 +35,20 @@ const StyledRow = styled.div`
 
 export interface FormRowProps extends HTMLAttributes<HTMLDivElement> {
   label: string
+  shortcut?: string | React.ReactNode
   fieldStyle?: React.CSSProperties
   labelStyle?: React.CSSProperties
 }
 
 export const FormRow = forwardRef<HTMLDivElement, FormRowProps>(
-  ({ label, children, fieldStyle, labelStyle, ...props }, ref) => {
+  ({ label, shortcut, children, fieldStyle, labelStyle, ...props }, ref) => {
     return (
       <StyledRow {...props} ref={ref}>
-        <div className="label">{label}</div>
+        <div className="label" style={labelStyle}>
+          {label}
+          {shortcut &&
+            (typeof shortcut === 'string' ? <ShortcutTag>{shortcut}</ShortcutTag> : shortcut)}
+        </div>
         <div className="field" style={fieldStyle}>
           {children}
         </div>

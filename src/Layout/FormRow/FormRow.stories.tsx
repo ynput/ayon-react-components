@@ -27,3 +27,18 @@ const Template = () => (
 export const Default: Story = {
   render: Template,
 }
+
+export const WithShortcut: Story = {
+  render: () => (
+    <div
+      style={{
+        display: 'flex',
+        width: '100%',
+      }}
+    >
+      <FormRow label="username" shortcut="Ctrl+U">
+        <InputText placeholder="username..." />
+      </FormRow>
+    </div>
+  ),
+}
