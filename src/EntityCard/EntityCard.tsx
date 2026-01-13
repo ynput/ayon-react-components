@@ -29,6 +29,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   showPath?: boolean // always show path
   title?: string // top left
   titleIcon?: IconType // top left
+  titleColor?: string
   isPlayable?: boolean // top right - play icon
   users?: User[] | null // bottom left
   status?: Status // bottom right
@@ -93,6 +94,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       showPath,
       title = '',
       titleIcon,
+      titleColor,
       isPlayable,
       users,
       status,
@@ -322,6 +324,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
             {/* middle Icon */}
             <Styled.NoImageIcon
               icon={imageIcon || 'image'}
+              style={{color: titleColor}}
               className={clsx('no-image')}
               onMouseEnter={closeEditors}
             />
@@ -350,7 +353,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     'loading card...'
                   ) : (
                     <>
-                      {titleIcon && <Icon icon={titleIcon} />}
+                      {titleIcon && <Icon style={{color: titleColor}} icon={titleIcon} />}
                       {title && <span className="inner-text">{title}</span>}
                     </>
                   )}
