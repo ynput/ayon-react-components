@@ -76,7 +76,7 @@ export const DefaultItemTemplate = ({
       style={itemStyle}
     >
       {startContent}
-      {option.icon && <Icon icon={option.icon} />}
+      {option.icon && <Icon icon={option.icon} style={{ color: option.color }} />}
       <span>{option[labelKey] || option[dataKey]}</span>
       {multiSelect &&
         [...selected, ...mixedSelected]?.includes(option[dataKey]) &&
