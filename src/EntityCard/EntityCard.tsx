@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Icon, IconType } from '../Icon'
+import { Icon, IconProps, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
@@ -82,6 +82,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
     priorityTag?: Partial<HTMLAttributes<HTMLDivElement>>
     versionsTag?: Partial<HTMLAttributes<HTMLDivElement>>
     notificationDot?: Partial<HTMLAttributes<HTMLDivElement>>
+    noImageIcon?: Partial<IconProps>
   }
 }
 
@@ -323,9 +324,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           >
             {/* middle Icon */}
             <Styled.NoImageIcon
+              {...pt.noImageIcon}
               icon={imageIcon || 'image'}
-              style={{color: titleColor}}
-              className={clsx('no-image')}
+              className={clsx(pt?.noImageIcon?.className, 'no-image')}
               onMouseEnter={closeEditors}
             />
 
