@@ -324,7 +324,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           >
             {/* middle Icon */}
             <Styled.NoImageIcon
-              {...pt.noImageIcon}
+              { ...pt.noImageIcon }
               icon={imageIcon || 'image'}
               className={clsx(pt?.noImageIcon?.className, 'no-image')}
               onMouseEnter={closeEditors}
