@@ -72,6 +72,7 @@ export const DefaultItemTemplate = ({
         selected: !!selected?.includes(option[dataKey]),
         active: value && value.includes(option[dataKey]),
         error: !!option.error,
+        disabled: !!option.disabled,
       })}
       style={itemStyle}
     >

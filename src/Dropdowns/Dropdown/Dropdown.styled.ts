@@ -235,6 +235,10 @@ export const ListItem = styled.li<{
     .option-child {
       background-color: var(--md-sys-color-surface-container-low) !important;
       color: var(--md-sys-color-outline);
+
+      .icon {
+        opacity: 0.5;
+      }
     }
     /* remove hover affect */
     &:hover {
