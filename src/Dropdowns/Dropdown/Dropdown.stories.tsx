@@ -92,6 +92,17 @@ export const Disabled: Story = {
   },
 }
 
+export const DisabledOptions: Story = {
+  render: Template,
+  args: {
+    options: options.map((option, i) => ({
+      ...option,
+      disabled: i % 3 === 0,
+      disabledMessage: i % 3 === 0 ? 'This icon is currently unavailable' : undefined,
+    })),
+  },
+}
+
 // simple dropdown with three items
 export const Tags: Story = {
   render: Template,
