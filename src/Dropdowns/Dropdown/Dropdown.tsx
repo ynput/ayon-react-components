@@ -489,6 +489,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       e?.stopPropagation()
       e?.preventDefault()
 
+      const option = options[index]
+      if (option?.disabled || disabledValues.includes(value)) {
+        return
+      }
+
       if (!multipleOverride) {
         if ((e?.target as HTMLDivElement).classList.contains('remove')) {
           onRemoveItem?.(value)
@@ -514,9 +519,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
         // select all values from options
         const allSelected = options
+          .filter(
+            (o) =>
+              !o.disabled && !disabledValues.includes(o[dataKey]) && o[dataKey] !== selectAllKey,
+          )
           .map((o) => o[dataKey])
-          .filter((o) => !disabledValues.includes(o))
-          .filter((o) => o !== selectAllKey)
 
         submitChange(allSelected, multiSelectClose, e)
 
@@ -955,6 +962,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                         focused: usingKeyboard && activeIndex === i,
                       })}
                       data-value={option[dataKey]}
+                      data-tooltip={option.disabled ? option.disabledMessage : undefined}
                     >
                       {itemTemplate ? (
                         itemTemplate(
