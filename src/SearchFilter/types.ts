@@ -1,3 +1,9 @@
+export type FilterValuePt = {
+  style?: {
+    color?: string
+  }
+}
+
 export type FilterValue = {
   id: string
   label: string
@@ -6,6 +12,7 @@ export type FilterValue = {
   color?: string | null
   isCustom?: boolean
   parentId?: string | null
+  pt?: FilterValuePt
 }
 
 export type FilterOperator = 'AND' | 'OR'
@@ -47,4 +54,5 @@ export interface Option extends Filter {
   searchLabel?: string // label to be shown when searching
   contentBefore?: React.ReactNode // content to be shown before the filter
   contentAfter?: React.ReactNode // content to be shown after the filter
+  pt?: FilterValuePt // pass-through styles for the filter value
 }
