@@ -45,7 +45,7 @@ export interface SearchFilterItemValueProps
 }
 
 export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItemValueProps>(
-  ({ label, img, icon, color, operator, isCompact, isCustom, ...props }, ref) => {
+  ({ label, img, icon, color, operator, isCompact, isCustom, pt, ...props }, ref) => {
     const colorStyle = color ? color : '#ffffff'
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
@@ -69,7 +69,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
           <span
             className="label"
             style={{
-              color: adjustedColor,
+              color:pt?.style?.color ?? adjustedColor
             }}
           >
             {label}

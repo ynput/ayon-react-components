@@ -375,6 +375,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                 icon,
                 img,
                 color,
+                pt: optionPt,
                 isCustom,
                 contentBefore,
                 contentAfter,
@@ -394,7 +395,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
                     {contentBefore && contentBefore}
-                    <span className="label" style={{ color: adjustedColor }}>
+                    <span className="label" style={{ color: optionPt?.style?.color ?? adjustedColor}}>
                       {search && searchLabel ? searchLabel : label}
                     </span>
                     {!!contentAfter && contentAfter}
