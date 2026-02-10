@@ -183,6 +183,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
               operator={index > 0 ? operator : undefined}
               isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
               {...pt.value}
+              pt={value.pt}
               id={value.id}
               label={value.label}
             />
