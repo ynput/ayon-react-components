@@ -106,7 +106,9 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
       style={style}
       className={clsx('template-value', className, { error: hasError, open: isOpen })}
     >
-      {noValue ? (
+      {childrenCustom ? (
+        childrenCustom
+      ) : noValue ? (
         <>
           <ContentStyled>
             <ValueStyled style={{ opacity: 0.5 }} className="placeholder">
@@ -164,7 +166,6 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
           )}
         </>
       )}
-      {childrenCustom}
 
       <Icon icon={dropIcon} className="control" />
     </DefaultValueStyled>

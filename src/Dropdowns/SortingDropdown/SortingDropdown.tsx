@@ -1,6 +1,7 @@
-import { FC } from 'react'
+import { FC, HTMLAttributes } from 'react'
 import { DefaultValueTemplate, Dropdown, DropdownProps } from '../Dropdown'
 import styled from 'styled-components'
+import clsx from 'clsx'
 import SortCard from './SortCard'
 
 const StyledDropdown = styled(Dropdown)`
@@ -26,6 +27,9 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
   options: SortCardType[]
   onChange: (value: SortCardType[]) => void
   title: string
+  pt?: {
+    chip?: Partial<HTMLAttributes<HTMLDivElement>>
+  }
 }
 
 export const SortingDropdown: FC<SortingDropdownProps> = ({
@@ -34,6 +38,7 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
   onChange,
   title = 'Sort by',
   multiSelect = true,
+  pt,
   ...props
 }) => {
   const handleChange = (v: DropdownProps['value']) => {
@@ -108,6 +113,8 @@ export const SortingDropdown: FC<SortingDropdownProps> = ({
                     <SortCard
                       key={id}
                       {...sortValue}
+                      {...pt?.chip}
+                      className={clsx(pt?.chip?.className)}
                       id={sortValue.id}
                       label={sortValue.label}
                       sortOrder={sortValue?.sortOrder ?? true}
