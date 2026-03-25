@@ -108,6 +108,11 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   buttonProps?: Styled.ButtonType['defaultProps']
   activateKeys?: string[]
   startContent?: (value: string[], selected: string[], isOpen: boolean) => React.ReactNode
+  pt?: {
+    button?: Partial<React.HTMLAttributes<HTMLButtonElement>>
+    list?: Partial<React.HTMLAttributes<HTMLDivElement>>
+    container?: Partial<React.HTMLAttributes<HTMLDivElement>>
+  }
 }
 
 export interface DropdownRef {
@@ -183,6 +188,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       buttonProps,
       activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       startContent,
+      pt,
       ...props
     },
     ref,
@@ -883,8 +889,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           $isChanged={!!isChanged}
           $isOpen={isOpen}
           {...buttonProps}
-          style={buttonStyle}
-          className={`button ${buttonClassName}`}
+          {...pt?.button}
+          style={{ ...buttonStyle, ...pt?.button?.style }}
+          className={clsx('button', buttonClassName, pt?.button?.className)}
         >
           {valueTemplateNode && valueTemplateNode(value || [], selected || [], isOpen) ? (
             valueTemplateNode(value || [], selected || [], isOpen)
@@ -898,6 +905,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         {isOpen &&
           createPortal(
             <Styled.Container
+              {...pt?.container}
               style={{
                 opacity: isShowOptions ? 1 : 0,
                 left: pos?.left || 'unset',
@@ -906,6 +914,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 translate: offScreen ? '0 -100%' : 'none',
                 transformOrigin: offScreen ? 'center bottom' : 'center top',
                 ...itemStyle,
+                ...pt?.container?.style,
               }}
               $message={message || ''}
               $messageOverButton={messageOverButton}
@@ -914,7 +923,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               $hidden={!isShowOptions}
               onSubmit={handleSearchSubmit}
               ref={formRef}
-              className={'container'}
+              className={clsx('container', pt?.container?.className)}
             >
               {startContent && (
                 <Styled.StartContent>
@@ -943,8 +952,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 defer
               >
                 <Styled.Options
-                  style={{ minWidth, maxWidth: widthExpandMax ? minWidth : 'unset', ...listStyle }}
-                  className={clsx('options', { usingKeyboard })}
+                  {...pt?.list}
+                  style={{ minWidth, maxWidth: widthExpandMax ? minWidth : 'unset', ...listStyle, ...pt?.list?.style }}
+                  className={clsx('options', { usingKeyboard }, pt?.list?.className)}
                   ref={optionsRef}
                 >
                   {[...missingOptions, ...showOptions].map((option, i) => (

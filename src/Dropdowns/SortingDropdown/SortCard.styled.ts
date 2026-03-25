@@ -13,6 +13,7 @@ export const Card = styled.div<{ $disabled: boolean }>`
   justify-content: center;
   align-items: center;
   min-height: unset;
+  min-width: fit-content;
   gap: 4px;
   overflow: hidden;
 
