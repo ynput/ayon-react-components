@@ -110,7 +110,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   startContent?: (value: string[], selected: string[], isOpen: boolean) => React.ReactNode
   pt?: {
     button?: Partial<React.HTMLAttributes<HTMLButtonElement>>
-    list?: Partial<React.HTMLAttributes<HTMLDivElement>>
+    list?: Partial<React.HTMLAttributes<HTMLUListElement>>
     container?: Partial<React.HTMLAttributes<HTMLDivElement>>
   }
 }

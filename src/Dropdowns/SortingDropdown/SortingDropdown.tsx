@@ -27,7 +27,7 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
   options: SortCardType[]
   onChange: (value: SortCardType[]) => void
   title: string
-  pt?: {
+  pt?: DropdownProps['pt'] & {
     chip?: Partial<HTMLAttributes<HTMLDivElement>>
   }
 }
