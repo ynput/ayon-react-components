@@ -15,8 +15,7 @@ export type IconPropType = IconType | (string & {})
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  icon: IconPropType
-  filled?: boolean
+  icon: IconType
 }
 
 // TODO: link to SVG
