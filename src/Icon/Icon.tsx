@@ -10,10 +10,12 @@ const StyledIcon = styled.span`
 `
 
 export type IconType = keyof typeof iconSet
+// This trick prevents the union from collapsing into 'string'
+type IconPropType = IconType | (string & {})
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  icon: IconType
+  icon: IconPropType
   filled?: boolean
 }
 
