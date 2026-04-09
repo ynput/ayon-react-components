@@ -6,6 +6,7 @@ import { Icon, IconPropType } from '../../Icon'
 
 const StyledDropdown = styled(Dropdown)`
   &.settings-dropdown {
+    margin-bottom: var(--padding-m);
     width: 100%;
     button {
       background-color: unset;
@@ -15,7 +16,7 @@ const StyledDropdown = styled(Dropdown)`
     }
     .template-value {
       border: none;
-      padding: 0 4px;
+      padding: 0 4px 0px 8px;
       /* dropdown icon color */
       .control {
         color: var(--md-sys-color-outline);
