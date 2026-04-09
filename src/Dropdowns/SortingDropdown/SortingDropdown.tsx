@@ -1,8 +1,8 @@
-import { FC, HTMLAttributes, forwardRef } from 'react'
+import { HTMLAttributes, ReactNode, forwardRef } from 'react'
 import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import styled from 'styled-components'
 import clsx from 'clsx'
-import { SortCard } from './SortCard'
+import { SortCard, SortCardProps } from './SortCard'
 
 const StyledDropdown = styled(Dropdown)`
   /* prevent active state if there is an active state on .action (close or sort buttons) */
@@ -27,6 +27,13 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
   options: SortCardType[]
   onChange: (value: SortCardType[]) => void
   title: string
+  renderValueContent?: (props: {
+    isOpen: boolean
+    title: string
+    selected: string[]
+    cards: ReactNode[]
+  }) => ReactNode
+  sortCardProps?: Pick<SortCardProps, 'hideSort' | 'disableSort'>
   pt?: DropdownProps['pt'] & {
     chip?: Partial<HTMLAttributes<HTMLDivElement>>
   }
@@ -34,7 +41,17 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
 
 export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
   (
-    { value = [], options = [], onChange, title = 'Sort by', multiSelect = true, pt, ...props },
+    {
+      value = [],
+      options = [],
+      onChange,
+      title = 'Sort by',
+      multiSelect = true,
+      renderValueContent,
+      sortCardProps,
+      pt,
+      ...props
+    },
     ref,
   ) => {
     const handleChange = (v: DropdownProps['value']) => {
@@ -78,6 +95,43 @@ export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
       onChange(newValues)
     }
 
+    const renderSortCard = (selectedValue: string, isOpen: boolean) => {
+      const id = selectedValue.toString()
+      const sortValue =
+        value.find((option) => option.id === id) || options.find((option) => option.id === id)
+      if (!sortValue) return null
+
+      return (
+        <SortCard
+          key={id}
+          {...sortValue}
+          {...pt?.chip}
+          {...sortCardProps}
+          className={clsx(pt?.chip?.className)}
+          id={sortValue.id}
+          label={sortValue.label}
+          sortOrder={sortValue?.sortOrder ?? true}
+          disabled={isOpen}
+          onSortBy={() => !isOpen && !sortCardProps?.disableSort && handleSortChange(id)}
+          onRemove={() => !isOpen && handleRemove(id)}
+          onKeyDown={(e) => {
+            if (isOpen) return
+            e.stopPropagation()
+            if (e.key === 'Enter') {
+              if ((e.target as HTMLDivElement).id === 'remove') {
+                handleRemove(id)
+                return
+              }
+
+              if (!sortCardProps?.disableSort && !sortCardProps?.hideSort) {
+                handleSortChange(id)
+              }
+            }
+          }}
+        />
+      )
+    }
+
     return (
       <StyledDropdown
         {...props}
@@ -90,49 +144,24 @@ export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
         // multiSelectClose
         widthExpand
         valueTemplate={(values, selected, isOpen) => {
-          // console.log(selected)
+          const cards = selected.map((selectedValue) =>
+            renderSortCard(selectedValue.toString(), isOpen),
+          )
+
           return (
             <DefaultValueTemplate
               value={[]}
               placeholder=""
               isOpen={isOpen}
               childrenCustom={
-                <>
-                  <span>{title}</span>
-                  {selected.map((v) => {
-                    const id = v.toString()
-                    // find the sort card in options
-                    const sortValue =
-                      value.find((o) => o.id === id) || options.find((o) => o.id === id)
-                    if (!sortValue) return ''
-
-                    return (
-                      <SortCard
-                        key={id}
-                        {...sortValue}
-                        {...pt?.chip}
-                        className={clsx(pt?.chip?.className)}
-                        id={sortValue.id}
-                        label={sortValue.label}
-                        sortOrder={sortValue?.sortOrder ?? true}
-                        disabled={isOpen}
-                        onSortBy={() => !isOpen && handleSortChange(id)}
-                        onRemove={() => !isOpen && handleRemove(id)}
-                        onKeyDown={(e) => {
-                          if (isOpen) return
-                          e.stopPropagation()
-                          if (e.key === 'Enter') {
-                            if ((e.target as HTMLDivElement).id !== 'remove') {
-                              handleSortChange(id)
-                            } else {
-                              handleRemove(id)
-                            }
-                          }
-                        }}
-                      />
-                    )
-                  })}
-                </>
+                renderValueContent ? (
+                  renderValueContent({ isOpen, title, selected, cards })
+                ) : (
+                  <>
+                    <span>{title}</span>
+                    {cards}
+                  </>
+                )
               }
             />
           )
