@@ -36,8 +36,8 @@ export type { EnumDropdownProps } from './Dropdowns/EnumDropdown'
 export { VersionSelect } from './Dropdowns/VersionSelect'
 export type { VersionSelectProps } from './Dropdowns/VersionSelect'
 // sortingDropdown
-export { SortingDropdown } from './Dropdowns/SortingDropdown'
-export type { SortingDropdownProps, SortCardType } from './Dropdowns/SortingDropdown'
+export { SortingDropdown, SortCard } from './Dropdowns/SortingDropdown'
+export type { SortingDropdownProps, SortCardType, SortCardProps } from './Dropdowns/SortingDropdown'
 // statusSelect
 export { StatusSelect, StatusField } from './Dropdowns/StatusSelect'
 export type { StatusSelectProps, StatusFieldProps, Status } from './Dropdowns/StatusSelect'
