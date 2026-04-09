@@ -38,6 +38,9 @@ export type { VersionSelectProps } from './Dropdowns/VersionSelect'
 // sortingDropdown
 export { SortingDropdown, SortCard } from './Dropdowns/SortingDropdown'
 export type { SortingDropdownProps, SortCardType, SortCardProps } from './Dropdowns/SortingDropdown'
+// settingsDropdown
+export { SettingsDropdown } from './Dropdowns/SettingsDropdown'
+export type { SettingsDropdownProps } from './Dropdowns/SettingsDropdown'
 // statusSelect
 export { StatusSelect, StatusField } from './Dropdowns/StatusSelect'
 export type { StatusSelectProps, StatusFieldProps, Status } from './Dropdowns/StatusSelect'
