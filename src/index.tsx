@@ -41,6 +41,9 @@ export type { SortingDropdownProps, SortCardType, SortCardProps } from './Dropdo
 // settingsDropdown
 export { SettingsDropdown } from './Dropdowns/SettingsDropdown'
 export type { SettingsDropdownProps } from './Dropdowns/SettingsDropdown'
+// settingsSortingDropdown
+export { SettingsSortingDropdown } from './Dropdowns/SettingsSortingDropdown'
+export type { SettingsSortingDropdownProps } from './Dropdowns/SettingsSortingDropdown'
 // statusSelect
 export { StatusSelect, StatusField } from './Dropdowns/StatusSelect'
 export type { StatusSelectProps, StatusFieldProps, Status } from './Dropdowns/StatusSelect'

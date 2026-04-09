@@ -10,17 +10,22 @@ export interface SortCardProps
   onRemove: () => void
   onSortBy: () => void
   disabled?: boolean
+  hideSort?: boolean
+  disableSort?: boolean
 }
 
 export const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
-  ({ id, label, sortOrder, onRemove, onSortBy, disabled, ...props }, ref) => {
+  (
+    { id, label, sortOrder, onRemove, onSortBy, disabled, hideSort, disableSort, ...props },
+    ref,
+  ) => {
     return (
       <Styled.Card
         {...props}
         ref={ref}
         tabIndex={0}
         $disabled={!!disabled}
-        className={clsx('sort-chip', props.className)}
+        className={clsx('sort-chip', props.className, { ['sort-hidden']: hideSort })}
       >
         <Icon
           icon="close"
@@ -33,22 +38,25 @@ export const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
           id="remove"
         />
         <span>{label}</span>
-        <Styled.SortWrapper
-          className="sort-order action"
-          onClick={(e) => {
-            e.stopPropagation()
-            onSortBy()
-          }}
-          tabIndex={0}
-        >
-          <Icon
-            icon={'arrow_right'}
-            style={{
-              transform: sortOrder ? 'rotate(90deg)' : 'rotate(270deg)',
-              transition: 'transform 0.2s ease-in-out',
+        {!hideSort && (
+          <Styled.SortWrapper
+            className={clsx('sort-order action', { disabled: disableSort })}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (!disableSort) onSortBy()
             }}
-          />
-        </Styled.SortWrapper>
+            tabIndex={disableSort ? -1 : 0}
+            style={disableSort ? { opacity: 0.5, pointerEvents: 'none' } : undefined}
+          >
+            <Icon
+              icon={'arrow_right'}
+              style={{
+                transform: sortOrder ? 'rotate(90deg)' : 'rotate(270deg)',
+                transition: 'transform 0.2s ease-in-out',
+              }}
+            />
+          </Styled.SortWrapper>
+        )}
       </Styled.Card>
     )
   },
