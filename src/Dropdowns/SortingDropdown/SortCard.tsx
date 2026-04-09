@@ -4,13 +4,15 @@ import { Icon } from '../../Icon'
 import * as Styled from './SortCard.styled'
 import clsx from 'clsx'
 
-interface SortCardProps extends SortCardType, Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {
+export interface SortCardProps
+  extends SortCardType,
+    Omit<React.HTMLAttributes<HTMLDivElement>, 'id'> {
   onRemove: () => void
   onSortBy: () => void
   disabled?: boolean
 }
 
-const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
+export const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
   ({ id, label, sortOrder, onRemove, onSortBy, disabled, ...props }, ref) => {
     return (
       <Styled.Card
@@ -51,5 +53,3 @@ const SortCard = forwardRef<HTMLDivElement, SortCardProps>(
     )
   },
 )
-
-export default SortCard
