@@ -1,8 +1,15 @@
-import { HTMLAttributes, ReactNode, forwardRef } from 'react'
-import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
+import { HTMLAttributes, ReactNode, forwardRef, useRef } from 'react'
+import {
+  DefaultItemTemplate,
+  DefaultValueTemplate,
+  Dropdown,
+  DropdownProps,
+  DropdownRef,
+} from '../Dropdown'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { SortCard, SortCardProps } from './SortCard'
+import { Icon } from '../../Icon'
 
 const StyledDropdown = styled(Dropdown)`
   /* prevent active state if there is an active state on .action (close or sort buttons) */
@@ -12,6 +19,29 @@ const StyledDropdown = styled(Dropdown)`
         background-color: var(--md-sys-color-surface-container-low-hover);
       }
     }
+  }
+`
+
+const StyledDefaultItemTemplate = styled(DefaultItemTemplate)`
+  .add-another {
+    /* default hidden until row is hovered */
+    visibility: hidden;
+  }
+
+  &:hover {
+    .add-another {
+      visibility: visible;
+    }
+  }
+`
+
+export const AddAnotherButton = styled(Icon)`
+  border-radius: var(--border-radius-m);
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 4px;
+  &:hover {
+    background-color: var(--md-sys-color-surface-container-hover);
   }
 `
 
@@ -27,6 +57,7 @@ export interface SortingDropdownProps extends Omit<DropdownProps, 'value' | 'onC
   options: SortCardType[]
   onChange: (value: SortCardType[]) => void
   title: string
+  multiSelectButton?: boolean
   renderValueContent?: (props: {
     isOpen: boolean
     title: string
@@ -47,14 +78,17 @@ export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
       onChange,
       title = 'Sort by',
       multiSelect = true,
+      multiSelectButton = true,
       renderValueContent,
       sortCardProps,
       pt,
       ...props
     },
-    ref,
+    externalRef,
   ) => {
-    const handleChange = (v: DropdownProps['value']) => {
+    const internalRef = useRef<DropdownRef>(null)
+    const ref = externalRef || internalRef
+    const handleChange: DropdownProps['onChange'] = (v, _r, e) => {
       // for each value, find in value, if not found, find in options and add sortOrder
       const newValues = v?.map((id) => {
         const idx = value.findIndex((v) => v.id === id)
@@ -132,16 +166,18 @@ export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
       )
     }
 
+    const valueIds = value.map(({ id }) => id)
+
     return (
       <StyledDropdown
         {...props}
         ref={ref}
-        value={value.map(({ id }) => id)}
+        value={valueIds}
         options={options}
         onChange={handleChange}
         dataKey="id"
         multiSelect={multiSelect}
-        // multiSelectClose
+        multiSelectClose
         widthExpand
         valueTemplate={(values, selected, isOpen) => {
           const cards = selected.map((selectedValue) =>
@@ -166,6 +202,43 @@ export const SortingDropdown = forwardRef<DropdownRef, SortingDropdownProps>(
             />
           )
         }}
+        itemTemplate={(option, _isActive, isSelected, _i, mixedSelection) => (
+          <StyledDefaultItemTemplate
+            option={option}
+            dataKey={props.dataKey || 'id'}
+            labelKey={props.labelKey || 'label'}
+            selected={valueIds || []}
+            mixedSelected={mixedSelection}
+            value={valueIds}
+            multiSelect={multiSelect}
+            minSelected={props.minSelected}
+            itemClassName={props.itemClassName}
+            itemStyle={props.itemStyle}
+            endContent={
+              multiSelect &&
+              multiSelectButton &&
+              !isSelected &&
+              !!value?.length && <AddAnotherButton icon="add" className="add-another" />
+            }
+            onClick={(e) => {
+              const target = e.target as HTMLElement
+              const isAddAnother = target.closest('.add-another')
+              if (isAddAnother || !multiSelect || !multiSelectButton) {
+                // do nothing and let dropdown handle the multiselect logic
+              } else {
+                // intercept the click, stop it to prevent the dropdown adding more.
+                e.stopPropagation()
+                // handle the change ourselves
+                const value = options.find((o) => o.id === option.id)
+                if (!value)
+                  throw new Error(`SortingDropdown: option with id ${option?.id} not found`)
+                onChange([value])
+                // @ts-expect-error
+                ref?.current?.close()
+              }
+            }}
+          />
+        )}
       />
     )
   },
