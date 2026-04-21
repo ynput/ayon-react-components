@@ -185,7 +185,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const { values, parentId } = option
 
       // check if the filter already exists and if we allow multiple of the same filter
-      if (!enableMultipleSameFilters && doesFilterExist(option.id, filters)) return
+      if (!enableMultipleSameFilters && doesFilterExist(option.id, filters)) {
+        console.warn(
+          `Filter with id ${option.id} already exists. Enable enableMultipleSameFilters to allow multiple filters with the same id.`,
+        )
+        return
+      }
 
       // create new id for the filter so we can add multiple of the same filter name
       const newId = buildFilterId(option.id)
@@ -194,18 +199,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         // find the parent filter that's already in the filters
         // if the option is a searchOnly filter, it's parent is in the filters state. Find the parent from the options
         // Find or create parent filter based on option type
-        const parentFilter = option.searchOnly
-          ? (() => {
-              const parentOption = options.find((opt) => opt.id === option.parentId)
-              return parentOption
-                ? {
-                    ...parentOption,
-                    id: buildFilterId(option.parentId || ''),
-                    values: [],
-                  }
-                : null
-            })()
-          : filters.find((filter) => filter.id === parentId)
+        let parentFilter: Filter | null | undefined = null
+        if (option.searchOnly) {
+          const parentOption = options.find((opt) => opt.id === option.parentId)
+          if (parentOption) {
+            parentFilter = {
+              ...parentOption,
+              id: buildFilterId(option.parentId || ''),
+              values: [],
+            }
+          }
+        } else {
+          parentFilter = filters.find((filter) => filter.id === parentId)
+        }
 
         // add to the parent filter values
         if (parentFilter) {

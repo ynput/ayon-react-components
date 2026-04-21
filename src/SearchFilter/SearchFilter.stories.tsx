@@ -82,24 +82,18 @@ const options: Option[] = [
 const Template = (args: Story['args']) => {
   const [filters, setFilters] = useState<Filter[]>([])
 
-  return (
-    <SearchFilter
-      options={options}
-      filters={filters}
-      onChange={setFilters}
-      enableGlobalSearch
-      globalSearchConfig={{
-        label: 'Global search',
-      }}
-      allowedSearchChildren={['status', 'attrib.private']}
-      {...args}
-    />
-  )
+  const handleChange = (newFilters: Filter[]) => {
+    setFilters(newFilters)
+  }
+
+  return <SearchFilter options={[]} {...args} filters={filters} onChange={handleChange} />
 }
 
 export const Default: Story = {
   args: {
     options: options,
+    enableGlobalSearch: true,
+    allowedSearchChildren: ['status', 'attrib.private'],
   },
   render: Template,
 }
@@ -110,6 +104,7 @@ export const Scopes: Story = {
     options: TaskFolderOptions,
     enableSearchChildren: true,
     allowedSearchChildren: undefined,
+    enableGlobalSearch: true,
   },
   render: Template,
 }
@@ -132,9 +127,6 @@ export const WithExternalControl: Story = {
           filters={filters}
           onChange={setFilters}
           enableGlobalSearch
-          globalSearchConfig={{
-            label: 'Global search',
-          }}
           allowedSearchChildren={['status', 'attrib.private']}
         />
       </div>
