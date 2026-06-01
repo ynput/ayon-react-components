@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { Filter, Option } from './types'
 import { Button } from '../Buttons/Button'
 import { Icon } from '../Icon'
+import { SearchFilterCustomRangeDebug } from './SearchFilterCustomRangeDebug'
 import TaskFolderOptions from './task-folder-options.json'
 const meta: Meta<typeof SearchFilter> = {
   component: SearchFilter,
@@ -175,4 +176,12 @@ export const OptionsContent: Story = {
     },
   },
   render: Template,
+}
+
+export const CustomRangeDebug: Story = {
+  args: {
+    enableGlobalSearch: true,
+    allowedSearchChildren: ['status', 'attrib.private', 'createdAt'],
+  },
+  render: (args) => <SearchFilterCustomRangeDebug {...args} baseOptions={options} />,
 }
