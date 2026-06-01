@@ -48,6 +48,24 @@ const ValueChip = styled.span`
   overflow: hidden;
   border-radius: 9px;
   user-select: none;
+
+  .remove {
+    border-radius: 100%;
+    padding: 0;
+    font-size: 16px;
+    margin-right: 4px;
+    margin-left: -4px;
+
+    color: var(--md-sys-color-on-primary);
+
+    &:hover {
+      background-color: var(--md-sys-color-on-primary-hover);
+      color: var(--md-sys-color-on-surface);
+    }
+    &:active {
+      background-color: var(--md-sys-color-on-primary-active);
+    }
+  }
 `
 
 export interface SettingsDropdownProps extends Omit<DropdownProps, 'label'> {
@@ -73,6 +91,16 @@ export const SettingsDropdown = forwardRef<DropdownRef, SettingsDropdownProps>(
                 {icon && <Icon icon={icon} className="dropdown-icon" />}
                 <span className="dropdown-title">{title}</span>
                 <ValueChip>
+                  {props.onRemoveItem && (
+                    <Icon
+                      icon="close"
+                      className="remove"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        props.onRemoveItem?.(value[0])
+                      }}
+                    />
+                  )}
                   {props.options.find((option) => option.value === value[0])?.label}
                 </ValueChip>
               </StyledInner>

@@ -24,6 +24,7 @@ export const Default: Story = {
       { value: 'option3', label: 'Option 3' },
     ],
     value: ['option1'],
+    onRemoveItem: (value) => alert(`Removed ${value}`),
   },
   render: (args) => {
     return (
