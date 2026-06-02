@@ -1,4 +1,4 @@
-import { FC, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
+import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
 
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
@@ -6,22 +6,32 @@ import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
 import SearchFilterDropdown, {
   getIsValueSelected,
   SearchFilterDropdownProps,
+  SearchFilterDropdownRef,
 } from './SearchFilterDropdown/SearchFilterDropdown'
-import { useFocusOptions } from './hooks'
 import { useCompactDisplay } from './hooks/useCompactDisplay'
 import { buildFilterId } from './buildFilterId'
 import { getFilterFromId } from './getFilterFromId'
 import doesFilterExist from './doesFilterExist'
-import { Icon } from '../Icon'
+import { Icon, IconType } from '../Icon'
 import clsx from 'clsx'
 import { SEARCH_FILTER_ID } from './constants'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
+export interface SearchFilterQuickAction {
+  id: string
+  icon?: string
+  label?: string
+  tooltip?: string
+  active?: boolean
+}
+
 export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   filters: Filter[]
   onChange: (filters: Filter[]) => void
   options: Option[]
+  quickActions?: SearchFilterQuickAction[]
+  onQuickAction?: (id: string) => void
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
@@ -43,6 +53,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
 export interface SearchFilterRef {
   open: () => void
   close: () => void
+  openFilter: (optionId: string) => void
   getContainerElement: () => HTMLDivElement | null
   getFiltersBarElement: () => HTMLDivElement | null
 }
@@ -54,6 +65,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onChange,
       onFinish,
       options = [],
+      quickActions,
+      onQuickAction,
       enableGlobalSearch = false,
       globalSearchConfig,
       enableSearchChildren = true,
@@ -74,12 +87,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const filtersBarRef = useRef<HTMLDivElement>(null)
     const filtersRef = useRef<HTMLDivElement>(null)
     const dropdownRef = useRef<HTMLUListElement>(null)
+    const dropdownApiRef = useRef<SearchFilterDropdownRef>(null)
+    const searchInputRef = useRef<HTMLInputElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
 
     const { enableMultiple: enableGlobalSearchMultiple } = globalSearchConfig || {}
 
     const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
     const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
+    const [search, setSearch] = useState('')
+    // in-place editing of a search chip (typing directly in the chip)
+    const [editingSearchChipId, setEditingSearchChipId] = useState<string | null>(null)
+    const [editingSearchValue, setEditingSearchValue] = useState('')
 
     const parentOption = options.find(
       (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
@@ -121,7 +140,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       return [...dropdownOptions, ...flattenedOptions]
     }, [dropdownOptions, enableSearchChildren, allowedSearchChildren])
 
-    useFocusOptions({ ref: dropdownRef, options: dropdownOptions })
+    // keep focus on the inline bar input when the dropdown opens at root level;
+    // inside a filter's value panel the dropdown renders its own input instead
+    useEffect(() => {
+      if (dropdownOptions && !dropdownParentId) searchInputRef.current?.focus()
+    }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId])
 
     const openOptions = (options: Option[], parentId: string | null) => {
       setOptions(options)
@@ -158,7 +181,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const updatedFilters = filters.filter((filter) => filter.values && filter.values.length > 0)
       onChange(updatedFilters)
 
-      // set dropdownOptions to null
+      // clear the inline search text and close the dropdown
+      setSearch('')
       closeOptions()
       // call onClose if it exists
       onFinish && onFinish(updatedFilters)
@@ -194,6 +218,22 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
       // create new id for the filter so we can add multiple of the same filter name
       const newId = buildFilterId(option.id)
+
+      // boolean options without explicit values are one-click toggles: add
+      // immediately with an "on" value and close, instead of opening a values panel
+      if (!parentId && option.type === 'boolean' && !option.values?.length) {
+        const addFilter: Filter = {
+          ...option,
+          id: newId,
+          values: [{ id: 'true', label: 'Yes' }],
+        }
+        delete (addFilter as Option).allowsCustomValues
+        const updatedFilters = [...filters, addFilter]
+        onChange(updatedFilters)
+        handleClose(updatedFilters)
+        return
+      }
+
       // check if there is a parent id
       if (parentId) {
         // find the parent filter that's already in the filters
@@ -290,6 +330,39 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const handleEditFilter = (id: string) => {
       // find the filter option and set those values
       const filter = filters.find((filter) => filter.id === id)
+
+      // search chips are edited in place (typing directly in the chip), not via the dropdown
+      if (filter && getFilterFromId(id) === SEARCH_FILTER_ID) {
+        const raw = filter.values?.[0]?.label || String(filter.values?.[0]?.id || '')
+        setEditingSearchChipId(id)
+        setEditingSearchValue(raw.replace(/%/g, '')) // strip LIKE wildcards for display
+        closeOptions()
+        return
+      }
+
+      handleEditFilterValues(id, filter)
+    }
+
+    // commit in-place search chip edit: update its value, or remove the chip if cleared
+    const handleSearchChipCommit = () => {
+      const id = editingSearchChipId
+      if (!id) return
+      const text = editingSearchValue.trim()
+      const updatedFilters = text
+        ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
+        : filters.filter((f) => f.id !== id)
+      setEditingSearchChipId(null)
+      setEditingSearchValue('')
+      onChange(updatedFilters)
+      onFinish && onFinish(updatedFilters)
+    }
+
+    const handleSearchChipCancel = () => {
+      setEditingSearchChipId(null)
+      setEditingSearchValue('')
+    }
+
+    const handleEditFilterValues = (id: string, filter?: Filter) => {
       if (filter && filter.values && filter.values.length > 0) {
         // Merge options with filter values to include custom values
         const newOptions = mergeOptionsWithFilterValues(filter, options).map((value) => ({
@@ -349,7 +422,22 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       }
     }
 
+    // inline search input: open the dropdown if needed, then delegate
+    // selection/navigation (Enter, ArrowDown, custom value) to the dropdown
+    const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!dropdownOptions) {
+        if (event.key === 'Enter' || event.key === 'ArrowDown') {
+          event.preventDefault()
+          openInitialOptions(undefined, { filters })
+          return
+        }
+      }
+      dropdownApiRef.current?.onInputKeyDown(event)
+    }
+
     const handleSearchBarKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+      // the inline input owns its own keys (typing, caret moves) — don't hijack them
+      if ((event.target as HTMLElement).tagName === 'INPUT') return
       // open on enter or space
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
@@ -426,61 +514,104 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         close: () => {
           closeOptions()
         },
+        // shortcut: behave like picking this option from the dropdown — open an
+        // existing filter for editing, or add it and open its values
+        openFilter: (optionId: string) => {
+          const existing = filters.find((f) => getFilterFromId(f.id) === optionId)
+          if (existing) {
+            handleEditFilter(existing.id)
+            return
+          }
+          const option = options.find((o) => o.id === optionId)
+          if (option) handleOptionSelect(option)
+        },
         getContainerElement: () => containerRef.current,
         getFiltersBarElement: () => filtersBarRef.current,
       }),
-      [dropdownOptions, filters, openInitialOptions, closeOptions],
+      [dropdownOptions, filters, options, openInitialOptions, closeOptions],
     )
 
     return (
       <Styled.Container onKeyDown={handleContainerKeyDown} ref={containerRef} {...props}>
         {dropdownOptions && <Styled.Backdrop onClick={() => handleClose(filters)} />}
-        <Styled.SearchBar
-          onClick={(e) => openInitialOptions(e, { hidable: true, filters })}
-          onKeyDown={handleSearchBarKeyDown}
-          tabIndex={0}
-          ref={filtersBarRef}
-          {...pt.searchBar}
-          className={clsx('search-bar', pt.searchBar?.className)}
-        >
-          <Icon icon="search" className="search" />
-          {!!filters.length && (
-            <Styled.SearchBarFilters ref={filtersRef} className="filter-values">
-              {filters.map((filter, index) => (
-                <SearchFilterItem
-                  key={filter.id + index}
-                  id={filter.id}
-                  label={filter.label}
-                  inverted={filter.inverted}
-                  operator={filter.operator}
-                  values={filter.values}
-                  icon={filter.icon}
-                  isCustom={filter.isCustom}
-                  index={index}
-                  isEditing={dropdownParentId === filter.id}
-                  isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
-                  isReadonly={filter.isReadonly}
-                  isCompact={showIconsOnly}
-                  isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
-                  onEdit={handleEditFilter}
-                  onRemove={handleRemoveFilter}
-                  onInvert={handleInvertFilter}
-                  {...pt.item}
+        <Styled.BarRow className="search-bar-row">
+          <Styled.SearchBar
+            onClick={(e) => {
+              searchInputRef.current?.focus()
+              openInitialOptions(e, { filters })
+            }}
+            onKeyDown={handleSearchBarKeyDown}
+            ref={filtersBarRef}
+            {...pt.searchBar}
+            className={clsx('search-bar', pt.searchBar?.className)}
+          >
+            <Icon icon="search" className="search" />
+            {!!filters.length && (
+              <Styled.SearchBarFilters ref={filtersRef} className="filter-values">
+                {filters.map((filter, index) => (
+                  <SearchFilterItem
+                    key={filter.id + index}
+                    id={filter.id}
+                    label={filter.label}
+                    inverted={filter.inverted}
+                    operator={filter.operator}
+                    values={filter.values}
+                    icon={filter.icon}
+                    isCustom={filter.isCustom}
+                    index={index}
+                    isEditing={dropdownParentId === filter.id}
+                    isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
+                    isReadonly={filter.isReadonly}
+                    isCompact={showIconsOnly}
+                    isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
+                    isInlineEditing={editingSearchChipId === filter.id}
+                    inlineEditValue={editingSearchValue}
+                    onInlineEditChange={setEditingSearchValue}
+                    onInlineEditCommit={handleSearchChipCommit}
+                    onInlineEditCancel={handleSearchChipCancel}
+                    onEdit={handleEditFilter}
+                    onRemove={handleRemoveFilter}
+                    onInvert={handleInvertFilter}
+                    {...pt.item}
+                  />
+                ))}
+              </Styled.SearchBarFilters>
+            )}
+            {!dropdownParentId && (
+              <Styled.SearchInput
+                ref={searchInputRef}
+                className="search-bar-input"
+                value={search}
+                placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                  if (!dropdownOptions) openInitialOptions(undefined, { filters })
+                }}
+                onKeyDown={handleInputKeyDown}
+                onClick={(e) => e.stopPropagation()}
+                onFocus={() => {
+                  if (!dropdownOptions) openInitialOptions(undefined, { filters })
+                }}
+              />
+            )}
+          </Styled.SearchBar>
+          {!!quickActions?.length && (
+            <Styled.QuickActions className="quick-actions">
+              {quickActions.map((action) => (
+                <Styled.FilterButton
+                  key={action.id}
+                  icon={action.icon as IconType}
+                  label={action.label}
+                  selected={action.active}
+                  className="quick-action"
+                  data-tooltip={action.tooltip}
+                  data-tooltip-delay={0}
+                  onClick={() => onQuickAction?.(action.id)}
                 />
               ))}
-            </Styled.SearchBarFilters>
+            </Styled.QuickActions>
           )}
-          {filters.length ? (
-            <Styled.FilterButton
-              icon={'add'}
-              className="add-button"
-              variant="text"
-              onClick={(e) => openInitialOptions(e, { filters })}
-            />
-          ) : (
-            <span>{getEmptyPlaceholder(enableGlobalSearch)}</span>
-          )}
-        </Styled.SearchBar>
+        </Styled.BarRow>
         {allOptions && (
           <SearchFilterDropdown
             options={allOptions}
@@ -500,7 +631,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             onOperatorChange={handleFilterOperatorChange}
             onConfirmAndClose={handleConfirmAndClose}
             onSwitchFilter={handleSwitchFilterFocus}
-            ref={dropdownRef}
+            search={search}
+            onSearchChange={setSearch}
+            searchInputRef={searchInputRef}
+            listRef={dropdownRef}
+            ref={dropdownApiRef}
             {...pt.dropdown}
           />
         )}

@@ -58,6 +58,50 @@ export const FilterButton = styled(Button)`
   }
 `
 
+export const SearchInput = styled.input`
+  /* strip native input chrome so it blends into the bar */
+  appearance: none;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+
+  flex: 1;
+  min-width: 60px;
+  height: 100%;
+  padding: 0;
+  cursor: text;
+  user-select: text;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: var(--md-sys-color-outline);
+  }
+`
+
+export const BarRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  width: 100%;
+
+  /* let the search bar take the remaining space, quick actions keep their size */
+  & > .search-bar {
+    flex: 1;
+    min-width: 0;
+  }
+`
+
+export const QuickActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  flex-shrink: 0;
+`
+
 export const Backdrop = styled.div`
   position: fixed;
   top: 0;

@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useMemo, useRef, useState } from 'react'
+import { forwardRef, ReactNode, useImperativeHandle, useMemo, useRef } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -19,11 +19,19 @@ type OnSelectConfig = {
   previous?: string // used to go back to the previous field along with restart
 }
 
+export interface SearchFilterDropdownRef {
+  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
+}
+
 export interface SearchFilterDropdownProps {
   options: Option[]
   values: Filter[]
   parentId: string | null
   parentLabel?: string
+  search: string
+  onSearchChange: (search: string) => void
+  searchInputRef?: React.RefObject<HTMLInputElement>
+  listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
   isHasValueAllowed?: boolean
   isNoValueAllowed?: boolean
@@ -46,13 +54,17 @@ export interface SearchFilterDropdownProps {
   }
 }
 
-const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownProps>(
+const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDropdownProps>(
   (
     {
       options,
       values,
       parentId,
       parentLabel,
+      search,
+      onSearchChange,
+      searchInputRef,
+      listRef,
       isCustomAllowed,
       isHasValueAllowed,
       isNoValueAllowed,
@@ -72,8 +84,11 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
   ) => {
     const parentFilter = values.find((filter) => filter.id === parentId)
 
-    const searchRef = useRef<HTMLInputElement>(null)
-    const [search, setSearch] = useState('')
+    const setSearch = onSearchChange
+    // dropdown's own input, shown only inside a filter's value panel (parentId set)
+    const dropdownSearchRef = useRef<HTMLInputElement>(null)
+    // focus the active typing input: dropdown input in a value panel, else the bar input
+    const focusSearch = () => (parentId ? dropdownSearchRef.current : searchInputRef?.current)?.focus()
 
     // sort options based on selected, skipping certain fields
     const sortedOptions = useMemo(() => {
@@ -242,10 +257,9 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         event.stopPropagation()
         const target = event.target as HTMLElement
         const prev = target.previousElementSibling as HTMLElement
-        // if the previous element is the search input, focus the input
-        if (prev?.classList.contains('search')) {
-          const input = prev.querySelector('input') as HTMLElement
-          input.focus()
+        // no previous option -> jump back up to the active search input
+        if (!prev || prev.classList.contains('search')) {
+          focusSearch()
         } else {
           prev?.focus()
         }
@@ -267,10 +281,10 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       } else if (event.key.match(/^[a-zA-Z0-9]$/) || event.key === 'Backspace') {
         event.preventDefault()
         event.stopPropagation()
-        // continue search by focusing the search input
-        searchRef.current?.focus()
+        // continue search by focusing the active search input
+        focusSearch()
         // update the search value
-        setSearch((prev) => (event.key === 'Backspace' ? prev.slice(0, -1) : prev + event.key))
+        onSearchChange(event.key === 'Backspace' ? search.slice(0, -1) : search + event.key)
       }
 
       // back key
@@ -340,32 +354,34 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
           }
         }
       }
-      // arrow down will focus the first option
+      // arrow down will focus the first option in the list
       if (event.key === 'ArrowDown') {
         event.preventDefault()
         event.stopPropagation()
-        const target = event.target as HTMLElement
-        let next = target.parentElement?.nextElementSibling as HTMLElement
-        if (target.tagName === 'INPUT' && search) next = next.nextElementSibling as HTMLElement
-        next?.focus()
+        const firstOption = listRef?.current?.querySelector('li') as HTMLElement | null
+        firstOption?.focus()
       }
     }
+
+    useImperativeHandle(ref, () => ({ onInputKeyDown: handleSearchKeyDown }))
 
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
-          <Styled.OptionsList ref={ref} className={clsx({ searching: !!search })}>
-            <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
-              <Styled.SearchInput
-                ref={searchRef}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder={getSearchPlaceholder(isCustomAllowed, allOptions)}
-                autoFocus
-              />
-              <Styled.SearchIcon icon={'search'} />
-            </Styled.SearchContainer>
+          <Styled.OptionsList ref={listRef} className={clsx({ searching: !!search })}>
+            {parentId && (
+              <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
+                <Styled.SearchInput
+                  ref={dropdownSearchRef}
+                  value={search}
+                  onChange={(event) => onSearchChange(event.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder={isCustomAllowed ? 'Search or filter...' : 'Filter...'}
+                  autoFocus
+                />
+                <Styled.SearchIcon icon={'search'} />
+              </Styled.SearchContainer>
+            )}
             {filteredOptions.map(
               ({
                 id,
@@ -513,16 +529,6 @@ const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: 
   }
 
   return matched
-}
-
-const getSearchPlaceholder = (isCustomAllowed: boolean, options: Option[]) => {
-  const somePreMadeOptions = options.length > 0 && options.some((option) => !option.isCustom)
-
-  return !somePreMadeOptions && isCustomAllowed
-    ? 'Search...'
-    : isCustomAllowed
-    ? 'Search or filter...'
-    : 'Filter...'
 }
 
 const getAddOption = (
