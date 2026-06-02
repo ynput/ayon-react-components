@@ -1,7 +1,17 @@
 import { forwardRef } from 'react'
 import iconSet from './icons.json'
+import clsx from 'clsx'
+import styled from 'styled-components'
+
+const StyledIcon = styled.span`
+  &.filled {
+    font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+  }
+`
 
 export type IconType = keyof typeof iconSet
+// This trick prevents the union from collapsing into 'string'
+export type IconPropType = IconType | (string & {})
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
@@ -12,12 +22,12 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 export const Icon = forwardRef<HTMLSpanElement, IconProps>((props, ref) => {
   return (
-    <span
+    <StyledIcon
       ref={ref}
       {...props}
-      className={`material-symbols-outlined icon ${props.className || ''}`}
+      className={clsx('material-symbols-outlined icon', props.className, { filled: props.filled })}
     >
       {props.icon}
-    </span>
+    </StyledIcon>
   )
 })

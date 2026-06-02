@@ -34,6 +34,9 @@ export const Card = styled.div<{ $disabled: boolean }>`
     font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 300, 'opsz' 20;
   }
 
+  &.sort-hidden {
+    padding-right: 8px;
+  }
   /* prevent hover when disabled */
   ${({ $disabled }) =>
     $disabled
