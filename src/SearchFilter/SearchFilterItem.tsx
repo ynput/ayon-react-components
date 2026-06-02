@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Filter } from './types'
 import { SearchFilterItemValue, SearchFilterItemValueProps } from './SearchFilterItemValue'
@@ -42,6 +42,22 @@ const Operator = styled.span`
   align-items: center;
 `
 
+const ChipInput = styled.input`
+  appearance: none;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  min-width: 40px;
+  width: var(--chip-input-width, 60px);
+
+  &:focus {
+    outline: none;
+  }
+`
+
 const ChipButton = styled(Button)`
   border-radius: 50%;
   background-color: unset;
@@ -73,6 +89,11 @@ export interface SearchFilterItemProps
   isDisabled?: boolean
   isCompact?: boolean
   isSearch?: boolean
+  isInlineEditing?: boolean
+  inlineEditValue?: string
+  onInlineEditChange?: (value: string) => void
+  onInlineEditCommit?: () => void
+  onInlineEditCancel?: () => void
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
@@ -98,6 +119,11 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isReadonly,
       isCompact,
       isSearch,
+      isInlineEditing,
+      inlineEditValue,
+      onInlineEditChange,
+      onInlineEditCommit,
+      onInlineEditCancel,
       onEdit,
       onRemove,
       onInvert,
@@ -107,6 +133,15 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     },
     ref,
   ) => {
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+      if (isInlineEditing) {
+        inputRef.current?.focus()
+        inputRef.current?.select()
+      }
+    }, [isInlineEditing])
+
     const handleEdit = (id: string) => {
       if (isReadonly) return
       onEdit?.(id)
@@ -173,21 +208,42 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
               <span className="label">{label}:</span>
             </>
           )}
-          {values?.map((value, index) => (
-            <SearchFilterItemValue
-              key={(value.id || '') + index}
-              img={value.img}
-              icon={value.icon}
-              color={value.color}
-              isCustom={value.isCustom}
-              operator={index > 0 ? operator : undefined}
-              isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
-              {...pt.value}
-              pt={value.pt}
-              id={value.id}
-              label={value.label}
+          {isInlineEditing ? (
+            <ChipInput
+              ref={inputRef}
+              value={inlineEditValue ?? ''}
+              style={{ ['--chip-input-width' as string]: `${(inlineEditValue?.length ?? 0) + 1}ch` }}
+              onClick={(e) => e.stopPropagation()}
+              onChange={(e) => onInlineEditChange?.(e.target.value)}
+              onBlur={() => onInlineEditCommit?.()}
+              onKeyDown={(e) => {
+                e.stopPropagation()
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  onInlineEditCommit?.()
+                } else if (e.key === 'Escape') {
+                  e.preventDefault()
+                  onInlineEditCancel?.()
+                }
+              }}
             />
-          ))}
+          ) : (
+            values?.map((value, index) => (
+              <SearchFilterItemValue
+                key={(value.id || '') + index}
+                img={value.img}
+                icon={value.icon}
+                color={value.color}
+                isCustom={value.isCustom}
+                operator={index > 0 ? operator : undefined}
+                isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
+                {...pt.value}
+                pt={value.pt}
+                id={value.id}
+                label={value.label}
+              />
+            ))
+          )}
           {onRemove && <ChipButton className="button remove" icon="close" onClick={handleRemove} />}
         </FilterItem>
       </>
