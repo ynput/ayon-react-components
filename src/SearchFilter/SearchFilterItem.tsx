@@ -205,7 +205,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 onClick={handleInvert}
                 data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
               />
-              <span className="label">{label}:</span>
+              {!isCompact && <span className="label">{label}:</span>}
             </>
           )}
           {isInlineEditing ? (

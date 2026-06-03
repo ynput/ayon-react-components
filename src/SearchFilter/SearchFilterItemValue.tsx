@@ -49,13 +49,16 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     const colorStyle = color ? color : '#ffffff'
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
+    // only collapse to icon-only when there's an icon/avatar to show, else keep the text
+    const iconOnly = isCompact && (!!icon || !!img)
+
     return (
       <>
         {operator && <Operator>{operator.toLowerCase()}</Operator>}
         <ValueChip
           {...props}
           ref={ref}
-          className={clsx(props.className, { compact: isCompact, custom: isCustom })}
+          className={clsx(props.className, { compact: iconOnly, custom: isCustom })}
         >
           {icon && (
             <Icon
