@@ -4,6 +4,46 @@ import { Button } from '../Buttons/Button'
 export const Container = styled.div`
   position: relative;
   width: 100%;
+
+  /* compact mode: shrink the bar to 28px with smaller padding/text.
+     scoped to .search-bar so the dropdown keeps its default sizing. */
+  &.compact {
+    .search-bar {
+      height: 28px;
+      padding: 1px 6px;
+      font-size: 12px;
+    }
+
+    /* keep the main left search icon at full size — only the rest shrinks */
+    .search-bar > .icon.search {
+      font-size: 20px;
+    }
+
+    /* shrink the chip itself so it fits the 28px bar: tighter padding on the
+       chip and its round check/remove buttons */
+    .search-bar .search-filter-item {
+      padding: 0 2px;
+    }
+    .search-bar .search-filter-item .button.hasIcon {
+      padding: 1px;
+    }
+
+    /* chip icons/images are explicitly sized (16px), so font-size alone won't shrink them */
+    .search-bar .search-filter-item .icon {
+      font-size: 14px;
+    }
+    .search-bar .search-filter-item img {
+      width: 14px;
+      height: 14px;
+    }
+
+    .quick-actions {
+      font-size: 12px;
+    }
+    .quick-actions .icon {
+      font-size: 16px;
+    }
+  }
 `
 
 export const SearchBar = styled.div`

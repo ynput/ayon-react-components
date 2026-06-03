@@ -32,6 +32,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   options: Option[]
   quickActions?: SearchFilterQuickAction[]
   onQuickAction?: (id: string) => void
+  compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
@@ -67,6 +68,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       options = [],
       quickActions,
       onQuickAction,
+      compact = false,
       enableGlobalSearch = false,
       globalSearchConfig,
       enableSearchChildren = true,
@@ -225,7 +227,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         const addFilter: Filter = {
           ...option,
           id: newId,
-          values: [{ id: 'true', label: 'Yes' }],
+          // value label = filter name so the compact chip (label hidden) reads the
+          // filter name instead of "Yes"
+          values: [{ id: 'true', label: option.label }],
         }
         delete (addFilter as Option).allowsCustomValues
         const updatedFilters = [...filters, addFilter]
@@ -532,8 +536,20 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     )
 
     return (
-      <Styled.Container onKeyDown={handleContainerKeyDown} ref={containerRef} {...props}>
-        {dropdownOptions && <Styled.Backdrop onClick={() => handleClose(filters)} />}
+      <Styled.Container
+        onKeyDown={handleContainerKeyDown}
+        ref={containerRef}
+        {...props}
+        className={clsx('search-filter', props.className, { compact })}
+      >
+        {dropdownOptions && (
+          <Styled.Backdrop
+            onClick={() => {
+              // clicking outside while typing a custom search stores it instead of discarding
+              if (!dropdownApiRef.current?.commitSearch()) handleClose(filters)
+            }}
+          />
+        )}
         <Styled.BarRow className="search-bar-row">
           <Styled.SearchBar
             onClick={(e) => {
@@ -562,7 +578,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     isEditing={dropdownParentId === filter.id}
                     isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
                     isReadonly={filter.isReadonly}
-                    isCompact={showIconsOnly}
+                    isCompact={showIconsOnly || compact}
                     isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
                     isInlineEditing={editingSearchChipId === filter.id}
                     inlineEditValue={editingSearchValue}

@@ -21,6 +21,8 @@ type OnSelectConfig = {
 
 export interface SearchFilterDropdownRef {
   onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  // commit pending custom search text on click-outside; returns true if it stored a filter (and closed)
+  commitSearch: () => boolean
 }
 
 export interface SearchFilterDropdownProps {
@@ -363,7 +365,25 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       }
     }
 
-    useImperativeHandle(ref, () => ({ onInputKeyDown: handleSearchKeyDown }))
+    useImperativeHandle(ref, () => ({
+      onInputKeyDown: handleSearchKeyDown,
+      commitSearch: () => {
+        const trimmed = search.trim()
+        if (!trimmed || !isCustomAllowed) return false
+        // inside a value panel: store as a custom value for the current filter
+        if (parentId) {
+          handleAddCustomSearchForFilter()
+          return true
+        }
+        // at root: only store free text that doesn't match a field, otherwise it's ambiguous
+        const hasFieldMatch = filteredOptions.some((o) => o.id !== 'search')
+        if (!hasFieldMatch) {
+          handleAddGlobalSearchTextFilter()
+          return true
+        }
+        return false
+      },
+    }))
 
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>

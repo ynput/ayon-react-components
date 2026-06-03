@@ -37,8 +37,9 @@ export const OptionsList = styled.ul`
   gap: var(--base-gap-small);
 
   &.searching {
-    /* first child is highlighted only when no items have focus-visible */
-    &:not(:has(li:focus-visible)) li:nth-child(2) {
+    /* first option is highlighted only when no items have focus-visible;
+       first-of-type skips the search input div (root has no search input, value panel does) */
+    &:not(:has(li:focus-visible)) li:first-of-type {
       background-color: var(--md-sys-color-secondary-container);
     }
 
