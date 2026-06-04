@@ -15,17 +15,18 @@ export type IconPropType = IconType | (string & {})
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  icon: IconType
+  icon: IconPropType
+  filled?: boolean
 }
 
 // TODO: link to SVG
 
-export const Icon = forwardRef<HTMLSpanElement, IconProps>((props, ref) => {
+export const Icon = forwardRef<HTMLSpanElement, IconProps>(({ filled, ...props }, ref) => {
   return (
     <StyledIcon
       ref={ref}
       {...props}
-      className={clsx('material-symbols-outlined icon', props.className, { filled: props.filled })}
+      className={clsx('material-symbols-outlined icon', props.className, { filled: filled })}
     >
       {props.icon}
     </StyledIcon>
