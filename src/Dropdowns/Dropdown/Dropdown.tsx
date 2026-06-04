@@ -385,7 +385,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         (!sortBySelected && !(isMultiple && !multipleOverride)) || !value || !value.length
           ? options
           : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
-      [value, options],
+      [value, options, sortBySelected, isMultiple, multipleOverride, dataKey],
     )
 
     // if onSelectAll, add to options
@@ -397,7 +397,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         ]
       }
       return options
-    }, [isAllSelected, showSelectAll, options])
+    }, [isAllSelected, showSelectAll, options, labelKey, dataKey, selectAllKey])
 
     // if editable, merge current search into showOptions
     options = useMemo(() => {
@@ -411,7 +411,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
         return [searchItem, ...options]
       } else return options
-    }, [editable, searchForm, options])
+    }, [editable, searchForm, options, labelKey, dataKey])
 
     const nonSearchedOptions = [...options]
 
@@ -793,7 +793,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         }
       })
       return result
-    }, [options, value, dataKey, labelKey, selected, isOpen])
+    }, [options, value, dataKey, labelKey, selected, isOpen, isMultiple, multipleOverride])
 
     const displayIcon = useMemo(() => {
       if (!value?.length) return null
@@ -801,12 +801,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       if (multiSelect && value.length > 1) return null
       if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
       return null
-    }, [valueIcon, multiSelect, options])
+    }, [valueIcon, multiSelect, options, value, editable])
 
     // splice to maxOptionsShown or 25 items
     let showOptions = useMemo(
       () => (search || editable ? [...options].splice(0, maxShown) : options),
-      [options, maxShown],
+      [options, maxShown, search, editable],
     )
 
     let hiddenLength = useMemo(() => options.length - showOptions.length, [options, showOptions])
@@ -843,6 +843,16 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       handleClear,
       isMultiple,
       dropIcon,
+      multipleOverride,
+      displayIcon,
+      clearTooltip,
+      handleClearNull,
+      clearNullTooltip,
+      nullPlaceholder,
+      valueStyle,
+      placeholder,
+      valueClassName,
+      error,
     ])
 
     // attach the refs to the ref
@@ -953,7 +963,12 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               >
                 <Styled.Options
                   {...pt?.list}
-                  style={{ minWidth, maxWidth: widthExpandMax ? minWidth : 'unset', ...listStyle, ...pt?.list?.style }}
+                  style={{
+                    minWidth,
+                    maxWidth: widthExpandMax ? minWidth : 'unset',
+                    ...listStyle,
+                    ...pt?.list?.style,
+                  }}
                   className={clsx('options', { usingKeyboard }, pt?.list?.className)}
                   ref={optionsRef}
                 >
