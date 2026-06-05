@@ -173,7 +173,8 @@ export const QuickActions = styled.div`
 
 export const QuickActionButton = styled(Button)`
   &.compact {
-    padding: 5px;
+    padding: 4px;
+    height: 28px;
   }
 `
 
