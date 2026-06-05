@@ -156,7 +156,9 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
           {isInlineEditing ? (
             isSearch || values?.some((v) => v.isCustom) ? (
               // Search (global text) chip OR custom value chip: replace the value with the inline input
-              <Styled.ChipInput ref={inputRef} {...search} />
+              <Styled.ChipInputWrapper data-value={search?.value || ''}>
+                <Styled.ChipInput ref={inputRef} size={1} {...search} />
+              </Styled.ChipInputWrapper>
             ) : (
               // Regular filter chip: show existing values + inline input to add more
               <>
@@ -175,7 +177,9 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     label={value.label}
                   />
                 ))}
-                <Styled.ChipInput ref={inputRef} {...search} />
+                <Styled.ChipInputWrapper data-value={search?.value || ''}>
+                  <Styled.ChipInput ref={inputRef} size={1} {...search} />
+                </Styled.ChipInputWrapper>
               </>
             )
           ) : (
