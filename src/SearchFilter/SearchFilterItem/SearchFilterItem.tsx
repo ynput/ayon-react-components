@@ -1,84 +1,8 @@
 import { forwardRef, useEffect, useRef } from 'react'
-import styled from 'styled-components'
-import { Filter } from './types'
-import { SearchFilterItemValue, SearchFilterItemValueProps } from './SearchFilterItemValue'
+import { Filter } from '../types'
+import { SearchFilterItemValue, SearchFilterItemValueProps } from '../SearchFilterItemValue'
 import clsx from 'clsx'
-import { Button, theme } from '..'
-
-const FilterItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: var(--base-gap-small);
-  user-select: none;
-  white-space: nowrap;
-
-  background-color: var(--md-sys-color-surface-container-high);
-  padding: 2px 4px;
-  /* padding-right: 8px; */
-  border-radius: 4px;
-
-  cursor: pointer;
-  &:hover {
-    background-color: var(--md-sys-color-surface-container-high-hover);
-
-    .button {
-      background-color: var(--md-sys-color-surface-container-highest-hover);
-    }
-  }
-
-  &.editing {
-    outline: 2px solid #99c8ff;
-  }
-
-  &.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-`
-
-const Operator = styled.span`
-  ${theme.labelSmall}
-  display: flex;
-  align-items: center;
-`
-
-const ChipInput = styled.input`
-  appearance: none;
-  border: none;
-  background: none;
-  font: inherit;
-  color: inherit;
-  padding: 0;
-  margin: 0;
-  min-width: 40px;
-  width: var(--chip-input-width, 60px);
-
-  &:focus {
-    outline: none;
-  }
-`
-
-const ChipButton = styled(Button)`
-  border-radius: 50%;
-  background-color: unset;
-
-  &:hover:not(.disabled) {
-    &.button {
-      background-color: var(--md-sys-color-primary);
-    }
-    .icon {
-      color: var(--md-sys-color-on-primary);
-    }
-  }
-
-  &.hasIcon {
-    padding: 2px;
-  }
-
-  .icon {
-    font-size: 16px;
-  }
-`
+import * as Styled from './SearchFilterItem.styled'
 
 export interface SearchFilterItemProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
@@ -92,8 +16,6 @@ export interface SearchFilterItemProps
   isInlineEditing?: boolean
   inlineEditValue?: string
   onInlineEditChange?: (value: string) => void
-  onInlineEditCommit?: () => void
-  onInlineEditCancel?: () => void
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
@@ -122,8 +44,6 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isInlineEditing,
       inlineEditValue,
       onInlineEditChange,
-      onInlineEditCommit,
-      onInlineEditCancel,
       onEdit,
       onRemove,
       onInvert,
@@ -183,8 +103,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
 
     return (
       <>
-        {operatorText && <Operator>{operatorText}</Operator>}
-        <FilterItem
+        {operatorText && <Styled.Operator>{operatorText}</Styled.Operator>}
+        <Styled.FilterItem
           id={id}
           {...props}
           ref={ref}
@@ -199,7 +119,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
         >
           {!isSearch && (
             <>
-              <ChipButton
+              <Styled.ChipButton
                 className={clsx('button', { disabled: !isInvertedAllowed })}
                 icon={inverted ? 'do_not_disturb_on' : 'check_small'}
                 onClick={handleInvert}
@@ -209,23 +129,25 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             </>
           )}
           {isInlineEditing ? (
-            <ChipInput
+            <Styled.ChipInput
               ref={inputRef}
               value={inlineEditValue ?? ''}
-              style={{ ['--chip-input-width' as string]: `${(inlineEditValue?.length ?? 0) + 1}ch` }}
+              style={{
+                ['--chip-input-width' as string]: `${(inlineEditValue?.length ?? 0) + 1}ch`,
+              }}
               onClick={(e) => e.stopPropagation()}
               onChange={(e) => onInlineEditChange?.(e.target.value)}
-              onBlur={() => onInlineEditCommit?.()}
-              onKeyDown={(e) => {
-                e.stopPropagation()
-                if (e.key === 'Enter') {
-                  e.preventDefault()
-                  onInlineEditCommit?.()
-                } else if (e.key === 'Escape') {
-                  e.preventDefault()
-                  onInlineEditCancel?.()
-                }
-              }}
+              // onBlur={() => onInlineEditCommit?.()}
+              // onKeyDown={(e) => {
+              //   e.stopPropagation()
+              //   if (e.key === 'Enter') {
+              //     e.preventDefault()
+              //     onInlineEditCommit?.()
+              //   } else if (e.key === 'Escape') {
+              //     e.preventDefault()
+              //     onInlineEditCancel?.()
+              //   }
+              // }}
             />
           ) : (
             values?.map((value, index) => (
@@ -244,8 +166,10 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
               />
             ))
           )}
-          {onRemove && <ChipButton className="button remove" icon="close" onClick={handleRemove} />}
-        </FilterItem>
+          {onRemove && (
+            <Styled.ChipButton className="button remove" icon="close" onClick={handleRemove} />
+          )}
+        </Styled.FilterItem>
       </>
     )
   },
