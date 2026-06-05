@@ -38,7 +38,7 @@ const Operator = styled.span`
 `
 
 export interface SearchFilterItemValueProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id'>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id' | 'children'>,
     FilterValue {
   operator?: FilterOperator
   isCompact?: boolean
@@ -72,7 +72,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
           <span
             className="label"
             style={{
-              color:pt?.style?.color ?? adjustedColor
+              color: pt?.style?.color ?? adjustedColor,
             }}
           >
             {label}
