@@ -200,15 +200,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       // call onClose if it exists
       onFinish && onFinish(updatedFilters)
 
-      if (dropdownParentId) {
-        // find filter element by the id and focus it
-        document.getElementById(dropdownParentId)?.focus()
-      } else {
-        // focus last filter
-        const filters = filtersRef.current?.querySelectorAll('.search-filter-item')
-        const lastFilter = filters?.[filters.length - 1] as HTMLElement
-        lastFilter?.focus()
-      }
+      // focus the search input after a short delay to ensure it's rendered
+      setTimeout(() => searchInputRef.current?.focus(), 10)
     }
 
     // Replace the compact display logic with the custom hook
@@ -571,6 +564,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       const isCmdCtrl = event.metaKey || event.ctrlKey
 
+      if (event.key === 'Backspace' && !search && filters.length > 0) {
+        handleRemoveFilter(filters[filters.length - 1].id)
+        return
+      }
+
       if (!dropdownOptions) {
         if (event.key === 'Enter' || event.key === 'ArrowDown' || event.key === 'Tab') {
           event.preventDefault()
@@ -797,14 +795,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 value={search}
                 placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
                 onChange={(e) => {
-                  setSearch(e.target.value)
-                  if (!dropdownOptions) openInitialOptions(undefined, { filters })
+                  const val = e.target.value
+                  setSearch(val)
+                  if (val && !dropdownOptions) openInitialOptions(undefined, { filters })
                 }}
                 onKeyDown={handleInputKeyDown}
-                onClick={(e) => e.stopPropagation()}
-                onFocus={() => {
-                  if (!dropdownOptions) openInitialOptions(undefined, { filters })
-                }}
               />
             )}
           </Styled.SearchBar>
