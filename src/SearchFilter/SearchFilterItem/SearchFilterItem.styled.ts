@@ -36,6 +36,19 @@ export const Operator = styled.span`
   ${theme.labelSmall}
   display: flex;
   align-items: center;
+  gap: 4px;
+
+  .clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    border-radius: 4px;
+    padding: 0 2px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-high-hover);
+    }
+  }
 `
 
 export const ChipInput = styled.input`

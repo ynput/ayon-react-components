@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useRef } from 'react'
-import { Filter } from '../types'
+import { Filter, FilterOperator } from '../types'
 import { SearchFilterItemValue, SearchFilterItemValueProps } from '../SearchFilterItemValue'
 import clsx from 'clsx'
 import * as Styled from './SearchFilterItem.styled'
@@ -7,7 +7,7 @@ import * as Styled from './SearchFilterItem.styled'
 export interface SearchFilterItemProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
     Filter {
-  index?: number
+  index: number
   isEditing?: boolean
   isInvertedAllowed?: boolean
   isDisabled?: boolean
@@ -21,6 +21,8 @@ export interface SearchFilterItemProps
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
+  rootOperator: FilterOperator
+  onRootOperatorChange?: () => void
   pt?: {
     value?: SearchFilterItemValueProps
   }
@@ -44,11 +46,13 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isCompact,
       isSearch,
       isInlineEditing,
+      rootOperator = 'AND',
       search,
       searchInputRef,
       onEdit,
       onRemove,
       onInvert,
+      onRootOperatorChange,
       onClick,
       pt = { value: {} },
       ...props
@@ -102,11 +106,29 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       onClick && onClick(event)
     }
 
-    const operatorText = getOperatorText(index || 0, inverted)
+    const handleRootOperatorChange = (e: React.MouseEvent<HTMLSpanElement>) => {
+      if (!onRootOperatorChange) return
+      e.stopPropagation()
+      onRootOperatorChange?.()
+    }
+
+    const rootOperatorLabel = rootOperator.toLowerCase()
 
     return (
       <>
-        {operatorText && <Styled.Operator>{operatorText}</Styled.Operator>}
+        {(index > 0 || inverted) && (
+          <Styled.Operator>
+            {index > 0 && (
+              <span
+                className={clsx({ clickable: !!onRootOperatorChange })}
+                onClick={handleRootOperatorChange}
+              >
+                {rootOperatorLabel}
+              </span>
+            )}
+            {inverted && <span>not</span>}
+          </Styled.Operator>
+        )}
         <Styled.FilterItem
           id={id}
           {...props}
@@ -181,13 +203,3 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     )
   },
 )
-
-const getOperatorText = (index: number, inverted?: boolean): string | undefined => {
-  if (index > 0) {
-    return `and ${inverted ? 'not' : ''}`
-  } else if (inverted) {
-    return 'not'
-  } else {
-    return undefined
-  }
-}

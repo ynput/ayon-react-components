@@ -41,6 +41,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   enableSearchChildren?: boolean // when searching, children of the options will also be shown
   allowedSearchChildren?: string[] // when searching, only these children will be shown
   enableMultipleSameFilters?: boolean
+  rootOperator?: FilterOperator
+  onRootOperatorChange?: (operator: FilterOperator) => void
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
   pt?: {
@@ -74,6 +76,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       enableSearchChildren = true,
       allowedSearchChildren = undefined,
       enableMultipleSameFilters = false,
+      rootOperator = 'AND',
+      onRootOperatorChange,
       disabledFilters,
       preserveOrderFields,
       pt = {
@@ -297,12 +301,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             )
           }
 
-          const operator = parentFilter.operator || 'OR'
-
           // Create a new parent filter with the updated values
           const updatedParentFilter = {
             ...parentFilter,
-            operator,
             values: updatedValues,
           }
 
@@ -443,12 +444,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     }
 
     const handleFilterOperatorChange = (id: string, operator: FilterOperator) => {
-      // find the filter and update the operator value
+      // update the values-level operator for a single filter
       const updatedFilters = filters.map((filter) =>
         filter.id === id ? { ...filter, operator } : filter,
       )
       onChange(updatedFilters)
       onFinish && onFinish(updatedFilters)
+    }
+
+    const handleRootOperatorChange = () => {
+      // flip the root operator between AND and OR
+      const newOperator = rootOperator === 'AND' ? 'OR' : 'AND'
+      onRootOperatorChange?.(newOperator)
     }
 
     // Reset highlighted index when search text or the active dropdown panel changes.
@@ -774,6 +781,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     isCompact={showIconsOnly || compact}
                     isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
                     isInlineEditing={editingSearchChipId === filter.id}
+                    rootOperator={rootOperator}
+                    onRootOperatorChange={
+                      !!onRootOperatorChange ? handleRootOperatorChange : undefined
+                    }
                     searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
                     search={{
                       value: search,
