@@ -98,6 +98,31 @@ export const FilterButton = styled(Button)`
   }
 `
 
+export const SearchInputWrapper = styled.div`
+  position: relative;
+  flex: 1;
+  min-width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .autocomplete-suggestion {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: var(--md-sys-color-outline);
+    white-space: pre;
+  }
+
+  .invisible-text {
+    opacity: 0;
+  }
+`
+
 export const SearchInput = styled.input`
   /* strip native input chrome so it blends into the bar */
   appearance: none;
@@ -106,8 +131,7 @@ export const SearchInput = styled.input`
   font: inherit;
   color: inherit;
 
-  flex: 1;
-  min-width: 60px;
+  width: 100%;
   height: 100%;
   padding: 0;
   cursor: text;

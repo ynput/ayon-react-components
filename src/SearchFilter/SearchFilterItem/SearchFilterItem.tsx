@@ -14,6 +14,7 @@ export interface SearchFilterItemProps
   isCompact?: boolean
   isSearch?: boolean
   isInlineEditing?: boolean
+  inlineSuggestion?: string
   // search is html input props
   search: React.InputHTMLAttributes<HTMLInputElement>
   // external ref for the inline chip input (used so the parent can control focus)
@@ -48,6 +49,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isCompact,
       isSearch,
       isInlineEditing,
+      inlineSuggestion,
       rootOperator = 'AND',
       search,
       searchInputRef,
@@ -167,6 +169,14 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             isSearch || values?.some((v) => v.isCustom) ? (
               // Search (global text) chip OR custom value chip: replace the value with the inline input
               <Styled.ChipInputWrapper data-value={search?.value || ''}>
+                {inlineSuggestion &&
+                  search?.value &&
+                  inlineSuggestion.toLowerCase().startsWith(String(search.value).toLowerCase()) && (
+                    <span className="autocomplete-suggestion">
+                      <span className="invisible-text">{search.value}</span>
+                      {inlineSuggestion.slice(String(search.value).length)}
+                    </span>
+                  )}
                 <Styled.ChipInput ref={inputRef} size={1} {...search} />
               </Styled.ChipInputWrapper>
             ) : (
@@ -190,6 +200,16 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                   />
                 ))}
                 <Styled.ChipInputWrapper data-value={search?.value || ''}>
+                  {inlineSuggestion &&
+                    search?.value &&
+                    inlineSuggestion
+                      .toLowerCase()
+                      .startsWith(String(search.value).toLowerCase()) && (
+                      <span className="autocomplete-suggestion">
+                        <span className="invisible-text">{search.value}</span>
+                        {inlineSuggestion.slice(String(search.value).length)}
+                      </span>
+                    )}
                   <Styled.ChipInput ref={inputRef} size={1} {...search} />
                 </Styled.ChipInputWrapper>
               </>

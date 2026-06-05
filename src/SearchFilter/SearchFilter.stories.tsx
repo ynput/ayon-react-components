@@ -116,6 +116,7 @@ export const Scopes: Story = {
     enableSearchChildren: true,
     allowedSearchChildren: undefined,
     enableGlobalSearch: true,
+    enableAutosuggestion: true,
   },
   render: Template,
 }
