@@ -38,6 +38,7 @@ export interface SearchFilterDropdownProps {
   isNoValueAllowed?: boolean
   isInvertedAllowed?: boolean
   operatorChangeable?: boolean
+  isCompact?: boolean
   preserveOrderFields?: string[]
   operationsTemplate?: ReactNode
   onSelect: (option: Option, config?: OnSelectConfig) => void
@@ -72,6 +73,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       isNoValueAllowed,
       isInvertedAllowed,
       operatorChangeable,
+      isCompact,
       preserveOrderFields = [],
       operationsTemplate,
       onSelect,
@@ -339,7 +341,11 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
     }))
 
     return (
-      <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
+      <Styled.OptionsContainer
+        onKeyDown={handleKeyDown}
+        className={clsx({ compact: isCompact })}
+        {...props}
+      >
         <Styled.Scrollable>
           <Styled.OptionsList ref={listRef} className={clsx({ searching: !!search })}>
             {filteredOptions.map(

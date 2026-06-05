@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Icon } from '../../Icon'
 import { Button } from '../../Buttons/Button'
+import { theme } from '../..'
 
 export const OptionsContainer = styled.div`
   position: absolute;
@@ -15,6 +16,71 @@ export const OptionsContainer = styled.div`
 
   box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.25);
   z-index: 301;
+
+  &.compact {
+    top: 32px;
+
+    /* Tighten up everything */
+    div:first-child {
+      padding: 4px;
+
+      &:has(.toolbar) {
+        margin-bottom: 32px;
+      }
+    }
+
+    ul {
+      gap: 2px;
+    }
+
+    li {
+      gap: var(--base-gap-small);
+      padding: 2px 6px;
+      min-height: 28px;
+
+      img,
+      .value-icon .icon {
+        width: 18px;
+        height: 18px;
+        font-size: 18px;
+      }
+
+      .icon:not(.check) {
+        font-size: 18px;
+      }
+
+      .label {
+        font-size: ${theme.bodySmall};
+      }
+    }
+
+    .toolbar {
+      padding: 4px;
+      height: 32px;
+
+      button {
+        padding: 2px 4px;
+        font-size: ${theme.bodySmall};
+        height: 24px;
+
+        .icon {
+          font-size: 16px;
+        }
+      }
+    }
+
+    /* Adjust search if present */
+    input {
+      height: 24px;
+      padding-left: 28px;
+      font-size: ${theme.bodySmall};
+    }
+
+    .search-icon {
+      left: 6px;
+      font-size: 18px;
+    }
+  }
 `
 
 export const Scrollable = styled.div`

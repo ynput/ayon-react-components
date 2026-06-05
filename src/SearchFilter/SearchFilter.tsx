@@ -926,6 +926,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             onOperatorChange={handleFilterOperatorChange}
             onConfirmAndClose={handleConfirmAndClose}
             onSwitchFilter={handleSwitchFilterFocus}
+            isCompact={compact}
             search={search}
             searchInputRef={searchInputRef}
             listRef={dropdownRef}
