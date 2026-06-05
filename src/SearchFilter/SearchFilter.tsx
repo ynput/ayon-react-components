@@ -12,6 +12,7 @@ import SearchFilterDropdown, {
 import { useCompactDisplay } from './hooks/useCompactDisplay'
 import { buildFilterId } from './buildFilterId'
 import { getFilterFromId } from './getFilterFromId'
+import { getFilteredOptions } from './getFilteredOptions'
 import doesFilterExist from './doesFilterExist'
 import { Icon, IconType } from '../Icon'
 import clsx from 'clsx'
@@ -161,21 +162,14 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId])
 
     const suggestedOption = useMemo(() => {
-      if (!enableAutosuggestion || !search || !dropdownOptions) return null
+      if (!enableAutosuggestion || !search || !allOptions) return null
 
-      const lowerSearch = search.toLowerCase()
-      // Suggest standard options for the current level (ignoring searchOnly nested children)
-      // Use match-sorter with STARTS_WITH to find the best match
-      const matched = matchSorter(
-        dropdownOptions.filter((option) => !option.searchOnly),
-        lowerSearch,
-        {
-          keys: ['label'],
-          threshold: matchSorter.rankings.STARTS_WITH,
-        },
-      )
-      return matched[0] || null
-    }, [search, dropdownOptions, enableAutosuggestion])
+      // Use the exact same filtering algorithm as the dropdown
+      const filtered = getFilteredOptions(allOptions, search, false)
+
+      // The auto complete shows the top ranked filtered item (skipping custom search option if any)
+      return filtered[0] || null
+    }, [search, allOptions, enableAutosuggestion])
 
     const inlineSuggestion = suggestedOption?.label || ''
 
