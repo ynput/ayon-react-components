@@ -116,7 +116,6 @@ export const Scopes: Story = {
     enableSearchChildren: true,
     allowedSearchChildren: undefined,
     enableGlobalSearch: true,
-    enableOperatorChange: true,
   },
   render: Template,
 }

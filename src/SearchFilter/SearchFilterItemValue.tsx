@@ -35,6 +35,18 @@ const Operator = styled.span`
   ${theme.labelSmall}
   display: flex;
   align-items: center;
+
+  &.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    border-radius: 4px;
+    padding: 0 2px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-highest-hover);
+    }
+  }
 `
 
 export interface SearchFilterItemValueProps
@@ -42,10 +54,27 @@ export interface SearchFilterItemValueProps
     FilterValue {
   operator?: FilterOperator
   isCompact?: boolean
+  isOperatorChangeable?: boolean
+  onOperatorChange?: (event: React.MouseEvent<HTMLSpanElement>) => void
 }
 
 export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItemValueProps>(
-  ({ label, img, icon, color, operator, isCompact, isCustom, pt, ...props }, ref) => {
+  (
+    {
+      label,
+      img,
+      icon,
+      color,
+      operator,
+      isCompact,
+      isCustom,
+      pt,
+      isOperatorChangeable,
+      onOperatorChange,
+      ...props
+    },
+    ref,
+  ) => {
     const colorStyle = color ? color : '#ffffff'
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
@@ -54,7 +83,14 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
 
     return (
       <>
-        {operator && <Operator>{operator.toLowerCase()}</Operator>}
+        {operator && (
+          <Operator
+            className={clsx({ clickable: isOperatorChangeable })}
+            onClick={isOperatorChangeable ? onOperatorChange : undefined}
+          >
+            {operator.toLowerCase()}
+          </Operator>
+        )}
         <ValueChip
           {...props}
           ref={ref}
