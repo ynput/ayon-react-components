@@ -452,6 +452,13 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onFinish && onFinish(updatedFilters)
     }
 
+    const handleToggleFilterOperator = (id: string) => {
+      const filter = filters.find((f) => f.id === id)
+      if (!filter) return
+      const newOperator = filter.operator === 'AND' ? 'OR' : 'AND'
+      handleFilterOperatorChange(id, newOperator)
+    }
+
     const handleRootOperatorChange = () => {
       // flip the root operator between AND and OR
       const newOperator = rootOperator === 'AND' ? 'OR' : 'AND'
@@ -769,39 +776,46 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             <Icon icon="search" className="search" />
             {!!filters.length && (
               <Styled.SearchBarFilters ref={filtersRef} className="filter-values">
-                {filters.map((filter, index) => (
-                  <SearchFilterItem
-                    key={filter.id + index}
-                    id={filter.id}
-                    label={filter.label}
-                    inverted={filter.inverted}
-                    operator={filter.operator}
-                    values={filter.values}
-                    icon={filter.icon}
-                    isCustom={filter.isCustom}
-                    index={index}
-                    isEditing={dropdownParentId === filter.id}
-                    isDisabled={disabledFilters?.includes(getFilterFromId(filter.id))}
-                    isReadonly={filter.isReadonly}
-                    isCompact={showIconsOnly || compact}
-                    isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
-                    isInlineEditing={editingSearchChipId === filter.id}
-                    rootOperator={rootOperator}
-                    onRootOperatorChange={
-                      !!onRootOperatorChange ? handleRootOperatorChange : undefined
-                    }
-                    searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
-                    search={{
-                      value: search,
-                      onChange: (e) => setSearch(e.target.value),
-                      onKeyDown: handleChipInputKeyDown,
-                    }}
-                    onEdit={handleEditFilter}
-                    onRemove={handleRemoveFilter}
-                    onInvert={handleInvertFilter}
-                    {...pt.item}
-                  />
-                ))}
+                {filters.map((filter, index) => {
+                  const filterName = getFilterFromId(filter.id)
+                  const option = options.find((o) => o.id === filterName)
+
+                  return (
+                    <SearchFilterItem
+                      key={filter.id + index}
+                      id={filter.id}
+                      label={filter.label}
+                      inverted={filter.inverted}
+                      operator={filter.operator}
+                      values={filter.values}
+                      icon={filter.icon}
+                      isCustom={filter.isCustom}
+                      index={index}
+                      isEditing={dropdownParentId === filter.id}
+                      isDisabled={disabledFilters?.includes(filterName)}
+                      isReadonly={filter.isReadonly}
+                      isCompact={showIconsOnly || compact}
+                      isSearch={filterName === SEARCH_FILTER_ID}
+                      isInlineEditing={editingSearchChipId === filter.id}
+                      rootOperator={rootOperator}
+                      operatorChangeable={option?.operatorChangeable}
+                      onOperatorChange={handleToggleFilterOperator}
+                      onRootOperatorChange={
+                        !!onRootOperatorChange ? handleRootOperatorChange : undefined
+                      }
+                      searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
+                      search={{
+                        value: search,
+                        onChange: (e) => setSearch(e.target.value),
+                        onKeyDown: handleChipInputKeyDown,
+                      }}
+                      onEdit={handleEditFilter}
+                      onRemove={handleRemoveFilter}
+                      onInvert={handleInvertFilter}
+                      {...pt.item}
+                    />
+                  )
+                })}
               </Styled.SearchBarFilters>
             )}
             {!dropdownParentId && !editingSearchChipId && (

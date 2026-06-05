@@ -21,6 +21,8 @@ export interface SearchFilterItemProps
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
+  onOperatorChange?: (id: string) => void
+  operatorChangeable?: boolean
   rootOperator: FilterOperator
   onRootOperatorChange?: () => void
   pt?: {
@@ -52,6 +54,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       onEdit,
       onRemove,
       onInvert,
+      onOperatorChange,
+      operatorChangeable,
       onRootOperatorChange,
       onClick,
       pt = { value: {} },
@@ -110,6 +114,12 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       if (!onRootOperatorChange) return
       e.stopPropagation()
       onRootOperatorChange?.()
+    }
+
+    const handleOperatorChange = (e: React.MouseEvent<HTMLSpanElement>) => {
+      if (!onOperatorChange) return
+      e.stopPropagation()
+      onOperatorChange?.(id)
     }
 
     const rootOperatorLabel = rootOperator.toLowerCase()
@@ -175,6 +185,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     pt={value.pt}
                     id={value.id}
                     label={value.label}
+                    isOperatorChangeable={operatorChangeable && index > 0}
+                    onOperatorChange={handleOperatorChange}
                   />
                 ))}
                 <Styled.ChipInputWrapper data-value={search?.value || ''}>
@@ -196,6 +208,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 pt={value.pt}
                 id={value.id}
                 label={value.label}
+                isOperatorChangeable={operatorChangeable && index > 0}
+                onOperatorChange={handleOperatorChange}
               />
             ))
           )}
