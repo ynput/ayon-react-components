@@ -12,6 +12,7 @@ import { Spacer } from '../../Layout/Spacer'
 import { ShortcutTag } from '../../ShortcutTag'
 import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 import { SEARCH_FILTER_ID } from '../constants'
+import { getFilteredOptions } from '../getFilteredOptions'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -466,35 +467,6 @@ export const getIsValueSelected = (
 
   // check if the value is already selected
   return !!parentFilter.values?.some((value) => value.id === id)
-}
-
-const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: boolean) => {
-  // filter out options that don't match the search in any of the fields
-
-  // no search? return all the main options
-  if (!search) return options.filter((option) => !option.searchOnly)
-
-  const parsedSearch = search.toLowerCase()
-
-  const matched = matchSorter(options, parsedSearch, {
-    keys: ['label'],
-    threshold: matchSorter.rankings.CONTAINS,
-  })
-
-  // if isCustomAllowed, add the custom value to the list
-  if (isCustomAllowed) {
-    matched.push({
-      id: 'search',
-      label: search,
-      icon: 'search',
-      values: [],
-      parentId: SEARCH_FILTER_ID,
-      isCustom: true,
-      searchOnly: true,
-    })
-  }
-
-  return matched
 }
 
 const getAddOption = (
