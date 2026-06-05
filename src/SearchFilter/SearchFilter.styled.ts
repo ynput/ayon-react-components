@@ -171,6 +171,12 @@ export const QuickActions = styled.div`
   flex-shrink: 0;
 `
 
+export const QuickActionButton = styled(Button)`
+  &.compact {
+    padding: 5px;
+  }
+`
+
 export const Backdrop = styled.div`
   position: fixed;
   top: 0;

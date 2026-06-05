@@ -56,3 +56,14 @@ export interface Option extends Filter {
   contentAfter?: React.ReactNode // content to be shown after the filter
   pt?: FilterValuePt // pass-through styles for the filter value
 }
+
+export interface SearchFilterQuickAction {
+  id: string
+  filterId?: string
+  valueId?: string
+  icon?: string
+  label?: string
+  color?: string
+  tooltip?: string
+  active?: boolean
+}

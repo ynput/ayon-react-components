@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
 import { matchSorter } from 'match-sorter'
 
-import { Filter, FilterOperator, Option } from './types'
+import { Filter, FilterOperator, Option, SearchFilterQuickAction } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem/SearchFilterItem'
+import { SearchFilterQuickActions } from './SearchFilterQuickActions'
 import SearchFilterDropdown, {
   getIsValueSelected,
   SearchFilterDropdownProps,
@@ -20,19 +21,12 @@ import { SEARCH_FILTER_ID } from './constants'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
-export interface SearchFilterQuickAction {
-  id: string
-  icon?: string
-  label?: string
-  tooltip?: string
-  active?: boolean
-}
-
 export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   filters: Filter[]
   onChange: (filters: Filter[]) => void
   options: Option[]
-  quickActions?: SearchFilterQuickAction[]
+  // Allow passing just the ID strings or the object for custom overrides
+  quickActions?: (string | SearchFilterQuickAction)[]
   onQuickAction?: (id: string) => void
   onSearchChange?: (search: string, filterId: string | null) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
@@ -280,7 +274,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             }
           }
         } else {
+          // find by exact id (e.g. status__123)
           parentFilter = filters.find((filter) => filter.id === parentId)
+          // if not found, it might be a quick action passing a base id (e.g. status)
+          if (!parentFilter) {
+            const parentOption = options.find((opt) => opt.id === parentId)
+            if (parentOption) {
+              parentFilter = {
+                ...parentOption,
+                id: buildFilterId(parentId),
+                values: [],
+              }
+            }
+          }
         }
 
         // add to the parent filter values
@@ -898,21 +904,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
               </Styled.SearchInputWrapper>
             )}
           </Styled.SearchBar>
+
           {!!quickActions?.length && (
-            <Styled.QuickActions className="quick-actions">
-              {quickActions.map((action) => (
-                <Styled.FilterButton
-                  key={action.id}
-                  icon={action.icon as IconType}
-                  label={action.label}
-                  selected={action.active}
-                  className="quick-action"
-                  data-tooltip={action.tooltip}
-                  data-tooltip-delay={0}
-                  onClick={() => onQuickAction?.(action.id)}
-                />
-              ))}
-            </Styled.QuickActions>
+            <SearchFilterQuickActions
+              quickActions={quickActions}
+              options={options}
+              filters={filters}
+              compact={compact}
+              onChange={onChange}
+              onFinish={onFinish}
+              onQuickAction={onQuickAction}
+              onEditFilter={handleEditFilter}
+              onOptionSelect={handleOptionSelect}
+            />
           )}
         </Styled.BarRow>
         {allOptions && (

@@ -109,7 +109,7 @@ export const Default: Story = {
   render: Template,
 }
 
-export const Scopes: Story = {
+export const Everything: Story = {
   args: {
     // @ts-ignore
     options: TaskFolderOptions,
@@ -117,6 +117,7 @@ export const Scopes: Story = {
     allowedSearchChildren: undefined,
     enableGlobalSearch: true,
     enableAutosuggestion: true,
+    quickActions: ['task_assignees', { id: 'task_status', valueId: 'Approved', label: 'Approved' }],
   },
   render: Template,
 }
