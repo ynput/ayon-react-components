@@ -114,7 +114,7 @@ export const SearchInputWrapper = styled.div`
   .autocomplete-suggestion {
     position: absolute;
     left: 0;
-    top: 2px;
+    top: 0;
     bottom: 0;
     display: flex;
     align-items: center;
@@ -137,7 +137,6 @@ export const SearchInput = styled.input`
   color: inherit;
 
   width: 100%;
-  height: 100%;
   padding: 0;
   cursor: text;
   user-select: text;
