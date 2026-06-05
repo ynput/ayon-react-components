@@ -51,6 +51,23 @@ export const Operator = styled.span`
   }
 `
 
+export const ChipInputWrapper = styled.div`
+  display: inline-grid;
+  align-items: center;
+
+  &::after {
+    /* The pseudo-element mirrors the input's value to stretch the grid */
+    content: attr(data-value) ' ';
+    visibility: hidden;
+    white-space: pre-wrap;
+    grid-area: 1 / 1;
+    font: inherit;
+    padding: 0;
+    margin: 0;
+    min-width: 10px; /* Applies your minimum width */
+  }
+`
+
 export const ChipInput = styled.input`
   appearance: none;
   border: none;
@@ -59,8 +76,11 @@ export const ChipInput = styled.input`
   color: inherit;
   padding: 0;
   margin: 0;
-  min-width: 40px;
-  width: var(--chip-input-width, 60px);
+
+  /* Update width properties to fit the grid */
+  min-width: 10px;
+  width: 100%;
+  grid-area: 1 / 1; /* Places the input precisely over the pseudo-element */
 
   &:focus {
     outline: none;
