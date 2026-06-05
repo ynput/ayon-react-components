@@ -19,7 +19,7 @@ const ValueChip = styled.div`
   }
 
   /* hide label */
-  &.compact {
+  &.icons {
     .label {
       display: none;
     }
@@ -53,7 +53,7 @@ export interface SearchFilterItemValueProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id' | 'children'>,
     FilterValue {
   operator?: FilterOperator
-  isCompact?: boolean
+  showIconsOnly?: boolean
   isOperatorChangeable?: boolean
   onOperatorChange?: (event: React.MouseEvent<HTMLSpanElement>) => void
 }
@@ -66,7 +66,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
       icon,
       color,
       operator,
-      isCompact,
+      showIconsOnly,
       isCustom,
       pt,
       isOperatorChangeable,
@@ -79,7 +79,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
     // only collapse to icon-only when there's an icon/avatar to show, else keep the text
-    const iconOnly = isCompact && (!!icon || !!img)
+    const iconOnly = showIconsOnly && (!!icon || !!img)
 
     return (
       <>
@@ -94,7 +94,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
         <ValueChip
           {...props}
           ref={ref}
-          className={clsx(props.className, { compact: iconOnly, custom: isCustom })}
+          className={clsx('value-icon', props.className, { icons: iconOnly, custom: isCustom })}
         >
           {icon && (
             <Icon

@@ -13,6 +13,7 @@ export interface SearchFilterItemProps
   isDisabled?: boolean
   isCompact?: boolean
   isSearch?: boolean
+  showIconsOnly?: boolean
   isInlineEditing?: boolean
   inlineSuggestion?: string
   // search is html input props
@@ -47,6 +48,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isDisabled,
       isReadonly,
       isCompact,
+      showIconsOnly,
       isSearch,
       isInlineEditing,
       inlineSuggestion,
@@ -154,7 +156,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             disabled: isDisabled,
           })}
         >
-          {!isSearch && (
+          {!isSearch && inverted && (
             <>
               <Styled.ChipButton
                 className={clsx('button', { disabled: !isInvertedAllowed })}
@@ -190,7 +192,9 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     color={value.color}
                     isCustom={value.isCustom}
                     operator={index > 0 ? operator : undefined}
-                    isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
+                    showIconsOnly={
+                      (values.length > 1 && (!!value.icon || !!value.img)) || showIconsOnly
+                    }
                     {...pt.value}
                     pt={value.pt}
                     id={value.id}
@@ -223,7 +227,9 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 color={value.color}
                 isCustom={value.isCustom}
                 operator={index > 0 ? operator : undefined}
-                isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
+                showIconsOnly={
+                  (values.length > 1 && (!!value.icon || !!value.img)) || showIconsOnly
+                }
                 {...pt.value}
                 pt={value.pt}
                 id={value.id}

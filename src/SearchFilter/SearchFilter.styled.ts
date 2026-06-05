@@ -22,26 +22,31 @@ export const Container = styled.div`
     /* shrink the chip itself so it fits the 28px bar: tighter padding on the
        chip and its round check/remove buttons */
     .search-bar .search-filter-item {
-      padding: 0 2px;
+      padding: 1px 2px;
+      gap: 2px;
     }
     .search-bar .search-filter-item .button.hasIcon {
       padding: 1px;
     }
 
-    /* chip icons/images are explicitly sized (16px), so font-size alone won't shrink them */
-    .search-bar .search-filter-item .icon {
-      font-size: 14px;
+    /* chip icons/images are explicitly sized (18px), so font-size alone won't shrink them */
+    .search-bar .search-filter-item .value-icon .icon {
+      font-size: 18px;
+    }
+    /* remove button icon */
+    .search-bar .search-filter-item .remove .icon {
+      font-size: 16px;
     }
     .search-bar .search-filter-item img {
-      width: 14px;
-      height: 14px;
+      width: 18px;
+      height: 18px;
     }
 
     .quick-actions {
       font-size: 12px;
     }
     .quick-actions .icon {
-      font-size: 16px;
+      font-size: 18px;
     }
   }
 `

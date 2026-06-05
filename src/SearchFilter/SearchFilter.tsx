@@ -34,6 +34,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   options: Option[]
   quickActions?: SearchFilterQuickAction[]
   onQuickAction?: (id: string) => void
+  onSearchChange?: (search: string, filterId: string | null) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
@@ -73,6 +74,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       options = [],
       quickActions,
       onQuickAction,
+      onSearchChange,
       compact = false,
       enableGlobalSearch = false,
       globalSearchConfig,
@@ -830,7 +832,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       isEditing={dropdownParentId === filter.id}
                       isDisabled={disabledFilters?.includes(filterName)}
                       isReadonly={filter.isReadonly}
-                      isCompact={showIconsOnly || compact}
+                      isCompact={compact}
+                      showIconsOnly={showIconsOnly}
                       isSearch={filterName === SEARCH_FILTER_ID}
                       isInlineEditing={editingSearchChipId === filter.id}
                       rootOperator={rootOperator}
@@ -845,7 +848,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
                       search={{
                         value: search,
-                        onChange: (e) => setSearch(e.target.value),
+                        onChange: (e) => {
+                          const val = e.target.value
+                          setSearch(val)
+                          onSearchChange?.(val, editingSearchChipId)
+                        },
                         onKeyDown: handleChipInputKeyDown,
                       }}
                       onEdit={handleEditFilter}
@@ -875,6 +882,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   onChange={(e) => {
                     const val = e.target.value
                     setSearch(val)
+                    onSearchChange?.(val, null)
                     if (val && !dropdownOptions) openInitialOptions(undefined, { filters })
                   }}
                   onKeyDown={handleInputKeyDown}
