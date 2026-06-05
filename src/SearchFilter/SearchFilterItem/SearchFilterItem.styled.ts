@@ -54,6 +54,7 @@ export const Operator = styled.span`
 export const ChipInputWrapper = styled.div`
   display: inline-grid;
   align-items: center;
+  position: relative;
 
   &::after {
     /* The pseudo-element mirrors the input's value to stretch the grid */
@@ -65,6 +66,17 @@ export const ChipInputWrapper = styled.div`
     padding: 0;
     margin: 0;
     min-width: 10px; /* Applies your minimum width */
+  }
+
+  .autocomplete-suggestion {
+    grid-area: 1 / 1;
+    pointer-events: none;
+    color: var(--md-sys-color-outline);
+    white-space: pre;
+  }
+
+  .invisible-text {
+    opacity: 0;
   }
 `
 

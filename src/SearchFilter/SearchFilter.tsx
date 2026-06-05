@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
+import { matchSorter } from 'match-sorter'
 
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
@@ -41,6 +42,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   enableSearchChildren?: boolean // when searching, children of the options will also be shown
   allowedSearchChildren?: string[] // when searching, only these children will be shown
   enableMultipleSameFilters?: boolean
+  enableAutosuggestion?: boolean
   rootOperator?: FilterOperator
   onRootOperatorChange?: (operator: FilterOperator) => void
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
@@ -76,6 +78,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       enableSearchChildren = true,
       allowedSearchChildren = undefined,
       enableMultipleSameFilters = false,
+      enableAutosuggestion = false,
       rootOperator = 'AND',
       onRootOperatorChange,
       disabledFilters,
@@ -156,6 +159,25 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     useEffect(() => {
       if (dropdownOptions && !dropdownParentId) searchInputRef.current?.focus()
     }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId])
+
+    const suggestedOption = useMemo(() => {
+      if (!enableAutosuggestion || !search || !dropdownOptions) return null
+
+      const lowerSearch = search.toLowerCase()
+      // Suggest standard options for the current level (ignoring searchOnly nested children)
+      // Use match-sorter with STARTS_WITH to find the best match
+      const matched = matchSorter(
+        dropdownOptions.filter((option) => !option.searchOnly),
+        lowerSearch,
+        {
+          keys: ['label'],
+          threshold: matchSorter.rankings.STARTS_WITH,
+        },
+      )
+      return matched[0] || null
+    }, [search, dropdownOptions, enableAutosuggestion])
+
+    const inlineSuggestion = suggestedOption?.label || ''
 
     const closeSearch = () => {
       setSearch('')
@@ -506,9 +528,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
     // key handler for the inline chip search input
     const handleChipInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      // Autocomplete Tab selection
+      if (enableAutosuggestion && event.key === 'Tab') {
+        if (suggestedOption) {
+          event.preventDefault()
+          event.stopPropagation()
+          handleOptionSelect(suggestedOption)
+          return
+        }
+      }
+
       // SEARCH_FILTER_ID chip editing — no dropdown is open, just commit/cancel text
       if (editingSearchChipId && !dropdownParentId) {
-        if (event.key === 'Enter' || event.key === 'Tab') {
+        if (event.key === 'Enter') {
           event.preventDefault()
           event.stopPropagation()
           handleSearchChipCommit()
@@ -535,7 +567,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
         return
       }
-      if (event.key === 'Enter' || event.key === 'Tab') {
+      if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
         const isCmdCtrl = event.metaKey || event.ctrlKey
@@ -588,8 +620,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         return
       }
 
+      // Autocomplete Tab selection
+      if (enableAutosuggestion && event.key === 'Tab') {
+        if (suggestedOption) {
+          event.preventDefault()
+          event.stopPropagation()
+          handleOptionSelect(suggestedOption)
+          return
+        }
+      }
+
       if (!dropdownOptions) {
-        if (event.key === 'Enter' || event.key === 'ArrowDown' || event.key === 'Tab') {
+        if (event.key === 'Enter' || event.key === 'ArrowDown') {
           event.preventDefault()
 
           if (isCmdCtrl && event.key === 'Enter') {
@@ -617,7 +659,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
           return
         }
-        if (event.key === 'Enter' || event.key === 'Tab') {
+        if (event.key === 'Enter') {
           event.preventDefault()
           if (isCmdCtrl) {
             if (enableGlobalSearch && search.trim()) {
@@ -803,6 +845,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       onRootOperatorChange={
                         !!onRootOperatorChange ? handleRootOperatorChange : undefined
                       }
+                      inlineSuggestion={
+                        editingSearchChipId === filter.id ? inlineSuggestion : undefined
+                      }
                       searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
                       search={{
                         value: search,
@@ -819,18 +864,28 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
               </Styled.SearchBarFilters>
             )}
             {!dropdownParentId && !editingSearchChipId && (
-              <Styled.SearchInput
-                ref={searchInputRef}
-                className="search-bar-input"
-                value={search}
-                placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
-                onChange={(e) => {
-                  const val = e.target.value
-                  setSearch(val)
-                  if (val && !dropdownOptions) openInitialOptions(undefined, { filters })
-                }}
-                onKeyDown={handleInputKeyDown}
-              />
+              <Styled.SearchInputWrapper>
+                {inlineSuggestion &&
+                  search &&
+                  inlineSuggestion.toLowerCase().startsWith(search.toLowerCase()) && (
+                    <span className="autocomplete-suggestion">
+                      <span className="invisible-text">{search}</span>
+                      {inlineSuggestion.slice(search.length)}
+                    </span>
+                  )}
+                <Styled.SearchInput
+                  ref={searchInputRef}
+                  className="search-bar-input"
+                  value={search}
+                  placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
+                  onChange={(e) => {
+                    const val = e.target.value
+                    setSearch(val)
+                    if (val && !dropdownOptions) openInitialOptions(undefined, { filters })
+                  }}
+                  onKeyDown={handleInputKeyDown}
+                />
+              </Styled.SearchInputWrapper>
             )}
           </Styled.SearchBar>
           {!!quickActions?.length && (
