@@ -14,8 +14,10 @@ export interface SearchFilterItemProps
   isCompact?: boolean
   isSearch?: boolean
   isInlineEditing?: boolean
-  inlineEditValue?: string
-  onInlineEditChange?: (value: string) => void
+  // search is html input props
+  search: React.InputHTMLAttributes<HTMLInputElement>
+  // external ref for the inline chip input (used so the parent can control focus)
+  searchInputRef?: React.RefObject<HTMLInputElement>
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
@@ -42,8 +44,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isCompact,
       isSearch,
       isInlineEditing,
-      inlineEditValue,
-      onInlineEditChange,
+      search,
+      searchInputRef,
       onEdit,
       onRemove,
       onInvert,
@@ -53,7 +55,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     },
     ref,
   ) => {
-    const inputRef = useRef<HTMLInputElement>(null)
+    const localInputRef = useRef<HTMLInputElement>(null)
+    const inputRef = searchInputRef ?? localInputRef
 
     useEffect(() => {
       if (isInlineEditing) {
@@ -129,26 +132,30 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             </>
           )}
           {isInlineEditing ? (
-            <Styled.ChipInput
-              ref={inputRef}
-              value={inlineEditValue ?? ''}
-              style={{
-                ['--chip-input-width' as string]: `${(inlineEditValue?.length ?? 0) + 1}ch`,
-              }}
-              onClick={(e) => e.stopPropagation()}
-              onChange={(e) => onInlineEditChange?.(e.target.value)}
-              // onBlur={() => onInlineEditCommit?.()}
-              // onKeyDown={(e) => {
-              //   e.stopPropagation()
-              //   if (e.key === 'Enter') {
-              //     e.preventDefault()
-              //     onInlineEditCommit?.()
-              //   } else if (e.key === 'Escape') {
-              //     e.preventDefault()
-              //     onInlineEditCancel?.()
-              //   }
-              // }}
-            />
+            isSearch || values?.some((v) => v.isCustom) ? (
+              // Search (global text) chip OR custom value chip: replace the value with the inline input
+              <Styled.ChipInput ref={inputRef} {...search} />
+            ) : (
+              // Regular filter chip: show existing values + inline input to add more
+              <>
+                {values?.map((value, index) => (
+                  <SearchFilterItemValue
+                    key={(value.id || '') + index}
+                    img={value.img}
+                    icon={value.icon}
+                    color={value.color}
+                    isCustom={value.isCustom}
+                    operator={index > 0 ? operator : undefined}
+                    isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
+                    {...pt.value}
+                    pt={value.pt}
+                    id={value.id}
+                    label={value.label}
+                  />
+                ))}
+                <Styled.ChipInput ref={inputRef} {...search} />
+              </>
+            )
           ) : (
             values?.map((value, index) => (
               <SearchFilterItemValue

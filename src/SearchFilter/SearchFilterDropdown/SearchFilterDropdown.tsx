@@ -20,7 +20,6 @@ type OnSelectConfig = {
 }
 
 export interface SearchFilterDropdownRef {
-  onInputKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
   // commit pending custom search text on click-outside; returns true if it stored a filter (and closed)
   commitSearch: () => boolean
 }
@@ -31,7 +30,6 @@ export interface SearchFilterDropdownProps {
   parentId: string | null
   parentLabel?: string
   search: string
-  onSearchChange: (search: string) => void
   searchInputRef?: React.RefObject<HTMLInputElement>
   listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
@@ -46,6 +44,8 @@ export interface SearchFilterDropdownProps {
   onOperatorChange?: (id: string, operator: FilterOperator) => void // change the operator
   onConfirmAndClose?: (filters: Filter[], config?: OnSelectConfig) => void // close the dropdown and update the filters
   onSwitchFilter?: (direction: 'left' | 'right') => void // switch to the next filter to edit
+  // index of the currently highlighted option (managed as React state in SearchFilter)
+  highlightedIndex?: number | null
   pt?: {
     search?: React.HTMLAttributes<HTMLDivElement>
     item?: Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> & {
@@ -64,7 +64,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       parentId,
       parentLabel,
       search,
-      onSearchChange,
       searchInputRef,
       listRef,
       isCustomAllowed,
@@ -79,6 +78,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       onOperatorChange,
       onConfirmAndClose,
       onSwitchFilter,
+      highlightedIndex,
       pt = { search: {}, item: {}, hasSomeOption: {}, hasNoOption: {} },
       ...props
     },
@@ -86,11 +86,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
   ) => {
     const parentFilter = values.find((filter) => filter.id === parentId)
 
-    const setSearch = onSearchChange
-    // dropdown's own input, shown only inside a filter's value panel (parentId set)
-    const dropdownSearchRef = useRef<HTMLInputElement>(null)
-    // focus the active typing input: dropdown input in a value panel, else the bar input
-    const focusSearch = () => (parentId ? dropdownSearchRef.current : searchInputRef?.current)?.focus()
+    // focus the active typing input: chip input when in inline-edit mode, else the bar input
+    const focusSearch = () => searchInputRef?.current?.focus()
 
     // sort options based on selected, skipping certain fields
     const sortedOptions = useMemo(() => {
@@ -199,8 +196,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         confirm: closeOptions,
         restart: closeOptions,
       })
-      // clear search
-      setSearch('')
     }
 
     const handleBack = (previousField?: string) => {
@@ -236,7 +231,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
             handleAddCustomSearchForFilter()
           }
         } else if (option && !isSelected) {
-          if (!isSelected) setSearch('')
           onSelect(option, { confirm: !isSelected, restart: event.shiftKey })
         } else {
           //  shift + enter will confirm but keep the dropdown open
@@ -285,8 +279,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         event.stopPropagation()
         // continue search by focusing the active search input
         focusSearch()
-        // update the search value
-        onSearchChange(event.key === 'Backspace' ? search.slice(0, -1) : search + event.key)
       }
 
       // back key
@@ -307,8 +299,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
 
       // add the first option
       onSelect(addedOption, { confirm: true, restart: restart })
-      // clear search
-      setSearch('')
     }
 
     const handleAddGlobalSearchTextFilter = (restart?: boolean) => {
@@ -324,49 +314,11 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         values: [{ id: search, label: search, parentId: newId }],
       }
 
-      // clear the search
-      setSearch('')
-
       onConfirmAndClose &&
         onConfirmAndClose([...values, newFilter], { restart: restart, confirm: true })
     }
 
-    const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      // enter will select the first option
-      if (event.key === 'Enter') {
-        event.preventDefault()
-        event.stopPropagation()
-
-        const cmdCtrl = event.metaKey || event.ctrlKey
-        if (search && (filteredOptions.filter((o) => o.id !== 'search').length === 0 || cmdCtrl)) {
-          if (parentId) {
-            handleAddCustomSearchForFilter()
-          } else {
-            // if the root field search has no results (not including search), add the custom value as text
-            handleAddGlobalSearchTextFilter(event.shiftKey)
-          }
-        } else {
-          // otherwise, add the first option
-          const firstOption = filteredOptions[0]
-          if (firstOption) {
-            // clear search
-            setSearch('')
-            // select first option
-            onSelect(firstOption, { confirm: true, restart: false })
-          }
-        }
-      }
-      // arrow down will focus the first option in the list
-      if (event.key === 'ArrowDown') {
-        event.preventDefault()
-        event.stopPropagation()
-        const firstOption = listRef?.current?.querySelector('li') as HTMLElement | null
-        firstOption?.focus()
-      }
-    }
-
     useImperativeHandle(ref, () => ({
-      onInputKeyDown: handleSearchKeyDown,
       commitSearch: () => {
         const trimmed = search.trim()
         if (!trimmed || !isCustomAllowed) return false
@@ -389,34 +341,25 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
           <Styled.OptionsList ref={listRef} className={clsx({ searching: !!search })}>
-            {parentId && (
-              <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
-                <Styled.SearchInput
-                  ref={dropdownSearchRef}
-                  value={search}
-                  onChange={(event) => onSearchChange(event.target.value)}
-                  onKeyDown={handleSearchKeyDown}
-                  placeholder={isCustomAllowed ? 'Search or filter...' : 'Filter...'}
-                  autoFocus
-                />
-                <Styled.SearchIcon icon={'search'} />
-              </Styled.SearchContainer>
-            )}
             {filteredOptions.map(
-              ({
-                id,
-                parentId,
-                label,
-                searchLabel,
-                icon,
-                img,
-                color,
-                pt: optionPt,
-                isCustom,
-                contentBefore,
-                contentAfter,
-              }) => {
+              (
+                {
+                  id,
+                  parentId,
+                  label,
+                  searchLabel,
+                  icon,
+                  img,
+                  color,
+                  pt: optionPt,
+                  isCustom,
+                  contentBefore,
+                  contentAfter,
+                },
+                optionIndex,
+              ) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
+                const isHighlighted = highlightedIndex === optionIndex
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
                   <Styled.Item
@@ -424,14 +367,17 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     id={id}
                     data-parent={parentId}
                     tabIndex={0}
-                    className={clsx({ selected: isSelected })}
+                    className={clsx({ selected: isSelected, highlighted: isHighlighted })}
                     {...pt.item}
                     onClick={(event) => handleSelectOption(event)}
                   >
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
                     {contentBefore && contentBefore}
-                    <span className="label" style={{ color: optionPt?.style?.color ?? adjustedColor}}>
+                    <span
+                      className="label"
+                      style={{ color: optionPt?.style?.color ?? adjustedColor }}
+                    >
                       {search && searchLabel ? searchLabel : label}
                     </span>
                     {!!contentAfter && contentAfter}

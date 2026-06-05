@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef }
 
 import { Filter, FilterOperator, Option } from './types'
 import * as Styled from './SearchFilter.styled'
-import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem'
+import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem/SearchFilterItem'
 import SearchFilterDropdown, {
   getIsValueSelected,
   SearchFilterDropdownProps,
@@ -92,6 +92,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const dropdownApiRef = useRef<SearchFilterDropdownRef>(null)
     const searchInputRef = useRef<HTMLInputElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
+    // ref for the inline search input rendered inside a chip
+    const chipSearchRef = useRef<HTMLInputElement>(null)
 
     const { enableMultiple: enableGlobalSearchMultiple } = globalSearchConfig || {}
 
@@ -100,7 +102,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const [search, setSearch] = useState('')
     // in-place editing of a search chip (typing directly in the chip)
     const [editingSearchChipId, setEditingSearchChipId] = useState<string | null>(null)
-    const [editingSearchValue, setEditingSearchValue] = useState('')
+    // true when editing an existing filter (multi-select); false when creating a new one (single-select auto-close)
+    const [isEditingExisting, setIsEditingExisting] = useState(false)
+    // index of the currently highlighted dropdown option (React state instead of browser focus)
+    const [highlightedOptionIndex, setHighlightedOptionIndex] = useState<number | null>(null)
 
     const parentOption = options.find(
       (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
@@ -148,6 +153,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       if (dropdownOptions && !dropdownParentId) searchInputRef.current?.focus()
     }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId])
 
+    const closeSearch = () => {
+      setSearch('')
+      setEditingSearchChipId(null)
+      setIsEditingExisting(false)
+    }
+
     const openOptions = (options: Option[], parentId: string | null) => {
       setOptions(options)
       setDropdownParentId(parentId)
@@ -184,7 +195,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onChange(updatedFilters)
 
       // clear the inline search text and close the dropdown
-      setSearch('')
+      closeSearch()
       closeOptions()
       // call onClose if it exists
       onFinish && onFinish(updatedFilters)
@@ -262,6 +273,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           const valueAlreadyExists = parentFilter.values?.some((val) => val.id === option.id)
 
           const singleSelect =
+            !isEditingExisting ||
             parentFilter.singleSelect ||
             (parentFilter.id.includes(SEARCH_FILTER_ID) && !enableGlobalSearchMultiple)
 
@@ -272,6 +284,15 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
               parentFilter.values.filter((val) => val.id !== option.id)
             : // Otherwise, add the new option to the values array
               [...(parentFilter.values || []), option]
+
+          // If we are editing an existing filter and it's a custom value, replace any existing custom values.
+          // This prevents adding multiple custom values when editing a custom value in-place.
+          if (option.isCustom && isEditingExisting && !singleSelect) {
+            updatedValues = [
+              (parentFilter.values || []).filter((val) => !val.isCustom),
+              option,
+            ].flat()
+          }
 
           // if the option is hasValue or noValue, remove all other options
           if (option.id === 'hasValue' || option.id === 'noValue') {
@@ -310,6 +331,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             handleClose(updatedFilters)
           } else if (config?.restart) {
             // go back to initial options
+            setSearch('')
+            setEditingSearchChipId(null)
+            setIsEditingExisting(false)
             openInitialOptions(undefined, { filters: updatedFilters })
           }
         }
@@ -317,18 +341,29 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         const addFilter = { ...option, id: newId, values: [] }
         // remove not required fields
         delete addFilter.allowsCustomValues
-        // add to filters top level
 
+        // add to filters top level
         onChange([...filters, addFilter])
       }
 
       // if there are values set the next dropdownOptions
       // or the option allows custom values (text)
-      if ((values && values.length > 0 && !parentId) || option.allowsCustomValues) {
+      if (!parentId && ((values && values.length > 0) || option.allowsCustomValues)) {
         const newOptions = values?.map((value) => ({ ...value, parentId: newId })) || []
 
         openOptions(newOptions, newId)
+        // enter inline chip editing mode so the chip's search input drives the value selection
+        setEditingSearchChipId(newId)
+        setIsEditingExisting(false)
+      } else if (!parentId) {
+        // root option with no child values (e.g. already fully handled above)
+        setEditingSearchChipId(null)
+        setIsEditingExisting(false)
       }
+      // parentId case: preserve editingSearchChipId — it is cleared by handleClose when done
+
+      // RESET SEARCH
+      setSearch('')
     }
 
     const handleEditFilter = (id: string) => {
@@ -339,31 +374,36 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       if (filter && getFilterFromId(id) === SEARCH_FILTER_ID) {
         const raw = filter.values?.[0]?.label || String(filter.values?.[0]?.id || '')
         setEditingSearchChipId(id)
-        setEditingSearchValue(raw.replace(/%/g, '')) // strip LIKE wildcards for display
+        setSearch(raw.replace(/%/g, '')) // strip LIKE wildcards for display
         closeOptions()
         return
+      }
+
+      // regular filter: enter inline chip editing with the value dropdown open (multi-select)
+      setEditingSearchChipId(id)
+      setIsEditingExisting(true)
+
+      const firstCustomValue = filter?.values?.find((v) => v.isCustom)
+      if (firstCustomValue) {
+        setSearch(firstCustomValue.label || String(firstCustomValue.id))
+      } else {
+        setSearch('')
       }
 
       handleEditFilterValues(id, filter)
     }
 
-    // commit in-place search chip edit: update its value, or remove the chip if cleared
+    // commit in-place search chip edit for SEARCH_FILTER_ID: update its value, or remove if cleared
     const handleSearchChipCommit = () => {
       const id = editingSearchChipId
       if (!id) return
-      const text = editingSearchValue.trim()
+      const text = search.trim()
       const updatedFilters = text
         ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
         : filters.filter((f) => f.id !== id)
-      setEditingSearchChipId(null)
-      setEditingSearchValue('')
+      closeSearch()
       onChange(updatedFilters)
       onFinish && onFinish(updatedFilters)
-    }
-
-    const handleSearchChipCancel = () => {
-      setEditingSearchChipId(null)
-      setEditingSearchValue('')
     }
 
     const handleEditFilterValues = (id: string, filter?: Filter) => {
@@ -395,8 +435,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const updatedFilters = filters.filter((filter) => filter.id !== id)
       onChange(updatedFilters)
       onFinish && onFinish(updatedFilters)
-      // close the dropdown
+      // close the dropdown and any chip editing state
       closeOptions()
+      if (editingSearchChipId === id) closeSearch()
     }
 
     const handleInvertFilter = (id: string) => {
@@ -417,8 +458,38 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onFinish && onFinish(updatedFilters)
     }
 
+    // Reset highlighted index when search text or the active dropdown panel changes.
+    // When search is non-empty the effective index falls back to 0 (first item auto-highlighted)
+    // so we just null out the explicit state and let the derivation handle it.
+    useEffect(() => {
+      setHighlightedOptionIndex(null)
+    }, [search, dropdownParentId])
+
+    // When the dropdown closes entirely, clear any stale highlight.
+    useEffect(() => {
+      if (!dropdownOptions) setHighlightedOptionIndex(null)
+    }, [dropdownOptions])
+
+    // When search is non-empty and nothing has been explicitly highlighted, default to 0.
+    const effectiveHighlightedIndex =
+      highlightedOptionIndex ?? (search && dropdownOptions ? 0 : null)
+
+    // Get the rendered <li> elements from the dropdown list.
+    const getDropdownItems = (): HTMLElement[] =>
+      dropdownRef.current ? Array.from(dropdownRef.current.querySelectorAll('li')) : []
+
+    // Scroll the highlighted item into view if it is not visible.
+    useEffect(() => {
+      if (effectiveHighlightedIndex !== null && dropdownRef.current) {
+        const items = getDropdownItems()
+        const activeItem = items[effectiveHighlightedIndex]
+        if (activeItem) {
+          activeItem.scrollIntoView({ block: 'nearest' })
+        }
+      }
+    }, [effectiveHighlightedIndex])
+
     const handleContainerKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-      // cancel on esc
       if (event.key === 'Escape') {
         event.preventDefault()
         event.stopPropagation()
@@ -426,17 +497,139 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       }
     }
 
+    // key handler for the inline chip search input
+    const handleChipInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      // SEARCH_FILTER_ID chip editing — no dropdown is open, just commit/cancel text
+      if (editingSearchChipId && !dropdownParentId) {
+        if (event.key === 'Enter' || event.key === 'Tab') {
+          event.preventDefault()
+          event.stopPropagation()
+          handleSearchChipCommit()
+        }
+        return
+      }
+
+      // Value-panel mode — dropdown is open; drive it from the chip input
+      if (event.key === 'ArrowDown') {
+        event.preventDefault()
+        event.stopPropagation()
+        const items = getDropdownItems()
+        if (items.length > 0) {
+          setHighlightedOptionIndex((prev) => {
+            const currentIdx = prev ?? (search ? 0 : -1)
+            return Math.min(currentIdx + 1, items.length - 1)
+          })
+        }
+        return
+      }
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+        event.stopPropagation()
+        setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
+        return
+      }
+      if (event.key === 'Enter' || event.key === 'Tab') {
+        event.preventDefault()
+        event.stopPropagation()
+        const isCmdCtrl = event.metaKey || event.ctrlKey
+        if (isCmdCtrl) {
+          // force add as custom value if there is search text, or just confirm and close
+          const committed = dropdownApiRef.current?.commitSearch()
+          if (!committed) {
+            handleConfirmAndClose?.(filters)
+          }
+        } else {
+          const items = getDropdownItems()
+          const idx = effectiveHighlightedIndex
+          if (idx !== null && items[idx]) {
+            items[idx].click()
+          } else {
+            const firstNonSearch = items.find((li) => li.id !== 'search') as HTMLElement | null
+            if (firstNonSearch) firstNonSearch.click()
+            else dropdownApiRef.current?.commitSearch()
+          }
+        }
+      }
+
+      if (event.key === 'Backspace' && !search) {
+        event.preventDefault()
+        event.stopPropagation()
+        // remove last value from the current filter
+        const filter = filters.find((f) => f.id === editingSearchChipId)
+        if (filter && filter.values && filter.values.length > 0) {
+          const updatedValues = filter.values.slice(0, -1)
+          const updatedFilters = filters.map((f) =>
+            f.id === editingSearchChipId ? { ...f, values: updatedValues } : f,
+          )
+          onChange(updatedFilters)
+        }
+      }
+    }
+
     // inline search input: open the dropdown if needed, then delegate
     // selection/navigation (Enter, ArrowDown, custom value) to the dropdown
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+      const isCmdCtrl = event.metaKey || event.ctrlKey
+
       if (!dropdownOptions) {
-        if (event.key === 'Enter' || event.key === 'ArrowDown') {
+        if (event.key === 'Enter' || event.key === 'ArrowDown' || event.key === 'Tab') {
           event.preventDefault()
+
+          if (isCmdCtrl && event.key === 'Enter') {
+            handleClose(filters)
+            return
+          }
+
           openInitialOptions(undefined, { filters })
           return
         }
+      } else {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault()
+          const items = getDropdownItems()
+          if (items.length > 0) {
+            setHighlightedOptionIndex((prev) => {
+              const currentIdx = prev ?? (search ? 0 : -1)
+              return Math.min(currentIdx + 1, items.length - 1)
+            })
+          }
+          return
+        }
+        if (event.key === 'ArrowUp') {
+          event.preventDefault()
+          setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
+          return
+        }
+        if (event.key === 'Enter' || event.key === 'Tab') {
+          event.preventDefault()
+          if (isCmdCtrl) {
+            if (enableGlobalSearch && search.trim()) {
+              // force-add global search text filter even if options match
+              const newId = buildFilterId(SEARCH_FILTER_ID)
+              const newFilter: Filter = {
+                id: newId,
+                label: '',
+                values: [{ id: search, label: search, parentId: newId }],
+              }
+              handleClose([...filters, newFilter])
+              return
+            } else {
+              // nothing to add or global search not enabled, just submit
+              handleClose(filters)
+              return
+            }
+          }
+          const items = getDropdownItems()
+          const idx = effectiveHighlightedIndex
+          if (idx !== null && items[idx]) {
+            items[idx].click()
+          } else {
+            const firstNonSearch = items.find((li) => li.id !== 'search') as HTMLElement | null
+            if (firstNonSearch) firstNonSearch.click()
+            else dropdownApiRef.current?.commitSearch()
+          }
+        }
       }
-      dropdownApiRef.current?.onInputKeyDown(event)
     }
 
     const handleSearchBarKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
@@ -491,6 +684,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       if (config?.restart) {
         // update filters
         onChange(filters)
+        // clear chip editing state before going back to root
+        closeSearch()
         // go back to initial options
         openInitialOptions(undefined, { filters })
 
@@ -581,10 +776,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     isCompact={showIconsOnly || compact}
                     isSearch={getFilterFromId(filter.id) === SEARCH_FILTER_ID}
                     isInlineEditing={editingSearchChipId === filter.id}
-                    inlineEditValue={editingSearchValue}
-                    onInlineEditChange={setEditingSearchValue}
-                    onInlineEditCommit={handleSearchChipCommit}
-                    onInlineEditCancel={handleSearchChipCancel}
+                    searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
+                    search={{
+                      value: search,
+                      onChange: (e) => setSearch(e.target.value),
+                      onKeyDown: handleChipInputKeyDown,
+                    }}
                     onEdit={handleEditFilter}
                     onRemove={handleRemoveFilter}
                     onInvert={handleInvertFilter}
@@ -593,7 +790,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 ))}
               </Styled.SearchBarFilters>
             )}
-            {!dropdownParentId && (
+            {!dropdownParentId && !editingSearchChipId && (
               <Styled.SearchInput
                 ref={searchInputRef}
                 className="search-bar-input"
@@ -648,10 +845,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             onConfirmAndClose={handleConfirmAndClose}
             onSwitchFilter={handleSwitchFilterFocus}
             search={search}
-            onSearchChange={setSearch}
             searchInputRef={searchInputRef}
             listRef={dropdownRef}
             ref={dropdownApiRef}
+            highlightedIndex={effectiveHighlightedIndex}
             {...pt.dropdown}
           />
         )}
