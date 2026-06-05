@@ -562,6 +562,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             f.id === editingSearchChipId ? { ...f, values: updatedValues } : f,
           )
           onChange(updatedFilters)
+        } else {
+          // no values left, remove the entire filter
+          handleRemoveFilter(filter?.id || '')
+          // refocus the main search input after removing the filter
+          setTimeout(() => searchInputRef.current?.focus(), 10)
         }
       }
     }
