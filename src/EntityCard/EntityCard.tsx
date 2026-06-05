@@ -11,7 +11,6 @@ import { Icon, IconProps, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
-import useImageLoader from '../helpers/useImageLoader'
 import useUserImagesLoader from './useUserImagesLoader'
 import { EnumDropdown, EnumDropdownOption, EnumDropdownProps } from '../Dropdowns/EnumDropdown'
 import { DropdownRef } from '../Dropdowns/Dropdown'
@@ -230,11 +229,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       onTitleClick(e)
     }
 
-    // check thumbnail image
-    const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
     // check first and second user images
-    const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
-      useUserImagesLoader(users)
+    const userWithValidatedImages = useUserImagesLoader(users)
 
     const shouldShowTag = (value: any, name: Section) =>
       (!!value && !isLoading) || (isLoading && loadingSections.includes(name))
@@ -324,7 +320,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
           >
             {/* middle Icon */}
             <Styled.NoImageIcon
-              { ...pt.noImageIcon }
+              {...pt.noImageIcon}
               icon={imageIcon || 'image'}
               className={clsx(pt?.noImageIcon?.className, 'no-image')}
               onMouseEnter={closeEditors}
@@ -335,10 +331,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 src={imageUrl}
                 onMouseEnter={closeEditors}
                 {...pt.image}
-                className={clsx(
-                  { loading: isThumbnailLoading, error: isThumbnailError },
-                  pt?.image?.className,
-                )}
+                className={clsx(pt?.image?.className)}
               />
             )}
             {/* TOP ROW */}
@@ -354,7 +347,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     'loading card...'
                   ) : (
                     <>
-                      {titleIcon && <Icon style={{color: titleColor}} icon={titleIcon} />}
+                      {titleIcon && <Icon style={{ color: titleColor }} icon={titleIcon} />}
                       {title && <span className="inner-text">{title}</span>}
                     </>
                   )}
@@ -424,7 +417,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               {shouldShowTag(users, 'users') && (
                 <Styled.Tag
                   className={clsx('tag users', {
-                    isLoading: isUserImagesLoading || isLoading,
+                    isLoading: isLoading,
                     editable: assigneesEditable,
                     empty: !users?.length,
                   })}

@@ -387,18 +387,6 @@ export const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-
-  /* loading transition */
-  opacity: 1;
-  transition: opacity 500ms;
-
-  &.loading {
-    opacity: 0;
-  }
-
-  &.error {
-    opacity: 0;
-  }
 `
 
 // for the header and footer inside the thumbnail
