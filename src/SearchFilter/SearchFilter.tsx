@@ -792,12 +792,20 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         {...props}
         className={clsx('search-filter', props.className, { compact })}
       >
-        {dropdownOptions && (
+        {(dropdownOptions || editingSearchChipId) && (
           <Styled.Backdrop
             onClick={() => {
-              // clicking outside while typing a custom search stores it instead of discarding
-              if (!dropdownApiRef.current?.commitSearch()) handleClose(filters)
+              if (
+                editingSearchChipId &&
+                getFilterFromId(editingSearchChipId) === SEARCH_FILTER_ID
+              ) {
+                handleSearchChipCommit()
+              } else {
+                // clicking outside while typing a custom search stores it instead of discarding
+                if (!dropdownApiRef.current?.commitSearch()) handleClose(filters)
+              }
             }}
+            {...pt.backdrop}
           />
         )}
         <Styled.BarRow className="search-bar-row">

@@ -330,13 +330,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
           handleAddCustomSearchForFilter()
           return true
         }
-        // at root: only store free text that doesn't match a field, otherwise it's ambiguous
-        const hasFieldMatch = filteredOptions.some((o) => o.id !== 'search')
-        if (!hasFieldMatch) {
-          handleAddGlobalSearchTextFilter()
-          return true
-        }
-        return false
+        // at root: store as global search
+        handleAddGlobalSearchTextFilter()
+        return true
       },
     }))
 
