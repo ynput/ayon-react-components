@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useMemo, useRef, useState } from 'react'
+import { forwardRef, ReactNode, useImperativeHandle, useMemo, useRef } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -12,6 +12,7 @@ import { Spacer } from '../../Layout/Spacer'
 import { ShortcutTag } from '../../ShortcutTag'
 import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 import { SEARCH_FILTER_ID } from '../constants'
+import { getFilteredOptions } from '../getFilteredOptions'
 
 type OnSelectConfig = {
   confirm?: boolean
@@ -19,11 +20,19 @@ type OnSelectConfig = {
   previous?: string // used to go back to the previous field along with restart
 }
 
+export interface SearchFilterDropdownRef {
+  // commit pending custom search text on click-outside; returns true if it stored a filter (and closed)
+  commitSearch: () => boolean
+}
+
 export interface SearchFilterDropdownProps {
   options: Option[]
   values: Filter[]
   parentId: string | null
   parentLabel?: string
+  search: string
+  searchInputRef?: React.RefObject<HTMLInputElement>
+  listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
   isHasValueAllowed?: boolean
   isNoValueAllowed?: boolean
@@ -36,6 +45,8 @@ export interface SearchFilterDropdownProps {
   onOperatorChange?: (id: string, operator: FilterOperator) => void // change the operator
   onConfirmAndClose?: (filters: Filter[], config?: OnSelectConfig) => void // close the dropdown and update the filters
   onSwitchFilter?: (direction: 'left' | 'right') => void // switch to the next filter to edit
+  // index of the currently highlighted option (managed as React state in SearchFilter)
+  highlightedIndex?: number | null
   pt?: {
     search?: React.HTMLAttributes<HTMLDivElement>
     item?: Omit<React.HTMLAttributes<HTMLLIElement>, 'onClick'> & {
@@ -46,13 +57,16 @@ export interface SearchFilterDropdownProps {
   }
 }
 
-const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownProps>(
+const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDropdownProps>(
   (
     {
       options,
       values,
       parentId,
       parentLabel,
+      search,
+      searchInputRef,
+      listRef,
       isCustomAllowed,
       isHasValueAllowed,
       isNoValueAllowed,
@@ -65,6 +79,7 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       onOperatorChange,
       onConfirmAndClose,
       onSwitchFilter,
+      highlightedIndex,
       pt = { search: {}, item: {}, hasSomeOption: {}, hasNoOption: {} },
       ...props
     },
@@ -72,8 +87,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
   ) => {
     const parentFilter = values.find((filter) => filter.id === parentId)
 
-    const searchRef = useRef<HTMLInputElement>(null)
-    const [search, setSearch] = useState('')
+    // focus the active typing input: chip input when in inline-edit mode, else the bar input
+    const focusSearch = () => searchInputRef?.current?.focus()
 
     // sort options based on selected, skipping certain fields
     const sortedOptions = useMemo(() => {
@@ -182,8 +197,6 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         confirm: closeOptions,
         restart: closeOptions,
       })
-      // clear search
-      setSearch('')
     }
 
     const handleBack = (previousField?: string) => {
@@ -219,7 +232,6 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
             handleAddCustomSearchForFilter()
           }
         } else if (option && !isSelected) {
-          if (!isSelected) setSearch('')
           onSelect(option, { confirm: !isSelected, restart: event.shiftKey })
         } else {
           //  shift + enter will confirm but keep the dropdown open
@@ -242,10 +254,9 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         event.stopPropagation()
         const target = event.target as HTMLElement
         const prev = target.previousElementSibling as HTMLElement
-        // if the previous element is the search input, focus the input
-        if (prev?.classList.contains('search')) {
-          const input = prev.querySelector('input') as HTMLElement
-          input.focus()
+        // no previous option -> jump back up to the active search input
+        if (!prev || prev.classList.contains('search')) {
+          focusSearch()
         } else {
           prev?.focus()
         }
@@ -267,10 +278,8 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
       } else if (event.key.match(/^[a-zA-Z0-9]$/) || event.key === 'Backspace') {
         event.preventDefault()
         event.stopPropagation()
-        // continue search by focusing the search input
-        searchRef.current?.focus()
-        // update the search value
-        setSearch((prev) => (event.key === 'Backspace' ? prev.slice(0, -1) : prev + event.key))
+        // continue search by focusing the active search input
+        focusSearch()
       }
 
       // back key
@@ -291,8 +300,6 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
 
       // add the first option
       onSelect(addedOption, { confirm: true, restart: restart })
-      // clear search
-      setSearch('')
     }
 
     const handleAddGlobalSearchTextFilter = (restart?: boolean) => {
@@ -308,79 +315,52 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
         values: [{ id: search, label: search, parentId: newId }],
       }
 
-      // clear the search
-      setSearch('')
-
       onConfirmAndClose &&
         onConfirmAndClose([...values, newFilter], { restart: restart, confirm: true })
     }
 
-    const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-      // enter will select the first option
-      if (event.key === 'Enter') {
-        event.preventDefault()
-        event.stopPropagation()
-
-        const cmdCtrl = event.metaKey || event.ctrlKey
-        if (search && (filteredOptions.filter((o) => o.id !== 'search').length === 0 || cmdCtrl)) {
-          if (parentId) {
-            handleAddCustomSearchForFilter()
-          } else {
-            // if the root field search has no results (not including search), add the custom value as text
-            handleAddGlobalSearchTextFilter(event.shiftKey)
-          }
-        } else {
-          // otherwise, add the first option
-          const firstOption = filteredOptions[0]
-          if (firstOption) {
-            // clear search
-            setSearch('')
-            // select first option
-            onSelect(firstOption, { confirm: true, restart: false })
-          }
+    useImperativeHandle(ref, () => ({
+      commitSearch: () => {
+        const trimmed = search.trim()
+        if (!trimmed || !isCustomAllowed) return false
+        // inside a value panel: store as a custom value for the current filter
+        if (parentId) {
+          handleAddCustomSearchForFilter()
+          return true
         }
-      }
-      // arrow down will focus the first option
-      if (event.key === 'ArrowDown') {
-        event.preventDefault()
-        event.stopPropagation()
-        const target = event.target as HTMLElement
-        let next = target.parentElement?.nextElementSibling as HTMLElement
-        if (target.tagName === 'INPUT' && search) next = next.nextElementSibling as HTMLElement
-        next?.focus()
-      }
-    }
+        // at root: only store free text that doesn't match a field, otherwise it's ambiguous
+        const hasFieldMatch = filteredOptions.some((o) => o.id !== 'search')
+        if (!hasFieldMatch) {
+          handleAddGlobalSearchTextFilter()
+          return true
+        }
+        return false
+      },
+    }))
 
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         <Styled.Scrollable>
-          <Styled.OptionsList ref={ref} className={clsx({ searching: !!search })}>
-            <Styled.SearchContainer {...pt.search} className={clsx('search', pt.search?.className)}>
-              <Styled.SearchInput
-                ref={searchRef}
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                onKeyDown={handleSearchKeyDown}
-                placeholder={getSearchPlaceholder(isCustomAllowed, allOptions)}
-                autoFocus
-              />
-              <Styled.SearchIcon icon={'search'} />
-            </Styled.SearchContainer>
+          <Styled.OptionsList ref={listRef} className={clsx({ searching: !!search })}>
             {filteredOptions.map(
-              ({
-                id,
-                parentId,
-                label,
-                searchLabel,
-                icon,
-                img,
-                color,
-                pt: optionPt,
-                isCustom,
-                contentBefore,
-                contentAfter,
-              }) => {
+              (
+                {
+                  id,
+                  parentId,
+                  label,
+                  searchLabel,
+                  icon,
+                  img,
+                  color,
+                  pt: optionPt,
+                  isCustom,
+                  contentBefore,
+                  contentAfter,
+                },
+                optionIndex,
+              ) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
+                const isHighlighted = highlightedIndex === optionIndex
                 const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
                 return (
                   <Styled.Item
@@ -388,14 +368,17 @@ const SearchFilterDropdown = forwardRef<HTMLUListElement, SearchFilterDropdownPr
                     id={id}
                     data-parent={parentId}
                     tabIndex={0}
-                    className={clsx({ selected: isSelected })}
+                    className={clsx({ selected: isSelected, highlighted: isHighlighted })}
                     {...pt.item}
                     onClick={(event) => handleSelectOption(event)}
                   >
                     {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
                     {img && <img src={img} alt={label} />}
                     {contentBefore && contentBefore}
-                    <span className="label" style={{ color: optionPt?.style?.color ?? adjustedColor}}>
+                    <span
+                      className="label"
+                      style={{ color: optionPt?.style?.color ?? adjustedColor }}
+                    >
                       {search && searchLabel ? searchLabel : label}
                     </span>
                     {!!contentAfter && contentAfter}
@@ -484,45 +467,6 @@ export const getIsValueSelected = (
 
   // check if the value is already selected
   return !!parentFilter.values?.some((value) => value.id === id)
-}
-
-const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: boolean) => {
-  // filter out options that don't match the search in any of the fields
-
-  // no search? return all the main options
-  if (!search) return options.filter((option) => !option.searchOnly)
-
-  const parsedSearch = search.toLowerCase()
-
-  const matched = matchSorter(options, parsedSearch, {
-    keys: ['label'],
-    threshold: matchSorter.rankings.CONTAINS,
-  })
-
-  // if isCustomAllowed, add the custom value to the list
-  if (isCustomAllowed) {
-    matched.push({
-      id: 'search',
-      label: search,
-      icon: 'search',
-      values: [],
-      parentId: SEARCH_FILTER_ID,
-      isCustom: true,
-      searchOnly: true,
-    })
-  }
-
-  return matched
-}
-
-const getSearchPlaceholder = (isCustomAllowed: boolean, options: Option[]) => {
-  const somePreMadeOptions = options.length > 0 && options.some((option) => !option.isCustom)
-
-  return !somePreMadeOptions && isCustomAllowed
-    ? 'Search...'
-    : isCustomAllowed
-    ? 'Search or filter...'
-    : 'Filter...'
 }
 
 const getAddOption = (

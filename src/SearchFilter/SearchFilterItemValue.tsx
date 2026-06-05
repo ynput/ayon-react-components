@@ -35,27 +35,66 @@ const Operator = styled.span`
   ${theme.labelSmall}
   display: flex;
   align-items: center;
+
+  &.clickable {
+    cursor: pointer;
+    text-decoration: underline;
+    border-radius: 4px;
+    padding: 0 2px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-highest-hover);
+    }
+  }
 `
 
 export interface SearchFilterItemValueProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id'>,
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id' | 'children'>,
     FilterValue {
   operator?: FilterOperator
   isCompact?: boolean
+  isOperatorChangeable?: boolean
+  onOperatorChange?: (event: React.MouseEvent<HTMLSpanElement>) => void
 }
 
 export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItemValueProps>(
-  ({ label, img, icon, color, operator, isCompact, isCustom, pt, ...props }, ref) => {
+  (
+    {
+      label,
+      img,
+      icon,
+      color,
+      operator,
+      isCompact,
+      isCustom,
+      pt,
+      isOperatorChangeable,
+      onOperatorChange,
+      ...props
+    },
+    ref,
+  ) => {
     const colorStyle = color ? color : '#ffffff'
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
+    // only collapse to icon-only when there's an icon/avatar to show, else keep the text
+    const iconOnly = isCompact && (!!icon || !!img)
+
     return (
       <>
-        {operator && <Operator>{operator.toLowerCase()}</Operator>}
+        {operator && (
+          <Operator
+            className={clsx({ clickable: isOperatorChangeable })}
+            onClick={isOperatorChangeable ? onOperatorChange : undefined}
+          >
+            {operator.toLowerCase()}
+          </Operator>
+        )}
         <ValueChip
           {...props}
           ref={ref}
-          className={clsx(props.className, { compact: isCompact, custom: isCustom })}
+          className={clsx(props.className, { compact: iconOnly, custom: isCustom })}
         >
           {icon && (
             <Icon
@@ -69,7 +108,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
           <span
             className="label"
             style={{
-              color:pt?.style?.color ?? adjustedColor
+              color: pt?.style?.color ?? adjustedColor,
             }}
           >
             {label}

@@ -37,13 +37,8 @@ export const OptionsList = styled.ul`
   gap: var(--base-gap-small);
 
   &.searching {
-    /* first child is highlighted only when no items have focus-visible */
-    &:not(:has(li:focus-visible)) li:nth-child(2) {
-      background-color: var(--md-sys-color-secondary-container);
-    }
-
-    &:has(li:focus-visible) {
-      /* hide custom search shortcut */
+    /* hide custom search shortcut when any other item is highlighted */
+    &:has(li.highlighted:not([id='search'])) {
       .search.shortcut {
         display: none;
       }
@@ -95,7 +90,8 @@ export const Item = styled.li`
     }
   }
 
-  &:focus-visible {
+  &:focus-visible,
+  &.highlighted {
     background-color: var(--md-sys-color-secondary-container);
     outline: none;
   }

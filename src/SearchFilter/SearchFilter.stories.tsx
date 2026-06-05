@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { SearchFilter, SearchFilterRef } from './SearchFilter'
 import { useState, useRef } from 'react'
-import { Filter, Option } from './types'
+import { Filter, FilterOperator, Option } from './types'
 import { Button } from '../Buttons/Button'
 import { Icon } from '../Icon'
 import { SearchFilterCustomRangeDebug } from './SearchFilterCustomRangeDebug'
@@ -82,12 +82,22 @@ const options: Option[] = [
 
 const Template = (args: Story['args']) => {
   const [filters, setFilters] = useState<Filter[]>([])
+  const [operator, setOperator] = useState<FilterOperator>('AND')
 
   const handleChange = (newFilters: Filter[]) => {
     setFilters(newFilters)
   }
 
-  return <SearchFilter options={[]} {...args} filters={filters} onChange={handleChange} />
+  return (
+    <SearchFilter
+      options={[]}
+      {...args}
+      rootOperator={operator}
+      onRootOperatorChange={setOperator}
+      filters={filters}
+      onChange={handleChange}
+    />
+  )
 }
 
 export const Default: Story = {
@@ -106,6 +116,7 @@ export const Scopes: Story = {
     enableSearchChildren: true,
     allowedSearchChildren: undefined,
     enableGlobalSearch: true,
+    enableAutosuggestion: true,
   },
   render: Template,
 }
