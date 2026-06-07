@@ -44,6 +44,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onRootOperatorChange?: (operator: FilterOperator) => void
   disabledFilters?: string[] // filters that should be disabled from adding, editing, or removing
   preserveOrderFields?: string[]
+  placeholder?: string // placeholder text for the search input
   pt?: {
     dropdown?: Partial<SearchFilterDropdownProps>
     item?: Partial<SearchFilterItemProps>
@@ -82,6 +83,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onRootOperatorChange,
       disabledFilters,
       preserveOrderFields,
+      placeholder = 'Search and filter',
       pt = {
         dropdown: {},
         item: {},
@@ -895,7 +897,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   ref={searchInputRef}
                   className="search-bar-input"
                   value={search}
-                  placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
+                  placeholder={
+                    placeholder || (filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch))
+                  }
                   onChange={(e) => {
                     const val = e.target.value
                     setSearch(val)
