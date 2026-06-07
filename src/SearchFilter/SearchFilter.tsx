@@ -30,6 +30,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onQuickAction?: (id: string) => void
   onSearchChange?: (search: string, filterId: string | null) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
+  labelMode?: 'none' | 'label' | 'icon'
   onFinish?: (filters: Filter[]) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
@@ -70,6 +71,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onQuickAction,
       onSearchChange,
       compact = false,
+      labelMode,
       enableGlobalSearch = false,
       globalSearchConfig,
       enableSearchChildren = true,
@@ -847,6 +849,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       isDisabled={disabledFilters?.includes(filterName)}
                       isReadonly={filter.isReadonly}
                       isCompact={compact}
+                      labelMode={labelMode}
                       showIconsOnly={showIconsOnly}
                       isSearch={filterName === SEARCH_FILTER_ID}
                       isInlineEditing={editingSearchChipId === filter.id}

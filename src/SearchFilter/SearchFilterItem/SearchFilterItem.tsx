@@ -3,6 +3,7 @@ import { Filter, FilterOperator } from '../types'
 import { SearchFilterItemValue, SearchFilterItemValueProps } from '../SearchFilterItemValue'
 import clsx from 'clsx'
 import * as Styled from './SearchFilterItem.styled'
+import { Icon } from '../..'
 
 export interface SearchFilterItemProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
@@ -12,6 +13,7 @@ export interface SearchFilterItemProps
   isInvertedAllowed?: boolean
   isDisabled?: boolean
   isCompact?: boolean
+  labelMode?: 'none' | 'label' | 'icon'
   isSearch?: boolean
   showIconsOnly?: boolean
   isInlineEditing?: boolean
@@ -48,6 +50,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isDisabled,
       isReadonly,
       isCompact,
+      labelMode = isCompact ? 'none' : 'icon',
       showIconsOnly,
       isSearch,
       isInlineEditing,
@@ -127,6 +130,13 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     }
 
     const rootOperatorLabel = rootOperator.toLowerCase()
+    const tooltip = `${label} ${
+      values && values.length > 0 ? values.map((v) => v.label).join(', ') : ''
+    }`
+
+    const shouldItemUseIcon = (value: { icon?: string | null; img?: string | null }) => {
+      return ((values ?? [])?.length > 1 && (!!value.icon || !!value.img)) || showIconsOnly
+    }
 
     return (
       <>
@@ -155,16 +165,24 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             editing: isEditing,
             disabled: isDisabled,
           })}
+          data-tooltip={tooltip}
+          // only make it 0 if any info is hidden
+          data-tooltip-delay={
+            values?.some((v) => shouldItemUseIcon(v)) || labelMode !== 'label' ? 0 : undefined
+          }
         >
-          {!isSearch && inverted && (
+          {!isSearch && (
             <>
-              <Styled.ChipButton
-                className={clsx('button', { disabled: !isInvertedAllowed })}
-                icon={inverted ? 'do_not_disturb_on' : 'check_small'}
-                onClick={handleInvert}
-                data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
-              />
-              {!isCompact && <span className="label">{label}:</span>}
+              {inverted && (
+                <Styled.ChipButton
+                  className={clsx('button', { disabled: !isInvertedAllowed })}
+                  icon={inverted ? 'do_not_disturb_on' : 'check_small'}
+                  onClick={handleInvert}
+                  data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
+                />
+              )}
+              {labelMode === 'label' && <span className="label">{label}:</span>}
+              {labelMode === 'icon' && icon && <Icon icon={icon} className="icon label-icon" />}
             </>
           )}
           {isInlineEditing ? (
@@ -192,9 +210,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     color={value.color}
                     isCustom={value.isCustom}
                     operator={index > 0 ? operator : undefined}
-                    showIconsOnly={
-                      (values.length > 1 && (!!value.icon || !!value.img)) || showIconsOnly
-                    }
+                    isIconOnly={shouldItemUseIcon(value)}
                     {...pt.value}
                     pt={value.pt}
                     id={value.id}
@@ -227,9 +243,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 color={value.color}
                 isCustom={value.isCustom}
                 operator={index > 0 ? operator : undefined}
-                showIconsOnly={
-                  (values.length > 1 && (!!value.icon || !!value.img)) || showIconsOnly
-                }
+                isIconOnly={shouldItemUseIcon(value)}
                 {...pt.value}
                 pt={value.pt}
                 id={value.id}

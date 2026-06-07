@@ -53,7 +53,7 @@ export interface SearchFilterItemValueProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'color' | 'id' | 'children'>,
     FilterValue {
   operator?: FilterOperator
-  showIconsOnly?: boolean
+  isIconOnly?: boolean
   isOperatorChangeable?: boolean
   onOperatorChange?: (event: React.MouseEvent<HTMLSpanElement>) => void
 }
@@ -66,7 +66,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
       icon,
       color,
       operator,
-      showIconsOnly,
+      isIconOnly,
       isCustom,
       pt,
       isOperatorChangeable,
@@ -79,7 +79,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
 
     // only collapse to icon-only when there's an icon/avatar to show, else keep the text
-    const iconOnly = showIconsOnly && (!!icon || !!img)
+    const iconOnly = isIconOnly && (!!icon || !!img)
 
     return (
       <>
