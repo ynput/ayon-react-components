@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
-import { matchSorter } from 'match-sorter'
 
 import { Filter, FilterOperator, Option, SearchFilterQuickAction } from './types'
 import * as Styled from './SearchFilter.styled'
@@ -15,7 +14,7 @@ import { buildFilterId } from './buildFilterId'
 import { getFilterFromId } from './getFilterFromId'
 import { getFilteredOptions } from './getFilteredOptions'
 import doesFilterExist from './doesFilterExist'
-import { Icon, IconType } from '../Icon'
+import { Icon } from '../Icon'
 import clsx from 'clsx'
 import { SEARCH_FILTER_ID } from './constants'
 
@@ -898,7 +897,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   className="search-bar-input"
                   value={search}
                   placeholder={
-                    placeholder || (filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch))
+                    filters.length ? '' : placeholder || getEmptyPlaceholder(enableGlobalSearch)
                   }
                   onChange={(e) => {
                     const val = e.target.value

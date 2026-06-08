@@ -171,6 +171,12 @@ export const QuickActions = styled.div`
 `
 
 export const QuickActionButton = styled(Button)`
+  background-color: var(--md-sys-color-surface-container);
+
+  &:hover {
+    background-color: var(--md-sys-color-surface-container-hover);
+  }
+
   &.compact {
     padding: 4px;
     height: 28px;
