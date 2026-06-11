@@ -17,22 +17,35 @@ import clsx from 'clsx'
  * Hook that alerts clicks outside of the passed ref
  */
 function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void): void {
+  // 1. Persist the callback in a ref so changes don't trigger the effect to re-run
+  const savedCallback = useRef(callback)
+
   useEffect(() => {
-    /**
-     * Alert if clicked on outside of element
-     */
+    savedCallback.current = callback
+  }, [callback])
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent): void {
-      if (refs.every((ref) => ref.current && !ref.current.contains(event.target as Node))) {
-        callback && callback()
+      // Check if the click landed outside of EVERY passed ref
+      const isOutsideAll = refs.every(
+        (ref) => ref.current && !ref.current.contains(event.target as Node),
+      )
+
+      if (isOutsideAll) {
+        savedCallback.current?.()
       }
     }
-    // Bind the event listener
-    document.addEventListener('mousedown', handleClickOutside)
+
+    // 2. Add 'true' as the 3rd argument to use the CAPTURING phase.
+    // This intercepts the click before external layout elements can call stopPropagation().
+    document.addEventListener('mousedown', handleClickOutside, true)
+
     return () => {
-      // Unbind the event listener on clean up
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('mousedown', handleClickOutside, true)
     }
-  }, [refs, callback])
+    // We safely track refs here; since ref objects themselves don't change,
+    // this effect will now only tear down if the component actually unmounts.
+  }, [refs])
 }
 
 type OnChangeEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
