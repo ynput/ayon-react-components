@@ -538,7 +538,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (suggestedOption) {
           event.preventDefault()
           event.stopPropagation()
-          handleOptionSelect(suggestedOption, { confirm: true })
+          handleOptionSelect(suggestedOption, {
+            confirm: !suggestedOption.searchOnly,
+            restart: false,
+          })
           return
         }
       }
@@ -630,7 +633,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (suggestedOption) {
           event.preventDefault()
           event.stopPropagation()
-          handleOptionSelect(suggestedOption, { confirm: true })
+          handleOptionSelect(suggestedOption, { confirm: !suggestedOption.searchOnly })
           return
         }
       }

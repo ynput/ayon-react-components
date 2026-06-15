@@ -191,13 +191,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         }
       }
 
-      const closeOptions =
-        ((option.id === 'hasValue' || option.id === 'noValue') && values.length === 0) ||
-        option.searchOnly
-
       onSelect(option, {
-        confirm: true,
-        restart: closeOptions,
+        confirm: !option.searchOnly,
+        restart: !option.searchOnly && event.shiftKey,
       })
     }
 
@@ -234,7 +230,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
             handleAddCustomSearchForFilter()
           }
         } else if (option && !isSelected) {
-          onSelect(option, { confirm: !isSelected, restart: event.shiftKey })
+          onSelect(option, {
+            confirm: !isSelected && !option.searchOnly,
+            restart: event.shiftKey,
+          })
         } else {
           //  shift + enter will confirm but keep the dropdown open
           //  any other enter will confirm and close dropdown
