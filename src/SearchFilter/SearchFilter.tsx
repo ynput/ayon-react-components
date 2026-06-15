@@ -538,7 +538,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (suggestedOption) {
           event.preventDefault()
           event.stopPropagation()
-          handleOptionSelect(suggestedOption)
+          handleOptionSelect(suggestedOption, { confirm: true })
           return
         }
       }
@@ -630,7 +630,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (suggestedOption) {
           event.preventDefault()
           event.stopPropagation()
-          handleOptionSelect(suggestedOption)
+          handleOptionSelect(suggestedOption, { confirm: true })
           return
         }
       }
