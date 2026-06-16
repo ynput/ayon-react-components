@@ -6,6 +6,7 @@ import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem/Sear
 import { SearchFilterQuickActions } from './SearchFilterQuickActions'
 import SearchFilterDropdown, {
   getIsValueSelected,
+  OnSelectConfig,
   SearchFilterDropdownProps,
   SearchFilterDropdownRef,
 } from './SearchFilterDropdown/SearchFilterDropdown'
@@ -55,7 +56,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
 export interface SearchFilterRef {
   open: () => void
   close: () => void
-  openFilter: (optionId: string) => void
+  openFilter: (optionId: string, config?: OnSelectConfig) => void
   getContainerElement: () => HTMLDivElement | null
   getFiltersBarElement: () => HTMLDivElement | null
 }
@@ -347,15 +348,63 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           // Call the onChange callback with the updated filters
           onChange(updatedFilters)
 
-          if ((config?.confirm || singleSelect) && !config?.restart) {
-            // close the dropdown with the new filters
-            handleClose(updatedFilters)
-          } else if (config?.restart) {
-            // go back to initial options
+          // ── Determine whether to close, restart, or stay open ──────────────
+          const hasExistingValuesBefore = (parentFilter.values?.length ?? 0) > 0
+          const isHardSingleSelect =
+            parentFilter.singleSelect ||
+            (parentFilter.id.includes(SEARCH_FILTER_ID) && !enableGlobalSearchMultiple)
+
+          const isCmdCtrl = config?.meta || config?.ctrl
+          const isShift = config?.shift
+          const isKeyboard = config?.keyboard
+
+          let shouldClose: boolean
+          let shouldRestart: boolean
+
+          if (config?.selectOnly) {
+            // Spacebar / explicit toggle: keep the dropdown open, just toggle the value
+            shouldClose = false
+            shouldRestart = false
+          } else if (isHardSingleSelect) {
+            // Explicitly single-select filter: always close
+            shouldClose = true
+            shouldRestart = false
+          } else if (isKeyboard) {
+            // Keyboard Enter: always submit; shift = restart instead of close
+            shouldClose = true
+            shouldRestart = !!isShift
+          } else if (!hasExistingValuesBefore) {
+            // First value selection (mouse click, no prior values)
+            if (isCmdCtrl) {
+              // meta/ctrl: stay open to allow multiple selections
+              shouldClose = false
+              shouldRestart = false
+            } else if (isShift) {
+              // shift: submit and go back to filter list
+              shouldClose = true
+              shouldRestart = true
+            } else {
+              // default: submit and close
+              shouldClose = true
+              shouldRestart = false
+            }
+          } else {
+            // Multi-select with existing values: mouse click stays open;
+            // no-config callers (e.g. quick actions) close for backward compat
+            shouldClose = !config
+            shouldRestart = false
+          }
+
+          if (shouldRestart) {
             setSearch('')
             setEditingSearchChipId(null)
             setIsEditingExisting(false)
             openInitialOptions(undefined, { filters: updatedFilters })
+          } else if (shouldClose) {
+            handleClose(updatedFilters)
+          } else {
+            // Staying open: switch to multi-select (append) mode for subsequent selections
+            if (!isEditingExisting) setIsEditingExisting(true)
           }
         }
       } else {
@@ -540,7 +589,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           event.stopPropagation()
           handleOptionSelect(suggestedOption, {
             confirm: !suggestedOption.searchOnly,
-            restart: false,
+            keyboard: true,
+            ctrl: event.ctrlKey,
+            meta: event.metaKey,
+            shift: event.shiftKey,
           })
           return
         }
@@ -575,26 +627,43 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
         return
       }
+      if (event.key === ' ' && dropdownParentId && !search) {
+        // Spacebar: toggle the highlighted item without closing (only when not typing a search)
+        event.preventDefault()
+        event.stopPropagation()
+        const idx = effectiveHighlightedIndex
+        if (idx !== null) {
+          dropdownApiRef.current?.selectAtIndex(idx, { selectOnly: true })
+        }
+        return
+      }
       if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
         const isCmdCtrl = event.metaKey || event.ctrlKey
         if (isCmdCtrl) {
-          // force add as custom value if there is search text, or just confirm and close
-          const committed = dropdownApiRef.current?.commitSearch()
-          if (!committed) {
-            handleConfirmAndClose?.(filters)
+          const currentFilterHasValues =
+            (filters.find((f) => f.id === dropdownParentId)?.values?.length ?? 0) > 0
+          if (currentFilterHasValues) {
+            // Values already selected: just confirm and close
+            const committed = dropdownApiRef.current?.commitSearch()
+            if (!committed) {
+              handleConfirmAndClose?.(filters)
+            }
+          } else {
+            // No values yet: select the highlighted item and submit+close
+            const idx = effectiveHighlightedIndex
+            const selected = dropdownApiRef.current?.selectAtIndex(idx ?? 0)
+            if (!selected) dropdownApiRef.current?.commitSearch()
           }
         } else {
-          const items = getDropdownItems()
           const idx = effectiveHighlightedIndex
-          if (idx !== null && items[idx]) {
-            items[idx].click()
-          } else {
-            const firstNonSearch = items.find((li) => li.id !== 'search') as HTMLElement | null
-            if (firstNonSearch) firstNonSearch.click()
-            else dropdownApiRef.current?.commitSearch()
-          }
+          const selected = dropdownApiRef.current?.selectAtIndex(idx ?? 0, {
+            meta: event.metaKey,
+            ctrl: event.ctrlKey,
+            shift: event.shiftKey,
+          })
+          if (!selected) dropdownApiRef.current?.commitSearch()
         }
       }
 
@@ -633,6 +702,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (suggestedOption) {
           event.preventDefault()
           event.stopPropagation()
+          // using tab always confirms and closes
           handleOptionSelect(suggestedOption, { confirm: !suggestedOption.searchOnly })
           return
         }
@@ -686,15 +756,13 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
               return
             }
           }
-          const items = getDropdownItems()
           const idx = effectiveHighlightedIndex
-          if (idx !== null && items[idx]) {
-            items[idx].click()
-          } else {
-            const firstNonSearch = items.find((li) => li.id !== 'search') as HTMLElement | null
-            if (firstNonSearch) firstNonSearch.click()
-            else dropdownApiRef.current?.commitSearch()
-          }
+          const selected = dropdownApiRef.current?.selectAtIndex(idx ?? 0, {
+            meta: event.metaKey,
+            ctrl: event.ctrlKey,
+            shift: event.shiftKey,
+          })
+          if (!selected) dropdownApiRef.current?.commitSearch()
         }
       }
     }
@@ -782,14 +850,14 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         },
         // shortcut: behave like picking this option from the dropdown — open an
         // existing filter for editing, or add it and open its values
-        openFilter: (optionId: string) => {
+        openFilter: (optionId: string, config?: OnSelectConfig) => {
           const existing = filters.find((f) => getFilterFromId(f.id) === optionId)
           if (existing) {
             handleEditFilter(existing.id)
             return
           }
           const option = options.find((o) => o.id === optionId)
-          if (option) handleOptionSelect(option)
+          if (option) handleOptionSelect(option, config)
         },
         getContainerElement: () => containerRef.current,
         getFiltersBarElement: () => filtersBarRef.current,

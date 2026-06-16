@@ -14,15 +14,25 @@ import { SwitchButton } from '../../Buttons/SwitchButton/SwitchButton'
 import { SEARCH_FILTER_ID } from '../constants'
 import { getFilteredOptions } from '../getFilteredOptions'
 
-type OnSelectConfig = {
+export type OnSelectConfig = {
   confirm?: boolean
   restart?: boolean
   previous?: string // used to go back to the previous field along with restart
+  meta?: boolean // cmd/meta key was held
+  ctrl?: boolean // ctrl key was held
+  shift?: boolean // shift key was held
+  keyboard?: boolean // selection triggered by keyboard (not mouse click)
+  selectOnly?: boolean // toggle selection without closing the dropdown (e.g. spacebar)
 }
 
 export interface SearchFilterDropdownRef {
   // commit pending custom search text on click-outside; returns true if it stored a filter (and closed)
   commitSearch: () => boolean
+  // programmatically select the option at the given filteredOptions index with optional modifier keys
+  selectAtIndex: (
+    index: number,
+    modifiers?: { meta?: boolean; ctrl?: boolean; shift?: boolean; selectOnly?: boolean },
+  ) => boolean
 }
 
 export interface SearchFilterDropdownProps {
@@ -192,8 +202,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       }
 
       onSelect(option, {
-        confirm: !option.searchOnly,
-        restart: !option.searchOnly && event.shiftKey,
+        meta: event.metaKey,
+        ctrl: event.ctrlKey,
+        shift: event.shiftKey,
+        keyboard: false,
       })
     }
 
@@ -231,8 +243,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
           }
         } else if (option && !isSelected) {
           onSelect(option, {
-            confirm: !isSelected && !option.searchOnly,
-            restart: event.shiftKey,
+            keyboard: true,
+            shift: event.shiftKey,
           })
         } else {
           //  shift + enter will confirm but keep the dropdown open
@@ -331,6 +343,19 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         }
         // at root: store as global search
         handleAddGlobalSearchTextFilter()
+        return true
+      },
+      selectAtIndex: (index, mods) => {
+        const option = filteredOptions[index]
+        if (!option) return false
+        if (option.id === 'search') return false // handled by commitSearch
+        onSelect(option, {
+          keyboard: !mods?.selectOnly,
+          shift: mods?.shift,
+          meta: mods?.meta,
+          ctrl: mods?.ctrl,
+          selectOnly: mods?.selectOnly,
+        })
         return true
       },
     }))
