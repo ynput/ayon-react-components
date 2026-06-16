@@ -110,6 +110,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const [search, setSearch] = useState('')
     // in-place editing of a search chip (typing directly in the chip)
     const [editingSearchChipId, setEditingSearchChipId] = useState<string | null>(null)
+    // when editing a filter with custom values: the id of the specific value being edited (null = add mode)
+    const [editingValueId, setEditingValueId] = useState<string | null>(null)
     // true when editing an existing filter (multi-select); false when creating a new one (single-select auto-close)
     const [isEditingExisting, setIsEditingExisting] = useState(false)
     // index of the currently highlighted dropdown option (React state instead of browser focus)
@@ -177,6 +179,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       setSearch('')
       setEditingSearchChipId(null)
       setIsEditingExisting(false)
+      setEditingValueId(null)
     }
 
     const openOptions = (options: Option[], parentId: string | null) => {
@@ -310,13 +313,13 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             : // Otherwise, add the new option to the values array
               [...(parentFilter.values || []), option]
 
-          // If we are editing an existing filter and it's a custom value, replace any existing custom values.
-          // This prevents adding multiple custom values when editing a custom value in-place.
-          if (option.isCustom && isEditingExisting && !singleSelect) {
-            updatedValues = [
-              (parentFilter.values || []).filter((val) => !val.isCustom),
-              option,
-            ].flat()
+          // When editing a specific custom value, replace just that value.
+          let didReplaceCustomValue = false
+          if (option.isCustom && editingValueId) {
+            updatedValues = (parentFilter.values || []).map((val) =>
+              val.id === editingValueId ? option : val,
+            )
+            didReplaceCustomValue = true
           }
 
           // if the option is hasValue or noValue, remove all other options
@@ -395,16 +398,32 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             shouldRestart = false
           }
 
+          // After replacing a specific custom value, always close so the chip doesn't stay in
+          // edit mode with a stale editingValueId.
+          if (didReplaceCustomValue) {
+            shouldClose = true
+            shouldRestart = false
+          }
+
+          // "Add another" mode: commit the value and stay in the panel for the next input
+          if (config?.addAnother) {
+            shouldClose = false
+            shouldRestart = false
+          }
+
           if (shouldRestart) {
             setSearch('')
             setEditingSearchChipId(null)
             setIsEditingExisting(false)
+            setEditingValueId(null)
             openInitialOptions(undefined, { filters: updatedFilters })
           } else if (shouldClose) {
             handleClose(updatedFilters)
           } else {
             // Staying open: switch to multi-select (append) mode for subsequent selections
             if (!isEditingExisting) setIsEditingExisting(true)
+            // In "add another" mode, clear the value being edited so input goes to add-new position
+            if (config?.addAnother) setEditingValueId(null)
           }
         }
       } else {
@@ -436,7 +455,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       setSearch('')
     }
 
-    const handleEditFilter = (id: string) => {
+    const handleEditFilter = (id: string, valueId?: string | null) => {
       // find the filter option and set those values
       const filter = filters.find((filter) => filter.id === id)
 
@@ -453,10 +472,14 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       setEditingSearchChipId(id)
       setIsEditingExisting(true)
 
-      const firstCustomValue = filter?.values?.find((v) => v.isCustom)
-      if (firstCustomValue) {
-        setSearch(firstCustomValue.label || String(firstCustomValue.id))
+      if (valueId) {
+        // editing a specific existing custom value: pre-populate search with that value's label
+        const targetValue = filter?.values?.find((v) => v.id === valueId)
+        setEditingValueId(valueId)
+        setSearch(targetValue?.label || String(targetValue?.id || ''))
       } else {
+        // add mode: open with empty search for a new value
+        setEditingValueId(null)
         setSearch('')
       }
 
@@ -627,20 +650,43 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         setHighlightedOptionIndex((prev) => (prev === null || prev === 0 ? null : prev - 1))
         return
       }
-      if (event.key === ' ' && dropdownParentId && !search) {
-        // Spacebar: toggle the highlighted item without closing (only when not typing a search)
-        event.preventDefault()
-        event.stopPropagation()
-        const idx = effectiveHighlightedIndex
-        if (idx !== null) {
-          dropdownApiRef.current?.selectAtIndex(idx, { selectOnly: true })
+      if (event.key === ' ' && dropdownParentId) {
+        const isExplicitlyHighlighted = highlightedOptionIndex !== null
+        const allowsCustomValues = parentOption?.allowsCustomValues
+
+        // if the filter allows custom values, only toggle on space if the user has explicitly highlighted an item
+        const shouldTypeSpace = allowsCustomValues && !isExplicitlyHighlighted
+
+        if (shouldTypeSpace) {
+          // allow typing the space, but stop it from bubbling to the chip which might handle it as "open"
+          event.stopPropagation()
+          return
+        } else if (!search || isExplicitlyHighlighted) {
+          // Spacebar: toggle the highlighted item without closing (only when not typing a search OR if explicitly highlighted)
+          event.preventDefault()
+          event.stopPropagation()
+          const idx = effectiveHighlightedIndex
+          if (idx !== null) {
+            dropdownApiRef.current?.selectAtIndex(idx, { selectOnly: true })
+          }
+          return
         }
-        return
       }
       if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
         const isCmdCtrl = event.metaKey || event.ctrlKey
+        // Shift+Enter: commit the typed custom value and stay in panel to add another
+        if (
+          event.shiftKey &&
+          !isCmdCtrl &&
+          search.trim() &&
+          parentOption?.allowsCustomValues &&
+          dropdownParentId
+        ) {
+          dropdownApiRef.current?.commitSearch(true)
+          return
+        }
         if (isCmdCtrl) {
           const currentFilterHasValues =
             (filters.find((f) => f.id === dropdownParentId)?.values?.length ?? 0) > 0
@@ -925,6 +971,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       showIconsOnly={showIconsOnly}
                       isSearch={filterName === SEARCH_FILTER_ID}
                       isInlineEditing={editingSearchChipId === filter.id}
+                      allowsCustomValues={!!option?.allowsCustomValues}
                       rootOperator={rootOperator}
                       operatorChangeable={option?.operatorChangeable}
                       onOperatorChange={handleToggleFilterOperator}
@@ -944,7 +991,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                         },
                         onKeyDown: handleChipInputKeyDown,
                       }}
+                      editingValueId={editingSearchChipId === filter.id ? editingValueId : null}
                       onEdit={handleEditFilter}
+                      onEditValue={handleEditFilter}
                       onRemove={handleRemoveFilter}
                       onInvert={handleInvertFilter}
                       {...pt.item}

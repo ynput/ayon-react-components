@@ -18,13 +18,18 @@ export interface SearchFilterItemProps
   showIconsOnly?: boolean
   isInlineEditing?: boolean
   inlineSuggestion?: string
+  // when isInlineEditing and the filter has custom values: the id of the specific value being edited (null = add mode)
+  editingValueId?: string | null
   // search is html input props
   search: React.InputHTMLAttributes<HTMLInputElement>
   // external ref for the inline chip input (used so the parent can control focus)
   searchInputRef?: React.RefObject<HTMLInputElement>
+  allowsCustomValues?: boolean
   onEdit?: (id: string) => void
   onRemove?: (id: string) => void
   onInvert?: (id: string) => void
+  // callback to start editing a specific value inside the chip (custom values only)
+  onEditValue?: (id: string, valueId: string) => void
   onOperatorChange?: (id: string) => void
   operatorChangeable?: boolean
   rootOperator: FilterOperator
@@ -55,12 +60,15 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isSearch,
       isInlineEditing,
       inlineSuggestion,
+      editingValueId,
+      allowsCustomValues,
       rootOperator = 'AND',
       search,
       searchInputRef,
       onEdit,
       onRemove,
       onInvert,
+      onEditValue,
       onOperatorChange,
       operatorChangeable,
       onRootOperatorChange,
@@ -78,7 +86,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
         inputRef.current?.focus()
         inputRef.current?.select()
       }
-    }, [isInlineEditing])
+    }, [isInlineEditing, editingValueId])
 
     const handleEdit = (id: string) => {
       if (isReadonly) return
@@ -101,6 +109,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (isInlineEditing) return
       // enter or space
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
@@ -186,8 +195,8 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
             </>
           )}
           {isInlineEditing ? (
-            isSearch || values?.some((v) => v.isCustom) ? (
-              // Search (global text) chip OR custom value chip: replace the value with the inline input
+            isSearch ? (
+              // Global search chip: replace the value with the inline input
               <Styled.ChipInputWrapper data-value={search?.value || ''}>
                 {inlineSuggestion &&
                   search?.value &&
@@ -199,6 +208,75 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                   )}
                 <Styled.ChipInput ref={inputRef} size={1} {...search} />
               </Styled.ChipInputWrapper>
+            ) : values?.some((v) => v.isCustom) ? (
+              // allowsCustomValues filter chip: each value is shown individually;
+              // a specific value can be edited in-place, or a new value added at the end.
+              <>
+                {values?.map((value, index) => {
+                  if (editingValueId && value.id === editingValueId) {
+                    // Replace this specific value with the inline input
+                    return (
+                      <Styled.ChipInputWrapper
+                        key={(value.id || '') + index}
+                        data-value={search?.value || ''}
+                      >
+                        {inlineSuggestion &&
+                          search?.value &&
+                          inlineSuggestion
+                            .toLowerCase()
+                            .startsWith(String(search.value).toLowerCase()) && (
+                            <span className="autocomplete-suggestion">
+                              <span className="invisible-text">{search.value}</span>
+                              {inlineSuggestion.slice(String(search.value).length)}
+                            </span>
+                          )}
+                        <Styled.ChipInput ref={inputRef} size={1} {...search} />
+                      </Styled.ChipInputWrapper>
+                    )
+                  }
+                  return (
+                    <SearchFilterItemValue
+                      key={(value.id || '') + index}
+                      img={value.img}
+                      icon={value.icon}
+                      color={value.color}
+                      isCustom={value.isCustom}
+                      operator={index > 0 ? operator : undefined}
+                      isIconOnly={shouldItemUseIcon(value)}
+                      {...pt.value}
+                      pt={value.pt}
+                      id={value.id}
+                      label={value.label}
+                      isOperatorChangeable={operatorChangeable && index > 0}
+                      onOperatorChange={handleOperatorChange}
+                      onClick={
+                        value.isCustom && onEditValue
+                          ? (e) => {
+                              e.stopPropagation()
+                              onEditValue(id, value.id)
+                            }
+                          : undefined
+                      }
+                    />
+                  )
+                })}
+                {!editingValueId && (
+                  // Add mode: inline input at the end for a new custom value
+                  <Styled.ChipInputWrapper data-value={search?.value || ''}>
+                    {inlineSuggestion &&
+                      search?.value &&
+                      inlineSuggestion
+                        .toLowerCase()
+                        .startsWith(String(search.value).toLowerCase()) && (
+                        <span className="autocomplete-suggestion">
+                          <span className="invisible-text">{search.value}</span>
+                          {inlineSuggestion.slice(String(search.value).length)}
+                        </span>
+                      )}
+                    <Styled.ChipInput ref={inputRef} size={1} {...search} />
+                  </Styled.ChipInputWrapper>
+                )}
+              </>
             ) : (
               // Regular filter chip: show existing values + inline input to add more
               <>
@@ -250,8 +328,27 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 label={value.label}
                 isOperatorChangeable={operatorChangeable && index > 0}
                 onOperatorChange={handleOperatorChange}
+                onClick={
+                  value.isCustom && onEditValue
+                    ? (e) => {
+                        e.stopPropagation()
+                        onEditValue(id, value.id)
+                      }
+                    : undefined
+                }
               />
             ))
+          )}
+          {allowsCustomValues && !isInlineEditing && (
+            <Styled.ChipButton
+              className="button add"
+              icon="add"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleEdit(id)
+              }}
+              data-tooltip="Add value"
+            />
           )}
           {onRemove && (
             <Styled.ChipButton className="button remove" icon="close" onClick={handleRemove} />

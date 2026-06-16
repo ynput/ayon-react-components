@@ -20,6 +20,13 @@ export const FilterItem = styled.div`
     .button {
       background-color: var(--md-sys-color-surface-container-highest-hover);
     }
+
+    .button.add {
+      opacity: 1;
+      width: 20px;
+      margin-left: 2px;
+      padding: 2px;
+    }
   }
 
   &.editing {
@@ -102,6 +109,15 @@ export const ChipInput = styled.input`
 export const ChipButton = styled(Button)`
   border-radius: 50%;
   background-color: unset;
+
+  &.add {
+    opacity: 0;
+    width: 0;
+    margin-left: calc(-1 * var(--base-gap-small));
+    padding: 0;
+    overflow: hidden;
+    transition: opacity 0.15s, width 0.15s, margin-left 0.15s, padding 0.15s;
+  }
 
   &:hover:not(.disabled) {
     &.button {

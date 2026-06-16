@@ -28,6 +28,9 @@ const ValueChip = styled.div`
   &.custom {
     padding: 0 2px;
     background-color: var(--md-sys-color-surface-container-high-hover);
+    &:hover {
+      background-color: var(--md-sys-color-surface-container-highest-hover);
+    }
   }
 `
 

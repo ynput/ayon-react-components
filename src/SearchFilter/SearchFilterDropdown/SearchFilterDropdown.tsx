@@ -17,6 +17,7 @@ import { getFilteredOptions } from '../getFilteredOptions'
 export type OnSelectConfig = {
   confirm?: boolean
   restart?: boolean
+  addAnother?: boolean // commit custom value and stay in panel to add another
   previous?: string // used to go back to the previous field along with restart
   meta?: boolean // cmd/meta key was held
   ctrl?: boolean // ctrl key was held
@@ -27,7 +28,7 @@ export type OnSelectConfig = {
 
 export interface SearchFilterDropdownRef {
   // commit pending custom search text on click-outside; returns true if it stored a filter (and closed)
-  commitSearch: () => boolean
+  commitSearch: (addAnother?: boolean) => boolean
   // programmatically select the option at the given filteredOptions index with optional modifier keys
   selectAtIndex: (
     index: number,
@@ -307,12 +308,12 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       }
     }
 
-    const handleAddCustomSearchForFilter = (restart?: boolean) => {
+    const handleAddCustomSearchForFilter = (addAnother?: boolean) => {
       const addedOption = getAddOption(search, parentId, isCustomAllowed)
       if (!addedOption) return console.error('Option not found:', search)
 
       // add the first option
-      onSelect(addedOption, { confirm: true, restart: restart })
+      onSelect(addedOption, { confirm: true, addAnother: addAnother })
     }
 
     const handleAddGlobalSearchTextFilter = (restart?: boolean) => {
@@ -333,12 +334,12 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
     }
 
     useImperativeHandle(ref, () => ({
-      commitSearch: () => {
+      commitSearch: (addAnother?: boolean) => {
         const trimmed = search.trim()
         if (!trimmed || !isCustomAllowed) return false
         // inside a value panel: store as a custom value for the current filter
         if (parentId) {
-          handleAddCustomSearchForFilter()
+          handleAddCustomSearchForFilter(addAnother)
           return true
         }
         // at root: store as global search
@@ -461,6 +462,16 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     </>
                   )}
                 </Styled.Operations>
+                {isCustomAllowed && search.trim() && (
+                  <Button
+                    variant="text"
+                    onClick={() => handleAddCustomSearchForFilter(true)}
+                    icon="add"
+                    shortcut={{ children: '⇧+↵' }}
+                  >
+                    Add more
+                  </Button>
+                )}
                 <Button
                   variant="filled"
                   onClick={() => {
