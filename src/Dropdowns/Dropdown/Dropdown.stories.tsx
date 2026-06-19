@@ -43,25 +43,32 @@ const Template = (args: DropdownProps) => {
     if (args.onChange) args.onChange(v, removed)
   }
 
+  const [hide, setHide] = useState(false)
+
   return (
-    <Toolbar style={{ margin: 32 }}>
-      <Dropdown
-        {...args}
-        value={value}
-        onChange={handleChange}
-        options={args.options || options}
-        onClear={args.onClear && setValue}
-        onClearNull={args.onClearNull && setValue}
-        widthExpand
-        style={{
-          width: 250,
-          ...args.style,
-        }}
-        ref={dropdownRef}
-      />
-      <InputText />
-      <Button label="Open dropdown" onClick={() => dropdownRef.current?.open()} />
-    </Toolbar>
+    <>
+      <Toolbar style={{ margin: 32 }}>
+        {!hide && (
+          <Dropdown
+            {...args}
+            value={value}
+            onChange={handleChange}
+            options={args.options || options}
+            onClear={args.onClear && setValue}
+            onClearNull={args.onClearNull && setValue}
+            widthExpand
+            style={{
+              width: 250,
+              ...args.style,
+            }}
+            ref={dropdownRef}
+          />
+        )}
+        <InputText />
+        <Button label="Open dropdown" onClick={() => dropdownRef.current?.open()} />
+      </Toolbar>
+      <Button label="Toggle hide" onClick={() => setHide(!hide)} />
+    </>
   )
 }
 

@@ -206,7 +206,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     },
     ref,
   ) => {
-    const [value, setValue] = useState<string[] | null>([])
+    const [value, setValue] = useState<string[] | null>(() =>
+      initialValue === null ? null : compact(initialValue),
+    )
 
     useEffect(() => {
       // set null if null otherwise compact array (array with no nulls or undefine)
