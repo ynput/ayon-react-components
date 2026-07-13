@@ -112,7 +112,6 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       onClick && onClick(event)
     }
 
-    // trigger onRootOperatorChange callback and stop propagation to avoid triggering onClick of the whole filter item
     const handleRootOperatorChange = (e: React.MouseEvent<HTMLSpanElement>) => {
       if (!onRootOperatorChange) return
       e.stopPropagation()
