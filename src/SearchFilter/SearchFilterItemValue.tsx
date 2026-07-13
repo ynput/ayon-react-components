@@ -12,10 +12,28 @@ const ValueChip = styled.div`
   gap: var(--base-gap-small);
   border-radius: var(--border-radius-m);
 
+  /* allow the chip to shrink below its content so the label can ellipsis */
+  min-width: 0;
+
+  .icon {
+    flex-shrink: 0;
+  }
+
   img {
     width: 16px;
     height: 16px;
     border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* cap a long value (e.g. a big custom search) at a readable width, then
+     ellipsis. this only affects the static display — while editing the value is
+     replaced by an input, which is free to grow into the available bar space. */
+  .label {
+    max-width: 260px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /* hide label */

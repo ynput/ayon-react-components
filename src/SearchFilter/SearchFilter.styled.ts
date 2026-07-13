@@ -5,6 +5,11 @@ export const Container = styled.div`
   position: relative;
   width: 100%;
 
+  /* allow the whole bar to shrink inside a flex toolbar instead of forcing its
+     content width onto siblings (which would push toolbar actions off screen).
+     the excess chips then scroll inside .filter-values / .search-bar. */
+  min-width: 0;
+
   /* compact mode: shrink the bar to 28px with smaller padding/text.
      scoped to .search-bar so the dropdown keeps its default sizing. */
   &.compact {
