@@ -13,6 +13,13 @@ export const FilterItem = styled.div`
   /* padding-right: 8px; */
   border-radius: 4px;
 
+  /* keep the check/remove buttons and the field label at full size — only the
+     value chip is allowed to shrink and ellipsis */
+  > .button,
+  > .label {
+    flex-shrink: 0;
+  }
+
   cursor: pointer;
   &:hover {
     background-color: var(--md-sys-color-surface-container-high-hover);
