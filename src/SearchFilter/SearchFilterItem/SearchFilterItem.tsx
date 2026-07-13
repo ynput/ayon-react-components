@@ -5,7 +5,8 @@ import clsx from 'clsx'
 import * as Styled from './SearchFilterItem.styled'
 
 export interface SearchFilterItemProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>, Filter {
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
+    Filter {
   index: number
   isEditing?: boolean
   isInvertedAllowed?: boolean
@@ -111,6 +112,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       onClick && onClick(event)
     }
 
+    // trigger onRootOperatorChange callback and stop propagation to avoid triggering onClick of the whole filter item
     const handleRootOperatorChange = (e: React.MouseEvent<HTMLSpanElement>) => {
       if (!onRootOperatorChange) return
       e.stopPropagation()
