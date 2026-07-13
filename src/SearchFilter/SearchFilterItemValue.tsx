@@ -31,6 +31,7 @@ const ValueChip = styled.div`
      replaced by an input, which is free to grow into the available bar space. */
   .label {
     max-width: 260px;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
