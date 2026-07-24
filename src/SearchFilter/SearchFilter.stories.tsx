@@ -516,6 +516,8 @@ export const FeedOptions: Story = {
     options: feedOptions,
     enableGlobalSearch: true,
     allowedSearchChildren: ['status', 'attrib.private'],
+    enableSearchChildren: true,
+    enableAutosuggestion: true,
     quickActions: [
       'comments',
       {

@@ -195,7 +195,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
 
       onSelect(option, {
         confirm: closeOptions,
-        restart: closeOptions,
+        restart: false,
       })
     }
 
