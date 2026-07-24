@@ -45,8 +45,8 @@ export const Container = styled.div`
     .quick-actions {
       font-size: 12px;
     }
-    .quick-actions .icon {
-      font-size: 16px;
+    .quick-actions .quick-action.hasIcon {
+      padding: 4px;
     }
   }
 `
@@ -97,11 +97,7 @@ export const SearchBarFilters = styled.div`
   }
 `
 
-export const FilterButton = styled(Button)`
-  &.hasIcon {
-    padding: 2px;
-  }
-`
+export const FilterButton = styled(Button)``
 
 export const SearchInputWrapper = styled.div`
   position: relative;

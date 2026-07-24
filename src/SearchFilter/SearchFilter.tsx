@@ -20,13 +20,16 @@ import { SEARCH_FILTER_ID } from './constants'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
-export interface SearchFilterQuickAction {
-  id: string
-  icon?: string
-  label?: string
-  tooltip?: string
-  active?: boolean
-}
+export type SearchFilterQuickAction =
+  | string
+  | {
+      id: string
+      icon?: string
+      label?: string
+      tooltip?: string
+      active?: boolean
+      values?: string[]
+    }
 
 export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   filters: Filter[]
@@ -753,6 +756,38 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       }
     }
 
+    const handleOpenFilter = (optionId: string, valueIds?: string[]) => {
+      const option = options.find((o) => o.id === optionId)
+      if (!option) return
+
+      const existing = filters.find((f) => getFilterFromId(f.id) === optionId)
+      if (valueIds?.length) {
+        const selectedValues = valueIds
+          .map((valueId) => option.values?.find((value) => value.id === valueId))
+          .filter((value): value is NonNullable<typeof value> => !!value)
+
+        if (!selectedValues.length) return
+
+        const updatedFilter = {
+          ...(existing || option),
+          id: existing?.id || buildFilterId(optionId),
+          values: selectedValues,
+        }
+        const updatedFilters = existing
+          ? filters.map((filter) => (filter.id === existing.id ? updatedFilter : filter))
+          : [...filters, updatedFilter]
+
+        handleClose(updatedFilters)
+        return
+      }
+
+      if (existing) {
+        handleEditFilter(existing.id)
+        return
+      }
+      handleOptionSelect(option)
+    }
+
     // Expose methods via ref
     useImperativeHandle(
       ref,
@@ -769,13 +804,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         // shortcut: behave like picking this option from the dropdown — open an
         // existing filter for editing, or add it and open its values
         openFilter: (optionId: string) => {
-          const existing = filters.find((f) => getFilterFromId(f.id) === optionId)
-          if (existing) {
-            handleEditFilter(existing.id)
-            return
-          }
-          const option = options.find((o) => o.id === optionId)
-          if (option) handleOptionSelect(option)
+          handleOpenFilter(optionId)
         },
         getContainerElement: () => containerRef.current,
         getFiltersBarElement: () => filtersBarRef.current,
@@ -884,18 +913,33 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           </Styled.SearchBar>
           {!!quickActions?.length && (
             <Styled.QuickActions className="quick-actions">
-              {quickActions.map((action) => (
-                <Styled.FilterButton
-                  key={action.id}
-                  icon={action.icon as IconType}
-                  label={action.label}
-                  selected={action.active}
-                  className="quick-action"
-                  data-tooltip={action.tooltip}
-                  data-tooltip-delay={0}
-                  onClick={() => onQuickAction?.(action.id)}
-                />
-              ))}
+              {quickActions.map((action) => {
+                const actionId = typeof action === 'string' ? action : action.id
+                const option = options.find((candidate) => candidate.id === actionId)
+                const icon = typeof action === 'string' ? option?.icon : action.icon ?? option?.icon
+                const label = typeof action === 'string' ? undefined : action.label
+                const tooltip =
+                  typeof action === 'string' ? option?.label : action.tooltip ?? option?.label
+
+                return (
+                  <Styled.FilterButton
+                    key={actionId}
+                    icon={icon as IconType}
+                    label={label}
+                    selected={typeof action === 'string' ? undefined : action.active}
+                    className="quick-action"
+                    data-tooltip={tooltip}
+                    data-tooltip-delay={0}
+                    onClick={() => {
+                      handleOpenFilter(
+                        actionId,
+                        typeof action === 'string' ? undefined : action.values,
+                      )
+                      onQuickAction?.(actionId)
+                    }}
+                  />
+                )
+              })}
             </Styled.QuickActions>
           )}
         </Styled.BarRow>
