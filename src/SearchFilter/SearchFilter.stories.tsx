@@ -108,6 +108,15 @@ export const Default: Story = {
   },
   render: Template,
 }
+export const QuickActions: Story = {
+  args: {
+    options: options,
+    enableGlobalSearch: true,
+    allowedSearchChildren: ['status', 'attrib.private'],
+    quickActions: [{ id: 'status', icon: 'check' }],
+  },
+  render: Template,
+}
 
 export const Scopes: Story = {
   args: {
