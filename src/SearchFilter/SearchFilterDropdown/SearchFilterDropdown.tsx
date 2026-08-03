@@ -356,16 +356,23 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   isCustom,
                   contentBefore,
                   contentAfter,
-                  dropdown,
+                  group,
+                  search: searchPresentation,
                 },
                 optionIndex,
               ) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const isHighlighted = highlightedIndex === optionIndex
-                const displayLabel =
-                  dropdown?.label ?? (search && searchLabel ? searchLabel : label)
-                const displayIcon = dropdown?.icon ?? icon
-                const displayColor = dropdown?.color ?? color
+                const groupPresentation = !search && typeof group === 'object' ? group : undefined
+                const displayLabel = search
+                  ? searchLabel ?? searchPresentation?.label ?? label
+                  : groupPresentation?.label ?? label
+                const displayIcon = search
+                  ? searchPresentation?.icon ?? icon
+                  : groupPresentation?.icon ?? icon
+                const displayColor = search
+                  ? searchPresentation?.color ?? color
+                  : groupPresentation?.color ?? color
                 const adjustedColor = displayColor
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined

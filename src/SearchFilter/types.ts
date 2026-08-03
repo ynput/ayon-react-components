@@ -19,7 +19,6 @@ export type FilterValue = {
   isCustom?: boolean
   parentId?: string | null
   pt?: FilterValuePt
-  dropdown?: SearchFilterDropdownOption
 }
 
 export type FilterOperator = 'AND' | 'OR'
@@ -73,5 +72,5 @@ export interface Option extends Filter {
   contentBefore?: React.ReactNode // content to be shown before the filter
   contentAfter?: React.ReactNode // content to be shown after the filter
   pt?: FilterValuePt // pass-through styles for the filter value
-  dropdown?: SearchFilterDropdownOption
+  search?: SearchFilterDropdownOption // presentation override used only while searching
 }

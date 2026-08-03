@@ -149,6 +149,9 @@
       "label": "Task Status",
       "icon": "task_alt"
     },
+    "search": {
+      "label": "Task"
+    },
     "icon": "arrow_circle_right",
     "inverted": false,
     "operator": "OR",
@@ -1030,7 +1033,10 @@
   {
     "id": "folder_status",
     "type": "string",
-    "label": "Status - Folder",
+    "label": "Status",
+    "search": {
+      "label": "Folder"
+    },
     "group": {
       "name": "Status",
       "label": "Folder Status",
@@ -1163,8 +1169,9 @@
   {
     "id": "folder_attrib.priority",
     "type": "string",
-    "label": "Priority - Folder",
-    "group": "Priority",
+    "label": "Priority",
+    "group": { "name": "Priority", "label": "Folder Priority", "icon": "keyboard_double_arrow_up" },
+    "search": { "label": "Folder" },
     "operator": "OR",
     "inverted": false,
     "values": [
