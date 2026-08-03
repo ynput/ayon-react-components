@@ -58,7 +58,7 @@ export type Filter = {
 }
 
 export interface Option extends Filter {
-  group?: string // groups options under a shared root menu item
+  group?: string | SearchFilterGroupOption // groups options under a shared root menu item
   groupItems?: Option[] // internal options for a synthetic group menu item
   isGroup?: boolean
   allowNoValue?: boolean // allows the filter to have "no value"

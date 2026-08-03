@@ -137,12 +137,17 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       for (const option of dropdownOptions) {
         if (option.isGroup && option.groupItems) {
           for (const groupOption of option.groupItems) {
+            const groupSearchLabel = `${option.label} - ${getGroupFieldLabel(
+              groupOption.searchLabel || groupOption.label,
+            )}`
+
             if (!addedItems.has(groupOption.id)) {
               addedItems.add(groupOption.id)
               flattenedOptions.push({
                 ...groupOption,
+                dropdown: undefined,
                 searchOnly: true,
-                searchLabel: `${option.label} - ${groupOption.label}`,
+                searchLabel: groupSearchLabel,
               })
             }
 
@@ -155,7 +160,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     ...value,
                     parentId: groupOption.id,
                     searchOnly: true,
-                    searchLabel: `${option.label} - ${groupOption.label} - ${value.label}`,
+                    searchLabel: `${groupSearchLabel} - ${value.label}`,
                   })
                 }
               }
@@ -238,7 +243,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const option = options.find((candidate) => candidate.id === getFilterFromId(filterId))
       if (option?.group) {
         const groupOption = getShownRootOptions(options, groupOptions, disabledFilters).find(
-          (candidate) => candidate.id === `group-${option.group}`,
+          (candidate) => candidate.id === `group-${getGroupName(option.group)}`,
         )
         if (groupOption?.groupItems) {
           openOptions(groupOption.groupItems, groupOption.id)
@@ -895,12 +900,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   const filterName = getFilterFromId(filter.id)
                   const option = options.find((o) => o.id === filterName)
                   const groupDefinition = option?.group
-                    ? groupOptions.find((group) => group.name === option.group)
+                    ? groupOptions.find((group) => group.name === getGroupName(option.group))
                     : undefined
                   const tooltipLabel = option?.group
-                    ? `${groupDefinition?.label || option.group} - ${getGroupFieldLabel(
-                        option.label,
-                      )}`
+                    ? `${
+                        groupDefinition?.label || getGroupName(option.group)
+                      } - ${getGroupFieldLabel(option.label)}`
                     : filter.label
                   const tooltipValues = filter.values?.map((value) => value.label).join(', ')
                   const tooltip = `${filter.inverted ? 'not ' : ''}${tooltipLabel}${
@@ -1059,20 +1064,35 @@ const getShownRootOptions = (
       continue
     }
 
-    const groupOptions = groupedOptions.get(option.group) || []
+    const groupName = getGroupName(option.group)
+    const groupOptions = groupedOptions.get(groupName) || []
     groupOptions.push(option)
-    groupedOptions.set(option.group, groupOptions)
+    groupedOptions.set(groupName, groupOptions)
   }
 
   for (const [group, groupItems] of groupedOptions) {
     const groupDefinition = groupDefinitions.find((option) => option.name === group)
     const showGroupLabel = groupDefinition?.showGroupLabel ?? true
-    const formattedGroupItems = groupItems.map((option) => ({
-      ...option,
-      label: option.dropdown?.label
-        ? option.label
-        : getGroupedOptionLabel(option.label, groupDefinition?.label, showGroupLabel),
-    }))
+    const formattedGroupItems = groupItems.map((option) => {
+      const groupPresentation = getGroupPresentation(option.group)
+      return {
+        ...option,
+        label:
+          groupPresentation?.label ||
+          (option.dropdown?.label
+            ? option.label
+            : getGroupedOptionLabel(option.label, groupDefinition?.label, showGroupLabel)),
+        dropdown: groupPresentation
+          ? {
+              icon: groupPresentation.icon,
+              label: groupPresentation.label,
+              color: groupPresentation.color,
+            }
+          : option.dropdown,
+        // Keep the source label for search results; group presentation is local to this menu.
+        searchLabel: option.label,
+      }
+    })
 
     rootOptions.push({
       id: `group-${group}`,
@@ -1105,6 +1125,12 @@ const getGroupFieldLabel = (optionLabel: string) => {
   const separatorIndex = optionLabel.lastIndexOf(' - ')
   return separatorIndex === -1 ? optionLabel : optionLabel.slice(separatorIndex + 3)
 }
+
+const getGroupName = (group: Option['group']) =>
+  typeof group === 'string' ? group : group?.name || ''
+
+const getGroupPresentation = (group: Option['group']) =>
+  typeof group === 'object' ? group : undefined
 
 const findOption = (options: Option[], optionId?: string | null): Option | undefined => {
   if (!optionId) return undefined
