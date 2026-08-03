@@ -147,7 +147,8 @@
     "group": {
       "name": "Status",
       "label": "Task Status",
-      "icon": "task_alt"
+      "icon": "task_alt",
+      "tooltip": "Task"
     },
     "search": {
       "label": "Task"
@@ -1040,7 +1041,8 @@
     "group": {
       "name": "Status",
       "label": "Folder Status",
-      "icon": "folder"
+      "icon": "folder",
+      "tooltip": "Folder"
     },
     "icon": "arrow_circle_right",
     "inverted": false,

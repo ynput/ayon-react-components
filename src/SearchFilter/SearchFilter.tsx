@@ -905,9 +905,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     ? groupOptions.find((group) => group.name === getGroupName(option.group))
                     : undefined
                   const tooltipLabel = option?.group
-                    ? `${
-                        groupDefinition?.label || getGroupName(option.group)
-                      } - ${getGroupFieldLabel(option.label)}`
+                    ? option.search?.tooltip ||
+                      groupDefinition?.tooltip ||
+                      getGroupFieldLabel(option.label)
                     : filter.label
                   const tooltipValues = filter.values?.map((value) => value.label).join(', ')
                   const tooltip = `${filter.inverted ? 'not ' : ''}${tooltipLabel}${
