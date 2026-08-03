@@ -15,6 +15,7 @@ export interface SearchFilterItemProps
   isSearch?: boolean
   isInlineEditing?: boolean
   inlineSuggestion?: string
+  tooltip?: string
   // search is html input props
   search: React.InputHTMLAttributes<HTMLInputElement>
   // external ref for the inline chip input (used so the parent can control focus)
@@ -50,6 +51,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isSearch,
       isInlineEditing,
       inlineSuggestion,
+      tooltip,
       rootOperator = 'AND',
       search,
       searchInputRef,
@@ -145,6 +147,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
           id={id}
           {...props}
           ref={ref}
+          data-tooltip={tooltip}
           tabIndex={0}
           onKeyDown={handleKeyDown}
           onClick={handleClick}
