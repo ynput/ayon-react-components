@@ -145,6 +145,21 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 searchLabel: `${option.label} - ${groupOption.label}`,
               })
             }
+
+            if (groupOption.values && groupOption.values.length > 0) {
+              for (const value of groupOption.values) {
+                const fullId = `${groupOption.id}-${value.id}`
+                if (!addedItems.has(fullId)) {
+                  addedItems.add(fullId)
+                  flattenedOptions.push({
+                    ...value,
+                    parentId: groupOption.id,
+                    searchOnly: true,
+                    searchLabel: `${option.label} - ${groupOption.label} - ${value.label}`,
+                  })
+                }
+              }
+            }
           }
         }
 
@@ -306,7 +321,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         // Find or create parent filter based on option type
         let parentFilter: Filter | null | undefined = null
         if (option.searchOnly) {
-          const parentOption = options.find((opt) => opt.id === option.parentId)
+          const parentOption = findOption(options, option.parentId)
           if (parentOption) {
             parentFilter = {
               ...parentOption,
@@ -1089,6 +1104,18 @@ const getGroupedOptionLabel = (
 const getGroupFieldLabel = (optionLabel: string) => {
   const separatorIndex = optionLabel.lastIndexOf(' - ')
   return separatorIndex === -1 ? optionLabel : optionLabel.slice(separatorIndex + 3)
+}
+
+const findOption = (options: Option[], optionId?: string | null): Option | undefined => {
+  if (!optionId) return undefined
+
+  for (const option of options) {
+    if (option.id === optionId) return option
+    const nestedOption = option.groupItems?.find((groupItem) => groupItem.id === optionId)
+    if (nestedOption) return nestedOption
+  }
+
+  return undefined
 }
 
 const mergeOptionsWithFilterValues = (filter: Filter, options: Option[]): Option[] => {
