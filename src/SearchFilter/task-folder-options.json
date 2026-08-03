@@ -144,11 +144,12 @@
     "id": "task_status",
     "type": "string",
     "label": "Status - Task",
-    "group": "Status",
-    "icon": "arrow_circle_right",
-    "dropdown": {
+    "group": {
+      "name": "Status",
+      "label": "Task Status",
       "icon": "task_alt"
     },
+    "icon": "arrow_circle_right",
     "inverted": false,
     "operator": "OR",
     "values": [
@@ -1030,11 +1031,12 @@
     "id": "folder_status",
     "type": "string",
     "label": "Status - Folder",
-    "group": "Status",
-    "icon": "arrow_circle_right",
-    "dropdown": {
+    "group": {
+      "name": "Status",
+      "label": "Folder Status",
       "icon": "folder"
     },
+    "icon": "arrow_circle_right",
     "inverted": false,
     "operator": "OR",
     "values": [
