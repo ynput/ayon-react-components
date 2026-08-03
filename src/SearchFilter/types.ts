@@ -8,6 +8,7 @@ export type SearchFilterDropdownOption = {
   icon?: string | null
   label?: string
   color?: string | null
+  tooltip?: string
 }
 
 export type FilterValue = {
@@ -28,6 +29,7 @@ export type SearchFilterGroupOption = {
   label: string
   icon?: string | null
   color?: string | null
+  tooltip?: string
   showGroupLabel?: boolean
 }
 
