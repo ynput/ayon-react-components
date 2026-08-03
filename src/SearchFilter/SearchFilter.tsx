@@ -879,6 +879,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 {filters.map((filter, index) => {
                   const filterName = getFilterFromId(filter.id)
                   const option = options.find((o) => o.id === filterName)
+                  const groupDefinition = option?.group
+                    ? groupOptions.find((group) => group.name === option.group)
+                    : undefined
+                  const tooltipLabel = option?.group
+                    ? `${groupDefinition?.label || option.group} - ${getGroupFieldLabel(
+                        option.label,
+                      )}`
+                    : filter.label
+                  const tooltipValues = filter.values?.map((value) => value.label).join(', ')
+                  const tooltip = `${filter.inverted ? 'not ' : ''}${tooltipLabel}${
+                    tooltipValues ? `: ${tooltipValues}` : ''
+                  }`
 
                   return (
                     <SearchFilterItem
@@ -896,6 +908,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       isReadonly={filter.isReadonly}
                       isCompact={showIconsOnly || compact}
                       isSearch={filterName === SEARCH_FILTER_ID}
+                      tooltip={tooltip}
                       isInlineEditing={editingSearchChipId === filter.id}
                       rootOperator={rootOperator}
                       operatorChangeable={option?.operatorChangeable}
@@ -1071,6 +1084,11 @@ const getGroupedOptionLabel = (
   const fieldLabel = optionLabel.slice(0, separatorIndex)
   const scopeLabel = optionLabel.slice(separatorIndex + 3)
   return showGroupLabel ? `${scopeLabel} ${groupLabel || fieldLabel}` : scopeLabel
+}
+
+const getGroupFieldLabel = (optionLabel: string) => {
+  const separatorIndex = optionLabel.lastIndexOf(' - ')
+  return separatorIndex === -1 ? optionLabel : optionLabel.slice(separatorIndex + 3)
 }
 
 const mergeOptionsWithFilterValues = (filter: Filter, options: Option[]): Option[] => {
