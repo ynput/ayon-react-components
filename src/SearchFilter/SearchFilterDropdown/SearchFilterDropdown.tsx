@@ -373,6 +373,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 const displayColor = search
                   ? searchPresentation?.color ?? color
                   : groupPresentation?.color ?? color
+                const tooltip = search ? searchPresentation?.tooltip : groupPresentation?.tooltip
                 const adjustedColor = displayColor
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined
@@ -381,6 +382,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     key={id + '-' + parentId}
                     id={id}
                     data-parent={parentId}
+                    data-tooltip={tooltip}
                     tabIndex={0}
                     className={clsx({ selected: isSelected, highlighted: isHighlighted })}
                     {...pt.item}
