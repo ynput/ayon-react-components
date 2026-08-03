@@ -219,6 +219,21 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       }
     }
 
+    const openOptionsAfterFilter = (filterId: string, filters: Filter[]) => {
+      const option = options.find((candidate) => candidate.id === getFilterFromId(filterId))
+      if (option?.group) {
+        const groupOption = getShownRootOptions(options, groupOptions, disabledFilters).find(
+          (candidate) => candidate.id === `group-${option.group}`,
+        )
+        if (groupOption?.groupItems) {
+          openOptions(groupOption.groupItems, groupOption.id)
+          return
+        }
+      }
+
+      openInitialOptions(undefined, { filters })
+    }
+
     const closeOptions = () => {
       setOptions(null)
       setDropdownParentId(null)
@@ -362,11 +377,11 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             // close the dropdown with the new filters
             handleClose(updatedFilters)
           } else if (config?.restart) {
-            // go back to initial options
+            // go back to the group menu when this filter belongs to one
             setSearch('')
             setEditingSearchChipId(null)
             setIsEditingExisting(false)
-            openInitialOptions(undefined, { filters: updatedFilters })
+            openOptionsAfterFilter(parentId, updatedFilters)
           }
         }
       } else {
@@ -761,8 +776,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         onChange(filters)
         // clear chip editing state before going back to root
         closeSearch()
-        // go back to initial options
-        openInitialOptions(undefined, { filters })
+        // go back to the group menu when this filter belongs to one
+        const previousFilterId = config.previous || dropdownParentId || ''
+        openOptionsAfterFilter(previousFilterId, filters)
 
         if (config.previous) {
           // find the filter element by the id and focus it
