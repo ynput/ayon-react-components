@@ -16,8 +16,8 @@ export interface SearchFilterItemProps
   isSearch?: boolean
   isInlineEditing?: boolean
   inlineSuggestion?: string
-  tooltip?: string
   valueOverride?: SearchFilterDropdownOption
+  tooltip?: string
   // search is html input props
   search: React.InputHTMLAttributes<HTMLInputElement>
   // external ref for the inline chip input (used so the parent can control focus)
