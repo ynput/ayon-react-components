@@ -36,6 +36,13 @@ export const getFilteredOptions = (options: Option[], search: string, isCustomAl
     })
   }
 
+  // Root options should remain the primary navigation targets when both a
+  // group and its searchable children match the same query.
+  matched = [
+    ...matched.filter((option) => !option.searchOnly),
+    ...matched.filter((option) => option.searchOnly),
+  ]
+
   // if isCustomAllowed, add the custom value to the list
   if (isCustomAllowed && search.trim()) {
     matched.push({
