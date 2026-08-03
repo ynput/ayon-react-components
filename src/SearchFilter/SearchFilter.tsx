@@ -137,15 +137,14 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       for (const option of dropdownOptions) {
         if (option.isGroup && option.groupItems) {
           for (const groupOption of option.groupItems) {
-            const groupSearchLabel = `${option.label} - ${getGroupFieldLabel(
-              groupOption.searchLabel || groupOption.label,
-            )}`
+            const groupSearchLabel = `${option.label} - ${
+              groupOption.search?.label || getGroupFieldLabel(groupOption.label)
+            }`
 
             if (!addedItems.has(groupOption.id)) {
               addedItems.add(groupOption.id)
               flattenedOptions.push({
                 ...groupOption,
-                dropdown: undefined,
                 searchOnly: true,
                 searchLabel: groupSearchLabel,
               })
@@ -283,6 +282,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
     const handleOptionSelect: SearchFilterDropdownProps['onSelect'] = (option, config) => {
       const { values, parentId } = option
+      const filterOption = !parentId ? findOption(options, option.id) || option : option
 
       if (option.isGroup && option.groupItems) {
         openOptions(option.groupItems, option.id)
@@ -305,8 +305,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       // boolean options without explicit values are one-click toggles: add
       // immediately with an "on" value and close, instead of opening a values panel
       if (!parentId && option.type === 'boolean' && !option.values?.length) {
+        const { group: _group, search: _search, ...filterOptionData } = filterOption
         const addFilter: Filter = {
-          ...option,
+          ...filterOptionData,
           id: newId,
           // value label = filter name so the compact chip (label hidden) reads the
           // filter name instead of "Yes"
@@ -405,7 +406,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           }
         }
       } else {
-        const addFilter = { ...option, id: newId, values: [] }
+        const { group: _group, search: _search, ...filterOptionData } = filterOption
+        const addFilter = { ...filterOptionData, id: newId, values: [] }
         // remove not required fields
         delete addFilter.allowsCustomValues
 
@@ -1072,23 +1074,23 @@ const getShownRootOptions = (
 
   for (const [group, groupItems] of groupedOptions) {
     const groupDefinition = groupDefinitions.find((option) => option.name === group)
+    const groupPresentation = getGroupPresentation(groupItems[0].group)
+    const groupConfig = groupDefinition || groupPresentation
     const showGroupLabel = groupDefinition?.showGroupLabel ?? true
     const formattedGroupItems = groupItems.map((option) => {
-      const groupPresentation = getGroupPresentation(option.group)
+      const groupPresentation =
+        getGroupPresentation(option.group) ||
+        (groupDefinition
+          ? {
+              name: groupDefinition.name,
+              label: getGroupedOptionLabel(option.label, groupDefinition.label, showGroupLabel),
+              icon: groupDefinition.icon,
+              color: groupDefinition.color,
+            }
+          : undefined)
       return {
         ...option,
-        label:
-          groupPresentation?.label ||
-          (option.dropdown?.label
-            ? option.label
-            : getGroupedOptionLabel(option.label, groupDefinition?.label, showGroupLabel)),
-        dropdown: groupPresentation
-          ? {
-              icon: groupPresentation.icon,
-              label: groupPresentation.label,
-              color: groupPresentation.color,
-            }
-          : option.dropdown,
+        group: groupPresentation || option.group,
         // Keep the source label for search results; group presentation is local to this menu.
         searchLabel: option.label,
       }
@@ -1096,9 +1098,9 @@ const getShownRootOptions = (
 
     rootOptions.push({
       id: `group-${group}`,
-      label: groupDefinition?.label || group,
-      icon: groupDefinition?.icon,
-      color: groupDefinition?.color,
+      label: groupConfig?.label || group,
+      icon: groupConfig?.icon,
+      color: groupConfig?.color,
       values: [],
       groupItems: formattedGroupItems,
       isGroup: true,
