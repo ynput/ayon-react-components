@@ -165,7 +165,6 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
               addedItems.add(groupOption.id)
               flattenedOptions.push({
                 ...groupOption,
-                dropdown: undefined,
                 searchOnly: true,
                 searchLabel: groupSearchLabel,
               })
