@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
 import { matchSorter } from 'match-sorter'
 
-import { Filter, FilterOperator, Option } from './types'
+import { Filter, FilterOperator, Option, SearchFilterGroupOption } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem/SearchFilterItem'
 import SearchFilterDropdown, {
@@ -35,6 +35,7 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   filters: Filter[]
   onChange: (filters: Filter[]) => void
   options: Option[]
+  groupOptions?: SearchFilterGroupOption[]
   quickActions?: SearchFilterQuickAction[]
   onQuickAction?: (id: string) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
@@ -74,6 +75,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       onChange,
       onFinish,
       options = [],
+      groupOptions = [],
       quickActions,
       onQuickAction,
       compact = false,
@@ -133,6 +135,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const addedItems = new Set() // Track added items to avoid duplicates
 
       for (const option of dropdownOptions) {
+        if (option.isGroup && option.groupItems) {
+          for (const groupOption of option.groupItems) {
+            if (!addedItems.has(groupOption.id)) {
+              addedItems.add(groupOption.id)
+              flattenedOptions.push({
+                ...groupOption,
+                searchOnly: true,
+                searchLabel: `${option.label} - ${groupOption.label}`,
+              })
+            }
+          }
+        }
+
         if (
           (!allowedSearchChildren || allowedSearchChildren?.includes(option.id)) &&
           option.type !== 'boolean'
@@ -200,10 +215,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         closeOptions()
       } else {
         // open the initial options
-        openOptions(
-          getShownRootOptions(options, filters, enableMultipleSameFilters, disabledFilters),
-          null,
-        )
+        openOptions(getShownRootOptions(options, groupOptions, disabledFilters), null)
       }
     }
 
@@ -237,11 +249,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const handleOptionSelect: SearchFilterDropdownProps['onSelect'] = (option, config) => {
       const { values, parentId } = option
 
-      // check if the filter already exists and if we allow multiple of the same filter
-      if (!enableMultipleSameFilters && doesFilterExist(option.id, filters)) {
-        console.warn(
-          `Filter with id ${option.id} already exists. Enable enableMultipleSameFilters to allow multiple filters with the same id.`,
+      if (option.isGroup && option.groupItems) {
+        openOptions(option.groupItems, option.id)
+        setSearch('')
+        return
+      }
+
+      // edit an existing root filter instead of trying to add a duplicate
+      if (!parentId && !enableMultipleSameFilters && doesFilterExist(option.id, filters)) {
+        const existingFilter = filters.find(
+          (filter) => getFilterFromId(filter.id) === getFilterFromId(option.id),
         )
+        if (existingFilter) handleEditFilter(existingFilter.id)
         return
       }
 
@@ -979,20 +998,63 @@ const getEmptyPlaceholder = (enableGlobalSearch: boolean) => {
   return enableGlobalSearch ? 'Search and filter' : 'Filter'
 }
 
-// get all the top level fields that should be shown depending on the filters and enableMultipleSameFilters and disabledFilters
+// get all the top level fields, combining grouped fields into synthetic menu items
 const getShownRootOptions = (
   options: Option[],
-  filters: Filter[],
-  enableMultipleSameFilters: boolean,
+  groupDefinitions: SearchFilterGroupOption[],
   disabledFilters: string[] = [],
 ): Option[] => {
-  return options.filter((option) => {
-    if (disabledFilters.includes(option.id)) return false
-    if (!enableMultipleSameFilters) {
-      return !doesFilterExist(option.id, filters)
+  const availableOptions = options.filter((option) => !disabledFilters.includes(option.id))
+
+  const groupedOptions = new Map<string, Option[]>()
+  const rootOptions: Option[] = []
+
+  for (const option of availableOptions) {
+    if (!option.group) {
+      rootOptions.push(option)
+      continue
     }
-    return true
-  })
+
+    const groupOptions = groupedOptions.get(option.group) || []
+    groupOptions.push(option)
+    groupedOptions.set(option.group, groupOptions)
+  }
+
+  for (const [group, groupItems] of groupedOptions) {
+    const groupDefinition = groupDefinitions.find((option) => option.name === group)
+    const showGroupLabel = groupDefinition?.showGroupLabel ?? true
+    const formattedGroupItems = groupItems.map((option) => ({
+      ...option,
+      label: option.dropdown?.label
+        ? option.label
+        : getGroupedOptionLabel(option.label, groupDefinition?.label, showGroupLabel),
+    }))
+
+    rootOptions.push({
+      id: `group-${group}`,
+      label: groupDefinition?.label || group,
+      icon: groupDefinition?.icon,
+      color: groupDefinition?.color,
+      values: [],
+      groupItems: formattedGroupItems,
+      isGroup: true,
+    })
+  }
+
+  return rootOptions
+}
+
+const getGroupedOptionLabel = (
+  optionLabel: string,
+  groupLabel: string | undefined,
+  showGroupLabel: boolean,
+) => {
+  const separatorIndex = optionLabel.lastIndexOf(' - ')
+  if (separatorIndex === -1) return optionLabel
+
+  const fieldLabel = optionLabel.slice(0, separatorIndex)
+  const scopeLabel = optionLabel.slice(separatorIndex + 3)
+  return showGroupLabel ? `${scopeLabel} ${groupLabel || fieldLabel}` : scopeLabel
 }
 
 const mergeOptionsWithFilterValues = (filter: Filter, options: Option[]): Option[] => {

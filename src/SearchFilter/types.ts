@@ -4,6 +4,12 @@ export type FilterValuePt = {
   }
 }
 
+export type SearchFilterDropdownOption = {
+  icon?: string | null
+  label?: string
+  color?: string | null
+}
+
 export type FilterValue = {
   id: string
   label: string
@@ -13,9 +19,18 @@ export type FilterValue = {
   isCustom?: boolean
   parentId?: string | null
   pt?: FilterValuePt
+  dropdown?: SearchFilterDropdownOption
 }
 
 export type FilterOperator = 'AND' | 'OR'
+
+export type SearchFilterGroupOption = {
+  name: string
+  label: string
+  icon?: string | null
+  color?: string | null
+  showGroupLabel?: boolean
+}
 
 export type Filter = {
   id: string
@@ -43,6 +58,9 @@ export type Filter = {
 }
 
 export interface Option extends Filter {
+  group?: string // groups options under a shared root menu item
+  groupItems?: Option[] // internal options for a synthetic group menu item
+  isGroup?: boolean
   allowNoValue?: boolean // allows the filter to have "no value"
   allowHasValue?: boolean // allows the filter to have "has a value"
   allowsCustomValues?: boolean // allows the filter to have custom values
@@ -55,4 +73,5 @@ export interface Option extends Filter {
   contentBefore?: React.ReactNode // content to be shown before the filter
   contentAfter?: React.ReactNode // content to be shown after the filter
   pt?: FilterValuePt // pass-through styles for the filter value
+  dropdown?: SearchFilterDropdownOption
 }

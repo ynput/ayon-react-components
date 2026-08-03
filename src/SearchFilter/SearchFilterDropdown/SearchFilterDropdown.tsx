@@ -356,12 +356,19 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   isCustom,
                   contentBefore,
                   contentAfter,
+                  dropdown,
                 },
                 optionIndex,
               ) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const isHighlighted = highlightedIndex === optionIndex
-                const adjustedColor = color ? checkColorBrightness(color, '#1C2026') : undefined
+                const displayLabel =
+                  dropdown?.label ?? (search && searchLabel ? searchLabel : label)
+                const displayIcon = dropdown?.icon ?? icon
+                const displayColor = dropdown?.color ?? color
+                const adjustedColor = displayColor
+                  ? checkColorBrightness(displayColor, '#1C2026')
+                  : undefined
                 return (
                   <Styled.Item
                     key={id + '-' + parentId}
@@ -372,14 +379,16 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     {...pt.item}
                     onClick={(event) => handleSelectOption(event)}
                   >
-                    {icon && <Icon icon={icon as IconType} style={{ color: adjustedColor }} />}
-                    {img && <img src={img} alt={label} />}
+                    {displayIcon && (
+                      <Icon icon={displayIcon as IconType} style={{ color: adjustedColor }} />
+                    )}
+                    {img && <img src={img} alt={displayLabel} />}
                     {contentBefore && contentBefore}
                     <span
                       className="label"
                       style={{ color: optionPt?.style?.color ?? adjustedColor }}
                     >
-                      {search && searchLabel ? searchLabel : label}
+                      {displayLabel}
                     </span>
                     {!!contentAfter && contentAfter}
                     {isSelected && <Icon icon="check" className="check" />}
