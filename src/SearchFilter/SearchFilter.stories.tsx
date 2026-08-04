@@ -5,7 +5,7 @@ import { Filter, FilterOperator, Option } from './types'
 import { Button } from '../Buttons/Button'
 import { Icon } from '../Icon'
 import { SearchFilterCustomRangeDebug } from './SearchFilterCustomRangeDebug'
-import TaskFolderOptions from './task-folder-options.json'
+import TaskFolderOptions, { taskFolderGroupOptions } from './task-folder-options'
 const meta: Meta<typeof SearchFilter> = {
   component: SearchFilter,
   tags: ['autodocs'],
@@ -483,32 +483,6 @@ const feedOptions: Option[] = [
   },
 ]
 
-const scopeGroupOptions = [
-  {
-    name: 'Status',
-    label: 'Status',
-    icon: 'arrow_circle_right',
-    color: '#5bb8f5',
-    showGroupLabel: true,
-  },
-  { name: 'Tags', label: 'Tags', icon: 'local_offer', color: '#cd8de2' },
-  { name: 'Name', label: 'Name', icon: 'text_fields' },
-  { name: 'Priority', label: 'Priority', icon: 'keyboard_double_arrow_up', color: '#ff8585' },
-  { name: 'FPS', label: 'FPS', icon: '30fps_select' },
-  { name: 'Width', label: 'Width', icon: 'settings_overscan' },
-  { name: 'Height', label: 'Height', icon: 'settings_overscan' },
-  { name: 'Pixel aspect', label: 'Pixel aspect', icon: 'stop' },
-  { name: 'Clip In', label: 'Clip In', icon: 'line_start_diamond' },
-  { name: 'Clip Out', label: 'Clip Out', icon: 'line_end_diamond' },
-  { name: 'Start frame', label: 'Start frame', icon: 'line_start_circle' },
-  { name: 'End frame', label: 'End frame', icon: 'line_end_circle' },
-  { name: 'Handle start', label: 'Handle start', icon: 'line_start_square' },
-  { name: 'Handle end', label: 'Handle end', icon: 'line_end_square' },
-  { name: 'Start date', label: 'Start date', icon: 'calendar_month' },
-  { name: 'End date', label: 'End date', icon: 'calendar_month' },
-  { name: 'Description', label: 'Description', icon: 'description' },
-]
-
 const Template = (args: Story['args']) => {
   const [filters, setFilters] = useState<Filter[]>([])
   const [operator, setOperator] = useState<FilterOperator>('AND')
@@ -566,7 +540,7 @@ export const Scopes: Story = {
   args: {
     // @ts-ignore
     options: TaskFolderOptions,
-    groupOptions: scopeGroupOptions,
+    groupOptions: taskFolderGroupOptions,
     enableSearchChildren: true,
     allowedSearchChildren: undefined,
     enableGlobalSearch: true,
