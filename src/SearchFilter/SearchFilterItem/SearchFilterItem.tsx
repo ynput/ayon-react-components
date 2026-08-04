@@ -165,12 +165,10 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
         >
           {!isSearch && (
             <>
-              <Styled.ChipButton
-                className={clsx('button', { disabled: !isInvertedAllowed })}
-                icon={inverted ? 'do_not_disturb_on' : 'check_small'}
-                onClick={handleInvert}
-                data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
-              />
+              {/* Only show exclude button if inverted */}
+              {inverted && (
+                <Styled.SmallIcon icon={'do_not_disturb_on'} data-tooltip={'Exclude this filter'} />
+              )}
               {!isCompact && (
                 <span className="label" style={{ color: filterColor ?? undefined }}>
                   {filterIcon && <Icon icon={filterIcon as IconType} />}
