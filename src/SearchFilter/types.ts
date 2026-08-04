@@ -8,7 +8,6 @@ export type SearchFilterDropdownOption = {
   icon?: string | null
   label?: string
   color?: string | null
-  tooltip?: string
 }
 
 export type FilterValue = {
@@ -29,7 +28,6 @@ export type SearchFilterGroupOption = {
   label: string
   icon?: string | null
   color?: string | null
-  tooltip?: string
   showGroupLabel?: boolean
 }
 
@@ -60,6 +58,8 @@ export type Filter = {
 
 export interface Option extends Filter {
   group?: string | SearchFilterGroupOption // groups options under a shared root menu item
+  tooltip?: string // tooltip shown for this filter option
+  value?: SearchFilterDropdownOption // display override for selected filter values
   groupItems?: Option[] // internal options for a synthetic group menu item
   isGroup?: boolean
   allowNoValue?: boolean // allows the filter to have "no value"

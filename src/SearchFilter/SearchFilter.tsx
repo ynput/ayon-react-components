@@ -158,6 +158,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   flattenedOptions.push({
                     ...value,
                     parentId: groupOption.id,
+                    tooltip: groupOption.tooltip,
                     searchOnly: true,
                     searchLabel: `${groupSearchLabel} - ${value.label}`,
                   })
@@ -180,6 +181,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 flattenedOptions.push({
                   ...value,
                   parentId: option.id,
+                  tooltip: option.tooltip,
                   searchOnly: true,
                   searchLabel: `${option.label} - ${value.label}`,
                 })
@@ -305,7 +307,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       // boolean options without explicit values are one-click toggles: add
       // immediately with an "on" value and close, instead of opening a values panel
       if (!parentId && option.type === 'boolean' && !option.values?.length) {
-        const { group: _group, search: _search, ...filterOptionData } = filterOption
+        const {
+          group: _group,
+          search: _search,
+          tooltip: _tooltip,
+          ...filterOptionData
+        } = filterOption
         const addFilter: Filter = {
           ...filterOptionData,
           id: newId,
@@ -406,7 +413,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           }
         }
       } else {
-        const { group: _group, search: _search, ...filterOptionData } = filterOption
+        const {
+          group: _group,
+          search: _search,
+          tooltip: _tooltip,
+          ...filterOptionData
+        } = filterOption
         const addFilter = { ...filterOptionData, id: newId, values: [] }
         // remove not required fields
         delete addFilter.allowsCustomValues
@@ -904,11 +916,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   const groupDefinition = option?.group
                     ? groupOptions.find((group) => group.name === getGroupName(option.group))
                     : undefined
-                  const tooltipLabel = option?.group
-                    ? option.search?.tooltip ||
-                      groupDefinition?.tooltip ||
-                      getGroupFieldLabel(option.label)
-                    : filter.label
+                  const tooltipLabel =
+                    option?.tooltip ||
+                    (option?.group ? getGroupFieldLabel(option.label) : filter.label)
                   const tooltipValues = filter.values?.map((value) => value.label).join(', ')
                   const tooltip = `${filter.inverted ? 'not ' : ''}${tooltipLabel}${
                     tooltipValues ? `: ${tooltipValues}` : ''
@@ -931,6 +941,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       isCompact={showIconsOnly || compact}
                       isSearch={filterName === SEARCH_FILTER_ID}
                       tooltip={tooltip}
+                      valueOverride={option?.value}
                       isInlineEditing={editingSearchChipId === filter.id}
                       rootOperator={rootOperator}
                       operatorChangeable={option?.operatorChangeable}

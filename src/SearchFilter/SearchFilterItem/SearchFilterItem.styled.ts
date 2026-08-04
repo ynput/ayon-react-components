@@ -17,6 +17,9 @@ export const FilterItem = styled.div`
      value chip is allowed to shrink and ellipsis */
   > .button,
   > .label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
     flex-shrink: 0;
   }
 

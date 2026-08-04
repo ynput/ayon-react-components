@@ -357,6 +357,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   contentBefore,
                   contentAfter,
                   group,
+                  tooltip,
                   search: searchPresentation,
                 },
                 optionIndex,
@@ -373,7 +374,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 const displayColor = search
                   ? searchPresentation?.color ?? color
                   : groupPresentation?.color ?? color
-                const tooltip = search ? searchPresentation?.tooltip : groupPresentation?.tooltip
                 const adjustedColor = displayColor
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined

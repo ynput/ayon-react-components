@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useRef } from 'react'
-import { Filter, FilterOperator } from '../types'
+import { Filter, FilterOperator, SearchFilterDropdownOption } from '../types'
 import { SearchFilterItemValue, SearchFilterItemValueProps } from '../SearchFilterItemValue'
 import clsx from 'clsx'
+import { Icon, IconType } from '../../Icon'
 import * as Styled from './SearchFilterItem.styled'
 
 export interface SearchFilterItemProps
@@ -16,6 +17,7 @@ export interface SearchFilterItemProps
   isInlineEditing?: boolean
   inlineSuggestion?: string
   tooltip?: string
+  valueOverride?: SearchFilterDropdownOption
   // search is html input props
   search: React.InputHTMLAttributes<HTMLInputElement>
   // external ref for the inline chip input (used so the parent can control focus)
@@ -52,6 +54,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
       isInlineEditing,
       inlineSuggestion,
       tooltip,
+      valueOverride,
       rootOperator = 'AND',
       search,
       searchInputRef,
@@ -127,6 +130,9 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     }
 
     const rootOperatorLabel = rootOperator.toLowerCase()
+    const filterLabel = valueOverride?.label ?? label
+    const filterIcon = valueOverride?.icon ?? undefined
+    const filterColor = valueOverride?.color ?? undefined
 
     return (
       <>
@@ -165,7 +171,12 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 onClick={handleInvert}
                 data-tooltip={isInvertedAllowed ? 'include/exclude' : undefined}
               />
-              {!isCompact && <span className="label">{label}:</span>}
+              {!isCompact && (
+                <span className="label" style={{ color: filterColor ?? undefined }}>
+                  {filterIcon && <Icon icon={filterIcon as IconType} />}
+                  {filterLabel}:
+                </span>
+              )}
             </>
           )}
           {isInlineEditing ? (
