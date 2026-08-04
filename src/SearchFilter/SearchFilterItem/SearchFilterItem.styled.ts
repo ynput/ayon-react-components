@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Button, theme } from '../..'
+import { Button, Icon, theme } from '../..'
 
 export const FilterItem = styled.div`
   display: flex;
@@ -107,6 +107,10 @@ export const ChipInput = styled.input`
   &:focus {
     outline: none;
   }
+`
+
+export const SmallIcon = styled(Icon)`
+  font-size: 16px;
 `
 
 export const ChipButton = styled(Button)`
