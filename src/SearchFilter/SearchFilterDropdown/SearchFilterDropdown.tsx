@@ -382,7 +382,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     key={id + '-' + parentId}
                     id={id}
                     data-parent={parentId}
-                    data-tooltip={tooltip}
                     tabIndex={0}
                     className={clsx({ selected: isSelected, highlighted: isHighlighted })}
                     {...pt.item}

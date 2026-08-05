@@ -913,9 +913,6 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 {filters.map((filter, index) => {
                   const filterName = getFilterFromId(filter.id)
                   const option = options.find((o) => o.id === filterName)
-                  const groupDefinition = option?.group
-                    ? groupOptions.find((group) => group.name === getGroupName(option.group))
-                    : undefined
                   const tooltipLabel =
                     option?.tooltip ||
                     (option?.group ? getGroupFieldLabel(option.label) : filter.label)
@@ -1069,20 +1066,24 @@ const getShownRootOptions = (
   const availableOptions = options.filter((option) => !disabledFilters.includes(option.id))
 
   const groupedOptions = new Map<string, Option[]>()
-  const rootOptions: Option[] = []
+  const rootEntries: Array<{ option: Option } | { group: string }> = []
 
   for (const option of availableOptions) {
     if (!option.group) {
-      rootOptions.push(option)
+      rootEntries.push({ option })
       continue
     }
 
     const groupName = getGroupName(option.group)
-    const groupOptions = groupedOptions.get(groupName) || []
-    groupOptions.push(option)
-    groupedOptions.set(groupName, groupOptions)
+    if (!groupedOptions.has(groupName)) {
+      groupedOptions.set(groupName, [])
+      // Add the synthetic group where its first option appears in the source list.
+      rootEntries.push({ group: groupName })
+    }
+    groupedOptions.get(groupName)?.push(option)
   }
 
+  const groupOptionsByName = new Map<string, Option>()
   for (const [group, groupItems] of groupedOptions) {
     const groupDefinition = groupDefinitions.find((option) => option.name === group)
     const groupPresentation = getGroupPresentation(groupItems[0].group)
@@ -1107,7 +1108,7 @@ const getShownRootOptions = (
       }
     })
 
-    rootOptions.push({
+    groupOptionsByName.set(group, {
       id: `group-${group}`,
       label: groupConfig?.label || group,
       icon: groupConfig?.icon,
@@ -1118,7 +1119,9 @@ const getShownRootOptions = (
     })
   }
 
-  return rootOptions
+  return rootEntries.map((entry) =>
+    'option' in entry ? entry.option : groupOptionsByName.get(entry.group)!,
+  )
 }
 
 const getGroupedOptionLabel = (
