@@ -20,7 +20,10 @@ export const getFilteredOptions = (options: Option[], search: string, isCustomAl
     matched = matchSorter(matched, word, {
       keys: [
         { key: 'label', threshold: matchSorter.rankings.CONTAINS },
-        { key: 'searchLabel', threshold: matchSorter.rankings.CONTAINS },
+        {
+          key: (option) => (option.parentId ? option.label : option.searchLabel),
+          threshold: matchSorter.rankings.CONTAINS,
+        },
       ],
       baseSort: (a, b) => {
         const aIsRoot = !a.item.searchOnly
@@ -42,6 +45,12 @@ export const getFilteredOptions = (options: Option[], search: string, isCustomAl
     ...matched.filter((option) => !option.searchOnly),
     ...matched.filter((option) => option.searchOnly),
   ]
+
+  // Keep search results in depth order so dividers represent sections rather than individual fields.
+  const levelOrder = { group: 0, option: 1, value: 2 }
+  const getLevel = (option: Option) =>
+    option.isGroup ? 'group' : option.parentId ? 'value' : 'option'
+  matched.sort((a, b) => levelOrder[getLevel(a)] - levelOrder[getLevel(b)])
 
   // if isCustomAllowed, add the custom value to the list
   if (isCustomAllowed && search.trim()) {
