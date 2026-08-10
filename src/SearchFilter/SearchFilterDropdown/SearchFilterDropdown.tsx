@@ -371,7 +371,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   id,
                   parentId,
                   groupItems,
-                  values,
+                  values: optionValues,
                   allowsCustomValues,
                   label,
                   searchLabel,
@@ -407,7 +407,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   : undefined
                 const opensSubmenu =
                   !parentId &&
-                  (Boolean(groupItems) || Boolean(values?.length) || !!allowsCustomValues)
+                  (Boolean(groupItems) || Boolean(optionValues?.length) || !!allowsCustomValues)
                 return (
                   <Fragment key={id + '-' + parentId}>
                     {hasLevelDivider && <Styled.Divider aria-hidden="true" />}
