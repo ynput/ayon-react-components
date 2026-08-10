@@ -30,6 +30,7 @@ export interface SearchFilterDropdownProps {
   values: Filter[]
   parentId: string | null
   parentLabel?: string
+  parentBreadcrumbs?: string[]
   search: string
   searchInputRef?: React.RefObject<HTMLInputElement>
   listRef?: React.RefObject<HTMLUListElement>
@@ -64,6 +65,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       values,
       parentId,
       parentLabel,
+      parentBreadcrumbs = [],
       search,
       searchInputRef,
       listRef,
@@ -346,6 +348,21 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
 
     return (
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
+        {parentId && (
+          <Styled.MenuHeader>
+            <Button variant="text" onClick={() => handleBack()} icon="arrow_back">
+              Back
+            </Button>
+            <Styled.Breadcrumbs aria-label="Current filter path">
+              {parentBreadcrumbs.map((breadcrumb, index) => (
+                <Fragment key={`${breadcrumb}-${index}`}>
+                  {index > 0 && <span aria-hidden="true">/</span>}
+                  <span>{breadcrumb}</span>
+                </Fragment>
+              ))}
+            </Styled.Breadcrumbs>
+          </Styled.MenuHeader>
+        )}
         <Styled.Scrollable>
           <Styled.OptionsList ref={listRef} className={clsx({ searching: !!search })}>
             {filteredOptions.map(
@@ -380,16 +397,11 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   !!previousOption &&
                   level !== getOptionLevel(previousOption) &&
                   level !== 'group'
-                const groupPresentation = !search && typeof group === 'object' ? group : undefined
                 const displayLabel = search
                   ? searchLabel ?? searchPresentation?.label ?? label
-                  : groupPresentation?.label ?? label
-                const displayIcon = search
-                  ? searchPresentation?.icon ?? icon
-                  : groupPresentation?.icon ?? icon
-                const displayColor = search
-                  ? searchPresentation?.color ?? color
-                  : groupPresentation?.color ?? color
+                  : label
+                const displayIcon = search ? searchPresentation?.icon ?? icon : icon
+                const displayColor = search ? searchPresentation?.color ?? color : color
                 const adjustedColor = displayColor
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined
@@ -440,9 +452,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
             {filteredOptions.length === 0 && !isCustomAllowed && <span>No filters found</span>}
             {parentId && (
               <Styled.Toolbar className="toolbar">
-                <Button variant="text" onClick={() => handleBack()} icon="arrow_back">
-                  Back
-                </Button>
                 <Spacer />
                 <Styled.Operations className="operations">
                   {!!operationsTemplate ? (
@@ -474,15 +483,17 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     </>
                   )}
                 </Styled.Operations>
-                <Button
-                  variant="filled"
-                  onClick={() => {
-                    onConfirmAndClose && onConfirmAndClose(values)
-                  }}
-                  icon="check"
-                >
-                  Confirm
-                </Button>
+                {!!parentFilter?.values?.length && (
+                  <Button
+                    variant="filled"
+                    onClick={() => {
+                      onConfirmAndClose && onConfirmAndClose(values)
+                    }}
+                    icon="check"
+                  >
+                    Confirm
+                  </Button>
+                )}
               </Styled.Toolbar>
             )}
           </Styled.OptionsList>

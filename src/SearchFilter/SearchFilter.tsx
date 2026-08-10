@@ -122,6 +122,26 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const parentOption = options.find(
       (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
     )
+    const parentMenuOption = dropdownParentId
+      ? getShownRootOptions(options, groupOptions, disabledFilters).find(
+          (option) => option.id === dropdownParentId,
+        )
+      : undefined
+    const parentBreadcrumbs = parentOption
+      ? [
+          ...(parentOption.group
+            ? [
+                getGroupPresentation(parentOption.group)?.label ||
+                  groupOptions.find((group) => group.name === getGroupName(parentOption.group))
+                    ?.label ||
+                  getGroupName(parentOption.group),
+              ]
+            : []),
+          parentOption.label,
+        ]
+      : parentMenuOption
+      ? [parentMenuOption.label]
+      : []
 
     const allOptions = useMemo(() => {
       if (!dropdownOptions) return null
@@ -1026,6 +1046,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             values={filters}
             parentId={dropdownParentId}
             parentLabel={parentOption?.label}
+            parentBreadcrumbs={parentBreadcrumbs}
             isCustomAllowed={
               !!parentOption?.allowsCustomValues || (!parentOption && !!enableGlobalSearch)
             }
@@ -1101,7 +1122,12 @@ const getShownRootOptions = (
           : undefined)
       return {
         ...option,
-        group: groupPresentation || option.group,
+        group: groupPresentation
+          ? {
+              ...groupPresentation,
+              label: getGroupedOptionLabel(option.label, groupDefinition?.label, showGroupLabel),
+            }
+          : option.group,
         // Keep the source label for search results; group presentation is local to this menu.
         searchLabel: option.label,
       }
