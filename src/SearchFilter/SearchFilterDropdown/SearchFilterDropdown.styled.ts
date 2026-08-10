@@ -17,19 +17,16 @@ export const OptionsContainer = styled.div`
   z-index: 301;
 `
 
-export const BackButton = styled(Button)`
-  &.hasIcon {
-    padding: 2px 4px;
-  }
-`
+export const BackButton = styled(Button)``
 
 export const MenuHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--base-gap-large);
-  padding: var(--padding-m);
-  padding-bottom: 0;
+  padding: 0 var(--padding-m);
+  margin-top: var(--padding-m);
+  margin-bottom: -4px;
 `
 
 export const Breadcrumbs = styled.div`

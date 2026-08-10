@@ -350,9 +350,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       <Styled.OptionsContainer onKeyDown={handleKeyDown} {...props}>
         {parentId && (
           <Styled.MenuHeader>
-            <Button variant="text" onClick={() => handleBack()} icon="arrow_back">
+            <Styled.BackButton variant="text" onClick={() => handleBack()} icon="arrow_back">
               Back
-            </Button>
+            </Styled.BackButton>
             <Styled.Breadcrumbs aria-label="Current filter path">
               {parentBreadcrumbs.map((breadcrumb, index) => (
                 <Fragment key={`${breadcrumb}-${index}`}>
@@ -450,7 +450,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
               },
             )}
             {filteredOptions.length === 0 && !isCustomAllowed && <span>No filters found</span>}
-            {parentId && (
+            {parentId && !!parentFilter?.values?.length && (
               <Styled.Toolbar className="toolbar">
                 <Spacer />
                 <Styled.Operations className="operations">
@@ -483,17 +483,16 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                     </>
                   )}
                 </Styled.Operations>
-                {!!parentFilter?.values?.length && (
-                  <Button
-                    variant="filled"
-                    onClick={() => {
-                      onConfirmAndClose && onConfirmAndClose(values)
-                    }}
-                    icon="check"
-                  >
-                    Confirm
-                  </Button>
-                )}
+
+                <Button
+                  variant="filled"
+                  onClick={() => {
+                    onConfirmAndClose && onConfirmAndClose(values)
+                  }}
+                  icon="check"
+                >
+                  Confirm
+                </Button>
               </Styled.Toolbar>
             )}
           </Styled.OptionsList>
