@@ -127,6 +127,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           (option) => option.id === dropdownParentId,
         )
       : undefined
+    const isGroupMenu = !!parentMenuOption?.isGroup
     const parentBreadcrumbs = parentOption
       ? [
           ...(parentOption.group
@@ -213,11 +214,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       return [...dropdownOptions, ...flattenedOptions]
     }, [dropdownOptions, enableSearchChildren, allowedSearchChildren])
 
-    // keep focus on the inline bar input when the dropdown opens at root level;
-    // inside a filter's value panel the dropdown renders its own input instead
+    // Keep focus on the bar input for root and group menus; filter value panels use a chip input.
     useEffect(() => {
-      if (dropdownOptions && !dropdownParentId) searchInputRef.current?.focus()
-    }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId])
+      if (dropdownOptions && (!dropdownParentId || isGroupMenu)) searchInputRef.current?.focus()
+    }, [dropdownOptions?.map((o) => o.id).join('__'), dropdownParentId, isGroupMenu])
 
     const suggestedOption = useMemo(() => {
       if (!enableAutosuggestion || !search || !allOptions) return null
@@ -308,6 +308,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       if (option.isGroup && option.groupItems) {
         openOptions(option.groupItems, option.id)
         setSearch('')
+        setTimeout(() => searchInputRef.current?.focus(), 0)
         return
       }
 
@@ -983,7 +984,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                 })}
               </Styled.SearchBarFilters>
             )}
-            {!dropdownParentId && !editingSearchChipId && (
+            {(!dropdownParentId || isGroupMenu) && !editingSearchChipId && (
               <Styled.SearchInputWrapper>
                 {inlineSuggestion &&
                   search &&
