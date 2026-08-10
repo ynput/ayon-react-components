@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode, useImperativeHandle, useMemo, useRef } from 'react'
+import { Fragment, forwardRef, ReactNode, useImperativeHandle, useMemo, useRef } from 'react'
 import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
@@ -253,7 +253,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
-        const prev = target.previousElementSibling as HTMLElement
+        let prev = target.previousElementSibling as HTMLElement | null
+        while (prev && prev.tagName !== 'LI') {
+          prev = prev.previousElementSibling as HTMLElement | null
+        }
         // no previous option -> jump back up to the active search input
         if (!prev || prev.classList.contains('search')) {
           focusSearch()
@@ -266,7 +269,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
         event.preventDefault()
         event.stopPropagation()
         const target = event.target as HTMLElement
-        const next = target.nextElementSibling as HTMLElement
+        let next = target.nextElementSibling as HTMLElement | null
+        while (next && next.tagName !== 'LI') {
+          next = next.nextElementSibling as HTMLElement | null
+        }
         next?.focus()
       }
       // arrow left or right
@@ -347,6 +353,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 {
                   id,
                   parentId,
+                  groupItems,
                   label,
                   searchLabel,
                   icon,
@@ -364,6 +371,13 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
               ) => {
                 const isSelected = getIsValueSelected(id, parentId, values)
                 const isHighlighted = highlightedIndex === optionIndex
+                const level = getOptionLevel({ isGroup: !!groupItems, parentId })
+                const previousOption = filteredOptions[optionIndex - 1]
+                const hasLevelDivider =
+                  !!search &&
+                  !!previousOption &&
+                  level !== getOptionLevel(previousOption) &&
+                  level !== 'group'
                 const groupPresentation = !search && typeof group === 'object' ? group : undefined
                 const displayLabel = search
                   ? searchLabel ?? searchPresentation?.label ?? label
@@ -378,40 +392,42 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined
                 return (
-                  <Styled.Item
-                    key={id + '-' + parentId}
-                    id={id}
-                    data-parent={parentId}
-                    tabIndex={0}
-                    className={clsx({ selected: isSelected, highlighted: isHighlighted })}
-                    {...pt.item}
-                    onClick={(event) => handleSelectOption(event)}
-                  >
-                    {displayIcon && (
-                      <Icon icon={displayIcon as IconType} style={{ color: adjustedColor }} />
-                    )}
-                    {img && <img src={img} alt={displayLabel} />}
-                    {contentBefore && contentBefore}
-                    <span
-                      className="label"
-                      style={{ color: optionPt?.style?.color ?? adjustedColor }}
+                  <Fragment key={id + '-' + parentId}>
+                    {hasLevelDivider && <Styled.Divider aria-hidden="true" />}
+                    <Styled.Item
+                      id={id}
+                      data-parent={parentId}
+                      tabIndex={0}
+                      className={clsx({ selected: isSelected, highlighted: isHighlighted })}
+                      {...pt.item}
+                      onClick={(event) => handleSelectOption(event)}
                     >
-                      {displayLabel}
-                    </span>
-                    {!!contentAfter && contentAfter}
-                    {isSelected && <Icon icon="check" className="check" />}
-                    {!isSelected &&
-                      search &&
-                      isCustom &&
-                      !parentFilter?.id.includes(SEARCH_FILTER_ID) && (
-                        <ShortcutTag className="search">
-                          {window.navigator.userAgent.toLowerCase().includes('mac')
-                            ? 'Cmd'
-                            : 'Ctrl'}
-                          +Enter ↵
-                        </ShortcutTag>
+                      {displayIcon && (
+                        <Icon icon={displayIcon as IconType} style={{ color: adjustedColor }} />
                       )}
-                  </Styled.Item>
+                      {img && <img src={img} alt={displayLabel} />}
+                      {contentBefore && contentBefore}
+                      <span
+                        className="label"
+                        style={{ color: optionPt?.style?.color ?? adjustedColor }}
+                      >
+                        {displayLabel}
+                      </span>
+                      {!!contentAfter && contentAfter}
+                      {isSelected && <Icon icon="check" className="check" />}
+                      {!isSelected &&
+                        search &&
+                        isCustom &&
+                        !parentFilter?.id.includes(SEARCH_FILTER_ID) && (
+                          <ShortcutTag className="search">
+                            {window.navigator.userAgent.toLowerCase().includes('mac')
+                              ? 'Cmd'
+                              : 'Ctrl'}
+                            +Enter ↵
+                          </ShortcutTag>
+                        )}
+                    </Styled.Item>
+                  </Fragment>
                 )
               },
             )}
@@ -471,6 +487,12 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
 )
 
 export default SearchFilterDropdown
+
+const getOptionLevel = (option: Pick<Option, 'isGroup' | 'parentId'>) => {
+  if (option.isGroup) return 'group'
+  if (option.parentId) return 'value'
+  return 'option'
+}
 
 export const getIsValueSelected = (
   id: string,

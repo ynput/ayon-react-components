@@ -101,6 +101,13 @@ export const Item = styled.li`
   }
 `
 
+export const Divider = styled.hr`
+  width: 100%;
+  margin: var(--base-gap-small) 0;
+  border: 0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
+`
+
 export const SearchContainer = styled.div`
   position: relative;
   width: 100%;

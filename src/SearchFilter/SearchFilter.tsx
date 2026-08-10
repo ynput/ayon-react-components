@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
-import { matchSorter } from 'match-sorter'
 
 import { Filter, FilterOperator, Option, SearchFilterGroupOption } from './types'
 import * as Styled from './SearchFilter.styled'
