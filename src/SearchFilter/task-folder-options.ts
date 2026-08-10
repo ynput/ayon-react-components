@@ -8,6 +8,12 @@ const scopeIcons: Record<Scope, string> = {
   Folder: 'folder',
 }
 
+const getScopeGroup = (scope: Scope): SearchFilterGroupOption => ({
+  name: scope.toLowerCase(),
+  label: scope,
+  icon: scopeIcons[scope],
+})
+
 const statusValues: FilterValue[] = [
   ['Not ready', 'fiber_new', '#3d444f'],
   ['Ready to start', 'timer', '#bababa'],
@@ -83,11 +89,7 @@ const createGroupedOption = (
   id: `${scope.toLowerCase()}_${id}`,
   type,
   label: label,
-  group: {
-    name: id,
-    label: `${scope} ${label}`,
-    icon: scopeIcons[scope],
-  },
+  group: getScopeGroup(scope),
   tooltip: `${scope} ${label}`,
   search: { label: scope },
   value: { icon: scopeIcons[scope] },
@@ -122,7 +124,8 @@ const taskOptions: Option[] = [
   {
     id: 'task_taskType',
     type: 'string',
-    label: 'Task Type - Task',
+    label: 'Task Type',
+    group: getScopeGroup('Task'),
     icon: 'check_circle',
     values: taskTypeValues,
     allowExcludes: true,
@@ -135,7 +138,8 @@ const folderOptions: Option[] = [
   {
     id: 'folder_folderType',
     type: 'string',
-    label: 'Folder Type - Folder',
+    label: 'Folder Type',
+    group: getScopeGroup('Folder'),
     icon: 'folder',
     values: ['Folder', 'Library', 'Asset', 'Sequence', 'Shot'].map((label) => ({
       id: label,
@@ -149,41 +153,11 @@ const folderOptions: Option[] = [
 
 const scopedOptions: Option[] = [...taskOptions, ...folderOptions]
 
-const getScope = (option: Option) => option.id.split('_', 1)[0]
+export const taskFolderGroupOptions: SearchFilterGroupOption[] = [
+  getScopeGroup('Task'),
+  getScopeGroup('Folder'),
+]
 
-const groupedOptions = new Map<string, Option[]>()
-for (const option of scopedOptions) {
-  if (!option.group) continue
-  const groupName = typeof option.group === 'string' ? option.group : option.group.name
-  const options = groupedOptions.get(groupName) || []
-  options.push(option)
-  groupedOptions.set(groupName, options)
-}
-
-export const taskFolderGroupOptions: SearchFilterGroupOption[] = [...groupedOptions].flatMap(
-  ([name, options]) => {
-    const scopes = new Set(options.map(getScope))
-    if (scopes.size < 2) return []
-
-    const firstOption = options[0]
-    const group = typeof firstOption.group === 'string' ? undefined : firstOption.group
-    return [
-      {
-        name,
-        label: firstOption.label,
-        icon: firstOption.icon,
-        color: group?.color,
-      },
-    ]
-  },
-)
-
-const groupedFieldNames = new Set(taskFolderGroupOptions.map(({ name }) => name))
-
-export const taskFolderOptions: Option[] = scopedOptions.map((option) => {
-  if (!option.group) return option
-  const groupName = typeof option.group === 'string' ? option.group : option.group.name
-  return groupedFieldNames.has(groupName) ? option : { ...option, group: undefined }
-})
+export const taskFolderOptions: Option[] = scopedOptions
 
 export default taskFolderOptions

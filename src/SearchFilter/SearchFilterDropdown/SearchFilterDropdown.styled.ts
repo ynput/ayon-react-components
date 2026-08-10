@@ -17,6 +17,29 @@ export const OptionsContainer = styled.div`
   z-index: 301;
 `
 
+export const BackButton = styled(Button)`
+  &.hasIcon {
+    padding: 2px 4px;
+  }
+`
+
+export const MenuHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--base-gap-large);
+  padding: var(--padding-m);
+  padding-bottom: 0;
+`
+
+export const Breadcrumbs = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  min-width: 0;
+  color: var(--md-sys-color-outline);
+`
+
 export const Scrollable = styled.div`
   overflow: auto;
   height: 100%;
