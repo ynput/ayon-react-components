@@ -354,6 +354,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   id,
                   parentId,
                   groupItems,
+                  values,
+                  allowsCustomValues,
                   label,
                   searchLabel,
                   icon,
@@ -391,6 +393,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 const adjustedColor = displayColor
                   ? checkColorBrightness(displayColor, '#1C2026')
                   : undefined
+                const opensSubmenu =
+                  !parentId &&
+                  (Boolean(groupItems) || Boolean(values?.length) || !!allowsCustomValues)
                 return (
                   <Fragment key={id + '-' + parentId}>
                     {hasLevelDivider && <Styled.Divider aria-hidden="true" />}
@@ -426,6 +431,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                             +Enter ↵
                           </ShortcutTag>
                         )}
+                      {opensSubmenu && <Icon icon="chevron_right" className="submenu-arrow" />}
                     </Styled.Item>
                   </Fragment>
                 )

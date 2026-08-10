@@ -74,6 +74,11 @@ export const Item = styled.li`
     margin-left: auto;
   }
 
+  .submenu-arrow {
+    margin-left: auto;
+    color: var(--md-sys-color-outline);
+  }
+
   &:hover {
     background-color: var(--md-sys-color-surface-container-hover);
   }
