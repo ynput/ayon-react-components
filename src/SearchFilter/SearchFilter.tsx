@@ -39,8 +39,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onQuickAction?: (id: string) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
   onFinish?: (filters: Filter[]) => void
-  // live global-search text (root-level typing / in-place search-chip editing); fires '' when cleared or committed as a chip
-  onSearchChange?: (search: string) => void
+  // live search text plus the filter whose value dropdown is open (null at root level)
+  onSearchChange?: (search: string, filter: string | null) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
     enableMultiple?: boolean
@@ -122,10 +122,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     // index of the currently highlighted dropdown option (React state instead of browser focus)
     const [highlightedOptionIndex, setHighlightedOptionIndex] = useState<number | null>(null)
 
-    // search is global search text only while no filter's value dropdown is open
     useEffect(() => {
-      if (!onSearchChange) return
-      onSearchChange(!dropdownParentId ? search : '')
+      onSearchChange?.(search, dropdownParentId)
     }, [search, dropdownParentId])
 
     const parentOption = options.find(
@@ -288,17 +286,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       setDropdownParentId(null)
     }
 
-    // with enableMultiple: false only the newest global search chip survives a commit
-    const collapseGlobalSearch = (next: Filter[]) => {
+    // with enableMultiple: false a commit leaves a single global search chip:
+    // the one being edited when keepId names it, otherwise the newest
+    const collapseGlobalSearch = (next: Filter[], keepId?: string) => {
       if (globalSearchConfig?.enableMultiple !== false) return next
-      let lastSearchIndex = -1
-      next.forEach((filter, index) => {
-        if (getFilterFromId(filter.id) === SEARCH_FILTER_ID) lastSearchIndex = index
-      })
-      if (lastSearchIndex === -1) return next
+      const searchIds = next
+        .filter((filter) => getFilterFromId(filter.id) === SEARCH_FILTER_ID)
+        .map((filter) => filter.id)
+      if (searchIds.length < 2) return next
+      const keep =
+        keepId && searchIds.includes(keepId) ? keepId : searchIds[searchIds.length - 1]
       return next.filter(
-        (filter, index) =>
-          getFilterFromId(filter.id) !== SEARCH_FILTER_ID || index === lastSearchIndex,
+        (filter) => getFilterFromId(filter.id) !== SEARCH_FILTER_ID || filter.id === keep,
       )
     }
 
@@ -524,9 +523,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const id = editingSearchChipId
       if (!id) return
       const text = search.trim()
-      const updatedFilters = text
-        ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
-        : filters.filter((f) => f.id !== id)
+      const updatedFilters = collapseGlobalSearch(
+        text
+          ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
+          : filters.filter((f) => f.id !== id),
+        id,
+      )
       closeSearch()
       onChange(updatedFilters)
       onFinish && onFinish(updatedFilters)
