@@ -39,6 +39,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onQuickAction?: (id: string) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
   onFinish?: (filters: Filter[]) => void
+  // live global-search text (root-level typing / in-place search-chip editing); fires '' when cleared or committed as a chip
+  onSearchChange?: (search: string) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
     enableMultiple?: boolean
@@ -73,6 +75,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       filters = [],
       onChange,
       onFinish,
+      onSearchChange,
       options = [],
       groupOptions = [],
       quickActions,
@@ -118,6 +121,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const [isEditingExisting, setIsEditingExisting] = useState(false)
     // index of the currently highlighted dropdown option (React state instead of browser focus)
     const [highlightedOptionIndex, setHighlightedOptionIndex] = useState<number | null>(null)
+
+    // search is global search text only while no filter's value dropdown is open
+    useEffect(() => {
+      if (!onSearchChange) return
+      onSearchChange(!dropdownParentId ? search : '')
+    }, [search, dropdownParentId])
 
     const parentOption = options.find(
       (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
@@ -279,9 +288,25 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       setDropdownParentId(null)
     }
 
+    // with enableMultiple: false only the newest global search chip survives a commit
+    const collapseGlobalSearch = (next: Filter[]) => {
+      if (globalSearchConfig?.enableMultiple !== false) return next
+      let lastSearchIndex = -1
+      next.forEach((filter, index) => {
+        if (getFilterFromId(filter.id) === SEARCH_FILTER_ID) lastSearchIndex = index
+      })
+      if (lastSearchIndex === -1) return next
+      return next.filter(
+        (filter, index) =>
+          getFilterFromId(filter.id) !== SEARCH_FILTER_ID || index === lastSearchIndex,
+      )
+    }
+
     const handleClose = (filters: Filter[]) => {
       // remove any filters that have no values
-      const updatedFilters = filters.filter((filter) => filter.values && filter.values.length > 0)
+      const updatedFilters = collapseGlobalSearch(
+        filters.filter((filter) => filter.values && filter.values.length > 0),
+      )
       onChange(updatedFilters)
 
       // clear the inline search text and close the dropdown
@@ -827,7 +852,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     ) => {
       if (config?.restart) {
         // update filters
-        onChange(filters)
+        onChange(collapseGlobalSearch(filters))
         // clear chip editing state before going back to root
         closeSearch()
         // go back to the group menu when this filter belongs to one
