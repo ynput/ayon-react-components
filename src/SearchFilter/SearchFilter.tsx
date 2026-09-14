@@ -39,6 +39,8 @@ export interface SearchFilterProps extends Omit<React.HTMLAttributes<HTMLDivElem
   onQuickAction?: (id: string) => void
   compact?: boolean // shrink the bar to 28px with smaller padding/text (left search icon stays normal)
   onFinish?: (filters: Filter[]) => void
+  // live search text plus the filter whose value dropdown is open (null at root level)
+  onSearchChange?: (search: string, filter: string | null) => void
   enableGlobalSearch?: boolean
   globalSearchConfig?: {
     enableMultiple?: boolean
@@ -73,6 +75,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       filters = [],
       onChange,
       onFinish,
+      onSearchChange,
       options = [],
       groupOptions = [],
       quickActions,
@@ -118,6 +121,25 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const [isEditingExisting, setIsEditingExisting] = useState(false)
     // index of the currently highlighted dropdown option (React state instead of browser focus)
     const [highlightedOptionIndex, setHighlightedOptionIndex] = useState<number | null>(null)
+
+    // search text and dropdown scope both change programmatically (chip commit, menu open),
+    // so the ref carries the settled pair to every onSearchChange call
+    const searchStateRef = useRef<{ search: string; parentId: string | null }>({
+      search: '',
+      parentId: null,
+    })
+
+    const updateSearch = (next: string) => {
+      searchStateRef.current.search = next
+      setSearch(next)
+      onSearchChange?.(next, searchStateRef.current.parentId)
+    }
+
+    const updateDropdownParentId = (next: string | null) => {
+      searchStateRef.current.parentId = next
+      setDropdownParentId(next)
+      onSearchChange?.(searchStateRef.current.search, next)
+    }
 
     const parentOption = options.find(
       (option) => dropdownParentId && option.id === getFilterFromId(dropdownParentId),
@@ -232,14 +254,14 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const inlineSuggestion = suggestedOption?.label || ''
 
     const closeSearch = () => {
-      setSearch('')
+      updateSearch('')
       setEditingSearchChipId(null)
       setIsEditingExisting(false)
     }
 
     const openOptions = (options: Option[], parentId: string | null) => {
       setOptions(options)
-      setDropdownParentId(parentId)
+      updateDropdownParentId(parentId)
     }
 
     type OpenInitialOptionsConfig = {
@@ -276,12 +298,29 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
     const closeOptions = () => {
       setOptions(null)
-      setDropdownParentId(null)
+      updateDropdownParentId(null)
+    }
+
+    // with enableMultiple: false a commit leaves a single global search chip:
+    // the one being edited when keepId names it, otherwise the newest
+    const collapseGlobalSearch = (next: Filter[], keepId?: string) => {
+      if (globalSearchConfig?.enableMultiple !== false) return next
+      const searchIds = next
+        .filter((filter) => getFilterFromId(filter.id) === SEARCH_FILTER_ID)
+        .map((filter) => filter.id)
+      if (searchIds.length < 2) return next
+      const keep =
+        keepId && searchIds.includes(keepId) ? keepId : searchIds[searchIds.length - 1]
+      return next.filter(
+        (filter) => getFilterFromId(filter.id) !== SEARCH_FILTER_ID || filter.id === keep,
+      )
     }
 
     const handleClose = (filters: Filter[]) => {
       // remove any filters that have no values
-      const updatedFilters = filters.filter((filter) => filter.values && filter.values.length > 0)
+      const updatedFilters = collapseGlobalSearch(
+        filters.filter((filter) => filter.values && filter.values.length > 0),
+      )
       onChange(updatedFilters)
 
       // clear the inline search text and close the dropdown
@@ -307,7 +346,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
       if (option.isGroup && option.groupItems) {
         openOptions(option.groupItems, option.id)
-        setSearch('')
+        updateSearch('')
         setTimeout(() => searchInputRef.current?.focus(), 0)
         return
       }
@@ -426,7 +465,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             handleClose(updatedFilters)
           } else if (config?.restart) {
             // go back to the group menu when this filter belongs to one
-            setSearch('')
+            updateSearch('')
             setEditingSearchChipId(null)
             setIsEditingExisting(false)
             openOptionsAfterFilter(parentId, updatedFilters)
@@ -464,7 +503,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       // parentId case: preserve editingSearchChipId — it is cleared by handleClose when done
 
       // RESET SEARCH
-      setSearch('')
+      updateSearch('')
     }
 
     const handleEditFilter = (id: string) => {
@@ -475,7 +514,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       if (filter && getFilterFromId(id) === SEARCH_FILTER_ID) {
         const raw = filter.values?.[0]?.label || String(filter.values?.[0]?.id || '')
         setEditingSearchChipId(id)
-        setSearch(raw.replace(/%/g, '')) // strip LIKE wildcards for display
+        updateSearch(raw.replace(/%/g, '')) // strip LIKE wildcards for display
         closeOptions()
         return
       }
@@ -486,9 +525,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
       const firstCustomValue = filter?.values?.find((v) => v.isCustom)
       if (firstCustomValue) {
-        setSearch(firstCustomValue.label || String(firstCustomValue.id))
+        updateSearch(firstCustomValue.label || String(firstCustomValue.id))
       } else {
-        setSearch('')
+        updateSearch('')
       }
 
       handleEditFilterValues(id, filter)
@@ -499,9 +538,12 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       const id = editingSearchChipId
       if (!id) return
       const text = search.trim()
-      const updatedFilters = text
-        ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
-        : filters.filter((f) => f.id !== id)
+      const updatedFilters = collapseGlobalSearch(
+        text
+          ? filters.map((f) => (f.id === id ? { ...f, values: [{ id: text, label: text }] } : f))
+          : filters.filter((f) => f.id !== id),
+        id,
+      )
       closeSearch()
       onChange(updatedFilters)
       onFinish && onFinish(updatedFilters)
@@ -827,7 +869,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     ) => {
       if (config?.restart) {
         // update filters
-        onChange(filters)
+        onChange(collapseGlobalSearch(filters))
         // clear chip editing state before going back to root
         closeSearch()
         // go back to the group menu when this filter belongs to one
@@ -972,7 +1014,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       searchInputRef={editingSearchChipId === filter.id ? chipSearchRef : undefined}
                       search={{
                         value: search,
-                        onChange: (e) => setSearch(e.target.value),
+                        onChange: (e) => updateSearch(e.target.value),
                         onKeyDown: handleChipInputKeyDown,
                       }}
                       onEdit={handleEditFilter}
@@ -1001,7 +1043,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   placeholder={filters.length ? '' : getEmptyPlaceholder(enableGlobalSearch)}
                   onChange={(e) => {
                     const val = e.target.value
-                    setSearch(val)
+                    updateSearch(val)
                     if (val && !dropdownOptions) openInitialOptions(undefined, { filters })
                   }}
                   onKeyDown={handleInputKeyDown}
