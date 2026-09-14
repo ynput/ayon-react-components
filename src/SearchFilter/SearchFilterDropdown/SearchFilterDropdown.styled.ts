@@ -66,6 +66,11 @@ export const OptionsList = styled.ul`
   }
 `
 
+export const Loading = styled.span`
+  padding: 6px 8px;
+  color: var(--md-sys-color-outline);
+`
+
 export const Item = styled.li`
   margin: 0;
   list-style: none;
