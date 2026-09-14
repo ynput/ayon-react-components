@@ -35,6 +35,7 @@ export interface SearchFilterDropdownProps {
   searchInputRef?: React.RefObject<HTMLInputElement>
   listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
+  valuesStatus?: 'loading' | 'loaded' | 'error' // state of the parent filter's lazily loaded values
   isHasValueAllowed?: boolean
   isNoValueAllowed?: boolean
   isInvertedAllowed?: boolean
@@ -70,6 +71,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       searchInputRef,
       listRef,
       isCustomAllowed,
+      valuesStatus,
       isHasValueAllowed,
       isNoValueAllowed,
       isInvertedAllowed,
@@ -373,6 +375,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   groupItems,
                   values: optionValues,
                   allowsCustomValues,
+                  loadValues,
                   label,
                   searchLabel,
                   icon,
@@ -407,7 +410,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   : undefined
                 const opensSubmenu =
                   !parentId &&
-                  (Boolean(groupItems) || Boolean(optionValues?.length) || !!allowsCustomValues)
+                  (Boolean(groupItems) ||
+                    Boolean(optionValues?.length) ||
+                    !!allowsCustomValues ||
+                    !!loadValues)
                 return (
                   <Fragment key={id + '-' + parentId}>
                     {hasLevelDivider && <Styled.Divider aria-hidden="true" />}
@@ -449,7 +455,13 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 )
               },
             )}
-            {filteredOptions.length === 0 && !isCustomAllowed && <span>No filters found</span>}
+            {valuesStatus === 'loading' && <Styled.Loading>Loading...</Styled.Loading>}
+            {valuesStatus === 'error' && <Styled.Loading>Could not load values</Styled.Loading>}
+            {filteredOptions.length === 0 &&
+              !isCustomAllowed &&
+              (!valuesStatus || valuesStatus === 'loaded') && (
+              <span>No filters found</span>
+            )}
             {parentId && !!parentFilter?.values?.length && (
               <Styled.Toolbar className="toolbar">
                 <Spacer />

@@ -624,3 +624,32 @@ export const CustomRangeDebug: Story = {
   },
   render: (args) => <SearchFilterCustomRangeDebug {...args} baseOptions={options} />,
 }
+
+const lazyPaletteValues = [
+  { id: 'red', label: 'Red', color: '#F44336', icon: 'circle' },
+  { id: 'green', label: 'Green', color: '#4CAF50', icon: 'circle' },
+  { id: 'blue', label: 'Blue', color: '#2196F3', icon: 'circle' },
+]
+
+export const LazyOptions: Story = {
+  args: {},
+  render: (args) => {
+    const [filters, setFilters] = useState<Filter[]>([])
+
+    const lazyOptions: Option[] = [
+      ...options,
+      {
+        id: 'palette',
+        label: 'Palette (loads on open)',
+        icon: 'palette',
+        operator: 'OR',
+        allowExcludes: true,
+        values: [],
+        loadValues: () =>
+          new Promise((resolve) => setTimeout(() => resolve(lazyPaletteValues), 1500)),
+      },
+    ]
+
+    return <SearchFilter {...args} options={lazyOptions} filters={filters} onChange={setFilters} />
+  },
+}
