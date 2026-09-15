@@ -36,6 +36,7 @@ export interface SearchFilterDropdownProps {
   listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
   valuesStatus?: 'loading' | 'loaded' | 'error' // state of the parent filter's lazily loaded values
+  valuesError?: string // error message when lazily loading values failed
   isHasValueAllowed?: boolean
   isNoValueAllowed?: boolean
   isInvertedAllowed?: boolean
@@ -59,6 +60,9 @@ export interface SearchFilterDropdownProps {
   }
 }
 
+// has/no value rows are always present, so they do not count as loaded values
+const isValueOption = (option: Option) => option.id !== 'hasValue' && option.id !== 'noValue'
+
 const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDropdownProps>(
   (
     {
@@ -72,6 +76,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       listRef,
       isCustomAllowed,
       valuesStatus,
+      valuesError,
       isHasValueAllowed,
       isNoValueAllowed,
       isInvertedAllowed,
@@ -455,8 +460,22 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 )
               },
             )}
-            {valuesStatus === 'loading' && <Styled.Loading>Loading...</Styled.Loading>}
-            {valuesStatus === 'error' && <Styled.Loading>Could not load values</Styled.Loading>}
+            {/* placeholders only on first load; a reload keeps showing the previous values */}
+            {valuesStatus === 'loading' && !filteredOptions.some(isValueOption) && (
+              <>
+                <Styled.StatusItem className="status visually-hidden" role="status">
+                  Loading values
+                </Styled.StatusItem>
+                {[0, 1, 2].map((index) => (
+                  <Styled.PlaceholderItem key={index} className="status" aria-hidden="true" />
+                ))}
+              </>
+            )}
+            {valuesStatus === 'error' && (
+              <Styled.StatusItem className="status error" role="alert">
+                Could not load values{valuesError ? `: ${valuesError}` : ''}
+              </Styled.StatusItem>
+            )}
             {filteredOptions.length === 0 &&
               !isCustomAllowed &&
               (!valuesStatus || valuesStatus === 'loaded') && (
