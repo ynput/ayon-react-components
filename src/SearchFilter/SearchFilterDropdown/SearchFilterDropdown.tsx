@@ -60,8 +60,8 @@ export interface SearchFilterDropdownProps {
   }
 }
 
-// has/no value rows are always present, so they do not count as loaded values
-const isValueOption = (option: Option) => option.id !== 'hasValue' && option.id !== 'noValue'
+// has/no value rows and the custom search shortcut are always present, so they do not count as loaded values
+const isValueOption = (option: Option) => !['hasValue', 'noValue', 'search'].includes(option.id)
 
 const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDropdownProps>(
   (
@@ -479,7 +479,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
             {filteredOptions.length === 0 &&
               !isCustomAllowed &&
               (!valuesStatus || valuesStatus === 'loaded') && (
-              <span>No filters found</span>
+              <Styled.StatusItem className="status">No filters found</Styled.StatusItem>
             )}
             {parentId && !!parentFilter?.values?.length && (
               <Styled.Toolbar className="toolbar">

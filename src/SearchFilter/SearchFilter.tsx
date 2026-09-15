@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, useImperativeHandle, forwardRef } from 'react'
 
-import { Filter, FilterOperator, FilterValue, Option, SearchFilterGroupOption } from './types'
+import { Filter, FilterOperator, Option, SearchFilterGroupOption } from './types'
 import * as Styled from './SearchFilter.styled'
 import { SearchFilterItem, SearchFilterItemProps } from './SearchFilterItem/SearchFilterItem'
 import SearchFilterDropdown, {
@@ -16,6 +16,14 @@ import doesFilterExist from './doesFilterExist'
 import { Icon, IconType } from '../Icon'
 import clsx from 'clsx'
 import { SEARCH_FILTER_ID } from './constants'
+import {
+  LazyValuesState,
+  getCurrentValues,
+  getDisplayValues,
+  getLoadErrorMessage,
+  mergeLoadedValues,
+  withLazyValues,
+} from './lazyValues'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
@@ -114,10 +122,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     const options = useMemo(() => withLazyValues(rawOptions, lazyValues), [rawOptions, lazyValues])
 
     // Caching is left to the consumer (e.g. RTK Query), so every call hits loadValues.
-    // Previously loaded values stay visible while reloading.
+    // Previously loaded values stay visible while reloading, unless loadValuesKey changed.
     const loadOptionValues = (option?: Option) => {
       if (!option?.loadValues) return
-      const { id, loadValues } = option
+      const { id, loadValues, loadValuesKey: key } = option
       // only the latest load of an option may write its result (e.g. after a project switch)
       const request = {}
       const isLatest = (current: Record<string, LazyValuesState>) =>
@@ -125,14 +133,16 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
       setLazyValues((current) => ({
         ...current,
-        [id]: { status: 'loading', values: current[id]?.values || [], request },
+        [id]: { status: 'loading', values: getCurrentValues(current[id], key), key, request },
       }))
       // started inside the chain so a synchronous throw also ends in the error state
       Promise.resolve()
         .then(loadValues)
         .then((values) =>
           setLazyValues((current) =>
-            isLatest(current) ? { ...current, [id]: { status: 'loaded', values, request } } : current,
+            isLatest(current)
+              ? { ...current, [id]: { status: 'loaded', values, key, request } }
+              : current,
           ),
         )
         .catch((error: unknown) =>
@@ -144,6 +154,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                     status: 'error',
                     values: current[id]?.values || [],
                     error: getLoadErrorMessage(error),
+                    key,
                     request,
                   },
                 }
@@ -189,12 +200,13 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       : []
 
     // Lazy values can arrive after a value panel opened, so they are merged into the snapshot at render
-    const loadedParentValues = dropdownParentId
-      ? lazyValues[getFilterFromId(dropdownParentId)]?.values
-      : undefined
+    const loadedParentValues = getCurrentValues(
+      dropdownParentId ? lazyValues[getFilterFromId(dropdownParentId)] : undefined,
+      parentOption?.loadValuesKey,
+    )
     const dropdownOptions = useMemo(
       () =>
-        openedOptions && dropdownParentId && loadedParentValues?.length
+        openedOptions && dropdownParentId && loadedParentValues.length
           ? mergeLoadedValues(openedOptions, loadedParentValues, dropdownParentId)
           : openedOptions,
       [openedOptions, dropdownParentId, loadedParentValues],
@@ -581,13 +593,20 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
     }
 
     // Chips restored with raw ids (e.g. from a URL) need their option's values to show labels.
-    // Options that already have a load entry are skipped; opening the panel reloads them.
+    // Options with a load entry for the current loadValuesKey are skipped; opening the panel reloads them.
     useEffect(() => {
+      // collected first so an option shared by several chips loads once per pass
+      const optionsToLoad = new Map<string, Option>()
       filters.forEach((filter) => {
         const option = rawOptions.find((candidate) => candidate.id === getFilterFromId(filter.id))
-        if (!option?.loadValues || lazyValues[option.id]) return
-        if (filter.values?.some((value) => value.label === value.id)) loadOptionValues(option)
+        if (!option?.loadValues || optionsToLoad.has(option.id)) return
+        const entry = lazyValues[option.id]
+        if (entry && entry.key === option.loadValuesKey) return
+        if (filter.values?.some((value) => value.label === value.id)) {
+          optionsToLoad.set(option.id, option)
+        }
       })
+      optionsToLoad.forEach((option) => loadOptionValues(option))
     }, [filters, rawOptions, lazyValues])
 
     const handleRemoveFilter = (id: string) => {
@@ -1263,76 +1282,6 @@ const mergeOptionsWithFilterValues = (filter: Filter, options: Option[]): Option
   })
 
   return mergedOptions
-}
-
-type LazyValuesState = {
-  status: 'loading' | 'loaded' | 'error'
-  values: FilterValue[]
-  error?: string
-  request: object // identity of the load that owns this entry
-}
-
-// Loaders may reject with anything: an Error, a string or an API error payload
-const getLoadErrorMessage = (error: unknown): string | undefined => {
-  if (typeof error === 'string') return error
-  if (error instanceof Error) return error.message
-  if (!error || typeof error !== 'object') return undefined
-  const { message, error: nested, data } = error as {
-    message?: unknown
-    error?: unknown
-    data?: { detail?: unknown; message?: unknown }
-  }
-  const candidate = [message, data?.detail, data?.message, nested].find(
-    (value) => typeof value === 'string' && value,
-  )
-  return candidate as string | undefined
-}
-
-const withLazyValues = (options: Option[], lazyValues: Record<string, LazyValuesState>) => {
-  if (!Object.keys(lazyValues).length) return options
-  return options.map((option) => {
-    const loaded = lazyValues[option.id]
-    if (!loaded?.values.length) return option
-    const existing = option.values || []
-    const extra = existing.filter((value) => !loaded.values.some((l) => l.id === value.id))
-    return { ...option, values: [...loaded.values, ...extra] }
-  })
-}
-
-// Updates the opened panel snapshot with loaded values: matching items are refreshed in place
-// (order stays stable), new values are appended, custom values in the snapshot are kept
-const mergeLoadedValues = (
-  openedOptions: Option[],
-  loadedValues: FilterValue[],
-  parentId: string,
-): Option[] => {
-  const loadedById = new Map(loadedValues.map((value) => [value.id, value]))
-  const openedIds = new Set(openedOptions.map((option) => option.id))
-  const refreshed = openedOptions.map((option) => {
-    const loaded = loadedById.get(option.id)
-    return loaded ? { ...option, ...loaded, parentId } : option
-  })
-  const added = loadedValues
-    .filter((value) => !openedIds.has(value.id))
-    .map((value) => ({ ...value, parentId }))
-  return [...refreshed, ...added]
-}
-
-// Chips built before lazy values arrived carry the raw id as label
-const getDisplayValues = (filter: Filter, option?: Option): FilterValue[] | undefined => {
-  if (!option?.loadValues || !filter.values) return filter.values
-  return filter.values.map((value) => {
-    if (value.label !== value.id) return value
-    const loaded = option.values?.find((candidate) => candidate.id === value.id)
-    if (!loaded) return value
-    return {
-      ...value,
-      label: loaded.label,
-      icon: value.icon ?? loaded.icon,
-      img: value.img ?? loaded.img,
-      color: value.color ?? loaded.color,
-    }
-  })
 }
 
 // Only filter fields are kept: option-only data (loadValues, loaded values, React content) must not leak into filters
