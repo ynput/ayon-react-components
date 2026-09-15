@@ -644,9 +644,21 @@ export const LazyOptions: Story = {
         icon: 'palette',
         operator: 'OR',
         allowExcludes: true,
+        allowHasValue: true,
+        allowNoValue: true,
         values: [],
         loadValues: () =>
           new Promise((resolve) => setTimeout(() => resolve(lazyPaletteValues), 1500)),
+      },
+      {
+        id: 'broken',
+        label: 'Broken (fails to load)',
+        icon: 'error',
+        values: [],
+        loadValues: () =>
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Enum resolver timed out')), 1500),
+          ),
       },
     ]
 
