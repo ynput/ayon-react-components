@@ -16,7 +16,6 @@ export interface SearchFilterItemProps
   isSearch?: boolean
   isInlineEditing?: boolean
   inlineSuggestion?: string
-  valueOverride?: SearchFilterDropdownOption
   tooltip?: string
   valueOverride?: SearchFilterDropdownOption
   // search is html input props

@@ -35,6 +35,8 @@ export interface SearchFilterDropdownProps {
   searchInputRef?: React.RefObject<HTMLInputElement>
   listRef?: React.RefObject<HTMLUListElement>
   isCustomAllowed: boolean
+  valuesStatus?: 'loading' | 'loaded' | 'error' // state of the parent filter's lazily loaded values
+  valuesError?: string // error message when lazily loading values failed
   isHasValueAllowed?: boolean
   isNoValueAllowed?: boolean
   isInvertedAllowed?: boolean
@@ -58,6 +60,9 @@ export interface SearchFilterDropdownProps {
   }
 }
 
+// has/no value rows and the custom search shortcut are always present, so they do not count as loaded values
+const isValueOption = (option: Option) => !['hasValue', 'noValue', 'search'].includes(option.id)
+
 const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDropdownProps>(
   (
     {
@@ -70,6 +75,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
       searchInputRef,
       listRef,
       isCustomAllowed,
+      valuesStatus,
+      valuesError,
       isHasValueAllowed,
       isNoValueAllowed,
       isInvertedAllowed,
@@ -373,6 +380,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   groupItems,
                   values: optionValues,
                   allowsCustomValues,
+                  loadValues,
                   label,
                   searchLabel,
                   icon,
@@ -407,7 +415,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   : undefined
                 const opensSubmenu =
                   !parentId &&
-                  (Boolean(groupItems) || Boolean(optionValues?.length) || !!allowsCustomValues)
+                  (Boolean(groupItems) ||
+                    Boolean(optionValues?.length) ||
+                    !!allowsCustomValues ||
+                    !!loadValues)
                 return (
                   <Fragment key={id + '-' + parentId}>
                     {hasLevelDivider && <Styled.Divider aria-hidden="true" />}
@@ -449,7 +460,27 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                 )
               },
             )}
-            {filteredOptions.length === 0 && !isCustomAllowed && <span>No filters found</span>}
+            {/* placeholders only on first load; a reload keeps showing the previous values */}
+            {valuesStatus === 'loading' && !filteredOptions.some(isValueOption) && (
+              <>
+                <Styled.StatusItem className="status visually-hidden" role="status">
+                  Loading values
+                </Styled.StatusItem>
+                {[0, 1, 2].map((index) => (
+                  <Styled.PlaceholderItem key={index} className="status" aria-hidden="true" />
+                ))}
+              </>
+            )}
+            {valuesStatus === 'error' && (
+              <Styled.StatusItem className="status error" role="alert">
+                Could not load values{valuesError ? `: ${valuesError}` : ''}
+              </Styled.StatusItem>
+            )}
+            {filteredOptions.length === 0 &&
+              !isCustomAllowed &&
+              (!valuesStatus || valuesStatus === 'loaded') && (
+              <Styled.StatusItem className="status">No filters found</Styled.StatusItem>
+            )}
             {parentId && !!parentFilter?.values?.length && (
               <Styled.Toolbar className="toolbar">
                 <Spacer />
