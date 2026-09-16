@@ -98,8 +98,6 @@ export const PlaceholderItem = styled.li`
   flex-shrink: 0;
   border-radius: var(--border-radius-m);
   background-color: var(--md-sys-color-surface-container);
-
-  ${getShimmerStyles()}
 `
 
 export const Item = styled.li`
