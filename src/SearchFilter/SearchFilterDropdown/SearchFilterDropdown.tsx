@@ -467,7 +467,11 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   Loading values
                 </Styled.StatusItem>
                 {[0, 1, 2].map((index) => (
-                  <Styled.PlaceholderItem key={index} className="status" aria-hidden="true" />
+                  <Styled.PlaceholderItem
+                    key={index}
+                    className="status loading"
+                    aria-hidden="true"
+                  />
                 ))}
               </>
             )}
@@ -479,8 +483,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
             {filteredOptions.length === 0 &&
               !isCustomAllowed &&
               (!valuesStatus || valuesStatus === 'loaded') && (
-              <Styled.StatusItem className="status">No filters found</Styled.StatusItem>
-            )}
+                <Styled.StatusItem className="status">No filters found</Styled.StatusItem>
+              )}
             {parentId && !!parentFilter?.values?.length && (
               <Styled.Toolbar className="toolbar">
                 <Spacer />
