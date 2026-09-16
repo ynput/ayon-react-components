@@ -16,6 +16,14 @@ import doesFilterExist from './doesFilterExist'
 import { Icon, IconType } from '../Icon'
 import clsx from 'clsx'
 import { SEARCH_FILTER_ID } from './constants'
+import {
+  LazyValuesState,
+  getCurrentValues,
+  getDisplayValues,
+  getLoadErrorMessage,
+  mergeLoadedValues,
+  withLazyValues,
+} from './lazyValues'
 
 const sortSelectedToTopFields = ['assignee', 'taskType']
 
@@ -73,7 +81,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       filters = [],
       onChange,
       onFinish,
-      options = [],
+      options: rawOptions = [],
       groupOptions = [],
       quickActions,
       onQuickAction,
@@ -109,8 +117,55 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
     const { enableMultiple: enableGlobalSearchMultiple } = globalSearchConfig || {}
 
+    const [lazyValues, setLazyValues] = useState<Record<string, LazyValuesState>>({})
+
+    const options = useMemo(() => withLazyValues(rawOptions, lazyValues), [rawOptions, lazyValues])
+
+    // Caching is left to the consumer (e.g. RTK Query), so every call hits loadValues.
+    // Previously loaded values stay visible while reloading, unless loadValuesKey changed.
+    const loadOptionValues = (option?: Option) => {
+      if (!option?.loadValues) return
+      const { id, loadValues, loadValuesKey: key } = option
+      // only the latest load of an option may write its result (e.g. after a project switch)
+      const request = {}
+      const isLatest = (current: Record<string, LazyValuesState>) =>
+        current[id]?.request === request
+
+      setLazyValues((current) => ({
+        ...current,
+        [id]: { status: 'loading', values: getCurrentValues(current[id], key), key, request },
+      }))
+      // started inside the chain so a synchronous throw also ends in the error state
+      Promise.resolve()
+        .then(loadValues)
+        .then((values) =>
+          setLazyValues((current) =>
+            isLatest(current)
+              ? { ...current, [id]: { status: 'loaded', values, key, request } }
+              : current,
+          ),
+        )
+        .catch((error: unknown) =>
+          setLazyValues((current) =>
+            isLatest(current)
+              ? {
+                  ...current,
+                  [id]: {
+                    status: 'error',
+                    values: current[id]?.values || [],
+                    error: getLoadErrorMessage(error),
+                    key,
+                    request,
+                  },
+                }
+              : current,
+          ),
+        )
+    }
+
     const [dropdownParentId, setDropdownParentId] = useState<null | string>(null)
-    const [dropdownOptions, setOptions] = useState<Option[] | null>(null)
+    // options snapshot taken when a menu/panel opens (see dropdownOptions below)
+    const [openedOptions, setOptions] = useState<Option[] | null>(null)
     const [search, setSearch] = useState('')
     // in-place editing of a search chip (typing directly in the chip)
     const [editingSearchChipId, setEditingSearchChipId] = useState<string | null>(null)
@@ -143,6 +198,19 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       : parentMenuOption
       ? [parentMenuOption.label]
       : []
+
+    // Lazy values can arrive after a value panel opened, so they are merged into the snapshot at render
+    const loadedParentValues = getCurrentValues(
+      dropdownParentId ? lazyValues[getFilterFromId(dropdownParentId)] : undefined,
+      parentOption?.loadValuesKey,
+    )
+    const dropdownOptions = useMemo(
+      () =>
+        openedOptions && dropdownParentId && loadedParentValues.length
+          ? mergeLoadedValues(openedOptions, loadedParentValues, dropdownParentId)
+          : openedOptions,
+      [openedOptions, dropdownParentId, loadedParentValues],
+    )
 
     const allOptions = useMemo(() => {
       if (!dropdownOptions) return null
@@ -326,21 +394,18 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
       // boolean options without explicit values are one-click toggles: add
       // immediately with an "on" value and close, instead of opening a values panel
-      if (!parentId && option.type === 'boolean' && !option.values?.length) {
-        const {
-          group: _group,
-          search: _search,
-          tooltip: _tooltip,
-          ...filterOptionData
-        } = filterOption
-        const addFilter: Filter = {
-          ...filterOptionData,
+      if (
+        !parentId &&
+        option.type === 'boolean' &&
+        !option.values?.length &&
+        !option.loadValues
+      ) {
+        const addFilter = createFilterState(filterOption, {
           id: newId,
           // value label = filter name so the compact chip (label hidden) reads the
           // filter name instead of "Yes"
           values: [{ id: 'true', label: option.label }],
-        }
-        delete (addFilter as Option).allowsCustomValues
+        })
         const updatedFilters = [...filters, addFilter]
         onChange(updatedFilters)
         handleClose(updatedFilters)
@@ -356,11 +421,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
         if (option.searchOnly) {
           const parentOption = findOption(options, option.parentId)
           if (parentOption) {
-            parentFilter = {
-              ...parentOption,
+            parentFilter = createFilterState(parentOption, {
               id: buildFilterId(option.parentId || ''),
               values: [],
-            }
+            })
           }
         } else {
           parentFilter = filters.find((filter) => filter.id === parentId)
@@ -433,26 +497,22 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
           }
         }
       } else {
-        const {
-          group: _group,
-          search: _search,
-          tooltip: _tooltip,
-          ...filterOptionData
-        } = filterOption
-        const addFilter = { ...filterOptionData, id: newId, values: [] }
-        // remove not required fields
-        delete addFilter.allowsCustomValues
+        const addFilter = createFilterState(filterOption, { id: newId, values: [] })
 
         // add to filters top level
         onChange([...filters, addFilter])
       }
 
       // if there are values set the next dropdownOptions
-      // or the option allows custom values (text)
-      if (!parentId && ((values && values.length > 0) || option.allowsCustomValues)) {
+      // or the option allows custom values (text), or it loads its values lazily
+      if (
+        !parentId &&
+        ((values && values.length > 0) || option.allowsCustomValues || option.loadValues)
+      ) {
         const newOptions = values?.map((value) => ({ ...value, parentId: newId })) || []
 
         openOptions(newOptions, newId)
+        loadOptionValues(filterOption)
         // enter inline chip editing mode so the chip's search input drives the value selection
         setEditingSearchChipId(newId)
         setIsEditingExisting(false)
@@ -529,7 +589,25 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
       } else {
         openOptions(options, id)
       }
+      loadOptionValues(findOption(options, getFilterFromId(id)))
     }
+
+    // Chips restored with raw ids (e.g. from a URL) need their option's values to show labels.
+    // Options with a load entry for the current loadValuesKey are skipped; opening the panel reloads them.
+    useEffect(() => {
+      // collected first so an option shared by several chips loads once per pass
+      const optionsToLoad = new Map<string, Option>()
+      filters.forEach((filter) => {
+        const option = rawOptions.find((candidate) => candidate.id === getFilterFromId(filter.id))
+        if (!option?.loadValues || optionsToLoad.has(option.id)) return
+        const entry = lazyValues[option.id]
+        if (entry && entry.key === option.loadValuesKey) return
+        if (filter.values?.some((value) => value.label === value.id)) {
+          optionsToLoad.set(option.id, option)
+        }
+      })
+      optionsToLoad.forEach((option) => loadOptionValues(option))
+    }, [filters, rawOptions, lazyValues])
 
     const handleRemoveFilter = (id: string) => {
       // remove a filter by id
@@ -590,7 +668,9 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
     // Get the rendered <li> elements from the dropdown list.
     const getDropdownItems = (): HTMLElement[] =>
-      dropdownRef.current ? Array.from(dropdownRef.current.querySelectorAll('li')) : []
+      dropdownRef.current
+        ? Array.from(dropdownRef.current.querySelectorAll('li:not(.status)'))
+        : []
 
     // Scroll the highlighted item into view if it is not visible.
     useEffect(() => {
@@ -857,11 +937,10 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
 
         if (!selectedValues.length) return
 
-        const updatedFilter = {
-          ...(existing || option),
+        const updatedFilter = createFilterState(existing || option, {
           id: existing?.id || buildFilterId(optionId),
           values: selectedValues,
-        }
+        })
         const updatedFilters = existing
           ? filters.map((filter) => (filter.id === existing.id ? updatedFilter : filter))
           : [...filters, updatedFilter]
@@ -936,7 +1015,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                   const tooltipLabel =
                     option?.tooltip ||
                     (option?.group ? getGroupFieldLabel(option.label) : filter.label)
-                  const tooltipValues = filter.values?.map((value) => value.label).join(', ')
+                  const displayValues = getDisplayValues(filter, option)
+                  const tooltipValues = displayValues?.map((value) => value.label).join(', ')
                   const tooltip = `${filter.inverted ? 'not ' : ''}${tooltipLabel}${
                     tooltipValues ? `: ${tooltipValues}` : ''
                   }`
@@ -948,7 +1028,7 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
                       label={filter.label}
                       inverted={filter.inverted}
                       operator={filter.operator}
-                      values={filter.values}
+                      values={displayValues}
                       icon={filter.icon}
                       isCustom={filter.isCustom}
                       index={index}
@@ -1051,6 +1131,8 @@ export const SearchFilter = forwardRef<SearchFilterRef, SearchFilterProps>(
             isCustomAllowed={
               !!parentOption?.allowsCustomValues || (!parentOption && !!enableGlobalSearch)
             }
+            valuesStatus={parentOption ? lazyValues[parentOption.id]?.status : undefined}
+            valuesError={parentOption ? lazyValues[parentOption.id]?.error : undefined}
             isHasValueAllowed={!!parentOption?.allowHasValue}
             isNoValueAllowed={!!parentOption?.allowNoValue}
             isInvertedAllowed={!!parentOption?.allowExcludes}
@@ -1201,3 +1283,20 @@ const mergeOptionsWithFilterValues = (filter: Filter, options: Option[]): Option
 
   return mergedOptions
 }
+
+// Only filter fields are kept: option-only data (loadValues, loaded values, React content) must not leak into filters
+const createFilterState = (option: Option | Filter, overrides: Partial<Filter> = {}): Filter => ({
+  id: option.id,
+  label: option.label,
+  type: option.type,
+  inverted: option.inverted,
+  operator: option.operator,
+  icon: option.icon,
+  img: option.img,
+  values: option.values,
+  isCustom: option.isCustom,
+  isReadonly: option.isReadonly,
+  singleSelect: option.singleSelect,
+  fieldType: option.fieldType,
+  ...overrides,
+})
