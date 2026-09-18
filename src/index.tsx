@@ -64,8 +64,10 @@ export { Dropdown, DefaultValueTemplate, DefaultItemTemplate } from './Dropdowns
 export type {
   DropdownProps,
   DefaultValueTemplateProps,
+  DefaultValueItem,
   DefaultItemTemplateProps,
   DropdownRef,
+  ValueIconMode,
 } from './Dropdowns/Dropdown'
 
 // SEARCH FILTER
@@ -79,8 +81,8 @@ export type { FileCardProps } from './FileCard'
 
 // ICONS
 // icon
-export { Icon } from './Icon'
-export type { IconProps } from './Icon'
+export { Icon, IconImage, isIconImage } from './Icon'
+export type { IconProps, IconImageProps, IconType, IconPropType } from './Icon'
 
 // INPUT
 // text

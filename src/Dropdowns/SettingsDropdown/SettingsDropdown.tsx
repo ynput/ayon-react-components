@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { forwardRef } from 'react'
 import styled from 'styled-components'
 import { Dropdown, DropdownProps, DropdownRef, DefaultValueTemplate } from '../Dropdown'
-import { Icon, IconPropType } from '../../Icon'
+import { Icon, IconImage, IconPropType, IconType, isIconImage } from '../../Icon'
 
 const StyledDropdown = styled(Dropdown)`
   &.settings-dropdown {
@@ -88,7 +88,12 @@ export const SettingsDropdown = forwardRef<DropdownRef, SettingsDropdownProps>(
             className="test"
             childrenCustom={
               <StyledInner>
-                {icon && <Icon icon={icon} className="dropdown-icon" />}
+                {icon &&
+                  (isIconImage(icon) ? (
+                    <IconImage icon={icon} className="dropdown-icon" />
+                  ) : (
+                    <Icon icon={icon as IconType} className="dropdown-icon" />
+                  ))}
                 <span className="dropdown-title">{title}</span>
                 <ValueChip>
                   {props.onRemoveItem && (
