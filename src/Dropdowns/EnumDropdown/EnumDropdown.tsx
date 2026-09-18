@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import * as Styled from './EnumDropdown.styled'
 import { DefaultValueTemplateProps, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
-import { Icon, IconPropType } from '../../Icon'
+import { Icon, IconImage, IconPropType, isIconImage } from '../../Icon'
 import clsx from 'clsx'
 
 export interface EnumTemplateProps extends Omit<DefaultValueTemplateProps, 'value'> {
@@ -19,7 +19,8 @@ export const EnumTemplate = ({ option, isSelected, isChanged, ...props }: EnumTe
       $color={color}
       {...props}
     >
-      {icon && <Icon icon={icon} />}
+      {icon &&
+        (isIconImage(icon) ? <IconImage icon={icon} /> : <Icon icon={icon} />)}
       <span className="value-label">{label}</span>
     </Styled.Option>
   )
