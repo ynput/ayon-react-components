@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react'
 import clsx from 'clsx'
 import styled from 'styled-components'
-import { Icon } from '../../Icon'
+import { Icon, IconImage, isIconImage } from '../../Icon'
 
 export const DefaultItemStyled = styled.span`
   display: flex;
@@ -77,7 +77,12 @@ export const DefaultItemTemplate = ({
       style={itemStyle}
     >
       {startContent}
-      {option.icon && <Icon icon={option.icon} style={{ color: option.color }} />}
+      {option.icon &&
+        (isIconImage(option.icon) ? (
+          <IconImage icon={option.icon} style={{ color: option.color }} />
+        ) : (
+          <Icon icon={option.icon} style={{ color: option.color }} />
+        ))}
       <span>{option[labelKey] || option[dataKey]}</span>
       {multiSelect &&
         [...selected, ...mixedSelected]?.includes(option[dataKey]) &&

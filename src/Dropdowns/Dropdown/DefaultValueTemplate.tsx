@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import styled, { css } from 'styled-components'
-import { Icon, IconType } from '../../Icon'
+import { Icon, IconImage, IconType, isIconImage } from '../../Icon'
 import { DropdownProps } from './Dropdown'
 import clsx from 'clsx'
 
@@ -140,7 +140,12 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
         <>
           <ContentStyled>
             {isMultiple && <span>{`Mixed (`}</span>}
-            {displayIcon && <Icon icon={displayIcon as IconType} />}
+            {displayIcon &&
+              (isIconImage(displayIcon) ? (
+                <IconImage icon={displayIcon} />
+              ) : (
+                <Icon icon={displayIcon as IconType} />
+              ))}
             <ValueStyled style={valueStyle}>{children}</ValueStyled>
             {isMultiple && <span>{`)`}</span>}
           </ContentStyled>
