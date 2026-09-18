@@ -79,8 +79,8 @@ export type { FileCardProps } from './FileCard'
 
 // ICONS
 // icon
-export { Icon, IconImage } from './Icon'
-export type { IconProps, IconImageProps } from './Icon'
+export { Icon, IconImage, isIconImage } from './Icon'
+export type { IconProps, IconImageProps, IconType, IconPropType } from './Icon'
 
 // INPUT
 // text
