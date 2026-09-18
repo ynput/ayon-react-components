@@ -121,6 +121,9 @@ export { TableRow } from './Layout/TableRow'
 export type { TableRowProps } from './Layout/TableRow'
 // toolbar
 export { Toolbar } from './Layout/Toolbar'
+// borderedSection
+export { BorderedSection } from './BorderedSection'
+export type { BorderedSectionProps } from './BorderedSection'
 
 // OVERLAY
 // dialog
