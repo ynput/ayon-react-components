@@ -10,6 +10,12 @@ import { Panel } from '../../Panels/Panel'
 const meta: Meta<typeof Dropdown> = {
   component: Dropdown,
   tags: ['autodocs'],
+  argTypes: {
+    valueIconMode: {
+      control: 'select',
+      options: ['none', 'single', 'all', 'multiple'],
+    },
+  },
 }
 
 export default meta
@@ -30,6 +36,14 @@ const options: { value: IconType; keyword: string }[] = [
   { value: 'alarm_off', keyword: 'clock_off' },
   { value: 'alarm_on', keyword: 'clock_on' },
 ]
+
+const imageOptions = [
+  { value: 'favicon', label: 'Favicon', icon: '/favicon-32x32.png' },
+  { value: 'small-favicon', label: 'Small favicon', icon: '/favicon-16x16.png' },
+  { value: 'favicon-icon', label: 'Favicon icon', icon: '/favicon.ico' },
+]
+
+const imageOptionsWithMissingIcon = [...imageOptions, { value: 'text-only', label: 'Text only' }]
 
 const Template = (args: DropdownProps) => {
   const [value, setValue] = useState<string[] | null>(
@@ -74,6 +88,49 @@ export const Icons: Story = {
     widthExpand: true,
     maxHeight: 180,
     onClear: undefined,
+  },
+  render: Template,
+}
+
+export const Images: Story = {
+  args: {
+    options: imageOptions,
+    value: [imageOptions[0].value],
+    multiSelect: true,
+    maxHeight: 180,
+  },
+  render: Template,
+}
+
+export const ImagesSingle: Story = {
+  args: {
+    options: imageOptions,
+    value: [imageOptions[0].value],
+    valueIconMode: 'single',
+    multiSelect: true,
+    maxHeight: 180,
+  },
+  render: Template,
+}
+
+export const ImagesAll: Story = {
+  args: {
+    options: imageOptions,
+    value: imageOptions.map((option) => option.value),
+    valueIconMode: 'all',
+    multiSelect: true,
+    maxHeight: 180,
+  },
+  render: Template,
+}
+
+export const ImagesMultiple: Story = {
+  args: {
+    options: imageOptionsWithMissingIcon,
+    value: imageOptionsWithMissingIcon.slice(0, 3).map((option) => option.value),
+    valueIconMode: 'multiple',
+    multiSelect: true,
+    maxHeight: 180,
   },
   render: Template,
 }

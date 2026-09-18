@@ -57,6 +57,18 @@ const ContentStyled = styled.div`
   flex: 1;
 `
 
+const ValueItemStyled = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+`
+
+export interface DefaultValueItem {
+  icon?: string
+  label: React.ReactNode
+  showLabel?: boolean
+}
+
 export interface DefaultValueTemplateProps
   extends Pick<
     DropdownProps,
@@ -71,6 +83,9 @@ export interface DefaultValueTemplateProps
     | 'clearNullTooltip'
   > {
   displayIcon?: string
+  displayIcons?: string[]
+  displayItems?: DefaultValueItem[]
+  showValue?: boolean
   style?: React.CSSProperties
   children?: React.ReactNode
   valueStyle?: React.CSSProperties
@@ -85,6 +100,9 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   isMultiple,
   dropIcon = 'expand_more',
   displayIcon,
+  displayIcons,
+  displayItems,
+  showValue = true,
   onClear,
   clearTooltip,
   onClearNull,
@@ -100,6 +118,7 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
   hasError,
 }) => {
   const noValue = !value?.length
+  const icons = displayIcons ?? (displayIcon ? [displayIcon] : [])
 
   return (
     <DefaultValueStyled
@@ -139,15 +158,34 @@ export const DefaultValueTemplate: FC<DefaultValueTemplateProps> = ({
       ) : (
         <>
           <ContentStyled>
-            {isMultiple && <span>{`Mixed (`}</span>}
-            {displayIcon &&
-              (isIconImage(displayIcon) ? (
-                <IconImage icon={displayIcon} />
-              ) : (
-                <Icon icon={displayIcon as IconType} />
-              ))}
-            <ValueStyled style={valueStyle}>{children}</ValueStyled>
-            {isMultiple && <span>{`)`}</span>}
+            {displayItems ? (
+              displayItems.map((item, index) => (
+                <ValueItemStyled key={`${item.icon || 'label'}-${index}`}>
+                  {item.icon &&
+                    (isIconImage(item.icon) ? (
+                      <IconImage icon={item.icon} />
+                    ) : (
+                      <Icon icon={item.icon as IconType} />
+                    ))}
+                  {item.showLabel !== false && (
+                    <ValueStyled style={valueStyle}>{item.label}</ValueStyled>
+                  )}
+                </ValueItemStyled>
+              ))
+            ) : (
+              <>
+                {showValue && isMultiple && <span>{`Mixed (`}</span>}
+                {icons.map((icon, index) =>
+                  isIconImage(icon) ? (
+                    <IconImage key={`${icon}-${index}`} icon={icon} />
+                  ) : (
+                    <Icon key={`${icon}-${index}`} icon={icon as IconType} />
+                  ),
+                )}
+                {showValue && <ValueStyled style={valueStyle}>{children}</ValueStyled>}
+                {showValue && isMultiple && <span>{`)`}</span>}
+              </>
+            )}
           </ContentStyled>
           {onClearNull && (
             <Icon

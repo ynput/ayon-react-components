@@ -2,8 +2,8 @@ import { forwardRef } from 'react'
 import styled from 'styled-components'
 
 const StyledImage = styled.img`
-  width: 1em;
-  height: 1em;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 `
 

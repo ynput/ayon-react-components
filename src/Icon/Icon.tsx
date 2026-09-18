@@ -15,7 +15,7 @@ export type IconPropType = IconType | (string & {})
 
 // types
 export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  icon: IconType
+  icon: IconPropType
   filled?: boolean
 }
 
