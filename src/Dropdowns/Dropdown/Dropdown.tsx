@@ -6,7 +6,7 @@ import { compact, isEqual, isNull } from 'lodash'
 import { useMemo } from 'react'
 import { InputText } from '../../Inputs/InputText'
 import { Icon, IconType } from '../../Icon'
-import { DefaultValueTemplate, DefaultItemTemplate, DefaultItemStyled } from '.'
+import { DefaultValueItem, DefaultValueTemplate, DefaultItemTemplate, DefaultItemStyled } from '.'
 import TagsValueTemplate from './TagsValueTemplate'
 import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
@@ -36,6 +36,8 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 }
 
 type OnChangeEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
+
+export type ValueIconMode = 'none' | 'single' | 'all' | 'multiple'
 
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -70,6 +72,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   searchOnNumber?: number
   disabled?: boolean
   valueIcon?: string
+  valueIconMode?: ValueIconMode
   emptyMessage?: string
   placeholder?: string
   isChanged?: boolean
@@ -172,6 +175,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       minSelected = 0,
       maxSelected,
       dropIcon = 'expand_more',
+      valueIconMode = 'none',
       onClear,
       clearTooltip = 'Clear to no value',
       onClearNull,
@@ -795,13 +799,40 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       return result
     }, [options, value, dataKey, labelKey, selected, isOpen, isMultiple, multipleOverride])
 
-    const displayIcon = useMemo(() => {
-      if (!value?.length) return null
-      if (valueIcon) return valueIcon
-      if (multiSelect && value.length > 1) return null
-      if (options.length && options[editable ? 1 : 0]) return options[editable ? 1 : 0].icon
-      return null
-    }, [valueIcon, multiSelect, options, value, editable])
+    const displayValues = isOpen && (!isMultiple || multipleOverride) ? selected : value || []
+    const displayIcons = useMemo(() => {
+      if (valueIcon) return [valueIcon]
+      if (valueIconMode === 'none') return []
+      if (valueIconMode === 'single' && displayValues.length !== 1) return []
+      if (valueIconMode === 'multiple' && displayValues.length < 2) return []
+
+      return displayValues
+        .map(
+          (displayValue) =>
+            nonSearchedOptions.find((option) => option[dataKey] === displayValue)?.icon,
+        )
+        .filter((icon): icon is string => !!icon)
+    }, [valueIcon, valueIconMode, displayValues, nonSearchedOptions, dataKey])
+    const displayItems = useMemo<DefaultValueItem[] | undefined>(() => {
+      if ((valueIconMode !== 'all' && valueIconMode !== 'multiple') || valueIcon) return undefined
+
+      return displayValues.map((displayValue) => {
+        const option = nonSearchedOptions.find((item) => item[dataKey] === displayValue)
+        const icon = option?.icon
+        const showIcon = valueIconMode !== 'multiple' || displayValues.length > 1
+        const hasIcon = showIcon && !!icon
+
+        return {
+          icon: hasIcon ? icon : undefined,
+          label: option?.[labelKey] || displayValue,
+          showLabel: !hasIcon || valueIconMode !== 'multiple',
+        }
+      })
+    }, [valueIconMode, valueIcon, displayValues, nonSearchedOptions, dataKey, labelKey])
+    const showValue =
+      valueIconMode !== 'multiple' ||
+      displayValues.length < 2 ||
+      displayIcons.length < displayValues.length
 
     // splice to maxOptionsShown or 25 items
     let showOptions = useMemo(
@@ -815,7 +846,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       value: isOpen && (!isMultiple || multipleOverride) ? selected : value,
       isMultiple,
       dropIcon,
-      displayIcon,
+      displayIcons,
+      displayItems,
+      showValue,
       onClear: onClear && handleClear,
       clearTooltip,
       onClearNull: onClearNull && handleClearNull,
@@ -844,7 +877,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       isMultiple,
       dropIcon,
       multipleOverride,
-      displayIcon,
+      displayIcons,
+      displayItems,
+      showValue,
+      valueIconMode,
       clearTooltip,
       handleClearNull,
       clearNullTooltip,

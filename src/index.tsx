@@ -64,8 +64,10 @@ export { Dropdown, DefaultValueTemplate, DefaultItemTemplate } from './Dropdowns
 export type {
   DropdownProps,
   DefaultValueTemplateProps,
+  DefaultValueItem,
   DefaultItemTemplateProps,
   DropdownRef,
+  ValueIconMode,
 } from './Dropdowns/Dropdown'
 
 // SEARCH FILTER
