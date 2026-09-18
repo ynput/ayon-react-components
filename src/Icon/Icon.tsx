@@ -9,6 +9,12 @@ const StyledIcon = styled.span`
   }
 `
 
+const StyledImage = styled.img`
+  width: 1em;
+  height: 1em;
+  object-fit: contain;
+`
+
 export type IconType = keyof typeof iconSet
 // This trick prevents the union from collapsing into 'string'
 export type IconPropType = IconType | (string & {})
@@ -22,13 +28,15 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 // TODO: link to SVG
 
 export const Icon = forwardRef<HTMLSpanElement, IconProps>((props, ref) => {
+  const isImage = /^(https?:\/\/|\/|\.{1,2}\/)/.test(props.icon)
+
   return (
     <StyledIcon
       ref={ref}
       {...props}
       className={clsx('material-symbols-outlined icon', props.className, { filled: props.filled })}
     >
-      {props.icon}
+      {isImage ? <StyledImage src={props.icon} alt="" /> : props.icon}
     </StyledIcon>
   )
 })
