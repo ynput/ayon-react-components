@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 const StyledIcon = styled.span`
   &.filled {
-    font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+    font-variation-settings: 'FILL' 1;
   }
 `
 

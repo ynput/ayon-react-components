@@ -40,7 +40,7 @@ export const StatusStyled = styled.div<StatusStyledProps>`
 
   /* STATUS ICON */
   .status-icon {
-    font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 300, 'opsz' 20;
+    font-variation-settings: 'FILL' 1;
     /* always takes parents color */
     color: inherit;
   }

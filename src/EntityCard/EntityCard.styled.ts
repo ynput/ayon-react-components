@@ -498,7 +498,7 @@ export const Tag = styled.span`
     width: 34px;
 
     .icon {
-      font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+      font-variation-settings: 'FILL' 1;
     }
     &:not(.editable) {
       .icon {
@@ -647,7 +647,7 @@ export const StatusContainer = styled.div<StatusProps>`
     }
 
     .status-icon {
-      font-variation-settings: 'FILL' 1, 'wght' 200, 'GRAD' 200, 'opsz' 20;
+      font-variation-settings: 'FILL' 1;
     }
 
     /* short is only shown when things are too small */

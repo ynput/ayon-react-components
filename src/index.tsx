@@ -1,6 +1,4 @@
-// import icons
-import 'material-symbols/outlined.css'
-
+// fonts, including the icon font
 import './fonts.scss'
 
 // import styles here

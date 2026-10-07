@@ -18,6 +18,6 @@ export const Notification = styled.div`
 
   .icon {
     font-size: 16px;
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 200, 'opsz' 5;
+    font-variation-settings: 'FILL' 0;
   }
 `

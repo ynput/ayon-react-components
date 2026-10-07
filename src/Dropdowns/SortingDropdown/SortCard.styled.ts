@@ -31,7 +31,7 @@ export const Card = styled.div<{ $disabled: boolean }>`
   }
 
   .icon {
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 300, 'opsz' 20;
+    font-variation-settings: 'FILL' 0;
   }
 
   &.sort-hidden {
