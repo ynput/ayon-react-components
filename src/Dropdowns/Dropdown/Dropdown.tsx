@@ -2,7 +2,7 @@ import React, { CSSProperties, forwardRef, useEffect, RefObject, useImperativeHa
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
-import { compact, isEqual, isNull } from 'lodash'
+import { compact, isEqual, isNull } from 'lodash-es'
 import { useMemo } from 'react'
 import { InputText } from '../../Inputs/InputText'
 import { Icon, IconType } from '../../Icon'
