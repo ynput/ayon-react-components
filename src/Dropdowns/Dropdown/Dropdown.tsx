@@ -384,13 +384,15 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     }
 
     // reorder options to put active at the top (if not disabled)
-    options = useMemo(
-      () =>
-        (!sortBySelected && !(isMultiple && !multipleOverride)) || !value || !value.length
-          ? options
-          : [...options].sort((a, b) => value.indexOf(b[dataKey]) - value.indexOf(a[dataKey])),
-      [value, options, sortBySelected, isMultiple, multipleOverride, dataKey],
-    )
+    // selected and unselected options both keep the order of `options` (sort is stable)
+    options = useMemo(() => {
+      if ((!sortBySelected && !(isMultiple && !multipleOverride)) || !value || !value.length)
+        return options
+      const selected = new Set(value)
+      return [...options].sort(
+        (a, b) => Number(selected.has(b[dataKey])) - Number(selected.has(a[dataKey])),
+      )
+    }, [value, options, sortBySelected, isMultiple, multipleOverride, dataKey])
 
     // if onSelectAll, add to options
     options = useMemo(() => {
