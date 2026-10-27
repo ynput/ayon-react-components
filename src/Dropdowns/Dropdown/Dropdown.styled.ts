@@ -341,6 +341,13 @@ export const MixedFooter = styled.div`
 
   .summary {
     color: var(--md-sys-color-on-surface);
+    /* wraps within the list's width instead of widening the dropdown */
+    width: 0;
+    min-width: 100%;
+
+    &.empty {
+      color: var(--md-sys-color-outline);
+    }
   }
 
   .row {
@@ -354,8 +361,11 @@ export const MixedFooter = styled.div`
     display: flex;
     align-items: center;
     gap: 6px;
-    cursor: pointer;
     user-select: none;
+
+    label {
+      cursor: pointer;
+    }
   }
 `
 

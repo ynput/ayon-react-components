@@ -1,4 +1,11 @@
-import React, { CSSProperties, forwardRef, useEffect, RefObject, useImperativeHandle } from 'react'
+import React, {
+  CSSProperties,
+  forwardRef,
+  useEffect,
+  RefObject,
+  useId,
+  useImperativeHandle,
+} from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
@@ -543,10 +550,9 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       setSearchForm('')
     }
 
-    const toggleReplaceAll = () => {
-      setReplaceAll(!replaceAll)
-      setMixedEdits({})
-    }
+    const replaceAllId = useId()
+    // values already checked or unchecked stay so, only the untouched ones follow the mode
+    const toggleReplaceAll = () => setReplaceAll((replace) => !replace)
 
     const submitChange = (selected: string[], close?: boolean, e?: OnChangeEvent) => {
       // find items that have been removed (difference between mixedSelected and value)
@@ -1242,15 +1248,24 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
               </Styled.Scrollable>
               {isMixed && (
                 <Styled.MixedFooter className="mixed-footer">
-                  {mixedSummary && <span className="summary">{mixedSummary}</span>}
+                  {/* always shown, so the footer keeps its height and the switch stays put */}
+                  <span className={clsx('summary', { empty: !mixedSummary })}>
+                    {mixedSummary || 'No changes'}
+                  </span>
                   <div className="row">
                     <span>
                       {mixedTotal} {mixedLabel} selected
                     </span>
-                    <label className="replace">
-                      <InputSwitch compact checked={replaceAll} onChange={toggleReplaceAll} />
-                      Replace all
-                    </label>
+                    {/* the switch has its own label, so the text labels it from beside it, not around it */}
+                    <div className="replace">
+                      <InputSwitch
+                        id={replaceAllId}
+                        compact
+                        checked={replaceAll}
+                        onChange={toggleReplaceAll}
+                      />
+                      <label htmlFor={replaceAllId}>Replace all</label>
+                    </div>
                   </div>
                 </Styled.MixedFooter>
               )}
