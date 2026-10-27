@@ -335,7 +335,7 @@ export const ListItem = styled.li<{
   }
 `
 
-// edits the option outside the dropdown; shows on the hovered or focused option, always on "add new"
+// edits the option outside the dropdown; shows on the hovered or focused option
 export const EditOption = styled(BaseButton)`
   &.edit-option {
     position: absolute;
@@ -349,8 +349,7 @@ export const EditOption = styled(BaseButton)`
 
   .option:hover > &,
   .option.focused > &,
-  .option.editing > &,
-  .option.add-new-option > & {
+  .option.editing > & {
     opacity: 1;
   }
 `

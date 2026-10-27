@@ -129,7 +129,7 @@ export const EditTags: Story = {
           value={value}
           onChange={setValue}
           onEditOption={onEditOption}
-          editOptionTooltip={(tag, isNew) => (isNew ? 'Add with a colour' : 'Change colour')}
+          editOptionTooltip="Change colour"
         />
         {dialog}
       </>

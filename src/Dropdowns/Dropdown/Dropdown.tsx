@@ -141,9 +141,10 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   mixedLabel?: string
   // called on close instead of onChange when editing several items
   onMixedChange?: (change: MixedChange) => void
-  // a button on each option, and on the "add new" one, to edit it. The dropdown stays open meanwhile
+  // an edit button on each option; the "add new" option creates one with it, with the search as
+  // its value. The dropdown stays open meanwhile
   onEditOption?: EditOptionHandler
-  editOptionTooltip?: string | ((option: any, isNew: boolean) => string)
+  editOptionTooltip?: string | ((option: any) => string)
   pt?: {
     button?: Partial<React.HTMLAttributes<HTMLButtonElement>>
     list?: Partial<React.HTMLAttributes<HTMLUListElement>>
@@ -481,7 +482,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     options = useMemo(() => {
       if (editable) {
         const searchItem = {
-          [labelKey]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
+          [labelKey]: searchForm
+            ? `Add new "${searchForm}"`
+            : onEditOption
+            ? 'Add new...'
+            : 'Type to add new items...',
           [dataKey]: searchForm,
           icon: 'add',
           className: 'add-new',
@@ -607,9 +612,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       if (isOpen) selectNewValue(createdValue)
     }, [createdValue])
 
-    const handleEditOption = async (option: any, isNew: boolean, e: React.MouseEvent) => {
-      // the button is in the option, which would select it
-      e.stopPropagation()
+    const handleEditOption = async (option: any, isNew: boolean, e?: React.SyntheticEvent) => {
+      // the edit button is in the option, which would select it
+      e?.stopPropagation()
+      e?.preventDefault()
       if (!onEditOption || editing) return
       setEditing({ value: option[dataKey], isNew })
       try {
@@ -621,9 +627,14 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
-    const getEditOptionTooltip = (option: any, isNew: boolean) => {
-      if (typeof editOptionTooltip === 'function') return editOptionTooltip(option, isNew)
-      return editOptionTooltip || (isNew ? 'Add with details' : 'Edit')
+    // the "add new" option opens the editor for a new option, the search as its value
+    const isCreatingInEditor = !!onEditOption && !!editable
+    const createInEditor = (e?: React.SyntheticEvent) =>
+      handleEditOption({ [dataKey]: searchForm, [labelKey]: searchForm }, true, e)
+
+    const getEditOptionTooltip = (option: any) => {
+      if (typeof editOptionTooltip === 'function') return editOptionTooltip(option)
+      return editOptionTooltip || 'Edit'
     }
 
     const handleChange = (
@@ -636,6 +647,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       const option = options[index]
       if (option?.disabled || disabledValues.includes(value)) {
+        return
+      }
+
+      if (isCreatingInEditor && index === 0) {
+        createInEditor()
         return
       }
 
@@ -874,6 +890,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (selectedValue && e.code !== 'Tab')
             return handleChange(selectedValue, activeIndex || 0, e)
 
+          if (isCreatingInEditor && searchForm && e.code !== 'Tab') return createInEditor(e)
+
           if (isMixed && e.code !== 'Tab') {
             if (editable && searchForm) {
               return addMixedValues(
@@ -907,6 +925,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (options.length === 1 && !editable) {
             selectedValue = [options[0][dataKey]]
           }
+
+          if (isCreatingInEditor && searchForm && e.code !== 'Tab') return createInEditor(e)
 
           if (editable && searchForm) {
             selectedValue = searchForm
@@ -1238,12 +1258,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   {[...missingOptions, ...showOptions].map((option, i) => {
                     // the first option adds the searched value
                     const isAddNew = !!editable && i === 0
+                    // the "add new" option opens the editor itself
                     const editableOption =
-                      !!onEditOption && !(showSelectAll && option[dataKey] === selectAllKey)
-                    // the "add new" option is edited as the value it adds
-                    const editedOption = isAddNew
-                      ? { [dataKey]: searchForm, [labelKey]: searchForm }
-                      : option
+                      !!onEditOption &&
+                      !isAddNew &&
+                      !(showSelectAll && option[dataKey] === selectAllKey)
                     const isEditing =
                       !!editing &&
                       editing.isNew === isAddNew &&
@@ -1308,10 +1327,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                             icon="edit"
                             variant="text"
                             tabIndex={-1}
-                            data-tooltip={getEditOptionTooltip(editedOption, isAddNew)}
-                            aria-label={getEditOptionTooltip(editedOption, isAddNew)}
+                            data-tooltip={getEditOptionTooltip(option)}
+                            aria-label={getEditOptionTooltip(option)}
                             disabled={!!editing}
-                            onClick={(e) => handleEditOption(editedOption, isAddNew, e)}
+                            onClick={(e) => handleEditOption(option, false, e)}
                           />
                         )}
                       </Styled.ListItem>
