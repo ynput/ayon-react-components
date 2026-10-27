@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { DefaultValueTemplate, Dropdown } from '../Dropdown'
+import { Button } from '../../Buttons/Button'
 export { DefaultItemStyled as DefaultItem } from '../Dropdown'
 
 export const TagSelectDropdown = styled(Dropdown)<{ $width: number; $checkboxes?: boolean }>`
@@ -35,6 +36,39 @@ export const TagSelectDropdown = styled(Dropdown)<{ $width: number; $checkboxes?
           }
         }
       `}
+  }
+`
+
+// the colour button shows on the hovered or focused tag, and always on the "add new" option
+export const ColorAction = styled(Button)`
+  margin-left: auto;
+  padding: 2px;
+  opacity: 0;
+
+  .option:hover &,
+  .option.focused &,
+  .option:first-child & {
+    opacity: 1;
+  }
+`
+
+export const Swatches = styled.div`
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+`
+
+export const Swatch = styled.button`
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid var(--md-sys-color-outline-variant);
+  cursor: pointer;
+
+  &:hover {
+    outline: 2px solid var(--md-sys-color-on-surface);
+    outline-offset: 1px;
   }
 `
 

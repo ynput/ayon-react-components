@@ -89,3 +89,30 @@ export const SeveralItems: Story = {
     )
   },
 }
+
+// tags without a colour can be saved with one, e.g. to the project's tags
+export const CreateTag: Story = {
+  args: {
+    tagsOrder,
+    editor: true,
+    createTagLabel: 'Add to project tags',
+  },
+  render: (args) => {
+    const [value, setValue] = useState(['no-colour-yet'])
+    const [allTags, setAllTags] = useState({
+      ...tags,
+      'no-colour-yet': { name: 'no-colour-yet', color: '' },
+    })
+
+    return (
+      <TagsSelect
+        {...args}
+        tags={allTags}
+        tagsOrder={undefined}
+        value={value}
+        onChange={setValue}
+        onCreateTag={(tag) => setAllTags({ ...allTags, [tag.name]: tag })}
+      />
+    )
+  },
+}

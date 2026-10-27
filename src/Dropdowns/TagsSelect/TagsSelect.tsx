@@ -5,6 +5,7 @@ import { type TagsOrderType, type TagsType } from './tags'
 import * as Styled from './TagsSelect.styled'
 import { Icon } from '../../Icon'
 import clsx from 'clsx'
+import { TagColorAction } from './TagColorAction'
 
 export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   value: string[]
@@ -24,6 +25,10 @@ export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   styleDropdown?: React.CSSProperties
   width?: number
   valueProps?: TagsSelectValueTemplateProps
+  // tags without a colour (and the typed "add new" one) get a button to save them with a colour
+  onCreateTag?: (tag: { name: string; color: string }) => void
+  createTagLabel?: string
+  tagColors?: string[]
 }
 
 export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
@@ -42,6 +47,9 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
       valueProps,
       isMultiple,
       checkboxes = true,
+      onCreateTag,
+      createTagLabel = 'Save with a colour',
+      tagColors,
       ...props
     },
     ref,
@@ -62,6 +70,8 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
     }, [tags, tagsOrder])
 
     const [value, setValue] = useState<string[]>([])
+    // the tag whose colours are shown
+    const [colorPickingTag, setColorPickingTag] = useState<string | null>(null)
 
     // set input value
     useEffect(() => {
@@ -95,6 +105,20 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
           >
             {tag.icon && <Icon icon={tag.icon} />}
             <span>{tag.name || tag.label}</span>
+            {onCreateTag && tag.name && !tags[tag.name]?.color && (
+              <TagColorAction
+                isPicking={colorPickingTag === tag.name}
+                colors={tagColors}
+                label={createTagLabel}
+                // the first option adds the typed tag, so it is selected too
+                passClick={i === 0}
+                onOpen={() => setColorPickingTag(tag.name)}
+                onPick={(color) => {
+                  setColorPickingTag(null)
+                  onCreateTag({ name: tag.name, color })
+                }}
+              />
+            )}
           </Styled.DefaultItem>
         )}
         options={tagsOptions || []}
@@ -118,6 +142,10 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         $checkboxes={checkboxes}
         checkboxes={checkboxes}
         sortBySelected
+        onClose={() => {
+          setColorPickingTag(null)
+          props.onClose?.()
+        }}
       />
     )
   },
