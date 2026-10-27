@@ -1,6 +1,7 @@
 import { forwardRef } from 'react'
 import clsx from 'clsx'
 import { Icon } from '../../Icon'
+import { getTextColor } from '../../helpers'
 import * as Styled from './ColorPicker.styled'
 
 // colours suggested by default
@@ -35,9 +36,8 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
     { value, onChange, colors = COLOR_SUGGESTIONS, custom = true, disabled, className, ...props },
     ref,
   ) => {
-    // a colour that isn't suggested is shown first, so the current one is always marked
+    // a colour that isn't suggested fills the custom button, so the current one is always marked
     const isCustomValue = !!value && !colors.some((color) => isSameColor(color, value))
-    const swatches = isCustomValue ? [value, ...colors] : colors
 
     return (
       <Styled.ColorPicker
@@ -46,7 +46,7 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         className={clsx('color-picker', className)}
         {...props}
       >
-        {swatches.map((color) => {
+        {colors.map((color) => {
           const selected = isSameColor(color, value)
           return (
             <Styled.Swatch
@@ -65,8 +65,11 @@ export const ColorPicker = forwardRef<HTMLDivElement, ColorPickerProps>(
         })}
         {custom && (
           <Styled.CustomSwatch
-            className={clsx('swatch custom', { disabled })}
-            data-tooltip="Other colour"
+            className={clsx('swatch custom', { disabled, selected: isCustomValue })}
+            data-tooltip={isCustomValue ? value : 'Other colour'}
+            style={
+              isCustomValue ? { backgroundColor: value, color: getTextColor(value) } : undefined
+            }
           >
             <Icon icon="colorize" />
             {/* React's onChange follows the colour while it is dragged in the browser's picker */}
