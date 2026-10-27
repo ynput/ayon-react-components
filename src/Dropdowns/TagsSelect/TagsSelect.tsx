@@ -25,9 +25,10 @@ export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   styleDropdown?: React.CSSProperties
   width?: number
   valueProps?: TagsSelectValueTemplateProps
-  // tags without a colour (and the typed "add new" one) get a button to save them with a colour
-  onCreateTag?: (tag: { name: string; color: string }) => void
-  createTagLabel?: string
+  // every tag, and a typed new one, gets a button to pick its colour
+  onTagColorChange?: (tag: { name: string; color: string }) => void
+  // the button's tooltip
+  tagColorLabel?: string | ((tag: { name: string; color?: string }) => string)
   tagColors?: string[]
 }
 
@@ -47,8 +48,8 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
       valueProps,
       isMultiple,
       checkboxes = true,
-      onCreateTag,
-      createTagLabel = 'Save with a colour',
+      onTagColorChange,
+      tagColorLabel = 'Pick a colour',
       tagColors,
       ...props
     },
@@ -97,7 +98,10 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <Styled.DefaultItem
-            className={clsx('option-child', { selected: isSelected })}
+            className={clsx('option-child', {
+              selected: isSelected,
+              'picking-color': colorPickingTag === tag.name,
+            })}
             style={{
               color: tag.color,
               justifyContent: i && !checkboxes ? 'center' : undefined,
@@ -105,17 +109,22 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
           >
             {tag.icon && <Icon icon={tag.icon} />}
             <span>{tag.name || tag.label}</span>
-            {onCreateTag && tag.name && !tags[tag.name]?.color && (
+            {onTagColorChange && tag.name && (
               <TagColorAction
                 isPicking={colorPickingTag === tag.name}
+                color={tags[tag.name]?.color}
                 colors={tagColors}
-                label={createTagLabel}
+                label={
+                  typeof tagColorLabel === 'function'
+                    ? tagColorLabel({ name: tag.name, color: tags[tag.name]?.color })
+                    : tagColorLabel
+                }
                 // the first option adds the typed tag, so it is selected too
-                passClick={i === 0}
+                isAddNew={i === 0}
                 onOpen={() => setColorPickingTag(tag.name)}
                 onPick={(color) => {
                   setColorPickingTag(null)
-                  onCreateTag({ name: tag.name, color })
+                  onTagColorChange({ name: tag.name, color })
                 }}
               />
             )}

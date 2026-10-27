@@ -1,7 +1,23 @@
 import styled, { css } from 'styled-components'
-import { DefaultValueTemplate, Dropdown } from '../Dropdown'
+import { DefaultItemStyled, DefaultValueTemplate, Dropdown } from '../Dropdown'
 import { Button } from '../../Buttons/Button'
-export { DefaultItemStyled as DefaultItem } from '../Dropdown'
+
+// while its colours are shown, a tag's row wraps them onto a line of their own
+export const DefaultItem = styled(DefaultItemStyled)`
+  &.picking-color {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: 32px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    row-gap: 6px;
+
+    .color-swatches {
+      flex-basis: 100%;
+      margin-left: 0;
+    }
+  }
+`
 
 export const TagSelectDropdown = styled(Dropdown)<{ $width: number; $checkboxes?: boolean }>`
   .options {
@@ -66,9 +82,32 @@ export const Swatch = styled.button`
   border: 1px solid var(--md-sys-color-outline-variant);
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &.selected {
     outline: 2px solid var(--md-sys-color-on-surface);
     outline-offset: 1px;
+  }
+`
+
+// opens the browser's colour picker, the input covers it
+export const CustomSwatch = styled.label`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+
+  .icon {
+    font-size: 16px;
+  }
+
+  input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
   }
 `
 

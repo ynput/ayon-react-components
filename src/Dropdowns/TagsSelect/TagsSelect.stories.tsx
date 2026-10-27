@@ -90,12 +90,12 @@ export const SeveralItems: Story = {
   },
 }
 
-// tags without a colour can be saved with one, e.g. to the project's tags
+// every tag can get a colour, e.g. saved to the project's tags
 export const CreateTag: Story = {
   args: {
     tagsOrder,
     editor: true,
-    createTagLabel: 'Add to project tags',
+    tagColorLabel: (tag) => (tag.color ? 'Change colour' : 'Add with a colour'),
   },
   render: (args) => {
     const [value, setValue] = useState(['no-colour-yet'])
@@ -111,7 +111,7 @@ export const CreateTag: Story = {
         tagsOrder={undefined}
         value={value}
         onChange={setValue}
-        onCreateTag={(tag) => setAllTags({ ...allTags, [tag.name]: tag })}
+        onTagColorChange={(tag) => setAllTags({ ...allTags, [tag.name]: tag })}
       />
     )
   },
