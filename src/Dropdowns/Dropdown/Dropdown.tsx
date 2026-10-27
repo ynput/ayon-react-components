@@ -55,6 +55,10 @@ type OnChangeEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLEle
 
 export type ValueIconMode = 'none' | 'single' | 'all' | 'multiple'
 
+// edits an option outside the dropdown, e.g. in a dialog, and resolves once it is saved or cancelled.
+// A new option resolves with its value (undefined when cancelled), which is then selected
+export type EditOptionHandler = (option: any, isNew: boolean) => Promise<string | void> | void
+
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   message?: string
@@ -137,6 +141,9 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   mixedLabel?: string
   // called on close instead of onChange when editing several items
   onMixedChange?: (change: MixedChange) => void
+  // a button on each option, and on the "add new" one, to edit it. The dropdown stays open meanwhile
+  onEditOption?: EditOptionHandler
+  editOptionTooltip?: string | ((option: any, isNew: boolean) => string)
   pt?: {
     button?: Partial<React.HTMLAttributes<HTMLButtonElement>>
     list?: Partial<React.HTMLAttributes<HTMLUListElement>>
@@ -223,6 +230,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       mixedTotal = 0,
       mixedLabel = 'items',
       onMixedChange,
+      onEditOption,
+      editOptionTooltip,
       pt,
       ...props
     },
@@ -232,7 +241,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     useEffect(() => {
       // set null if null otherwise compact array (array with no nulls or undefine)
-      setValue(initialValue === null ? null : compact(initialValue))
+      const newValue = initialValue === null ? null : compact(initialValue)
+      // a new array with the same values (e.g. value={v.map(String)}) would reset the selection,
+      // which a re-render while the dropdown is open, like saving an edited option, must not do
+      setValue((current) => (isEqual(current, newValue) ? current : newValue))
     }, [initialValue])
 
     // value = useMemo(() => compact(value), [value])
@@ -272,6 +284,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
       return selected.includes(optionValue) ? 'all' : 'none'
     }
+    // the option being edited outside the dropdown, see onEditOption
+    const [editing, setEditing] = useState<{ value: string; isNew: boolean } | null>(null)
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -540,7 +554,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, true))
+    // clicks in the editor (a dialog, outside the dropdown) don't close it
+    useOutsideAlerter([formRef, valueRef], () => !editing && handleClose(undefined, true))
 
     // new values typed in the search go onto every item
     const addMixedValues = (newValues: string[]) => {
@@ -568,6 +583,47 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
         setValue(selected)
         handleClose(selected)
       }
+    }
+
+    // selects a value created in the editor, keeping the dropdown open
+    const selectNewValue = (newValue: string) => {
+      setSearchForm('')
+      if (isMixed) {
+        setMixedEdits((edits) => ({ ...edits, [newValue]: 'add' }))
+        return
+      }
+      if (!multiSelect || maxSelected === 1) return submitChange([newValue])
+      if (selected.includes(newValue)) return
+      if (maxSelected && selected.length >= maxSelected) return
+      onAddItem?.(newValue)
+      submitChange([...selected, newValue])
+    }
+
+    // a value created in the editor, selected on the next render so it sees the current selection
+    const [createdValue, setCreatedValue] = useState<string | null>(null)
+    useEffect(() => {
+      if (createdValue === null) return
+      setCreatedValue(null)
+      if (isOpen) selectNewValue(createdValue)
+    }, [createdValue])
+
+    const handleEditOption = async (option: any, isNew: boolean, e: React.MouseEvent) => {
+      // the button is in the option, which would select it
+      e.stopPropagation()
+      if (!onEditOption || editing) return
+      setEditing({ value: option[dataKey], isNew })
+      try {
+        const newValue = await onEditOption(option, isNew)
+        if (isNew && newValue) setCreatedValue(newValue)
+      } finally {
+        setEditing(null)
+        searchRef.current?.focus()
+      }
+    }
+
+    const getEditOptionTooltip = (option: any, isNew: boolean) => {
+      if (typeof editOptionTooltip === 'function') return editOptionTooltip(option, isNew)
+      return editOptionTooltip || (isNew ? 'Add with details' : 'Edit')
     }
 
     const handleChange = (
@@ -1179,58 +1235,88 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   className={clsx('options', { usingKeyboard }, pt?.list?.className)}
                   ref={optionsRef}
                 >
-                  {[...missingOptions, ...showOptions].map((option, i) => (
-                    <Styled.ListItem
-                      key={`${option[dataKey]}-${i}`}
-                      onClick={(e) =>
-                        !option.disabled &&
-                        !disabledValues.includes(option[dataKey]) &&
-                        handleChange(option[dataKey], i, e)
-                      }
-                      $usingKeyboard={usingKeyboard}
-                      tabIndex={0}
-                      className={clsx('option', listClassName, {
-                        disabled: option.disabled || disabledValues.includes(option[dataKey]),
-                        focused: usingKeyboard && activeIndex === i,
-                        checkbox: showCheckboxes,
-                      })}
-                      data-value={option[dataKey]}
-                      data-tooltip={option.disabled ? option.disabledMessage : undefined}
-                    >
-                      {showCheckboxes &&
-                        !(editable && i === 0) &&
-                        renderCheckbox(
-                          option[dataKey] === selectAllKey && showSelectAll
-                            ? isAllSelected
-                              ? 'all'
-                              : 'none'
-                            : getOptionState(option[dataKey]),
+                  {[...missingOptions, ...showOptions].map((option, i) => {
+                    // the first option adds the searched value
+                    const isAddNew = !!editable && i === 0
+                    const editableOption =
+                      !!onEditOption && !(showSelectAll && option[dataKey] === selectAllKey)
+                    // the "add new" option is edited as the value it adds
+                    const editedOption = isAddNew
+                      ? { [dataKey]: searchForm, [labelKey]: searchForm }
+                      : option
+                    const isEditing =
+                      !!editing &&
+                      editing.isNew === isAddNew &&
+                      (isAddNew || editing.value === option[dataKey])
+                    return (
+                      <Styled.ListItem
+                        key={`${option[dataKey]}-${i}`}
+                        onClick={(e) =>
+                          !option.disabled &&
+                          !disabledValues.includes(option[dataKey]) &&
+                          handleChange(option[dataKey], i, e)
+                        }
+                        $usingKeyboard={usingKeyboard}
+                        tabIndex={0}
+                        className={clsx('option', listClassName, {
+                          disabled: option.disabled || disabledValues.includes(option[dataKey]),
+                          focused: usingKeyboard && activeIndex === i,
+                          checkbox: showCheckboxes,
+                          'add-new-option': isAddNew,
+                          'has-edit': editableOption,
+                          editing: isEditing,
+                        })}
+                        data-value={option[dataKey]}
+                        data-tooltip={option.disabled ? option.disabledMessage : undefined}
+                      >
+                        {showCheckboxes &&
+                          !(editable && i === 0) &&
+                          renderCheckbox(
+                            option[dataKey] === selectAllKey && showSelectAll
+                              ? isAllSelected
+                                ? 'all'
+                                : 'none'
+                              : getOptionState(option[dataKey]),
+                          )}
+                        {itemTemplate ? (
+                          itemTemplate(
+                            option,
+                            !!value && value.includes(option[dataKey]),
+                            !!selected?.includes(option[dataKey]),
+                            i,
+                            mixedSelected,
+                          )
+                        ) : (
+                          <DefaultItemTemplate
+                            option={option}
+                            dataKey={dataKey}
+                            labelKey={labelKey}
+                            selected={selected}
+                            mixedSelected={mixedSelected}
+                            value={value}
+                            multiSelect={multiSelect}
+                            minSelected={minSelected}
+                            itemClassName={itemClassName}
+                            itemStyle={itemStyle}
+                          />
                         )}
-                      {itemTemplate ? (
-                        itemTemplate(
-                          option,
-                          !!value && value.includes(option[dataKey]),
-                          !!selected?.includes(option[dataKey]),
-                          i,
-                          mixedSelected,
-                        )
-                      ) : (
-                        <DefaultItemTemplate
-                          option={option}
-                          dataKey={dataKey}
-                          labelKey={labelKey}
-                          selected={selected}
-                          mixedSelected={mixedSelected}
-                          value={value}
-                          multiSelect={multiSelect}
-                          minSelected={minSelected}
-                          itemClassName={itemClassName}
-                          itemStyle={itemStyle}
-                        />
-                      )}
-                      {isMixed && !(editable && i === 0) && renderMixedCount(option[dataKey])}
-                    </Styled.ListItem>
-                  ))}
+                        {isMixed && !(editable && i === 0) && renderMixedCount(option[dataKey])}
+                        {editableOption && (
+                          <Styled.EditOption
+                            type="button"
+                            className="edit-option"
+                            icon="edit"
+                            variant="text"
+                            tabIndex={-1}
+                            data-tooltip={getEditOptionTooltip(editedOption, isAddNew)}
+                            aria-label={getEditOptionTooltip(editedOption, isAddNew)}
+                            disabled={!!editing}
+                            onClick={(e) => handleEditOption(editedOption, isAddNew, e)}
+                          />
+                        )}
+                      </Styled.ListItem>
+                    )
+                  })}
                   {!!hiddenLength && (
                     <Styled.ListItem
                       onClick={handleShowMore}

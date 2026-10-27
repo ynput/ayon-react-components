@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TagsSelect, tags, tagsOrder } from '.'
+import type { TagsType } from './tags'
+import { useEditOptionDialog } from '../Dropdown/EditOptionDialog.stories.helper'
 import { useState } from 'react'
 import { applyMixedChange, getMixedCounts, type MixedChange } from '../Dropdown/mixedValues'
 
@@ -64,6 +66,13 @@ export const SeveralItems: Story = {
       [tagsOrder[0], 'not-in-anatomy'],
     ])
     const allTags = [...new Set(items.flat())]
+    const [tagDefinitions, setTagDefinitions] = useState<TagsType>(tags)
+    const { onEditOption, dialog } = useEditOptionDialog({
+      dataKey: 'name',
+      fields: ['color'],
+      onSave: ({ value: name, color = '' }) =>
+        setTagDefinitions({ ...tagDefinitions, [name]: { name, color } }),
+    })
 
     const handleMixedChange = (change: MixedChange) => {
       console.log(change)
@@ -74,12 +83,15 @@ export const SeveralItems: Story = {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <TagsSelect
           {...args}
+          tags={tagDefinitions}
           value={allTags}
           mixedCounts={getMixedCounts(items)}
           mixedTotal={items.length}
           mixedLabel="items"
           onMixedChange={handleMixedChange}
+          onEditOption={onEditOption}
         />
+        {dialog}
         <ul>
           {items.map((itemTags, i) => (
             <li key={i}>{itemTags.join(', ') || '-'}</li>
@@ -90,29 +102,37 @@ export const SeveralItems: Story = {
   },
 }
 
-// every tag can get a colour, e.g. saved to the project's tags
-export const CreateTag: Story = {
+// a tag's colour is edited in a dialog, and a new tag can be given one as it is added
+export const EditTags: Story = {
   args: {
     tagsOrder,
     editor: true,
-    tagColorLabel: (tag) => (tag.color ? 'Change colour' : 'Add with a colour'),
   },
   render: (args) => {
     const [value, setValue] = useState(['no-colour-yet'])
-    const [allTags, setAllTags] = useState({
+    const [allTags, setAllTags] = useState<TagsType>({
       ...tags,
       'no-colour-yet': { name: 'no-colour-yet', color: '' },
     })
+    const { onEditOption, dialog } = useEditOptionDialog({
+      dataKey: 'name',
+      fields: ['color'],
+      onSave: ({ value: name, color = '' }) => setAllTags({ ...allTags, [name]: { name, color } }),
+    })
 
     return (
-      <TagsSelect
-        {...args}
-        tags={allTags}
-        tagsOrder={undefined}
-        value={value}
-        onChange={setValue}
-        onTagColorChange={(tag) => setAllTags({ ...allTags, [tag.name]: tag })}
-      />
+      <>
+        <TagsSelect
+          {...args}
+          tags={allTags}
+          tagsOrder={undefined}
+          value={value}
+          onChange={setValue}
+          onEditOption={onEditOption}
+          editOptionTooltip={(tag, isNew) => (isNew ? 'Add with a colour' : 'Change colour')}
+        />
+        {dialog}
+      </>
     )
   },
 }

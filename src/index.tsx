@@ -66,6 +66,7 @@ export type {
   DefaultItemTemplateProps,
   DropdownRef,
   ValueIconMode,
+  EditOptionHandler,
 } from './Dropdowns/Dropdown'
 export { getMixedCounts, applyMixedChange } from './Dropdowns/Dropdown/mixedValues'
 export type { MixedChange, MixedState } from './Dropdowns/Dropdown/mixedValues'
@@ -92,6 +93,9 @@ export { InputText } from './Inputs/InputText'
 export { InputTextarea } from './Inputs/InputTextarea'
 // color
 export { InputColor } from './Inputs/InputColor'
+
+export { ColorPicker, COLOR_SUGGESTIONS } from './Inputs/ColorPicker'
+export type { ColorPickerProps } from './Inputs/ColorPicker'
 // number
 export { InputNumber } from './Inputs/InputNumber'
 // switch

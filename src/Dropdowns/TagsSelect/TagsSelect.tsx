@@ -5,7 +5,6 @@ import { type TagsOrderType, type TagsType } from './tags'
 import * as Styled from './TagsSelect.styled'
 import { Icon } from '../../Icon'
 import clsx from 'clsx'
-import { TagColorAction } from './TagColorAction'
 
 export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   value: string[]
@@ -25,11 +24,6 @@ export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
   styleDropdown?: React.CSSProperties
   width?: number
   valueProps?: TagsSelectValueTemplateProps
-  // every tag, and a typed new one, gets a button to pick its colour
-  onTagColorChange?: (tag: { name: string; color: string }) => void
-  // the button's tooltip
-  tagColorLabel?: string | ((tag: { name: string; color?: string }) => string)
-  tagColors?: string[]
 }
 
 export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
@@ -48,9 +42,6 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
       valueProps,
       isMultiple,
       checkboxes = true,
-      onTagColorChange,
-      tagColorLabel = 'Pick a colour',
-      tagColors,
       ...props
     },
     ref,
@@ -71,8 +62,6 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
     }, [tags, tagsOrder])
 
     const [value, setValue] = useState<string[]>([])
-    // the tag whose colours are shown
-    const [colorPickingTag, setColorPickingTag] = useState<string | null>(null)
 
     // set input value
     useEffect(() => {
@@ -98,10 +87,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
           <Styled.DefaultItem
-            className={clsx('option-child', {
-              selected: isSelected,
-              'picking-color': colorPickingTag === tag.name,
-            })}
+            className={clsx('option-child', { selected: isSelected })}
             style={{
               color: tag.color,
               justifyContent: i && !checkboxes ? 'center' : undefined,
@@ -109,25 +95,6 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
           >
             {tag.icon && <Icon icon={tag.icon} />}
             <span>{tag.name || tag.label}</span>
-            {onTagColorChange && tag.name && (
-              <TagColorAction
-                isPicking={colorPickingTag === tag.name}
-                color={tags[tag.name]?.color}
-                colors={tagColors}
-                label={
-                  typeof tagColorLabel === 'function'
-                    ? tagColorLabel({ name: tag.name, color: tags[tag.name]?.color })
-                    : tagColorLabel
-                }
-                // the first option adds the typed tag, so it is selected too
-                isAddNew={i === 0}
-                onOpen={() => setColorPickingTag(tag.name)}
-                onPick={(color) => {
-                  setColorPickingTag(null)
-                  onTagColorChange({ name: tag.name, color })
-                }}
-              />
-            )}
           </Styled.DefaultItem>
         )}
         options={tagsOptions || []}
@@ -151,10 +118,6 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         $checkboxes={checkboxes}
         checkboxes={checkboxes}
         sortBySelected
-        onClose={() => {
-          setColorPickingTag(null)
-          props.onClose?.()
-        }}
       />
     )
   },

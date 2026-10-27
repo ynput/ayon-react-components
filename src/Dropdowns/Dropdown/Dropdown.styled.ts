@@ -1,6 +1,7 @@
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import styled, { css, keyframes } from 'styled-components'
 import { labelSmall } from '../../theme/typography.styles'
+import { Button as BaseButton } from '../../Buttons/Button'
 
 export const Button = styled.button<{
   $isChanged: boolean
@@ -222,6 +223,7 @@ export const Options = styled.ul`
 export const ListItem = styled.li<{
   $usingKeyboard: boolean
 }>`
+  position: relative;
   cursor: pointer;
   user-select: none;
 
@@ -257,7 +259,7 @@ export const ListItem = styled.li<{
   &.focused {
     background-color: var(--md-sys-color-surface-container-low-hover);
 
-    & > * {
+    & > *:not(.edit-option) {
       outline: solid var(--focus-color) 1px;
       outline-offset: -1px;
       border-radius: var(--border-radius-m);
@@ -270,9 +272,16 @@ export const ListItem = styled.li<{
     align-items: center;
     padding: 0 8px;
 
-    & > *:not(.checkbox-icon):not(.mixed-count) {
+    & > *:not(.checkbox-icon):not(.mixed-count):not(.edit-option) {
       flex: 1;
       min-width: 0;
+    }
+
+    /* in line, so it doesn't cover the counts */
+    .edit-option {
+      position: static;
+      translate: none;
+      margin-left: 4px;
     }
 
     .selected,
@@ -323,6 +332,26 @@ export const ListItem = styled.li<{
       color: var(--md-sys-color-on-error-container);
       background-color: var(--md-sys-color-error-container);
     }
+  }
+`
+
+// edits the option outside the dropdown; shows on the hovered or focused option, always on "add new"
+export const EditOption = styled(BaseButton)`
+  &.edit-option {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    translate: 0 -50%;
+    flex: none;
+    padding: 2px;
+    opacity: 0;
+  }
+
+  .option:hover > &,
+  .option.focused > &,
+  .option.editing > &,
+  .option.add-new-option > & {
+    opacity: 1;
   }
 `
 
