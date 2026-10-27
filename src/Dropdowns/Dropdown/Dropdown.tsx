@@ -1,4 +1,11 @@
-import React, { CSSProperties, forwardRef, useEffect, RefObject, useImperativeHandle } from 'react'
+import React, {
+  CSSProperties,
+  forwardRef,
+  useEffect,
+  RefObject,
+  useId,
+  useImperativeHandle,
+} from 'react'
 import { useState } from 'react'
 import { useRef } from 'react'
 import * as Styled from './Dropdown.styled'
@@ -12,6 +19,15 @@ import 'overlayscrollbars/overlayscrollbars.css'
 import { createPortal } from 'react-dom'
 import { matchSorter } from 'match-sorter'
 import clsx from 'clsx'
+import { InputSwitch } from '../../Inputs/InputSwitch'
+import {
+  getMixedChange,
+  getMixedState,
+  toggleMixedValue,
+  type MixedChange,
+  type MixedEdits,
+  type MixedState,
+} from './mixedValues'
 
 /**
  * Hook that alerts clicks outside of the passed ref
@@ -38,6 +54,10 @@ function useOutsideAlerter(refs: RefObject<HTMLElement>[], callback: () => void)
 type OnChangeEvent = React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
 
 export type ValueIconMode = 'none' | 'single' | 'all' | 'multiple'
+
+// edits an option outside the dropdown, e.g. in a dialog, and resolves once it is saved or cancelled.
+// A new option resolves with its value (undefined when cancelled), which is then selected
+export type EditOptionHandler = (option: any, isNew: boolean) => Promise<string | void> | void
 
 // types
 export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
@@ -111,6 +131,20 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   buttonProps?: Styled.ButtonType['defaultProps']
   activateKeys?: string[]
   startContent?: (value: string[], selected: string[], isOpen: boolean) => React.ReactNode
+  // multiSelect: show a checkbox on each option
+  checkboxes?: boolean
+  // editing several items at once (more than one): how many of the items have each value. Every
+  // value is then added to, removed from or left as it is on each item, see mixedValues.ts
+  mixedCounts?: Record<string, number>
+  mixedTotal?: number
+  // what the items are called, e.g. "tasks"
+  mixedLabel?: string
+  // called on close instead of onChange when editing several items
+  onMixedChange?: (change: MixedChange) => void
+  // an edit button on each option; the "add new" option creates one with it, with the search as
+  // its value. The dropdown stays open meanwhile
+  onEditOption?: EditOptionHandler
+  editOptionTooltip?: string | ((option: any) => string)
   pt?: {
     button?: Partial<React.HTMLAttributes<HTMLButtonElement>>
     list?: Partial<React.HTMLAttributes<HTMLUListElement>>
@@ -192,6 +226,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       buttonProps,
       activateKeys = ['Enter', 'Space', 'NumpadEnter', 'Tab'],
       startContent,
+      checkboxes,
+      mixedCounts,
+      mixedTotal = 0,
+      mixedLabel = 'items',
+      onMixedChange,
+      onEditOption,
+      editOptionTooltip,
       pt,
       ...props
     },
@@ -201,7 +242,10 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
     useEffect(() => {
       // set null if null otherwise compact array (array with no nulls or undefine)
-      setValue(initialValue === null ? null : compact(initialValue))
+      const newValue = initialValue === null ? null : compact(initialValue)
+      // a new array with the same values (e.g. value={v.map(String)}) would reset the selection,
+      // which a re-render while the dropdown is open, like saving an edited option, must not do
+      setValue((current) => (isEqual(current, newValue) ? current : newValue))
     }, [initialValue])
 
     // value = useMemo(() => compact(value), [value])
@@ -228,6 +272,21 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     const [selected, setSelected] = useState<string[]>([])
     // mixed selection, is it selected by at least one item
     const [mixedSelected, setMixedSelected] = useState<string[]>([])
+    // editing several items at once, see mixedValues.ts
+    const isMixed = !!multiSelect && !!mixedCounts && mixedTotal > 1
+    const [mixedEdits, setMixedEdits] = useState<MixedEdits>({})
+    const [replaceAll, setReplaceAll] = useState(false)
+    // the older mixed mode (isMultiple without multipleOverride) keeps its remove icons
+    const isLegacyMixed = !isMixed && !!isMultiple && !multipleOverride
+    const showCheckboxes = !!multiSelect && (!!checkboxes || isMixed) && !isLegacyMixed
+    const getOptionState = (optionValue: string): MixedState => {
+      if (isMixed) {
+        return getMixedState(optionValue, mixedCounts, mixedTotal, mixedEdits, replaceAll)
+      }
+      return selected.includes(optionValue) ? 'all' : 'none'
+    }
+    // the option being edited outside the dropdown, see onEditOption
+    const [editing, setEditing] = useState<{ value: string; isNew: boolean } | null>(null)
     // keyboard states
     const [activeIndex, setActiveIndex] = useState<number | null>(null)
     const [usingKeyboard, setUsingKeyboard] = useState(false)
@@ -343,13 +402,26 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }, [activeIndex, options, usingKeyboard, optionsRef])
 
+    // a closed dropdown starts without changes
+    useEffect(() => {
+      if (isOpen) return
+      setMixedEdits({})
+      setReplaceAll(false)
+    }, [isOpen])
+
     // select all only works with multiSelect
-    const showSelectAll = onSelectAll && multiSelect
+    const showSelectAll = onSelectAll && multiSelect && !isMixed
     // are all options selected
     const isAllSelected = useMemo(() => value && value.length >= options.length, [value, options])
 
     const getMissingOptions = () => {
-      const values = Array.from(new Set([...selected, ...mixedSelected]))
+      const values = Array.from(
+        new Set([
+          ...selected,
+          ...mixedSelected,
+          ...(isMixed ? [...Object.keys(mixedCounts), ...Object.keys(mixedEdits)] : []),
+        ]),
+      )
       // add in any values that are not in options
       return values?.filter((s) => !!s && !options.some((o) => o[dataKey] === s)) || []
     }
@@ -359,7 +431,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       [key: string]: string
       error: string
     }[] = []
-    if (editable) {
+    // every value the items have is listed when editing several, so none is changed unseen
+    if (editable || isMixed) {
       // add missing options to options
       options = options.concat(
         missing.map((s) => ({
@@ -409,7 +482,11 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
     options = useMemo(() => {
       if (editable) {
         const searchItem = {
-          [labelKey]: searchForm ? `Add new "${searchForm}"` : 'Type to add new items...',
+          [labelKey]: searchForm
+            ? `Add new "${searchForm}"`
+            : onEditOption
+            ? 'Add new...'
+            : 'Type to add new items...',
           [dataKey]: searchForm,
           icon: 'add',
           className: 'add-new',
@@ -452,6 +529,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       // reset width
       setMinWidth(0)
 
+      if (isMixed) {
+        const change = getMixedChange(mixedCounts, mixedTotal, mixedEdits, replaceAll)
+        if (change.add.length || change.remove.length) onMixedChange?.(change)
+        valueRef.current?.focus()
+        return
+      }
+
       // check if value has changed
       const isSame = isEqual(changeValue, value)
 
@@ -475,7 +559,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       valueRef.current?.focus()
     }
 
-    useOutsideAlerter([formRef, valueRef], () => handleClose(undefined, true))
+    // clicks in the editor (a dialog, outside the dropdown) don't close it
+    useOutsideAlerter([formRef, valueRef], () => !editing && handleClose(undefined, true))
+
+    // new values typed in the search go onto every item
+    const addMixedValues = (newValues: string[]) => {
+      const edits: MixedEdits = { ...mixedEdits }
+      newValues.forEach((newValue) => (edits[newValue] = 'add'))
+      setMixedEdits(edits)
+      setSearchForm('')
+    }
+
+    const replaceAllId = useId()
+    // values already checked or unchecked stay so, only the untouched ones follow the mode
+    const toggleReplaceAll = () => setReplaceAll((replace) => !replace)
 
     const submitChange = (selected: string[], close?: boolean, e?: OnChangeEvent) => {
       // find items that have been removed (difference between mixedSelected and value)
@@ -493,6 +590,53 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       }
     }
 
+    // selects a value created in the editor, keeping the dropdown open
+    const selectNewValue = (newValue: string) => {
+      setSearchForm('')
+      if (isMixed) {
+        setMixedEdits((edits) => ({ ...edits, [newValue]: 'add' }))
+        return
+      }
+      if (!multiSelect || maxSelected === 1) return submitChange([newValue])
+      if (selected.includes(newValue)) return
+      if (maxSelected && selected.length >= maxSelected) return
+      onAddItem?.(newValue)
+      submitChange([...selected, newValue])
+    }
+
+    // a value created in the editor, selected on the next render so it sees the current selection
+    const [createdValue, setCreatedValue] = useState<string | null>(null)
+    useEffect(() => {
+      if (createdValue === null) return
+      setCreatedValue(null)
+      if (isOpen) selectNewValue(createdValue)
+    }, [createdValue])
+
+    const handleEditOption = async (option: any, isNew: boolean, e?: React.SyntheticEvent) => {
+      // the edit button is in the option, which would select it
+      e?.stopPropagation()
+      e?.preventDefault()
+      if (!onEditOption || editing) return
+      setEditing({ value: option[dataKey], isNew })
+      try {
+        const newValue = await onEditOption(option, isNew)
+        if (isNew && newValue) setCreatedValue(newValue)
+      } finally {
+        setEditing(null)
+        searchRef.current?.focus()
+      }
+    }
+
+    // the "add new" option opens the editor for a new option, the search as its value
+    const isCreatingInEditor = !!onEditOption && !!editable
+    const createInEditor = (e?: React.SyntheticEvent) =>
+      handleEditOption({ [dataKey]: searchForm, [labelKey]: searchForm }, true, e)
+
+    const getEditOptionTooltip = (option: any) => {
+      if (typeof editOptionTooltip === 'function') return editOptionTooltip(option)
+      return editOptionTooltip || 'Edit'
+    }
+
     const handleChange = (
       value: string,
       index: number,
@@ -503,6 +647,22 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
 
       const option = options[index]
       if (option?.disabled || disabledValues.includes(value)) {
+        return
+      }
+
+      if (isCreatingInEditor && index === 0) {
+        createInEditor()
+        return
+      }
+
+      if (isMixed) {
+        // the first option adds the searched value to every item
+        if (editable && index === 0) {
+          if (searchForm) addMixedValues([searchForm])
+          searchRef.current?.focus()
+          return
+        }
+        setMixedEdits(toggleMixedValue(value, mixedCounts, mixedTotal, mixedEdits, replaceAll))
         return
       }
 
@@ -730,6 +890,20 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (selectedValue && e.code !== 'Tab')
             return handleChange(selectedValue, activeIndex || 0, e)
 
+          if (isCreatingInEditor && searchForm && e.code !== 'Tab') return createInEditor(e)
+
+          if (isMixed && e.code !== 'Tab') {
+            if (editable && searchForm) {
+              return addMixedValues(
+                searchForm
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean),
+              )
+            }
+            return handleClose()
+          }
+
           let selectedValues = [options[0][dataKey]]
           // if editable, split by comma
           if (editable && searchForm) {
@@ -751,6 +925,8 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
           if (options.length === 1 && !editable) {
             selectedValue = [options[0][dataKey]]
           }
+
+          if (isCreatingInEditor && searchForm && e.code !== 'Tab') return createInEditor(e)
 
           if (editable && searchForm) {
             selectedValue = searchForm
@@ -921,6 +1097,74 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       valueChildren = emptyMessage
     }
 
+    const renderCheckbox = (state: MixedState) => (
+      <Icon
+        icon={
+          state === 'all'
+            ? 'check_box'
+            : state === 'some'
+            ? 'indeterminate_check_box'
+            : 'check_box_outline_blank'
+        }
+        filled={state !== 'none'}
+        className={clsx('checkbox-icon', state)}
+      />
+    )
+
+    const getOptionLabel = (optionValue: string): string => {
+      const option = nonSearchedOptions.find((o) => o[dataKey] === optionValue)
+      return option?.[labelKey] || optionValue
+    }
+
+    // how many items have the value, or how many the change adds it to or removes it from
+    const renderMixedCount = (optionValue: string) => {
+      if (!isMixed) return null
+      const count = mixedCounts[optionValue] || 0
+      const state = getOptionState(optionValue)
+      if (state === 'all' && count < mixedTotal) {
+        const added = mixedTotal - count
+        return (
+          <span
+            className="mixed-count adding"
+            data-tooltip={`Add to ${added} of ${mixedTotal} ${mixedLabel}`}
+          >
+            +{added}
+          </span>
+        )
+      }
+      if (state === 'none' && count > 0) {
+        return (
+          <span
+            className="mixed-count removing"
+            data-tooltip={`Remove from ${count} of ${mixedTotal} ${mixedLabel}`}
+          >
+            −{count}
+          </span>
+        )
+      }
+      if (state === 'some') {
+        return (
+          <span className="mixed-count" data-tooltip={`On ${count} of ${mixedTotal} ${mixedLabel}`}>
+            {count}/{mixedTotal}
+          </span>
+        )
+      }
+      return null
+    }
+
+    const mixedChange = isMixed
+      ? getMixedChange(mixedCounts, mixedTotal, mixedEdits, replaceAll)
+      : undefined
+    const mixedSummary = mixedChange
+      ? [
+          mixedChange.add.length && `Add ${mixedChange.add.map(getOptionLabel).join(', ')}`,
+          mixedChange.remove.length &&
+            `Remove ${mixedChange.remove.map(getOptionLabel).join(', ')}`,
+        ]
+          .filter(Boolean)
+          .join(' · ')
+      : ''
+
     return (
       <Styled.Dropdown
         onKeyDown={handleKeyPress}
@@ -996,6 +1240,7 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                 style={{ maxHeight }}
                 className={clsx({
                   ['no-top-radius']: (messageOverButton && !!message) || !!search || !!editable,
+                  ['no-bottom-radius']: isMixed,
                 })}
                 defer
               >
@@ -1010,47 +1255,87 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   className={clsx('options', { usingKeyboard }, pt?.list?.className)}
                   ref={optionsRef}
                 >
-                  {[...missingOptions, ...showOptions].map((option, i) => (
-                    <Styled.ListItem
-                      key={`${option[dataKey]}-${i}`}
-                      onClick={(e) =>
-                        !option.disabled &&
-                        !disabledValues.includes(option[dataKey]) &&
-                        handleChange(option[dataKey], i, e)
-                      }
-                      $usingKeyboard={usingKeyboard}
-                      tabIndex={0}
-                      className={clsx('option', listClassName, {
-                        disabled: option.disabled || disabledValues.includes(option[dataKey]),
-                        focused: usingKeyboard && activeIndex === i,
-                      })}
-                      data-value={option[dataKey]}
-                      data-tooltip={option.disabled ? option.disabledMessage : undefined}
-                    >
-                      {itemTemplate ? (
-                        itemTemplate(
-                          option,
-                          !!value && value.includes(option[dataKey]),
-                          !!selected?.includes(option[dataKey]),
-                          i,
-                          mixedSelected,
-                        )
-                      ) : (
-                        <DefaultItemTemplate
-                          option={option}
-                          dataKey={dataKey}
-                          labelKey={labelKey}
-                          selected={selected}
-                          mixedSelected={mixedSelected}
-                          value={value}
-                          multiSelect={multiSelect}
-                          minSelected={minSelected}
-                          itemClassName={itemClassName}
-                          itemStyle={itemStyle}
-                        />
-                      )}
-                    </Styled.ListItem>
-                  ))}
+                  {[...missingOptions, ...showOptions].map((option, i) => {
+                    // the first option adds the searched value
+                    const isAddNew = !!editable && i === 0
+                    // the "add new" option opens the editor itself
+                    const editableOption =
+                      !!onEditOption &&
+                      !isAddNew &&
+                      !(showSelectAll && option[dataKey] === selectAllKey)
+                    const isEditing =
+                      !!editing &&
+                      editing.isNew === isAddNew &&
+                      (isAddNew || editing.value === option[dataKey])
+                    return (
+                      <Styled.ListItem
+                        key={`${option[dataKey]}-${i}`}
+                        onClick={(e) =>
+                          !option.disabled &&
+                          !disabledValues.includes(option[dataKey]) &&
+                          handleChange(option[dataKey], i, e)
+                        }
+                        $usingKeyboard={usingKeyboard}
+                        tabIndex={0}
+                        className={clsx('option', listClassName, {
+                          disabled: option.disabled || disabledValues.includes(option[dataKey]),
+                          focused: usingKeyboard && activeIndex === i,
+                          checkbox: showCheckboxes,
+                          'add-new-option': isAddNew,
+                          'has-edit': editableOption,
+                          editing: isEditing,
+                        })}
+                        data-value={option[dataKey]}
+                        data-tooltip={option.disabled ? option.disabledMessage : undefined}
+                      >
+                        {showCheckboxes &&
+                          !(editable && i === 0) &&
+                          renderCheckbox(
+                            option[dataKey] === selectAllKey && showSelectAll
+                              ? isAllSelected
+                                ? 'all'
+                                : 'none'
+                              : getOptionState(option[dataKey]),
+                          )}
+                        {itemTemplate ? (
+                          itemTemplate(
+                            option,
+                            !!value && value.includes(option[dataKey]),
+                            !!selected?.includes(option[dataKey]),
+                            i,
+                            mixedSelected,
+                          )
+                        ) : (
+                          <DefaultItemTemplate
+                            option={option}
+                            dataKey={dataKey}
+                            labelKey={labelKey}
+                            selected={selected}
+                            mixedSelected={mixedSelected}
+                            value={value}
+                            multiSelect={multiSelect}
+                            minSelected={minSelected}
+                            itemClassName={itemClassName}
+                            itemStyle={itemStyle}
+                          />
+                        )}
+                        {isMixed && !(editable && i === 0) && renderMixedCount(option[dataKey])}
+                        {editableOption && (
+                          <Styled.EditOption
+                            type="button"
+                            className="edit-option"
+                            icon="edit"
+                            variant="text"
+                            tabIndex={-1}
+                            data-tooltip={getEditOptionTooltip(option)}
+                            aria-label={getEditOptionTooltip(option)}
+                            disabled={!!editing}
+                            onClick={(e) => handleEditOption(option, false, e)}
+                          />
+                        )}
+                      </Styled.ListItem>
+                    )
+                  })}
                   {!!hiddenLength && (
                     <Styled.ListItem
                       onClick={handleShowMore}
@@ -1066,6 +1351,29 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
                   )}
                 </Styled.Options>
               </Styled.Scrollable>
+              {isMixed && (
+                <Styled.MixedFooter className="mixed-footer">
+                  {/* always shown, so the footer keeps its height and the switch stays put */}
+                  <span className={clsx('summary', { empty: !mixedSummary })}>
+                    {mixedSummary || 'No changes'}
+                  </span>
+                  <div className="row">
+                    <span>
+                      {mixedTotal} {mixedLabel} selected
+                    </span>
+                    {/* the switch has its own label, so the text labels it from beside it, not around it */}
+                    <div className="replace">
+                      <InputSwitch
+                        id={replaceAllId}
+                        compact
+                        checked={replaceAll}
+                        onChange={toggleReplaceAll}
+                      />
+                      <label htmlFor={replaceAllId}>Replace all</label>
+                    </div>
+                  </div>
+                </Styled.MixedFooter>
+              )}
             </Styled.Container>,
             document.body,
           )}

@@ -233,6 +233,16 @@ export const MultipleSorted: Story = {
   render: Template,
 }
 
+export const Checkboxes: Story = {
+  args: {
+    value: [options[0].value, options[1].value],
+    multiSelect: true,
+    checkboxes: true,
+    search: true,
+  },
+  render: Template,
+}
+
 // custom item and option renderers
 // TODO: fix this!
 export const CustomTemplates: Story = {
