@@ -67,6 +67,8 @@ export type {
   DropdownRef,
   ValueIconMode,
 } from './Dropdowns/Dropdown'
+export { getMixedCounts, applyMixedChange } from './Dropdowns/Dropdown/mixedValues'
+export type { MixedChange, MixedState } from './Dropdowns/Dropdown/mixedValues'
 
 // SEARCH FILTER
 export * from './SearchFilter'

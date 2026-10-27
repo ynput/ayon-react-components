@@ -17,9 +17,16 @@ const PlaceholderTag = styled.div`
 export interface TagsSelectValueTemplateProps extends Omit<DefaultValueTemplateProps, 'children'> {
   tags: TagsType
   editor?: boolean
+  // editing several items: tags only some of them have are shown dashed
+  mixedCounts?: Record<string, number>
+  mixedTotal?: number
 }
 
-export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props) => {
+export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = ({
+  mixedCounts,
+  mixedTotal = 0,
+  ...props
+}) => {
   const { value, tags = {}, editor = false } = props
 
   //   if value empty return placeholder tag
@@ -38,16 +45,30 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = (props)
       valueStyle={{ gap: 4, display: 'flex' }}
       className={clsx('tags', { editor }, props.className)}
     >
-      {value?.map((v) => (
-        <Styled.Tag
-          key={v}
-          $backgroundColor={tags[v]?.color}
-          $color={getTextColor(tags[v]?.color || '#353B46')}
-          className="tag"
-        >
-          {v}
-        </Styled.Tag>
-      ))}
+      {value?.map((v) => {
+        const count = mixedCounts?.[v] ?? mixedTotal
+        if (mixedTotal > 1 && count < mixedTotal) {
+          return (
+            <Styled.PartialTag
+              key={v}
+              className="tag partial"
+              data-tooltip={`On ${count} of ${mixedTotal}`}
+            >
+              {v}
+            </Styled.PartialTag>
+          )
+        }
+        return (
+          <Styled.Tag
+            key={v}
+            $backgroundColor={tags[v]?.color}
+            $color={getTextColor(tags[v]?.color || '#353B46')}
+            className="tag"
+          >
+            {v}
+          </Styled.Tag>
+        )
+      })}
     </Styled.TagsValueTemplate>
   )
 }
