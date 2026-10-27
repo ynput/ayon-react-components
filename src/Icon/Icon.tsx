@@ -21,12 +21,13 @@ export interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
 
 // TODO: link to SVG
 
-export const Icon = forwardRef<HTMLSpanElement, IconProps>((props, ref) => {
+// `icon` stays on the element, styles and queries select icons by it
+export const Icon = forwardRef<HTMLSpanElement, IconProps>(({ filled, ...props }, ref) => {
   return (
     <StyledIcon
       ref={ref}
       {...props}
-      className={clsx('material-symbols-outlined icon', props.className, { filled: props.filled })}
+      className={clsx('material-symbols-outlined icon', props.className, { filled })}
     >
       {props.icon}
     </StyledIcon>
