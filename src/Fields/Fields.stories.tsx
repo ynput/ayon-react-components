@@ -58,7 +58,12 @@ const useCommitLog = () => {
 
 const options: EnumFieldOption[] = [
   { value: 'animation', label: 'Animation', icon: 'directions_run', color: '#e6524b' },
-  { value: 'lighting', label: 'Lighting', icon: 'lightbulb', color: '#f4c95d' },
+  {
+    value: 'lighting',
+    label: 'Lighting',
+    icon: { type: 'material-symbols', name: 'lightbulb' },
+    color: '#f4c95d',
+  },
   { value: 'compositing', label: 'Compositing', icon: 'layers', color: '#5bb5f0' },
 ]
 

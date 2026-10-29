@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { StatusSelect, StatusField, Status } from '../Dropdowns/StatusSelect'
 import { IconType } from '../Icon'
 import { fieldSubmittingStyles } from './fieldStyles'
-import { EnumFieldOption } from './EnumField'
+import { EnumFieldOption, resolveEnumFieldIcon } from './EnumField'
 
 const StyledStatusValue = styled(StatusField)`
   height: 30px;
@@ -44,7 +44,7 @@ export const StatusSelectField = ({
 }: StatusSelectFieldProps) => {
   const statusOptions: Status[] = options.map((option) => ({
     name: String(option.value),
-    icon: option.icon as IconType | undefined,
+    icon: resolveEnumFieldIcon(option.icon) as IconType | undefined,
     color: option.color,
   }))
 

@@ -13,14 +13,32 @@ import { Icon, IconImage, IconPropType, IconType, isIconImage } from '../Icon'
 import { dropdownVariantStyles, fieldLoadingStyles, fieldSubmittingStyles } from './fieldStyles'
 import { EMPTY_VALUE, ReadOnlyValue } from './common.styled'
 
+/** An icon given as an object, as AYON enum items store it */
+export type EnumFieldIconObject = {
+  type?: 'material-symbols' | 'url'
+  /** Material symbol name */
+  name?: string
+  /** Image URL */
+  url?: string
+  color?: string
+}
+
 /** An option of an enum field. Matches the shape of AYON enum items. */
 export type EnumFieldOption = {
   value: string | number | boolean
   label: string
-  /** Material symbol name or an image URL/path */
-  icon?: IconPropType
+  /** Material symbol name, an image URL/path, or an icon object */
+  icon?: IconPropType | EnumFieldIconObject
   color?: string
 }
+
+/** The option icon as a material symbol name or image URL */
+export const resolveEnumFieldIcon = (icon?: EnumFieldOption['icon']): IconPropType | undefined => {
+  if (!icon || typeof icon === 'string') return icon
+  return icon.type === 'url' || (!icon.name && icon.url) ? icon.url : icon.name
+}
+
+type ResolvedEnumFieldOption = Omit<EnumFieldOption, 'icon'> & { icon?: IconPropType }
 
 const ADD_VALUE = '__add__'
 const DIVIDER_VALUE = '__divider__'
@@ -155,7 +173,7 @@ const OptionValue = ({
   iconOnlyColor,
   suffix,
 }: {
-  option: EnumFieldOption
+  option: ResolvedEnumFieldOption
   iconOnlyColor?: boolean
   suffix?: string
 }) => (
@@ -200,7 +218,7 @@ export interface EnumFieldProps
 export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
   (
     {
-      options,
+      options: optionsProp,
       value,
       onChange,
       onClear,
@@ -222,6 +240,15 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
   ) => {
     const internalRef = useRef<DropdownRef>(null)
     const ref = refProp || internalRef
+    const options = useMemo<ResolvedEnumFieldOption[]>(
+      () =>
+        optionsProp.map((option) =>
+          typeof option.icon === 'object'
+            ? { ...option, icon: resolveEnumFieldIcon(option.icon) }
+            : (option as ResolvedEnumFieldOption),
+        ),
+      [optionsProp],
+    )
     const valueAsStrings = useMemo(
       () => value.filter((v) => v !== undefined && v !== null && v !== '').map((v) => String(v)),
       [value],
@@ -277,7 +304,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
       }
     }
 
-    const allOptions: EnumFieldOption[] = useMemo(
+    const allOptions: ResolvedEnumFieldOption[] = useMemo(
       () =>
         onAddItem
           ? [
@@ -374,7 +401,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
             />
           )
         }}
-        itemTemplate={(option: EnumFieldOption, _isActive, isSelected) => {
+        itemTemplate={(option: ResolvedEnumFieldOption, _isActive, isSelected) => {
           if (option.value === DIVIDER_VALUE) return <Divider />
 
           // Image icons go into startContent; DefaultItemTemplate only renders material icons
