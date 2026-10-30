@@ -8,7 +8,12 @@ import { Icon, IconType, iconSet } from '../../Icon'
 type KeywordsByIcon = Record<string, string[]>
 let keywordsPromise: Promise<KeywordsByIcon> | undefined
 const loadKeywords = () =>
-  (keywordsPromise ??= import('../../Icon/icon-keywords.json').then((m) => m.default))
+  (keywordsPromise ??= import('../../Icon/icon-keywords.json')
+    .then((m) => m.default)
+    .catch(() => {
+      keywordsPromise = undefined
+      return {}
+    }))
 // search the icon name and its keywords
 const SEARCH_FIELDS = ['value', 'label', 'keywords']
 
