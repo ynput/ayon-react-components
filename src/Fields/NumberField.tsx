@@ -35,8 +35,9 @@ export interface NumberFieldProps
 
 const parseNumber = (raw: string, type: NumberFieldType): number | undefined => {
   if (!raw) return undefined
-  const parsed = type === 'integer' ? Number.parseInt(raw, 10) : Number(raw)
-  return Number.isNaN(parsed) ? undefined : parsed
+  const parsed = Number(raw)
+  if (!Number.isFinite(parsed)) return undefined
+  return type === 'integer' ? Math.trunc(parsed) : parsed
 }
 
 const toText = (value: number | undefined | null) =>
