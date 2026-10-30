@@ -1,12 +1,15 @@
-import { forwardRef, useMemo } from 'react'
+import { forwardRef, useMemo, useState } from 'react'
 import * as Styled from './IconSelect.styled'
 import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../../Icon'
-import keywordsJson from '../../Icon/icon-keywords.json'
 
 // what each icon looks like and is used for, so searching "trash" finds delete
-const keywordsByIcon: Record<string, string[]> = keywordsJson
-// match the icon name first, then its keywords
+// the file is large, so it is only loaded the first time a dropdown opens (then cached)
+type KeywordsByIcon = Record<string, string[]>
+let keywordsPromise: Promise<KeywordsByIcon> | undefined
+const loadKeywords = () =>
+  (keywordsPromise ??= import('../../Icon/icon-keywords.json').then((m) => m.default))
+// search the icon name and its keywords
 const SEARCH_FIELDS = ['value', 'label', 'keywords']
 
 export interface IconTemplateProps {
@@ -45,10 +48,19 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
       featuredOnly,
       widthExpand = false,
       sortBySelected = true,
+      onOpen,
       ...props
     },
     ref,
   ) => {
+    const [keywordsByIcon, setKeywordsByIcon] = useState<KeywordsByIcon>({})
+
+    // load keywords on first open, then still call the caller's onOpen
+    const handleOpen = () => {
+      loadKeywords().then(setKeywordsByIcon)
+      onOpen?.()
+    }
+
     const dropdownOptions = useMemo(() => {
       const dropdownOptions = []
 
@@ -63,7 +75,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
         })
       }
       return dropdownOptions
-    }, [])
+    }, [keywordsByIcon])
 
     const featuredStrings = featured.map((icon) => icon as string)
 
@@ -93,6 +105,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
         valueStyle={{ width: 150, ...props.valueStyle }}
         style={{ maxWidth: 150, ...props.style }}
         ref={ref}
+        onOpen={handleOpen}
         {...props}
         maxOptionsShown={Math.max(props.maxOptionsShown || 25, featured.length)}
         minSelected={1}
