@@ -364,6 +364,13 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       setActiveIndex(index)
     }, [isOpen, setActiveIndex, optionsRef])
 
+    // onOpen runs however the dropdown opens (click, keyboard, open() or toggle())
+    const onOpenRef = useRef(onOpen)
+    onOpenRef.current = onOpen
+    useEffect(() => {
+      if (isOpen) onOpenRef.current && onOpenRef.current()
+    }, [isOpen])
+
     // set initial selected from value
     useEffect(() => {
       if (isMultiple && !multipleOverride) {
@@ -792,8 +799,6 @@ export const Dropdown = forwardRef<DropdownRef, DropdownProps>(
       if (disabled) return
       e.stopPropagation()
       setIsOpen(!isOpen)
-
-      onOpen && onOpen()
     }
 
     const handleSearchSubmit = (e: React.MouseEvent<HTMLDivElement>): void => {}
