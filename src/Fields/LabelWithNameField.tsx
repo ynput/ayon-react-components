@@ -119,6 +119,8 @@ export const LabelWithNameField = ({
   }
 
   const handleNameInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.nativeEvent.isComposing) return
+
     if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
