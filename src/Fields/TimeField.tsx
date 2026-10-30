@@ -301,6 +301,12 @@ export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(
 
     // Parses and normalizes the draft. Returns the formatted time, or false when invalid.
     const applyDraft = (nextValue: string) => {
+      if (!nextValue.trim()) {
+        setDraftValue('')
+        if (value !== '') onChange('')
+        return ''
+      }
+
       const parsed = parseTimeValue(nextValue)
 
       if (!parsed) {
@@ -316,7 +322,7 @@ export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(
 
     const commitDraft = () => {
       const formatted = applyDraft(draftValue)
-      if (formatted) field.commit(formatted, onCommit)
+      if (formatted !== false) field.commit(formatted, onCommit)
     }
 
     const pickOption = (option: string) => {
