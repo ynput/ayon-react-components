@@ -242,11 +242,11 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
     const ref = refProp || internalRef
     const options = useMemo<ResolvedEnumFieldOption[]>(
       () =>
-        optionsProp.map((option) =>
-          typeof option.icon === 'object'
-            ? { ...option, icon: resolveEnumFieldIcon(option.icon) }
-            : (option as ResolvedEnumFieldOption),
-        ),
+        optionsProp.map((option) => ({
+          ...option,
+          value: String(option.value),
+          icon: resolveEnumFieldIcon(option.icon),
+        })),
       [optionsProp],
     )
     const valueAsStrings = useMemo(
