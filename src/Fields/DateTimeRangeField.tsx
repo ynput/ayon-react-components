@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { DateField } from './DateField'
@@ -80,8 +81,8 @@ export interface DateTimeRangeFieldProps {
   /** Local, inclusive end in the same format as startValue */
   endValue: string
   onChange: (next: DateTimeRangeFieldValue) => void
-  /** Called when any of the inputs commits (Enter, blur, option pick) */
-  onCommit?: () => void
+  /** Called with the committed range when an input commits (Enter, blur, option pick) or the mode toggles */
+  onCommit?: (next: DateTimeRangeFieldValue) => void
   /** Show the "Add time" / "All day" toggle. When false the range is whole days. Defaults to true. */
   allowTimeToggle?: boolean
   /** Times used when switching a whole-day range to times. Default 00:00 and 23:59. */
@@ -127,6 +128,15 @@ export const DateTimeRangeField = ({
   const end = splitValue(endValue)
   const showTime = allowTimeToggle && !!(start.time || end.time)
 
+  // The latest range, so a commit right after a change (option pick) gets it before the parent re-renders
+  const latestRange = useRef<DateTimeRangeFieldValue>({ startValue, endValue, withTime: showTime })
+  latestRange.current = { startValue, endValue, withTime: showTime }
+
+  const changeRange = (next: DateTimeRangeFieldValue) => {
+    latestRange.current = next
+    onChange(next)
+  }
+
   const updateRange = ({
     startDate = start.date,
     endDate = end.date,
@@ -140,15 +150,22 @@ export const DateTimeRangeField = ({
     endTime?: string
     withTime?: boolean
   }) => {
-    const nextStart = joinValue(startDate, withTime ? startTime : undefined)
-    let nextEnd = joinValue(endDate, withTime ? endTime : undefined)
+    changeRange({
+      startValue: joinValue(startDate, withTime ? startTime : undefined),
+      endValue: joinValue(endDate, withTime ? endTime : undefined),
+      withTime,
+    })
+  }
 
-    // Both values share one format, so string order is time order. Keep the end after the start.
-    if (nextStart && nextEnd && nextEnd < nextStart) {
-      nextEnd = withTime ? nextStart : startDate
+  // The end is kept after the start on commit, not while editing, so Escape on one input restores the whole range
+  const commitRange = () => {
+    let next = latestRange.current
+    // Both values share one format, so string order is time order
+    if (next.startValue && next.endValue && next.endValue < next.startValue) {
+      next = { ...next, endValue: next.startValue }
+      changeRange(next)
     }
-
-    onChange({ startValue: nextStart, endValue: nextEnd, withTime })
+    onCommit?.(next)
   }
 
   if (isReadOnly) {
@@ -169,7 +186,7 @@ export const DateTimeRangeField = ({
           <DateField
             value={start.date}
             onChange={(date) => updateRange({ startDate: date })}
-            onCommit={onCommit}
+            onCommit={commitRange}
             placeholder="Start"
             disabled={disabled}
             isSubmitting={isSubmitting}
@@ -180,7 +197,7 @@ export const DateTimeRangeField = ({
             <TimeField
               value={start.time}
               onChange={(time) => updateRange({ startTime: time, withTime: true })}
-              onCommit={onCommit}
+              onCommit={commitRange}
               isSubmitting={isSubmitting}
               disabled={disabled}
               className={inputClassName}
@@ -193,7 +210,7 @@ export const DateTimeRangeField = ({
           <DateField
             value={end.date}
             onChange={(date) => updateRange({ endDate: date })}
-            onCommit={onCommit}
+            onCommit={commitRange}
             placeholder="End"
             isSubmitting={isSubmitting}
             disabled={disabled}
@@ -204,7 +221,7 @@ export const DateTimeRangeField = ({
             <TimeField
               value={end.time}
               onChange={(time) => updateRange({ endTime: time, withTime: true })}
-              onCommit={onCommit}
+              onCommit={commitRange}
               isSubmitting={isSubmitting}
               disabled={disabled}
               className={inputClassName}
@@ -217,13 +234,14 @@ export const DateTimeRangeField = ({
       {allowTimeToggle && (
         <Toggle
           type="button"
-          onClick={() =>
+          onClick={() => {
             updateRange(
               showTime
                 ? { withTime: false }
                 : { withTime: true, startTime: defaultStartTime, endTime: defaultEndTime },
             )
-          }
+            commitRange()
+          }}
           disabled={disabled}
         >
           {showTime ? 'All day' : 'Add time'}

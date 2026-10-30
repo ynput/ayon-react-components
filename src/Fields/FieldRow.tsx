@@ -209,7 +209,10 @@ export const FieldRow = ({
           </FieldIcon>
         )}
 
-        <FieldBody className={clsx({ 'align-start': alignStart })}>{children}</FieldBody>
+        {/* Names the controls inside after the row label, also when the label is only a tooltip */}
+        <FieldBody role="group" aria-label={label} className={clsx({ 'align-start': alignStart })}>
+          {children}
+        </FieldBody>
 
         {showMixed ? (
           <FieldMeta>

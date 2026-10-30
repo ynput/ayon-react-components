@@ -74,6 +74,14 @@ const ValueContent = styled.div`
 
 const ValueContentWrapper = styled(ValueContent)`
   width: 100%;
+`
+
+// The actions sit beside the dropdown button, not in it: buttons can't nest
+const Container = styled.div`
+  position: relative;
+  width: 100%;
+  min-width: 0;
+
   .actions {
     visibility: hidden;
   }
@@ -85,11 +93,19 @@ const ValueContentWrapper = styled(ValueContent)`
   }
 `
 
+const ACTION_SIZE = 24
+const ACTION_GAP = 4
+
 const Actions = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  /* above the dropdown button (z-index 12) */
+  z-index: 13;
   display: flex;
   align-items: center;
-  gap: 4px;
-  margin-left: auto;
+  gap: ${ACTION_GAP}px;
 `
 
 const ValueLabel = styled.span`
@@ -111,9 +127,9 @@ const StyledItemTemplate = styled(DefaultItemTemplate)`
 `
 
 const ActionButton = styled(Button)`
-  width: 24px;
+  width: ${ACTION_SIZE}px;
   padding: 4px;
-  height: 24px;
+  height: ${ACTION_SIZE}px;
   border-radius: var(--border-radius-m);
   cursor: pointer;
 
@@ -285,10 +301,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
       onChange(multiSelect ? newValue : newValue.slice(-1))
     }
 
-    const handleClear = (event: React.MouseEvent<HTMLButtonElement>) => {
-      // prevent opening the dropdown when clicking clear button
-      event.preventDefault()
-      event.stopPropagation()
+    const handleClear = () => {
       if (onClear) onClear()
       else onChange([])
     }
@@ -338,110 +351,111 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
     }
 
     const showClear = !isRequired || !!onClear
+    const actionCount =
+      selectedOptions.length && !props.disabled ? (actions?.length ?? 0) + (showClear ? 1 : 0) : 0
+    // Keeps the value clear of the actions, which overlay the end of the button
+    const actionsWidth = actionCount ? actionCount * (ACTION_SIZE + ACTION_GAP) : 0
 
     return (
-      <StyledDropdown
-        options={allOptions.map((option) => ({
-          ...option,
-          disabled: option.value === DIVIDER_VALUE,
-        }))}
-        value={valueAsStrings}
-        ref={ref}
-        multiSelect={multiSelect}
-        placeholder={placeholder}
-        widthExpand
-        searchOnNumber={10}
-        maxOptionsShown={100}
-        sortBySelected={options.length > 10}
-        className={clsx(
-          className,
-          { submitting: isSubmitting, loading: isLoading },
-          'shimmer-lightest',
-        )}
-        valueTemplate={(_value, _selected, isOpen) => {
-          const showIconsOnly =
-            multiSelect && selectedOptions.length > 1 && selectedOptions.some((opt) => opt.icon)
+      <Container>
+        <StyledDropdown
+          options={allOptions.map((option) => ({
+            ...option,
+            disabled: option.value === DIVIDER_VALUE,
+          }))}
+          value={valueAsStrings}
+          ref={ref}
+          multiSelect={multiSelect}
+          placeholder={placeholder}
+          widthExpand
+          searchOnNumber={10}
+          maxOptionsShown={100}
+          sortBySelected={options.length > 10}
+          className={clsx(
+            className,
+            { submitting: isSubmitting, loading: isLoading },
+            'shimmer-lightest',
+          )}
+          valueTemplate={(_value, _selected, isOpen) => {
+            const showIconsOnly =
+              multiSelect && selectedOptions.length > 1 && selectedOptions.some((opt) => opt.icon)
 
-          return (
-            <DefaultValueTemplate
-              value={valueAsStrings}
-              isOpen={isOpen}
-              placeholder={placeholder}
-              isMultiple={multiSelect && selectedOptions.length > 1}
-              childrenCustom={
-                selectedOptions.length > 0 ? (
-                  <ValueContentWrapper>
-                    {selectedOptions.map((opt, i, a) =>
-                      showIconsOnly ? (
-                        <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
-                      ) : (
-                        <OptionValue
-                          key={String(opt.value)}
-                          option={opt}
-                          iconOnlyColor={iconOnlyColor}
-                          suffix={multiSelect && a.length > 1 && i < a.length - 1 ? ',' : ''}
-                        />
-                      ),
-                    )}
-                    {(showClear || !!actions?.length) && (
-                      <Actions className="actions">
-                        {actions?.map((action, index) => (
-                          <ActionButton key={index} variant="text" {...action} />
-                        ))}
-                        {showClear && (
-                          <ActionButton
-                            variant="text"
-                            icon="close"
-                            className="clear"
-                            onClick={handleClear}
+            return (
+              <DefaultValueTemplate
+                value={valueAsStrings}
+                isOpen={isOpen}
+                placeholder={placeholder}
+                isMultiple={multiSelect && selectedOptions.length > 1}
+                childrenCustom={
+                  selectedOptions.length > 0 ? (
+                    <ValueContentWrapper style={{ paddingRight: actionsWidth }}>
+                      {selectedOptions.map((opt, i, a) =>
+                        showIconsOnly ? (
+                          <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
+                        ) : (
+                          <OptionValue
+                            key={String(opt.value)}
+                            option={opt}
+                            iconOnlyColor={iconOnlyColor}
+                            suffix={multiSelect && a.length > 1 && i < a.length - 1 ? ',' : ''}
                           />
-                        )}
-                      </Actions>
-                    )}
-                  </ValueContentWrapper>
-                ) : undefined
-              }
-            />
-          )
-        }}
-        itemTemplate={(option: ResolvedEnumFieldOption, _isActive, isSelected) => {
-          if (option.value === DIVIDER_VALUE) return <Divider />
+                        ),
+                      )}
+                    </ValueContentWrapper>
+                  ) : undefined
+                }
+              />
+            )
+          }}
+          itemTemplate={(option: ResolvedEnumFieldOption, _isActive, isSelected) => {
+            if (option.value === DIVIDER_VALUE) return <Divider />
 
-          // Image icons go into startContent; DefaultItemTemplate only renders material icons
-          const imageIcon = isImageIcon(option.icon) ? option.icon : undefined
-          const displayOption = imageIcon ? { ...option, icon: undefined } : option
+            // Image icons go into startContent; DefaultItemTemplate only renders material icons
+            const imageIcon = isImageIcon(option.icon) ? option.icon : undefined
+            const displayOption = imageIcon ? { ...option, icon: undefined } : option
 
-          return (
-            <StyledItemTemplate
-              option={displayOption}
-              dataKey="value"
-              labelKey="label"
-              selected={isSelected ? [String(option.value)] : []}
-              value={valueAsStrings}
-              multiSelect={multiSelect}
-              startContent={
-                imageIcon && (
-                  <OptionIcon>
-                    <IconImage icon={imageIcon} />
-                  </OptionIcon>
-                )
-              }
-              endContent={
-                onEditItem &&
-                option.value !== ADD_VALUE && (
-                  <EditButton
-                    icon={'edit' as IconType}
-                    className={clsx('edit-item', { selected: isSelected })}
-                    onClick={(e) => handleEdit(e, String(option.value))}
-                  />
-                )
-              }
-            />
-          )
-        }}
-        {...props}
-        onChange={handleChange}
-      />
+            return (
+              <StyledItemTemplate
+                option={displayOption}
+                dataKey="value"
+                labelKey="label"
+                selected={isSelected ? [String(option.value)] : []}
+                value={valueAsStrings}
+                multiSelect={multiSelect}
+                startContent={
+                  imageIcon && (
+                    <OptionIcon>
+                      <IconImage icon={imageIcon} />
+                    </OptionIcon>
+                  )
+                }
+                endContent={
+                  onEditItem &&
+                  option.value !== ADD_VALUE && (
+                    <EditButton
+                      icon={'edit' as IconType}
+                      className={clsx('edit-item', { selected: isSelected })}
+                      onClick={(e) => handleEdit(e, String(option.value))}
+                    />
+                  )
+                }
+              />
+            )
+          }}
+          {...props}
+          onChange={handleChange}
+        />
+        {actionCount > 0 && (
+          <Actions className="actions">
+            {actions?.map((action, index) => (
+              <ActionButton key={index} variant="text" {...action} />
+            ))}
+            {showClear && (
+              <ActionButton variant="text" icon="close" className="clear" onClick={handleClear} />
+            )}
+          </Actions>
+        )}
+      </Container>
     )
   },
 )

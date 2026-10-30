@@ -191,6 +191,7 @@ const DateTimeRangeTemplate = () => {
     endValue: '2026-10-29',
     withTime: false,
   })
+  const [committed, setCommitted] = useState<DateTimeRangeFieldValue | null>(null)
   return (
     <Form>
       <FieldRow icon="schedule" label="When" hasCopyButton={false}>
@@ -198,12 +199,13 @@ const DateTimeRangeTemplate = () => {
           startValue={range.startValue}
           endValue={range.endValue}
           onChange={setRange}
+          onCommit={setCommitted}
           ghost
           timezoneLabel={range.withTime ? 'UTC+1' : undefined}
           timezoneTooltip="Europe/Prague"
         />
       </FieldRow>
-      <Log>{JSON.stringify(range, null, 2)}</Log>
+      <Log>{JSON.stringify({ value: range, committed }, null, 2)}</Log>
     </Form>
   )
 }

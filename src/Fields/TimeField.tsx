@@ -142,9 +142,11 @@ const normalizeTimeSearchValue = (value: string) => {
   return normalized
 }
 
+// Whether the draft can be applied while typing. Compact digits ("930", "1230") wait for Enter or blur,
+// because "123" may still become "1230".
 const isCompleteTimeValue = (value: string) => {
   const normalized = value.trim().toLowerCase().replace(/\s+/g, '')
-  return /^(\d{1,2}:\d{2}|\d{3,4}|\d{1,2}(am|pm))$/.test(normalized)
+  return /^(\d{1,2}:\d{2}|\d{1,2}(am|pm))$/.test(normalized)
 }
 
 const getBestMatchingOption = (value: string, options: string[]) => {

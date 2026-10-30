@@ -98,8 +98,10 @@ export const LabelWithNameField = ({
     }
   }, [generatedName, hasCustomName, nameLocked, nameValue, onNameChange])
 
+  const canEditName = !disabled && !nameLocked
+
   const startEditingName = () => {
-    if (disabled || nameLocked) return
+    if (!canEditName) return
     setDraftName(nameValue || generatedName)
     setIsEditingName(true)
   }
@@ -173,12 +175,15 @@ export const LabelWithNameField = ({
             />
           ) : (
             <NameDisplay
-              className={clsx({ active: !nameLocked && !disabled })}
-              onClick={startEditingName}
+              {...(canEditName
+                ? { as: 'button', type: 'button', 'aria-label': `Edit ${nameLabel}` }
+                : {})}
+              className={clsx({ active: canEditName })}
+              onClick={canEditName ? startEditingName : undefined}
               title={nameTitle}
             >
               <NameValue title={nameTitle}>{nameValue || generatedName}</NameValue>
-              {!nameLocked && !disabled && <Icon icon="edit" className="icon" />}
+              {canEditName && <Icon icon="edit" className="icon" />}
             </NameDisplay>
           )}
         </NameRow>
@@ -257,6 +262,8 @@ const NameDisplay = styled.span`
   gap: var(--base-gap-small);
   border: 0;
   background: transparent;
+  font: inherit;
+  text-align: left;
   border-radius: var(--border-radius-m);
   color: var(--md-sys-color-on-surface-variant);
   user-select: text;
