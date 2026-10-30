@@ -7,8 +7,14 @@ import { Icon, IconType, iconSet } from '../../Icon'
 // the file is large, so it is only loaded the first time a dropdown opens (then cached)
 type KeywordsByIcon = Record<string, string[]>
 let keywordsPromise: Promise<KeywordsByIcon> | undefined
-const loadKeywords = () =>
-  (keywordsPromise ??= import('../../Icon/icon-keywords.json').then((m) => m.default))
+const loadKeywords = () => {
+  keywordsPromise ??= import('../../Icon/icon-keywords.json').then((m) => m.default)
+  // if the import fails, forget it so the next open retries; name search still works meanwhile
+  return keywordsPromise.catch((): KeywordsByIcon => {
+    keywordsPromise = undefined
+    return {}
+  })
+}
 // search the icon name and its keywords
 const SEARCH_FIELDS = ['value', 'label', 'keywords']
 
@@ -55,7 +61,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
   ) => {
     const [keywordsByIcon, setKeywordsByIcon] = useState<KeywordsByIcon>({})
 
-    // load keywords on first open, then still call the caller's onOpen
+    // Dropdown calls this on every open; keywords load once, then the caller's onOpen still runs
     const handleOpen = () => {
       loadKeywords().then(setKeywordsByIcon)
       onOpen?.()
