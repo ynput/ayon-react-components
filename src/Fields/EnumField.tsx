@@ -341,7 +341,10 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
 
     return (
       <StyledDropdown
-        options={allOptions}
+        options={allOptions.map((option) => ({
+          ...option,
+          disabled: option.value === DIVIDER_VALUE,
+        }))}
         value={valueAsStrings}
         ref={ref}
         multiSelect={multiSelect}
