@@ -2,6 +2,12 @@ import { forwardRef, useMemo } from 'react'
 import * as Styled from './IconSelect.styled'
 import { DefaultValueTemplate, Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { Icon, IconType, iconSet } from '../../Icon'
+import keywordsJson from '../../Icon/icon-keywords.json'
+
+// what each icon looks like and is used for, so searching "trash" finds delete
+const keywordsByIcon: Record<string, string[]> = keywordsJson
+// match the icon name first, then its keywords
+const SEARCH_FIELDS = ['value', 'label', 'keywords']
 
 export interface IconTemplateProps {
   value: IconSelectProps['value']
@@ -50,7 +56,11 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
       const iconKeys = featuredOnly ? featured : Object.keys(iconSet)
       // map icon keys to dropdown options (label and value)
       for (const key of iconKeys) {
-        dropdownOptions.push({ label: key, value: key as string })
+        dropdownOptions.push({
+          label: key,
+          value: key as string,
+          keywords: keywordsByIcon[key] ?? [],
+        })
       }
       return dropdownOptions
     }, [])
@@ -79,6 +89,7 @@ export const IconSelect = forwardRef<DropdownRef, IconSelectProps>(
         )}
         onChange={onChange}
         search
+        searchFields={SEARCH_FIELDS}
         valueStyle={{ width: 150, ...props.valueStyle }}
         style={{ maxWidth: 150, ...props.style }}
         ref={ref}
