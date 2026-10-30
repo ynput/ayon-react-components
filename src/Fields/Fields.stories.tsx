@@ -96,7 +96,7 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
       <FieldRow icon="text_fields" label="Text" copyValue={text}>
         <TextField {...row} value={text} onChange={setText} onCommit={commit('text')} />
       </FieldRow>
-      <FieldRow icon="pin" label="Number">
+      <FieldRow icon="pin" label="Number" copyValue={String(number)}>
         <NumberField
           {...row}
           type="float"
@@ -106,16 +106,16 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           placeholder="Enter a number"
         />
       </FieldRow>
-      <FieldRow icon="check_box" label="Boolean">
+      <FieldRow icon="check_box" label="Boolean" copyValue={String(bool)}>
         <BooleanField {...row} value={bool} onChange={setBool} onCommit={commit('boolean')} />
       </FieldRow>
-      <FieldRow icon="calendar_month" label="Date">
+      <FieldRow icon="calendar_month" label="Date" copyValue={date}>
         <DateField {...row} value={date} onChange={setDate} onCommit={commit('date')} />
       </FieldRow>
-      <FieldRow icon="schedule" label="Time">
+      <FieldRow icon="schedule" label="Time" copyValue={time}>
         <TimeField {...row} value={time} onChange={setTime} onCommit={commit('time')} />
       </FieldRow>
-      <FieldRow icon="event" label="Date time (UTC)">
+      <FieldRow icon="event" label="Date time (UTC)" copyValue={dateTime}>
         <DateTimeField
           {...row}
           value={dateTime}
@@ -123,7 +123,7 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           onCommit={commit('dateTime')}
         />
       </FieldRow>
-      <FieldRow icon="checklist" label="Select">
+      <FieldRow icon="checklist" label="Select" copyValue={select}>
         <SelectField
           {...row}
           type="string"
@@ -134,7 +134,7 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           placeholder="Select an option"
         />
       </FieldRow>
-      <FieldRow icon="checklist" label="Multi select">
+      <FieldRow icon="checklist" label="Multi select" copyValue={multi.join(', ')}>
         <MultiSelectField
           {...row}
           type="list_of_strings"
@@ -145,7 +145,7 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           placeholder="Select options"
         />
       </FieldRow>
-      <FieldRow icon="radio_button_checked" label="Status">
+      <FieldRow icon="radio_button_checked" label="Status" copyValue={status}>
         <StatusSelectField
           isReadOnly={isReadOnly}
           value={status}
@@ -154,13 +154,13 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           onCommit={commit('status')}
         />
       </FieldRow>
-      <FieldRow icon="palette" label="Color">
+      <FieldRow icon="palette" label="Color" copyValue={color}>
         <ColorField {...row} value={color} onChange={setColor} onCommit={commit('color')} />
       </FieldRow>
-      <FieldRow icon="interests" label="Icon">
+      <FieldRow icon="interests" label="Icon" copyValue={icon}>
         <IconField {...row} value={icon} onChange={setIcon} onCommit={commit('icon')} />
       </FieldRow>
-      <FieldRow icon="format_list_bulleted" label="List" alignStart>
+      <FieldRow icon="format_list_bulleted" label="List" alignStart copyValue={list.join(', ')}>
         <TextAreaField
           {...row}
           type="list_of_strings"
@@ -169,7 +169,7 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
           onCommit={commit('list')}
         />
       </FieldRow>
-      <FieldRow icon="data_object" label="JSON" alignStart>
+      <FieldRow icon="data_object" label="JSON" alignStart copyValue={JSON.stringify(json)}>
         <JsonField {...row} value={json} onChange={setJson} onCommit={commit('json')} />
       </FieldRow>
       <Log>{log.join('\n') || 'Commits appear here'}</Log>

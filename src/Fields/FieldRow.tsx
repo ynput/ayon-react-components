@@ -139,7 +139,7 @@ export interface FieldRowProps {
   label: string
   children: ReactNode
   /** If provided, a copy-to-clipboard button is shown on hover. */
-  copyValue?: string
+  copyValue?: string | null
   /** Called after copyValue was written to the clipboard, e.g. to show a toast */
   onCopy?: (value: string) => void
   error?: string
@@ -180,7 +180,7 @@ export const FieldRow = ({
   const handleCopyValue = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    if (copyValue === undefined) return
+    if (copyValue === undefined || copyValue === null) return
     try {
       await navigator.clipboard.writeText(copyValue)
       onCopy?.(copyValue)
