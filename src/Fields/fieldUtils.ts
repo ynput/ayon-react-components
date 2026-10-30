@@ -12,6 +12,8 @@ export const checkKeydownSubmit = (
   onCommit: () => void,
   onCancel?: () => void,
 ) => {
+  if (e.nativeEvent.isComposing) return
+
   if (e.key === 'Enter' && !!onCommit) {
     e.preventDefault()
     e.stopPropagation()
