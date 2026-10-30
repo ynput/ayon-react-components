@@ -16,7 +16,7 @@ export const nameFormatPresets: Record<NameFormatPreset, (label: string) => stri
   snake_case: (label) => toWords(label).join('_'),
   'kebab-case': (label) => toWords(label).join('-'),
   camelCase: (label) =>
-    toWords(label)
+    toWords(label.replace(/([a-z0-9])([A-Z])/g, '$1 $2'))
       .map((word, index) => (index ? word.charAt(0).toUpperCase() + word.slice(1) : word))
       .join(''),
 }
