@@ -144,6 +144,7 @@ export const LabelWithNameField = ({
       </LabelRow>
       <div className="field-group">
         <TextField
+          aria-label={labelLabel}
           value={labelValue}
           onChange={onLabelChange}
           onCommit={onLabelCommit}
@@ -161,6 +162,7 @@ export const LabelWithNameField = ({
           ) : null}
           {isEditingName ? (
             <NameInput
+              aria-label={nameLabel}
               ref={nameInputRef}
               value={draftName}
               onChange={(event) => setDraftName(event.target.value)}
