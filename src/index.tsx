@@ -107,6 +107,9 @@ export { LockedInput } from './Inputs/LockedInput'
 // date
 export { InputDate } from './Inputs/InputDate'
 
+// FIELDS: form inputs with typed values, commit on Enter/blur and read-only mode
+export * from './Fields'
+
 // LAYOUT
 // divider
 export { Divider } from './Layout/Divider'
