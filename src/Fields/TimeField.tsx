@@ -46,7 +46,8 @@ const TimePopover = styled.div<{
   top: ${({ $top }) => `${$top}px`};
   left: ${({ $left }) => `${$left}px`};
   width: ${({ $width }) => `${$width}px`};
-  z-index: 900;
+  /* the overlay layer of dialogs and AYON's menus and popovers: above the one it opens from */
+  z-index: 1000;
   display: flex;
   flex-direction: column;
   max-height: 240px;
