@@ -132,7 +132,9 @@ export const Backdrop = styled.div`
   inset: 0;
   animation: ${fadeIn} 150ms ease-in-out forwards;
   animation-fill-mode: both;
-  z-index: 999;
+  /* the overlay layer AYON's menus and popovers use: with the same z-index, the one opened last
+     (portalled to the end of body) is on top */
+  z-index: 1000;
 
   display: flex;
   align-items: center;
