@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useRef } from 'react'
+import { CSSProperties, forwardRef, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { Button, ButtonProps } from '../Buttons/Button'
@@ -46,6 +46,8 @@ const DIVIDER_VALUE = '__divider__'
 const isImageIcon = (icon?: IconPropType): icon is string => !!icon && isIconImage(icon)
 
 const StyledDropdown = styled(Dropdown)`
+  /* inline-block would leave a gap under the button, moving the centred actions down */
+  display: block;
   width: 100%;
   ${dropdownVariantStyles}
   ${fieldSubmittingStyles}
@@ -90,6 +92,14 @@ const Container = styled.div`
     .actions {
       visibility: visible;
     }
+
+    /* the actions overlay the end of the button: keep the value and chevron clear of them */
+    ${ValueContentWrapper} {
+      padding-right: var(--actions-width, 0);
+    }
+    &.hasActions .icon.control {
+      visibility: hidden;
+    }
   }
 `
 
@@ -127,8 +137,10 @@ const StyledItemTemplate = styled(DefaultItemTemplate)`
 `
 
 const ActionButton = styled(Button)`
-  width: ${ACTION_SIZE}px;
-  padding: 4px;
+  /* grows to fit a text label; icon buttons stay square */
+  min-width: ${ACTION_SIZE}px;
+  padding: 0 8px;
+  white-space: nowrap;
   height: ${ACTION_SIZE}px;
   border-radius: var(--border-radius-m);
   cursor: pointer;
@@ -256,6 +268,11 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
   ) => {
     const internalRef = useRef<DropdownRef>(null)
     const ref = refProp || internalRef
+    const actionsRef = useRef<HTMLDivElement>(null)
+    const [actionsWidth, setActionsWidth] = useState(0)
+    useLayoutEffect(() => {
+      setActionsWidth(actionsRef.current ? actionsRef.current.offsetWidth + ACTION_GAP : 0)
+    })
     const options = useMemo<ResolvedEnumFieldOption[]>(
       () =>
         optionsProp.map((option) => ({
@@ -353,11 +370,12 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
     const showClear = !isRequired || !!onClear
     const actionCount =
       selectedOptions.length && !props.disabled ? (actions?.length ?? 0) + (showClear ? 1 : 0) : 0
-    // Keeps the value clear of the actions, which overlay the end of the button
-    const actionsWidth = actionCount ? actionCount * (ACTION_SIZE + ACTION_GAP) : 0
 
     return (
-      <Container>
+      <Container
+        className={clsx({ hasActions: actionCount > 0 })}
+        style={{ '--actions-width': `${actionsWidth}px` } as CSSProperties}
+      >
         <StyledDropdown
           options={allOptions.map((option) => ({
             ...option,
@@ -388,7 +406,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
                 isMultiple={multiSelect && selectedOptions.length > 1}
                 childrenCustom={
                   selectedOptions.length > 0 ? (
-                    <ValueContentWrapper style={{ paddingRight: actionsWidth }}>
+                    <ValueContentWrapper>
                       {selectedOptions.map((opt, i, a) =>
                         showIconsOnly ? (
                           <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
@@ -446,7 +464,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
           onChange={handleChange}
         />
         {actionCount > 0 && (
-          <Actions className="actions">
+          <Actions className="actions" ref={actionsRef}>
             {actions?.map((action, index) => (
               <ActionButton key={index} variant="text" {...action} />
             ))}
