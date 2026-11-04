@@ -1,4 +1,12 @@
-import { CSSProperties, forwardRef, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  CSSProperties,
+  forwardRef,
+  ReactNode,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { Button, ButtonProps } from '../Buttons/Button'
@@ -78,6 +86,27 @@ const ValueContentWrapper = styled(ValueContent)`
   width: 100%;
 `
 
+// Shrinks with the hover suffix, so both truncate with an ellipsis in narrow fields
+const ValueOptions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+`
+
+// Text after the value, shown only while the field is hovered
+const HoverSuffix = styled.span`
+  display: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--md-sys-color-outline);
+`
+
 // The actions sit beside the dropdown button, not in it: buttons can't nest
 const Container = styled.div`
   position: relative;
@@ -91,6 +120,10 @@ const Container = styled.div`
   &:hover {
     .actions {
       visibility: visible;
+    }
+
+    ${HoverSuffix} {
+      display: inline;
     }
 
     /* the actions overlay the end of the button: keep the value and chevron clear of them */
@@ -157,8 +190,6 @@ const ActionButton = styled(Button)`
   &.hasIcon {
     padding: 4px;
   }
-
-  color: var(--md-sys-color-outline);
 
   &:hover {
     background-color: var(--md-sys-color-surface-container-hover) !important;
@@ -242,6 +273,8 @@ export interface EnumFieldProps
   placeholder?: string
   /** Extra buttons shown on hover next to the clear button */
   actions?: ButtonProps[]
+  /** Text shown after the value only while the field is hovered */
+  hoverSuffix?: ReactNode
   /** When true, only the icon is colored — the label stays default */
   iconOnlyColor?: boolean
 }
@@ -267,6 +300,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
       multiSelect = false,
       placeholder,
       actions,
+      hoverSuffix,
       iconOnlyColor = false,
       className,
       ...props
@@ -414,18 +448,21 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
                 childrenCustom={
                   selectedOptions.length > 0 ? (
                     <ValueContentWrapper>
-                      {selectedOptions.map((opt, i, a) =>
-                        showIconsOnly ? (
-                          <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
-                        ) : (
-                          <OptionValue
-                            key={String(opt.value)}
-                            option={opt}
-                            iconOnlyColor={iconOnlyColor}
-                            suffix={multiSelect && a.length > 1 && i < a.length - 1 ? ',' : ''}
-                          />
-                        ),
-                      )}
+                      <ValueOptions>
+                        {selectedOptions.map((opt, i, a) =>
+                          showIconsOnly ? (
+                            <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
+                          ) : (
+                            <OptionValue
+                              key={String(opt.value)}
+                              option={opt}
+                              iconOnlyColor={iconOnlyColor}
+                              suffix={multiSelect && a.length > 1 && i < a.length - 1 ? ',' : ''}
+                            />
+                          ),
+                        )}
+                      </ValueOptions>
+                      {hoverSuffix && <HoverSuffix>{hoverSuffix}</HoverSuffix>}
                     </ValueContentWrapper>
                   ) : undefined
                 }
