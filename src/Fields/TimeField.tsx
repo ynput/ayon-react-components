@@ -230,10 +230,14 @@ export const TimeField = forwardRef<HTMLInputElement, TimeFieldProps>(
       setDraftValue(value)
     }, [value])
 
+    // The list renders once it has a position. Depend on that, not on the position itself: it is
+    // recalculated on every scroll, including scrolling the list, which would jump back here.
+    const isPopoverPositioned = popoverPosition !== null
+
     useEffect(() => {
-      if (!isOpen) return
+      if (!isOpen || !isPopoverPositioned) return
       bestMatchOptionRef.current?.scrollIntoView({ block: 'nearest' })
-    }, [draftValue, isOpen, popoverPosition])
+    }, [draftValue, isOpen, isPopoverPositioned])
 
     const handleClosePopover = () => setIsOpen(false)
 
