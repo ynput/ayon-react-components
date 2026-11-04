@@ -101,6 +101,11 @@ const Container = styled.div`
       visibility: hidden;
     }
   }
+
+  /* the actions sit over the button, which drops its own :hover: keep the field highlighted */
+  &.hasActions:hover:not(.changed) ${StyledDropdown} button {
+    background-color: var(--md-sys-color-surface-container-low-hover);
+  }
 `
 
 const ACTION_SIZE = 24
@@ -152,6 +157,8 @@ const ActionButton = styled(Button)`
   &.hasIcon {
     padding: 4px;
   }
+
+  color: var(--md-sys-color-outline);
 
   &:hover {
     background-color: var(--md-sys-color-surface-container-hover) !important;
@@ -373,7 +380,7 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
 
     return (
       <Container
-        className={clsx({ hasActions: actionCount > 0 })}
+        className={clsx({ hasActions: actionCount > 0, changed: props.isChanged })}
         style={{ '--actions-width': `${actionsWidth}px` } as CSSProperties}
       >
         <StyledDropdown
