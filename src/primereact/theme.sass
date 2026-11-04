@@ -1,4 +1,4 @@
-:root
+:root, [data-theme='dark']
   --surface-a:#1e1e1e
   --surface-b:#121212
   --surface-c:rgba(255, 255, 255, 0.03)
@@ -42,7 +42,48 @@
   --maskbg:rgba(0, 0, 0, 0.4)
   --focus-color: var(--md-sys-color-primary)
   --focus-ring:0 0 0 1px var(--focus-color)
-  color-scheme: dark
+  // colours the stock theme had no variable for
+  --p-primary-color-hover:#43a5f4
+  --p-primary-color-active:#2396f2
+  --p-highlight-bg:rgba(100, 181, 246, 0.16)
+  --p-primary-tint-hover:rgba(100, 181, 246, 0.04)
+  --p-striped-row-bg:rgba(255, 255, 255, 0.01)
+  --p-skeleton-bg:rgba(255, 255, 255, 0.06)
+  --p-skeleton-shine:rgba(255, 255, 255, 0.04)
+  // dropdown, multiselect and menu panels (primereact/index.scss)
+  --p-menu-bg:rgba(33, 37, 43, 0.9)
+  --p-menu-header-bg:#21252b
+
+// the gray and surface scales are not used, so they keep their dark values
+[data-theme='light']
+  --surface-a:var(--md-sys-color-surface-container-low)
+  --surface-b:var(--md-sys-color-background)
+  --surface-c:rgba(0, 0, 0, 0.04)
+  --surface-d:var(--md-sys-color-surface-container-highest)
+  --surface-e:var(--md-sys-color-surface-container-low)
+  --surface-f:var(--md-sys-color-surface-container-low)
+  --text-color:var(--md-sys-color-on-surface)
+  --text-color-secondary:var(--md-sys-color-on-surface-variant)
+  --primary-color:var(--md-sys-color-primary)
+  --primary-color-text:var(--md-sys-color-on-primary)
+  --surface-0:var(--md-sys-color-surface-container-low)
+  --surface-ground:var(--md-sys-color-background)
+  --surface-section:var(--md-sys-color-surface-container-low)
+  --surface-card:var(--md-sys-color-surface-container-low)
+  --surface-overlay:var(--md-sys-color-surface-overlay)
+  --surface-border:var(--md-sys-color-outline-variant)
+  --surface-hover:rgba(0, 0, 0, 0.04)
+  --focus-color: var(--md-sys-color-primary)
+  --focus-ring:0 0 0 1px var(--focus-color)
+  --p-primary-color-hover:var(--md-sys-color-primary-hover)
+  --p-primary-color-active:var(--md-sys-color-primary-active)
+  --p-highlight-bg:var(--md-sys-color-primary-container)
+  --p-primary-tint-hover:rgba(11, 118, 186, 0.04)
+  --p-striped-row-bg:rgba(0, 0, 0, 0.02)
+  --p-skeleton-bg:rgba(0, 0, 0, 0.06)
+  --p-skeleton-shine:rgba(255, 255, 255, 0.4)
+  --p-menu-bg:var(--md-sys-color-surface-overlay)
+  --p-menu-header-bg:var(--md-sys-color-surface-overlay)
 
 .p-component
   font-family: var(--base-font-family) !important
@@ -60,7 +101,7 @@
   color: var(--color-hl-error)
 
 .p-text-secondary
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--text-color-secondary)
 
 .p-link
   font-size: var(--base-font-size)
@@ -96,7 +137,7 @@
     border: 0 none
 
     &.p-placeholder
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:enabled:focus
       outline: 0 none
@@ -104,30 +145,30 @@
 
   .p-dropdown-trigger
     background: transparent
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     width: 2.357rem
     border-top-right-radius: 3px
     border-bottom-right-radius: 3px
 
   .p-dropdown-clear-icon
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     right: 2.357rem
 
   &.p-invalid.p-component
     border-color: var(--color-hl-error)
 
 .p-dropdown-panel
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-dropdown-header
     padding: 0.5rem 1rem
     border-bottom: 0 none
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-overlay)
     margin: 0
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -138,7 +179,7 @@
 
     .p-dropdown-filter-icon
       right: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     .p-dropdown-clearable-filter
       .p-dropdown-filter
@@ -155,40 +196,40 @@
       margin: 0
       padding: 0.5rem 1rem
       border: 0 none
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
       transition: box-shadow 0.2s
       border-radius: 0
 
       &.p-highlight
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(100, 181, 246, 0.16)
+        color: var(--text-color)
+        background: var(--p-highlight-bg)
 
       &:not(.p-highlight):not(.p-disabled):hover
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(255, 255, 255, 0.03)
+        color: var(--text-color)
+        background: var(--surface-hover)
 
     .p-dropdown-item-group
       margin: 0
       padding: 0.75rem 1rem
-      color: rgba(255, 255, 255, 0.87)
-      background: #1e1e1e
+      color: var(--text-color)
+      background: var(--surface-overlay)
       font-weight: 700
 
     .p-dropdown-empty-message
       padding: 0.5rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
 
 .p-input-filled .p-dropdown
-  background: #383838
+  background: var(--surface-d)
 
   &:not(.p-disabled)
     &:hover
-      background-color: #383838
+      background-color: var(--surface-d)
 
     &.p-focus
-      background-color: #383838
+      background-color: var(--surface-d)
 
       .p-inputtext
         background-color: transparent
@@ -202,12 +243,12 @@
   height: 1.75rem
 
   .p-inputswitch-slider
-    background: #383838
+    background: var(--surface-d)
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
     border-radius: 30px
 
     &:before
-      background: rgba(255, 255, 255, 0.6)
+      background: var(--text-color-secondary)
       width: 1.25rem
       height: 1.25rem
       left: 0.25rem
@@ -224,17 +265,17 @@
     box-shadow: 0 0 0 1px var(--focus-color)
 
   &:not(.p-disabled):hover .p-inputswitch-slider
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
   &.p-inputswitch-checked
     .p-inputswitch-slider
-      background: #64b5f6
+      background: var(--primary-color)
 
       &:before
-        background: rgba(255, 255, 255, 0.87)
+        background: var(--text-color)
 
     &:not(.p-disabled):hover .p-inputswitch-slider
-      background: #43a5f4
+      background: var(--p-primary-color-hover)
 
   &.p-invalid .p-inputswitch-slider
     border-color: var(--color-hl-error)
@@ -242,7 +283,7 @@
 .p-inputtext
   font-family: var(--base-font-family)
   font-size: var(--base-font-size)
-  color: rgba(255, 255, 255, 0.87)
+  color: var(--text-color)
   padding: 0.5rem 0.5rem
   appearance: none
   border-radius: var(--base-input-border-radius)
@@ -251,7 +292,7 @@
     &:focus, &.p-focus
       outline: 0 none
       outline-offset: 0
-      border-color: #64b5f6
+      border-color: var(--primary-color)
 
   &.p-invalid.p-component
     border-color: var(--color-hl-error)
@@ -266,7 +307,7 @@
 
 .p-float-label > label
   left: 0.5rem
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--text-color-secondary)
   transition-duration: 0.2s
 
   &.p-error
@@ -276,7 +317,7 @@
   >
     i:first-of-type, svg:first-of-type, .p-input-prefix
       left: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     .p-inputtext
       padding-left: 2rem
@@ -287,20 +328,20 @@
 .p-input-icon-right >
   i:last-of-type, svg:last-of-type, .p-input-suffix
     right: 0.5rem
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
 
   .p-inputtext
     padding-right: 2rem
 
 \::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--text-color-secondary)
 
 .p-input-filled .p-inputtext
-  background-color: #383838
+  background-color: var(--surface-d)
 
   &:enabled
     &:hover, &:focus
-      background-color: #383838
+      background-color: var(--surface-d)
 
 .p-inputtext-sm .p-inputtext
   font-size: 0.875rem
@@ -320,13 +361,13 @@
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
     &.p-placeholder
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   &.p-multiselect-chip .p-multiselect-token
     padding: 0.25rem 0.5rem
     margin-right: 0.5rem
-    background: rgba(100, 181, 246, 0.16)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--p-highlight-bg)
+    color: var(--text-color)
     border-radius: 3px
 
     .p-multiselect-token-icon
@@ -334,13 +375,13 @@
 
   .p-multiselect-trigger
     background: transparent
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     width: 2.357rem
     border-top-right-radius: 3px
     border-bottom-right-radius: 3px
 
   .p-multiselect-clear-icon
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     right: 2.357rem
 
   &.p-invalid.p-component
@@ -357,17 +398,17 @@
     padding-right: 1.5rem
 
 .p-multiselect-panel
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-multiselect-header
     padding: 0.5rem 1rem
     border-bottom: 0 none
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-overlay)
     margin: 0
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -380,21 +421,21 @@
 
       .p-multiselect-filter-icon
         right: 0.5rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
     .p-multiselect-close
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
       &:enabled:hover
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
         border-color: transparent
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       &:focus
         outline: 1px solid var(--md-sys-color-primary)
@@ -406,18 +447,18 @@
       margin: 0
       padding: 0.5rem 1rem
       border: 0 none
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
       transition: box-shadow 0.2s
       border-radius: 0
 
       &.p-highlight
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(100, 181, 246, 0.16)
+        color: var(--text-color)
+        background: var(--p-highlight-bg)
 
       &:not(.p-highlight):not(.p-disabled):hover
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(255, 255, 255, 0.03)
+        color: var(--text-color)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -430,36 +471,36 @@
     .p-multiselect-item-group
       margin: 0
       padding: 0.75rem 1rem
-      color: rgba(255, 255, 255, 0.87)
-      background: #1e1e1e
+      color: var(--text-color)
+      background: var(--surface-overlay)
       font-weight: 700
 
     .p-multiselect-empty-message
       padding: 0.5rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
 
 .p-input-filled .p-multiselect
-  background: #383838
+  background: var(--surface-d)
 
   &:not(.p-disabled)
     &:hover, &.p-focus
-      background-color: #383838
+      background-color: var(--surface-d)
 
 .p-password.p-invalid.p-component > .p-inputtext
   border-color: var(--color-hl-error)
 
 .p-password-panel
   padding: 1rem
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
   border-radius: 3px
 
   .p-password-meter
     margin-bottom: 0.5rem
-    background: #383838
+    background: var(--surface-d)
 
     .p-password-strength
       &.weak
@@ -486,38 +527,38 @@
   height: 20px
 
   .p-radiobutton-box
-    border: 2px solid #383838
-    background: #121212
+    border: 2px solid var(--surface-border)
+    background: var(--surface-ground)
     width: 20px
     height: 20px
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 50%
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
     &:not(.p-disabled)
       &:not(.p-highlight):hover
-        border-color: #64b5f6
+        border-color: var(--primary-color)
 
       &.p-focus
         outline: 0 none
         outline-offset: 0
         box-shadow: 0 0 0 1px var(--focus-color)
-        border-color: #64b5f6
+        border-color: var(--primary-color)
 
     .p-radiobutton-icon
       width: 12px
       height: 12px
       transition-duration: 0.2s
-      background-color: #212529
+      background-color: var(--primary-color-text)
 
     &.p-highlight
-      border-color: #64b5f6
-      background: #64b5f6
+      border-color: var(--primary-color)
+      background: var(--primary-color)
 
       &:not(.p-disabled):hover
-        border-color: #2396f2
-        background: #2396f2
-        color: #212529
+        border-color: var(--p-primary-color-active)
+        background: var(--p-primary-color-active)
+        color: var(--primary-color-text)
 
   &.p-invalid > .p-radiobutton-box
     border-color: var(--color-hl-error)
@@ -526,23 +567,23 @@
     outline: 0 none
 
 .p-input-filled .p-radiobutton .p-radiobutton-box
-  background-color: #383838
+  background-color: var(--surface-d)
 
   &:not(.p-disabled):hover
-    background-color: #383838
+    background-color: var(--surface-d)
 
   &.p-highlight
-    background: #64b5f6
+    background: var(--primary-color)
 
     &:not(.p-disabled):hover
-      background: #2396f2
+      background: var(--p-primary-color-active)
 
 .p-rating
   gap: 0.5rem
 
   .p-rating-item
     .p-rating-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
       font-size: 1.143rem
 
@@ -555,10 +596,10 @@
       box-shadow: 0 0 0 1px var(--focus-color)
 
     &.p-rating-item-active .p-rating-icon
-      color: #64b5f6
+      color: var(--primary-color)
 
   &:not(.p-disabled):not(.p-readonly) .p-rating-item:hover .p-rating-icon
-    color: #64b5f6
+    color: var(--primary-color)
 
     &.p-rating-cancel
       color: #f48fb1
@@ -572,15 +613,15 @@
     padding: 5px 12px
 
     .p-button-icon-left, .p-button-icon-right
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):not(.p-highlight):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
       border-color: var(--md-sys-color-outline-variant)
       color: var(--md-sys-color-on-surface)
 
       .p-button-icon-left, .p-button-icon-right
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
     &.p-highlight
       background: var(--md-sys-color-primary-container)
@@ -602,7 +643,7 @@
     border-color: var(--color-hl-error)
 
 .p-slider
-  background: #383838
+  background: var(--surface-d)
   border: 0 none
   border-radius: 3px
 
@@ -623,8 +664,8 @@
   .p-slider-handle
     height: 1.143rem
     width: 1.143rem
-    background: #383838
-    border: 2px solid #64b5f6
+    background: var(--surface-d)
+    border: 2px solid var(--primary-color)
     border-radius: 50%
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
@@ -634,45 +675,45 @@
       box-shadow: 0 0 0 1px var(--focus-color)
 
   .p-slider-range
-    background: #64b5f6
+    background: var(--primary-color)
 
   &:not(.p-disabled) .p-slider-handle:hover
-    background: #64b5f6
-    border-color: #64b5f6
+    background: var(--primary-color)
+    border-color: var(--primary-color)
 
 .p-treeselect
-  background: #121212
-  border: 1px solid #383838
+  background: var(--surface-ground)
+  border: 1px solid var(--surface-border)
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
   border-radius: 3px
 
   &:not(.p-disabled)
     &:hover
-      border-color: #64b5f6
+      border-color: var(--primary-color)
 
     &.p-focus
       outline: 0 none
       outline-offset: 0
       box-shadow: 0 0 0 1px var(--focus-color)
-      border-color: #64b5f6
+      border-color: var(--primary-color)
 
   .p-treeselect-label
     padding: 0.5rem 0.5rem
     transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
     &.p-placeholder
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   &.p-treeselect-chip .p-treeselect-token
     padding: 0.25rem 0.5rem
     margin-right: 0.5rem
-    background: #383838
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-d)
+    color: var(--text-color)
     border-radius: 16px
 
   .p-treeselect-trigger
     background: transparent
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     width: 2.357rem
     border-top-right-radius: 3px
     border-bottom-right-radius: 3px
@@ -684,17 +725,17 @@
   padding: 0.25rem 0.5rem
 
 .p-treeselect-panel
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-treeselect-header
     padding: 0.5rem 1rem
     border-bottom: 0 none
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-overlay)
     margin: 0
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -707,7 +748,7 @@
 
       .p-treeselect-filter-icon
         right: 0.5rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
       &.p-treeselect-clearable-filter
         .p-treeselect-filter
@@ -719,16 +760,16 @@
     .p-treeselect-close
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
       &:enabled:hover
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
         border-color: transparent
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -741,48 +782,48 @@
 
     .p-treeselect-empty-message
       padding: 0.5rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
 
 .p-input-filled .p-treeselect
-  background: #383838
+  background: var(--surface-d)
 
   &:not(.p-disabled)
     &:hover, &.p-focus
-      background-color: #383838
+      background-color: var(--surface-d)
 
 .p-togglebutton.p-button
-  background: #1e1e1e
-  border: 1px solid #383838
-  color: rgba(255, 255, 255, 0.87)
+  background: var(--surface-card)
+  border: 1px solid var(--surface-border)
+  color: var(--text-color)
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
   .p-button-icon-left, .p-button-icon-right
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
 
   &:not(.p-disabled):not(.p-highlight):hover
-    background: rgba(255, 255, 255, 0.03)
-    border-color: #383838
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-hover)
+    border-color: var(--surface-border)
+    color: var(--text-color)
 
     .p-button-icon-left, .p-button-icon-right
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   &.p-highlight
-    background: #64b5f6
-    border-color: #64b5f6
-    color: #212529
+    background: var(--primary-color)
+    border-color: var(--primary-color)
+    color: var(--primary-color-text)
 
     .p-button-icon-left, .p-button-icon-right
-      color: #212529
+      color: var(--primary-color-text)
 
     &:hover
-      background: #43a5f4
-      border-color: #43a5f4
-      color: #212529
+      background: var(--p-primary-color-hover)
+      border-color: var(--p-primary-color-hover)
+      color: var(--primary-color-text)
 
       .p-button-icon-left, .p-button-icon-right
-        color: #212529
+        color: var(--primary-color-text)
 
   &.p-invalid > .p-button
     border-color: var(--color-hl-error)
@@ -797,7 +838,7 @@
 
   &:enabled:active, &:not(button):not(a):not(.p-disabled):active
     background: var(--md-sys-color-surface-container-highest-active)
-    color: white
+    color: var(--md-sys-color-on-surface-strong)
 
   &:focus
     outline: 1px solid var(--md-sys-color-primary)
@@ -819,8 +860,8 @@
     min-width: 1rem
     height: 1rem
     line-height: 1rem
-    color: #64b5f6
-    background-color: #212529
+    color: var(--primary-color)
+    background-color: var(--primary-color-text)
 
   &.p-button-raised
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
@@ -1933,13 +1974,13 @@
     color: #f48fb1
 
 .p-button.p-button-link
-  color: #64b5f6
+  color: var(--primary-color)
   background: transparent
   border: transparent
 
   &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
     background: transparent
-    color: #64b5f6
+    color: var(--primary-color)
     border-color: transparent
 
   &:enabled:hover .p-button-label, &:not(button):not(a):not(.p-disabled):hover .p-button-label
@@ -1952,7 +1993,7 @@
 
   &:enabled:active, &:not(button):not(a):not(.p-disabled):active
     background: transparent
-    color: #64b5f6
+    color: var(--primary-color)
     border-color: transparent
 
 .p-splitbutton
@@ -1961,55 +2002,55 @@
   &.p-button-outlined
     > .p-button
       background-color: transparent
-      color: #64b5f6
+      color: var(--primary-color)
       border: 1px solid
 
       &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(100, 181, 246, 0.04)
-        color: #64b5f6
+        background: var(--p-primary-tint-hover)
+        color: var(--primary-color)
 
       &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-        background: rgba(100, 181, 246, 0.16)
-        color: #64b5f6
+        background: var(--p-highlight-bg)
+        color: var(--primary-color)
 
     &.p-button-plain > .p-button
-      color: rgba(255, 255, 255, 0.6)
-      border-color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
+      border-color: var(--text-color-secondary)
 
       &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.6)
+        background: var(--surface-hover)
+        color: var(--text-color-secondary)
 
       &:enabled:active, &:not(button):not(a):not(.p-disabled):active
         background: rgba(255, 255, 255, 0.16)
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
   &.p-button-text
     > .p-button
       background-color: transparent
-      color: #64b5f6
+      color: var(--primary-color)
       border-color: transparent
 
       &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(100, 181, 246, 0.04)
-        color: #64b5f6
+        background: var(--p-primary-tint-hover)
+        color: var(--primary-color)
         border-color: transparent
 
       &:enabled:active, &:not(button):not(a):not(.p-disabled):active
-        background: rgba(100, 181, 246, 0.16)
-        color: #64b5f6
+        background: var(--p-highlight-bg)
+        color: var(--primary-color)
         border-color: transparent
 
     &.p-button-plain > .p-button
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
       &:enabled:hover, &:not(button):not(a):not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.6)
+        background: var(--surface-hover)
+        color: var(--text-color-secondary)
 
       &:enabled:active, &:not(button):not(a):not(.p-disabled):active
         background: rgba(255, 255, 255, 0.16)
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
   &.p-button-raised
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
@@ -2272,7 +2313,7 @@
     .p-carousel-prev, .p-carousel-next
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
@@ -2280,9 +2321,9 @@
       margin: 0.5rem
 
     .p-carousel-prev:enabled:hover, .p-carousel-next:enabled:hover
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-color: transparent
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
     .p-carousel-prev:focus, .p-carousel-next:focus
       outline: 0 none
@@ -2297,18 +2338,18 @@
       margin-bottom: 0.5rem
 
       button
-        background-color: #383838
+        background-color: var(--surface-d)
         width: 2rem
         height: 0.5rem
         transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
         border-radius: 0
 
         &:hover
-          background: rgba(255, 255, 255, 0.03)
+          background: var(--surface-hover)
 
       &.p-highlight button
-        background: rgba(100, 181, 246, 0.16)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--p-highlight-bg)
+        color: var(--text-color)
 
 .p-datatable
   .p-paginator-top
@@ -2320,17 +2361,17 @@
     border-radius: 0
 
   .p-datatable-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.6)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color-secondary)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
 
   .p-datatable-footer
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
@@ -2338,25 +2379,25 @@
   .p-datatable-thead > tr > th
     text-align: left
     padding: 1rem 1rem
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     font-weight: 700
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
     transition: box-shadow 0.2s
 
   .p-datatable-tfoot > tr > td
     text-align: left
     padding: 1rem 1rem
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     font-weight: 700
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
 
   .p-sortable-column
     .p-sortable-column-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-left: 0.5rem
 
     .p-sortable-column-badge
@@ -2364,59 +2405,59 @@
       height: 1.143rem
       min-width: 1.143rem
       line-height: 1.143rem
-      color: rgba(255, 255, 255, 0.87)
-      background: rgba(100, 181, 246, 0.16)
+      color: var(--text-color)
+      background: var(--p-highlight-bg)
       margin-left: 0.5rem
 
     &:not(.p-highlight):not(.p-sortable-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
       .p-sortable-column-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &.p-highlight
-      background: #1e1e1e
-      color: #64b5f6
+      background: var(--surface-card)
+      color: var(--primary-color)
 
       .p-sortable-column-icon
-        color: #64b5f6
+        color: var(--primary-color)
 
       &:not(.p-sortable-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: #64b5f6
+        background: var(--surface-hover)
+        color: var(--primary-color)
 
         .p-sortable-column-icon
-          color: #64b5f6
+          color: var(--primary-color)
 
     &:focus
       box-shadow: inset 0 0 0 0.15rem var(--focus-color)
       outline: 0 none
 
   .p-datatable-tbody > tr
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-card)
+    color: var(--text-color)
     transition: box-shadow 0.2s
 
     > td
       text-align: left
-      border: 1px solid #383838
+      border: 1px solid var(--surface-border)
       border-width: 0 0 1px 0
       padding: 1rem 1rem
 
       .p-row-toggler, .p-row-editor-init, .p-row-editor-save, .p-row-editor-cancel
         width: 2rem
         height: 2rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         border: 0 none
         background: transparent
         border-radius: 50%
         transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
       .p-row-toggler:enabled:hover, .p-row-editor-init:enabled:hover, .p-row-editor-save:enabled:hover, .p-row-editor-cancel:enabled:hover
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
         border-color: transparent
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       .p-row-toggler:focus, .p-row-editor-init:focus, .p-row-editor-save:focus, .p-row-editor-cancel:focus
         outline: 0 none
@@ -2430,23 +2471,23 @@
         font-weight: 700
 
       &.p-highlight
-        background: rgba(100, 181, 246, 0.16)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--p-highlight-bg)
+        color: var(--text-color)
 
     &.p-highlight
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
     &.p-datatable-dragpoint-top > td
-      box-shadow: inset 0 2px 0 0 rgba(100, 181, 246, 0.16)
+      box-shadow: inset 0 2px 0 0 var(--p-highlight-bg)
 
     &.p-datatable-dragpoint-bottom > td
-      box-shadow: inset 0 -2px 0 0 rgba(100, 181, 246, 0.16)
+      box-shadow: inset 0 -2px 0 0 var(--p-highlight-bg)
 
   &.p-datatable-selectable .p-datatable-tbody > tr.p-selectable-row
     &:not(.p-highlight):not(.p-datatable-emptymessage):hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
     &:focus
       outline: 0.15rem solid var(--focus-color)
@@ -2454,31 +2495,31 @@
 
   &.p-datatable-selectable-cell .p-datatable-tbody > tr.p-selectable-row > td.p-selectable-cell
     &:not(.p-highlight):hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
     &:focus
       outline: 0.15rem solid var(--focus-color)
       outline-offset: -0.15rem
 
   &.p-datatable-hoverable-rows .p-datatable-tbody > tr:not(.p-highlight):not(.p-datatable-emptymessage):hover
-    background: rgba(255, 255, 255, 0.03)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-hover)
+    color: var(--text-color)
 
   .p-column-resizer-helper
-    background: #64b5f6
+    background: var(--primary-color)
 
   .p-datatable-scrollable-header, .p-datatable-scrollable-footer
-    background: #1e1e1e
+    background: var(--surface-card)
 
   &.p-datatable-scrollable > .p-datatable-wrapper >
     .p-datatable-table >
       .p-datatable-thead, .p-datatable-tfoot
-        background-color: #1e1e1e
+        background-color: var(--surface-card)
 
     .p-virtualscroller > .p-datatable-table >
       .p-datatable-thead, .p-datatable-tfoot
-        background-color: #1e1e1e
+        background-color: var(--surface-card)
 
   .p-datatable-loading-icon
     font-size: 2rem
@@ -2503,20 +2544,20 @@
       border-width: 1px
 
   &.p-datatable-striped .p-datatable-tbody > tr.p-row-odd
-    background: rgba(255, 255, 255, 0.01)
+    background: var(--p-striped-row-bg)
 
     &.p-highlight
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
       .p-row-toggler
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
         &:hover
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
     + .p-row-expanded
-      background: rgba(255, 255, 255, 0.01)
+      background: var(--p-striped-row-bg)
 
   &.p-datatable-sm
     .p-datatable-header, .p-datatable-thead > tr > th, .p-datatable-tbody > tr > td, .p-datatable-tfoot > tr > td, .p-datatable-footer
@@ -2527,7 +2568,7 @@
       padding: 1.25rem 1.25rem
 
 .p-datatable-drag-selection-helper
-  background: rgba(100, 181, 246, 0.16)
+  background: var(--p-highlight-bg)
 
 .p-dataview
   .p-paginator-top
@@ -2539,27 +2580,27 @@
     border-radius: 0
 
   .p-dataview-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.6)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color-secondary)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
 
   .p-dataview-content
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-card)
+    color: var(--text-color)
     border: 0 none
     padding: 0
 
   &.p-dataview-list .p-dataview-content > .p-grid > div
-    border: solid #383838
+    border: solid var(--surface-border)
     border-width: 0 0 1px 0
 
   .p-dataview-footer
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
@@ -2579,27 +2620,27 @@
     border-radius: 0
 
   .p-datascroller-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.6)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color-secondary)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
 
   .p-datascroller-content
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-card)
+    color: var(--text-color)
     border: 0 none
     padding: 0
 
   &.p-datascroller-inline .p-datascroller-list > li
-    border: solid #383838
+    border: solid var(--surface-border)
     border-width: 0 0 1px 0
 
   .p-datascroller-footer
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
@@ -2613,32 +2654,32 @@
 .p-column-filter-menu-button
   width: 2rem
   height: 2rem
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--text-color-secondary)
   border: 0 none
   background: transparent
   border-radius: 50%
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
   &:hover
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-color: transparent
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
   &.p-column-filter-menu-button-open
-    background: rgba(255, 255, 255, 0.03)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-hover)
+    color: var(--text-color)
 
     &:hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
   &.p-column-filter-menu-button-active
-    background: rgba(100, 181, 246, 0.16)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--p-highlight-bg)
+    color: var(--text-color)
 
     &:hover
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
   &:focus
     outline: 0 none
@@ -2648,16 +2689,16 @@
 .p-column-filter-clear-button
   width: 2rem
   height: 2rem
-  color: rgba(255, 255, 255, 0.6)
+  color: var(--text-color-secondary)
   border: 0 none
   background: transparent
   border-radius: 50%
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
   &:hover
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-color: transparent
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
   &:focus
     outline: 0 none
@@ -2665,9 +2706,9 @@
     box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-column-filter-overlay
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
   min-width: 12.5rem
@@ -2679,18 +2720,18 @@
       margin: 0
       padding: 0.5rem 1rem
       border: 0 none
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
       transition: box-shadow 0.2s
       border-radius: 0
 
       &.p-highlight
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(100, 181, 246, 0.16)
+        color: var(--text-color)
+        background: var(--p-highlight-bg)
 
       &:not(.p-highlight):not(.p-disabled):hover
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(255, 255, 255, 0.03)
+        color: var(--text-color)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -2698,22 +2739,22 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     .p-column-filter-separator
-      border-top: 1px solid #383838
+      border-top: 1px solid var(--surface-border)
       margin: 0.25rem 0
 
 .p-column-filter-overlay-menu
   .p-column-filter-operator
     padding: 0.5rem 1rem
     border-bottom: 0 none
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-overlay)
     margin: 0
     border-top-right-radius: 3px
     border-top-left-radius: 3px
 
   .p-column-filter-constraint
     padding: 1rem
-    border-bottom: 1px solid #383838
+    border-bottom: 1px solid var(--surface-border)
 
     .p-column-filter-matchmode-dropdown
       margin-bottom: 0.5rem
@@ -2737,38 +2778,38 @@
   &.fc-unthemed
     .fc-view-container
       th
-        background: #1e1e1e
-        border: 1px solid #383838
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-card)
+        border: 1px solid var(--surface-border)
+        color: var(--text-color)
 
       td
         &.fc-widget-content
-          border: 1px solid #383838
-          color: rgba(255, 255, 255, 0.87)
+          border: 1px solid var(--surface-border)
+          color: var(--text-color)
 
         &.fc-head-container
-          border: 1px solid #383838
+          border: 1px solid var(--surface-border)
 
       .fc-view
-        background: #1e1e1e
+        background: var(--surface-card)
 
       .fc-row
-        border-right: 1px solid #383838
+        border-right: 1px solid var(--surface-border)
 
       .fc-event
-        background: #43a5f4
-        border: 1px solid #43a5f4
-        color: #212529
+        background: var(--p-primary-color-hover)
+        border: 1px solid var(--p-primary-color-hover)
+        color: var(--primary-color-text)
 
       .fc-divider
-        background: #1e1e1e
-        border: 1px solid #383838
+        background: var(--surface-card)
+        border: 1px solid var(--surface-border)
 
     .fc-toolbar
       .fc-button
-        color: #212529
-        background: #64b5f6
-        border: 1px solid #64b5f6
+        color: var(--primary-color-text)
+        background: var(--primary-color)
+        border: 1px solid var(--primary-color)
         font-size: 1rem
         transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
         border-radius: 3px
@@ -2777,14 +2818,14 @@
 
         &:enabled
           &:hover
-            background: #43a5f4
-            color: #212529
-            border-color: #43a5f4
+            background: var(--p-primary-color-hover)
+            color: var(--primary-color-text)
+            border-color: var(--p-primary-color-hover)
 
           &:active
-            background: #2396f2
-            color: #212529
-            border-color: #2396f2
+            background: var(--p-primary-color-active)
+            color: var(--primary-color-text)
+            border-color: var(--p-primary-color-active)
 
             &:focus
               outline: 0 none
@@ -2813,25 +2854,25 @@
           box-shadow: 0 0 0 1px var(--focus-color)
 
         &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
-          background: #1e1e1e
-          border: 1px solid #383838
-          color: rgba(255, 255, 255, 0.87)
+          background: var(--surface-card)
+          border: 1px solid var(--surface-border)
+          color: var(--text-color)
           transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
         &.fc-dayGridMonth-button:hover, &.fc-timeGridWeek-button:hover, &.fc-timeGridDay-button:hover
-          background: rgba(255, 255, 255, 0.03)
-          border-color: #383838
-          color: rgba(255, 255, 255, 0.87)
+          background: var(--surface-hover)
+          border-color: var(--surface-border)
+          color: var(--text-color)
 
         &.fc-dayGridMonth-button.fc-button-active, &.fc-timeGridWeek-button.fc-button-active, &.fc-timeGridDay-button.fc-button-active
-          background: #64b5f6
-          border-color: #64b5f6
-          color: #212529
+          background: var(--primary-color)
+          border-color: var(--primary-color)
+          color: var(--primary-color-text)
 
         &.fc-dayGridMonth-button.fc-button-active:hover, &.fc-timeGridWeek-button.fc-button-active:hover, &.fc-timeGridDay-button.fc-button-active:hover
-          background: #43a5f4
-          border-color: #43a5f4
-          color: #212529
+          background: var(--p-primary-color-hover)
+          border-color: var(--p-primary-color-hover)
+          color: var(--primary-color-text)
 
         &.fc-dayGridMonth-button:focus, &.fc-timeGridWeek-button:focus, &.fc-timeGridDay-button:focus
           outline: 0 none
@@ -2853,29 +2894,29 @@
   &.fc-theme-standard
     .fc-view-harness
       .fc-scrollgrid
-        border-color: #383838
+        border-color: var(--surface-border)
 
       th
-        background: #1e1e1e
-        border-color: #383838
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-card)
+        border-color: var(--surface-border)
+        color: var(--text-color)
 
       td
-        color: rgba(255, 255, 255, 0.87)
-        border-color: #383838
+        color: var(--text-color)
+        border-color: var(--surface-border)
 
       .fc-view
-        background: #1e1e1e
+        background: var(--surface-card)
 
       .fc-popover
         background: none
         border: 0 none
 
         .fc-popover-header
-          border: 1px solid #383838
+          border: 1px solid var(--surface-border)
           padding: 1rem
-          background: #1e1e1e
-          color: rgba(255, 255, 255, 0.87)
+          background: var(--surface-overlay)
+          color: var(--text-color)
 
           .fc-popover-close
             opacity: 1
@@ -2887,7 +2928,7 @@
             font-size: 1rem
             width: 2rem
             height: 2rem
-            color: rgba(255, 255, 255, 0.6)
+            color: var(--text-color-secondary)
             border: 0 none
             background: transparent
             border-radius: 50%
@@ -2897,9 +2938,9 @@
               content: '\e90b'
 
             &:hover
-              color: rgba(255, 255, 255, 0.87)
+              color: var(--text-color)
               border-color: transparent
-              background: rgba(255, 255, 255, 0.03)
+              background: var(--surface-hover)
 
             &:focus
               outline: 0 none
@@ -2908,51 +2949,51 @@
 
         .fc-popover-body
           padding: 1rem
-          border: 1px solid #383838
-          background: #1e1e1e
-          color: rgba(255, 255, 255, 0.87)
+          border: 1px solid var(--surface-border)
+          background: var(--surface-overlay)
+          color: var(--text-color)
           border-top: 0 none
 
       .fc-event
         &.fc-daygrid-block-event
-          color: #212529
-          background: #43a5f4
-          border-color: #43a5f4
+          color: var(--primary-color-text)
+          background: var(--p-primary-color-hover)
+          border-color: var(--p-primary-color-hover)
 
           .fc-event-main
-            color: #212529
+            color: var(--primary-color-text)
 
         &.fc-daygrid-dot-event
           .fc-daygrid-event-dot
-            background: #43a5f4
-            border-color: #43a5f4
+            background: var(--p-primary-color-hover)
+            border-color: var(--p-primary-color-hover)
 
           &:hover
-            background: rgba(255, 255, 255, 0.03)
-            color: rgba(255, 255, 255, 0.87)
+            background: var(--surface-hover)
+            color: var(--text-color)
 
       .fc-cell-shaded
-        background: #1e1e1e
+        background: var(--surface-card)
 
     .fc-toolbar
       .fc-button
-        color: #212529
-        background: #64b5f6
-        border: 1px solid #64b5f6
+        color: var(--primary-color-text)
+        background: var(--primary-color)
+        border: 1px solid var(--primary-color)
         font-size: 1rem
         transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
         border-radius: 3px
 
         &:enabled
           &:hover
-            background: #43a5f4
-            color: #212529
-            border-color: #43a5f4
+            background: var(--p-primary-color-hover)
+            color: var(--primary-color-text)
+            border-color: var(--p-primary-color-hover)
 
           &:active
-            background: #2396f2
-            color: #212529
-            border-color: #2396f2
+            background: var(--p-primary-color-active)
+            color: var(--primary-color-text)
+            border-color: var(--p-primary-color-active)
 
             &:focus
               outline: 0 none
@@ -2961,9 +3002,9 @@
 
         &:disabled
           opacity: 0.4
-          color: #212529
-          background: #64b5f6
-          border: 1px solid #64b5f6
+          color: var(--primary-color-text)
+          background: var(--primary-color)
+          border: 1px solid var(--primary-color)
 
         .fc-icon-chevron-left
           font-family: 'PrimeIcons' !important
@@ -2987,25 +3028,25 @@
           box-shadow: 0 0 0 1px var(--focus-color)
 
         &.fc-dayGridMonth-button, &.fc-timeGridWeek-button, &.fc-timeGridDay-button
-          background: #1e1e1e
-          border: 1px solid #383838
-          color: rgba(255, 255, 255, 0.87)
+          background: var(--surface-card)
+          border: 1px solid var(--surface-border)
+          color: var(--text-color)
           transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
         &.fc-dayGridMonth-button:hover, &.fc-timeGridWeek-button:hover, &.fc-timeGridDay-button:hover
-          background: rgba(255, 255, 255, 0.03)
-          border-color: #383838
-          color: rgba(255, 255, 255, 0.87)
+          background: var(--surface-hover)
+          border-color: var(--surface-border)
+          color: var(--text-color)
 
         &.fc-dayGridMonth-button.fc-button-active, &.fc-timeGridWeek-button.fc-button-active, &.fc-timeGridDay-button.fc-button-active
-          background: #64b5f6
-          border-color: #64b5f6
-          color: #212529
+          background: var(--primary-color)
+          border-color: var(--primary-color)
+          color: var(--primary-color-text)
 
         &.fc-dayGridMonth-button.fc-button-active:hover, &.fc-timeGridWeek-button.fc-button-active:hover, &.fc-timeGridDay-button.fc-button-active:hover
-          background: #43a5f4
-          border-color: #43a5f4
-          color: #212529
+          background: var(--p-primary-color-hover)
+          border-color: var(--p-primary-color-hover)
+          color: var(--primary-color-text)
 
         &.fc-dayGridMonth-button:not(:disabled):focus, &.fc-timeGridWeek-button:not(:disabled):focus, &.fc-timeGridDay-button:not(:disabled):focus
           outline: 0 none
@@ -3025,8 +3066,8 @@
           border-bottom-right-radius: 3px
 
     .fc-highlight
-      color: rgba(255, 255, 255, 0.87)
-      background: rgba(100, 181, 246, 0.16)
+      color: var(--text-color)
+      background: var(--p-highlight-bg)
 
 .p-orderlist
   .p-orderlist-controls
@@ -3036,9 +3077,9 @@
       margin-bottom: 0.5rem
 
   .p-orderlist-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     padding: 1rem
     font-weight: 700
     border-bottom: 0 none
@@ -3047,8 +3088,8 @@
 
   .p-orderlist-filter-container
     padding: 1rem
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-card)
+    border: 1px solid var(--surface-border)
     border-bottom: 0 none
 
     .p-orderlist-filter-input
@@ -3056,12 +3097,12 @@
 
     .p-orderlist-filter-icon
       right: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   .p-orderlist-list
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     padding: 0.5rem 0
     border-bottom-right-radius: 3px
     border-bottom-left-radius: 3px
@@ -3070,13 +3111,13 @@
       padding: 0.5rem 1rem
       margin: 0
       border: 0 none
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
       transition: transform 0.2s, box-shadow 0.2s
 
       &:not(.p-highlight):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-hover)
+        color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -3084,14 +3125,14 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(100, 181, 246, 0.16)
+        color: var(--text-color)
+        background: var(--p-highlight-bg)
 
   &.p-orderlist-striped .p-orderlist-list .p-orderlist-item:nth-child(even)
-    background: rgba(255, 255, 255, 0.01)
+    background: var(--p-striped-row-bg)
 
     &:hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
 @media screen and (max-width: 960px)
   .p-orderlist
@@ -3111,31 +3152,31 @@
 .p-organizationchart
   .p-organizationchart-node-content
     &.p-organizationchart-selectable-node:not(.p-highlight):hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
     &.p-highlight
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
       .p-node-toggler i
         color: rgba(12, 120, 207, 0.16)
 
   .p-organizationchart-line-down
-    background: #383838
+    background: var(--surface-d)
 
   .p-organizationchart-line-left
-    border-right: 1px solid #383838
-    border-color: #383838
+    border-right: 1px solid var(--surface-border)
+    border-color: var(--surface-border)
 
   .p-organizationchart-line-top
-    border-top: 1px solid #383838
-    border-color: #383838
+    border-top: 1px solid var(--surface-border)
+    border-color: var(--surface-border)
 
   .p-organizationchart-node-content
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     padding: 1rem
 
     .p-node-toggler
@@ -3149,9 +3190,9 @@
         box-shadow: 0 0 0 1px var(--focus-color)
 
 .p-paginator
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.6)
-  border: solid #383838
+  background: var(--surface-card)
+  color: var(--text-color-secondary)
+  border: solid var(--surface-border)
   border-width: 1px
   padding: 0.5rem 1rem
   border-radius: 3px
@@ -3159,7 +3200,7 @@
   .p-paginator-first, .p-paginator-prev, .p-paginator-next, .p-paginator-last
     background-color: transparent
     border: 0 none
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     min-width: 2.286em
     height: 2.286em
     margin: 0.143rem
@@ -3167,9 +3208,9 @@
     border-radius: 3px
 
   .p-paginator-first:not(.p-disabled):not(.p-highlight):hover, .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover, .p-paginator-next:not(.p-disabled):not(.p-highlight):hover, .p-paginator-last:not(.p-disabled):not(.p-highlight):hover
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
     border-color: transparent
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
 
   .p-paginator-first
     border-top-left-radius: 3px
@@ -3196,7 +3237,7 @@
   .p-paginator-current
     background-color: transparent
     border: 0 none
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     min-width: 2.286em
     height: 2.286em
     margin: 0.143rem
@@ -3205,7 +3246,7 @@
   .p-paginator-pages .p-paginator-page
     background-color: transparent
     border: 0 none
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
     min-width: 2.286em
     height: 2.286em
     margin: 0.143rem
@@ -3213,14 +3254,14 @@
     border-radius: 3px
 
     &.p-highlight
-      background: rgba(100, 181, 246, 0.16)
-      border-color: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      border-color: var(--p-highlight-bg)
+      color: var(--text-color)
 
     &:not(.p-highlight):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
       border-color: transparent
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
 .p-picklist
   .p-picklist-buttons
@@ -3230,9 +3271,9 @@
       margin-bottom: 0.5rem
 
   .p-picklist-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     padding: 1rem
     font-weight: 700
     border-bottom: 0 none
@@ -3241,8 +3282,8 @@
 
   .p-picklist-filter-container
     padding: 1rem
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-card)
+    border: 1px solid var(--surface-border)
     border-bottom: 0 none
 
     .p-picklist-filter-input
@@ -3250,12 +3291,12 @@
 
     .p-picklist-filter-icon
       right: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   .p-picklist-list
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     padding: 0.5rem 0
     border-bottom-right-radius: 3px
     border-bottom-left-radius: 3px
@@ -3264,13 +3305,13 @@
       padding: 0.5rem 1rem
       margin: 0
       border: 0 none
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       background: transparent
       transition: transform 0.2s, box-shadow 0.2s
 
       &:not(.p-highlight):hover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-hover)
+        color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -3278,8 +3319,8 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(100, 181, 246, 0.16)
+        color: var(--text-color)
+        background: var(--p-highlight-bg)
 
 @media screen and (max-width: 960px)
   .p-picklist
@@ -3310,9 +3351,9 @@
         content: '\e92f'
 
 .p-tree
-  border: 1px solid #383838
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid var(--surface-border)
+  background: var(--surface-card)
+  color: var(--text-color)
   padding: 1rem
   border-radius: 3px
 
@@ -3328,16 +3369,16 @@
         margin-right: 0.5rem
         width: 2rem
         height: 2rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         border: 0 none
         background: transparent
         border-radius: 50%
         transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
         &:enabled:hover
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
           border-color: transparent
-          background: rgba(255, 255, 255, 0.03)
+          background: var(--surface-hover)
 
         &:focus
           outline: 0 none
@@ -3346,13 +3387,13 @@
 
       .p-treenode-icon
         margin-right: 0.5rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
       .p-checkbox
         margin-right: 0.5rem
 
         .p-indeterminate .p-checkbox-icon
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -3360,15 +3401,15 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
       &.p-highlight
-        background: rgba(100, 181, 246, 0.16)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--p-highlight-bg)
+        color: var(--text-color)
 
         .p-tree-toggler, .p-treenode-icon, .p-tree-toggler:hover, .p-treenode-icon:hover
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
       &.p-treenode-selectable:not(.p-highlight):hover, &.p-treenode-dragover
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-hover)
+        color: var(--text-color)
 
   .p-tree-filter-container
     margin-bottom: 0.5rem
@@ -3379,7 +3420,7 @@
 
     .p-tree-filter-icon
       right: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
   .p-treenode-children
     padding: 0 0 0 1rem
@@ -3403,17 +3444,17 @@
     border-radius: 0
 
   .p-treetable-header
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.6)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color-secondary)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
 
   .p-treetable-footer
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-card)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     padding: 1rem 1rem
     font-weight: 700
@@ -3421,27 +3462,27 @@
   .p-treetable-thead > tr > th
     text-align: left
     padding: 1rem 1rem
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     font-weight: 700
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
     transition: box-shadow 0.2s
 
   .p-treetable-tfoot > tr > td
     text-align: left
     padding: 1rem 1rem
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     border-width: 0 0 1px 0
     font-weight: 700
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
 
   .p-sortable-column
     outline-color: var(--focus-color)
 
     .p-sortable-column-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-left: 0.5rem
 
     .p-sortable-column-badge
@@ -3449,39 +3490,39 @@
       height: 1.143rem
       min-width: 1.143rem
       line-height: 1.143rem
-      color: rgba(255, 255, 255, 0.87)
-      background: rgba(100, 181, 246, 0.16)
+      color: var(--text-color)
+      background: var(--p-highlight-bg)
       margin-left: 0.5rem
 
     &:not(.p-highlight):hover
-      background: rgba(255, 255, 255, 0.03)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      color: var(--text-color)
 
       .p-sortable-column-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &.p-highlight
-      background: #1e1e1e
-      color: #64b5f6
+      background: var(--surface-card)
+      color: var(--primary-color)
 
       .p-sortable-column-icon
-        color: #64b5f6
+        color: var(--primary-color)
 
   .p-treetable-tbody > tr
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-card)
+    color: var(--text-color)
     transition: box-shadow 0.2s
 
     > td
       text-align: left
-      border: 1px solid #383838
+      border: 1px solid var(--surface-border)
       border-width: 0 0 1px 0
       padding: 1rem 1rem
 
       .p-treetable-toggler
         width: 2rem
         height: 2rem
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         border: 0 none
         background: transparent
         border-radius: 50%
@@ -3489,9 +3530,9 @@
         margin-right: 0.5rem
 
         &:enabled:hover
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
           border-color: transparent
-          background: rgba(255, 255, 255, 0.03)
+          background: var(--surface-hover)
 
         &:focus
           outline: 0 none
@@ -3502,34 +3543,34 @@
           margin-right: 0.5rem
 
           .p-indeterminate .p-checkbox-icon
-            color: rgba(255, 255, 255, 0.87)
+            color: var(--text-color)
 
     &:focus
       outline: 0.15rem solid var(--focus-color)
       outline-offset: -0.15rem
 
     &.p-highlight
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
       .p-treetable-toggler
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
         &:hover
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
   &.p-treetable-selectable .p-treetable-tbody > tr:not(.p-highlight):hover, &.p-treetable-hoverable-rows .p-treetable-tbody > tr:not(.p-highlight):hover
-    background: rgba(255, 255, 255, 0.03)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-hover)
+    color: var(--text-color)
 
   &.p-treetable-selectable .p-treetable-tbody > tr:not(.p-highlight):hover .p-treetable-toggler, &.p-treetable-hoverable-rows .p-treetable-tbody > tr:not(.p-highlight):hover .p-treetable-toggler
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
 
   .p-column-resizer-helper
-    background: #64b5f6
+    background: var(--primary-color)
 
   .p-treetable-scrollable-header, .p-treetable-scrollable-footer
-    background: #1e1e1e
+    background: var(--surface-card)
 
   .p-treetable-loading-icon
     font-size: 2rem
@@ -3563,14 +3604,14 @@
 
 .p-timeline
   .p-timeline-event-marker
-    border: 2px solid #64b5f6
+    border: 2px solid var(--primary-color)
     border-radius: 50%
     width: 1rem
     height: 1rem
-    background-color: #1e1e1e
+    background-color: var(--surface-card)
 
   .p-timeline-event-connector
-    background-color: #383838
+    background-color: var(--surface-d)
 
   &.p-timeline-vertical
     .p-timeline-event-opposite, .p-timeline-event-content
@@ -3590,9 +3631,9 @@
   .p-accordion-header
     .p-accordion-header-link
       padding: 1rem
-      border: 1px solid #383838
-      color: rgba(255, 255, 255, 0.87)
-      background: #1e1e1e
+      border: 1px solid var(--surface-border)
+      color: var(--text-color)
+      background: var(--surface-card)
       font-weight: 700
       border-radius: 3px
       transition: box-shadow 0.2s
@@ -3606,28 +3647,28 @@
       box-shadow: 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled):hover .p-accordion-header-link
-      background: rgba(255, 255, 255, 0.03)
-      border-color: #383838
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      border-color: var(--surface-border)
+      color: var(--text-color)
 
     &:not(.p-disabled).p-highlight
       .p-accordion-header-link
-        background: #1e1e1e
-        border-color: #383838
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-card)
+        border-color: var(--surface-border)
+        color: var(--text-color)
         border-bottom-right-radius: 0
         border-bottom-left-radius: 0
 
       &:hover .p-accordion-header-link
-        border-color: #383838
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.87)
+        border-color: var(--surface-border)
+        background: var(--surface-hover)
+        color: var(--text-color)
 
   .p-accordion-content
     padding: 1rem
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     border-top: 0
     border-top-right-radius: 0
     border-top-left-radius: 0
@@ -3658,8 +3699,8 @@
         border-bottom-left-radius: 3px
 
 .p-card
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
+  background: var(--surface-card)
+  color: var(--text-color)
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12)
   border-radius: 3px
 
@@ -3674,7 +3715,7 @@
   .p-card-subtitle
     font-weight: 700
     margin-bottom: 0.5rem
-    color: rgba(255, 255, 255, 0.6)
+    color: var(--text-color-secondary)
 
   .p-card-content
     padding: 1rem 0
@@ -3683,16 +3724,16 @@
     padding: 1rem 0 0 0
 
 .p-fieldset
-  border: 1px solid #383838
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
+  border: 1px solid var(--surface-border)
+  background: var(--surface-card)
+  color: var(--text-color)
   border-radius: 3px
 
   .p-fieldset-legend
     padding: 1rem
-    border: 1px solid #383838
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    border: 1px solid var(--surface-border)
+    color: var(--text-color)
+    background: var(--surface-card)
     font-weight: 700
     border-radius: 3px
 
@@ -3702,7 +3743,7 @@
 
     a
       padding: 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-radius: 3px
       transition: box-shadow 0.2s
 
@@ -3715,23 +3756,23 @@
         box-shadow: 0 0 0 1px var(--focus-color)
 
     &:hover
-      background: rgba(255, 255, 255, 0.03)
-      border-color: #383838
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      border-color: var(--surface-border)
+      color: var(--text-color)
 
   .p-fieldset-content
     padding: 1rem
 
 .p-divider
   .p-divider-content
-    background-color: #1e1e1e
+    background-color: var(--surface-card)
 
   &.p-divider-horizontal
     margin: 1rem 0
     padding: 0 1rem
 
     &:before
-      border-top: 1px #383838
+      border-top: 1px var(--surface-border)
 
     .p-divider-content
       padding: 0 0.5rem
@@ -3741,17 +3782,17 @@
     padding: 1rem 0
 
     &:before
-      border-left: 1px #383838
+      border-left: 1px var(--surface-border)
 
     .p-divider-content
       padding: 0.5rem 0
 
 .p-panel
   .p-panel-header
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     padding: 1rem
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-card)
+    color: var(--text-color)
     border-top-right-radius: 3px
     border-top-left-radius: 3px
 
@@ -3761,16 +3802,16 @@
     .p-panel-header-icon
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
       &:enabled:hover
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
         border-color: transparent
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -3782,55 +3823,55 @@
 
   .p-panel-content
     padding: 1rem
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     border-bottom-right-radius: 3px
     border-bottom-left-radius: 3px
     border-top: 0 none
 
   .p-panel-footer
     padding: 0.5rem 1rem
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     border-top: 0 none
 
 .p-splitter
-  border: 1px solid #383838
-  background: #1e1e1e
+  border: 1px solid var(--surface-border)
+  background: var(--surface-card)
   border-radius: 3px
-  color: rgba(255, 255, 255, 0.87)
+  color: var(--text-color)
 
   .p-splitter-gutter
     transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-splitter-gutter-handle
-      background: #383838
+      background: var(--surface-d)
 
   .p-splitter-gutter-resizing
-    background: #383838
+    background: var(--surface-d)
 
 .p-scrollpanel .p-scrollpanel-bar
-  background: #383838
+  background: var(--surface-d)
   border: 0 none
 
 .p-tabview
   .p-tabview-nav
     background: transparent
-    border: 1px solid #383838
+    border: 1px solid var(--surface-border)
     border-width: 0 0 2px 0
 
     li
       margin-right: 0
 
       .p-tabview-nav-link
-        border: solid #383838
+        border: solid var(--surface-border)
         border-width: 0 0 2px 0
-        border-color: transparent transparent #383838 transparent
-        background: #1e1e1e
-        color: rgba(255, 255, 255, 0.6)
+        border-color: transparent transparent var(--surface-border) transparent
+        background: var(--surface-card)
+        color: var(--text-color-secondary)
         padding: 1rem
         font-weight: 700
         border-top-right-radius: 3px
@@ -3844,21 +3885,21 @@
           box-shadow: inset 0 0 0 1px var(--focus-color)
 
       &:not(.p-highlight):not(.p-disabled):hover .p-tabview-nav-link
-        background: #1e1e1e
-        border-color: #64b5f6
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-card)
+        border-color: var(--primary-color)
+        color: var(--text-color)
 
       &.p-highlight .p-tabview-nav-link
-        background: #1e1e1e
-        border-color: #64b5f6
-        color: #64b5f6
+        background: var(--surface-card)
+        border-color: var(--primary-color)
+        color: var(--primary-color)
 
   .p-tabview-close
     margin-left: 0.5rem
 
   .p-tabview-nav-btn.p-link
-    background: #1e1e1e
-    color: #64b5f6
+    background: var(--surface-card)
+    color: var(--primary-color)
     width: 2.357rem
     box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12)
     border-radius: 0
@@ -3869,16 +3910,16 @@
       box-shadow: inset 0 0 0 1px var(--focus-color)
 
   .p-tabview-panels
-    background: #1e1e1e
+    background: var(--surface-card)
     padding: 1rem
     border: 0 none
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-bottom-right-radius: 3px
     border-bottom-left-radius: 3px
 
 .p-toolbar
-  background: #1e1e1e
-  border: 1px solid #383838
+  background: var(--surface-card)
+  border: 1px solid var(--surface-border)
   padding: 1rem
   border-radius: 3px
 
@@ -3886,9 +3927,9 @@
     margin: 0 0.5rem
 
 .p-confirm-popup
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
 
@@ -3909,19 +3950,19 @@
   &:after
     border: solid transparent
     border-color: rgba(30, 30, 30, 0)
-    border-bottom-color: #1e1e1e
+    border-bottom-color: var(--surface-overlay)
 
   &:before
     border: solid transparent
     border-color: rgba(56, 56, 56, 0)
-    border-bottom-color: #383838
+    border-bottom-color: var(--surface-border)
 
   &.p-confirm-popup-flipped
     &:after
-      border-top-color: #1e1e1e
+      border-top-color: var(--surface-overlay)
 
     &:before
-      border-top-color: #383838
+      border-top-color: var(--surface-border)
 
   .p-confirm-popup-icon
     font-size: 1.5rem
@@ -3932,12 +3973,12 @@
 .p-dialog
   border-radius: 3px
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
-  border: 1px solid #383838
+  border: 1px solid var(--surface-border)
 
   .p-dialog-header
     border-bottom: 0 none
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-overlay)
+    color: var(--text-color)
     padding: 1.5rem
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -3949,7 +3990,7 @@
     .p-dialog-header-icon
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
@@ -3957,9 +3998,9 @@
       margin-right: 0.5rem
 
       &:enabled:hover
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
         border-color: transparent
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -3970,8 +4011,8 @@
         margin-right: 0
 
   .p-dialog-content
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-overlay)
+    color: var(--text-color)
     padding: 0 1.5rem 2rem 1.5rem
 
     &:last-of-type
@@ -3980,8 +4021,8 @@
 
   .p-dialog-footer
     border-top: 0 none
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-overlay)
+    color: var(--text-color)
     padding: 0 1.5rem 1.5rem 1.5rem
     text-align: right
     border-bottom-right-radius: 3px
@@ -3999,9 +4040,9 @@
       margin-left: 1rem
 
 .p-overlaypanel
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
 
@@ -4009,8 +4050,8 @@
     padding: 1rem
 
   .p-overlaypanel-close
-    background: #64b5f6
-    color: #212529
+    background: var(--primary-color)
+    color: var(--primary-color-text)
     width: 2rem
     height: 2rem
     transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
@@ -4020,13 +4061,13 @@
     right: -1rem
 
     &:enabled:hover
-      background: #43a5f4
-      color: #212529
+      background: var(--p-primary-color-hover)
+      color: var(--primary-color-text)
 
   &:after
     border: solid transparent
     border-color: rgba(30, 30, 30, 0)
-    border-bottom-color: #1e1e1e
+    border-bottom-color: var(--surface-overlay)
 
   &:before
     border: solid transparent
@@ -4035,15 +4076,15 @@
 
   &.p-overlaypanel-flipped
     &:after
-      border-top-color: #1e1e1e
+      border-top-color: var(--surface-overlay)
 
     &:before
-      border-top-color: #383838
+      border-top-color: var(--surface-border)
 
 .p-sidebar
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12)
 
   .p-sidebar-header
@@ -4052,16 +4093,16 @@
     .p-sidebar-close, .p-sidebar-icon
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border: 0 none
       background: transparent
       border-radius: 50%
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
     .p-sidebar-close:enabled:hover, .p-sidebar-icon:enabled:hover
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-color: transparent
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
     .p-sidebar-close:focus, .p-sidebar-icon:focus
       outline: 0 none
@@ -4076,30 +4117,30 @@
 
 .p-tooltip
   .p-tooltip-text
-    background: #383838
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-d)
+    color: var(--text-color)
     padding: 0.5rem 0.5rem
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
     border-radius: 3px
 
   &.p-tooltip-right .p-tooltip-arrow
-    border-right-color: #383838
+    border-right-color: var(--surface-d)
 
   &.p-tooltip-left .p-tooltip-arrow
-    border-left-color: #383838
+    border-left-color: var(--surface-d)
 
   &.p-tooltip-top .p-tooltip-arrow
-    border-top-color: #383838
+    border-top-color: var(--surface-d)
 
   &.p-tooltip-bottom .p-tooltip-arrow
-    border-bottom-color: #383838
+    border-bottom-color: var(--surface-d)
 
 .p-fileupload
   .p-fileupload-buttonbar
-    background: #1e1e1e
+    background: var(--surface-card)
     padding: 1rem
-    border: 1px solid #383838
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    color: var(--text-color)
     border-bottom: 0 none
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -4108,10 +4149,10 @@
       margin-right: 0.5rem
 
   .p-fileupload-content
-    background: #1e1e1e
+    background: var(--surface-card)
     padding: 2rem 1rem
-    border: 1px solid #383838
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    color: var(--text-color)
     border-bottom-right-radius: 3px
     border-bottom-left-radius: 3px
 
@@ -4125,8 +4166,8 @@
     margin-top: 0
 
 .p-breadcrumb
-  background: #1e1e1e
-  border: 1px solid #383838
+  background: var(--surface-card)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   padding: 1rem
 
@@ -4141,53 +4182,53 @@
         box-shadow: 0 0 0 1px var(--focus-color)
 
       .p-menuitem-text
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
       .p-menuitem-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
     &.p-breadcrumb-chevron
       margin: 0 0.5rem 0 0.5rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     &:last-child
       .p-menuitem-text
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
       .p-menuitem-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
 .p-contextmenu
   padding: 0.25rem 0
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-overlay)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
   border-radius: 3px
   width: 12.5rem
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4196,19 +4237,19 @@
 
   .p-submenu-list
     padding: 0.25rem 0
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
     border-radius: 3px
 
   .p-menuitem.p-menuitem-active > .p-menuitem-link
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
   .p-menu-separator
-    border-top: 1px solid #383838
+    border-top: 1px solid var(--surface-border)
     margin: 0.25rem 0
 
   .p-submenu-icon
@@ -4306,35 +4347,35 @@
 
 .p-megamenu
   padding: 0.5rem
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
 
   .p-megamenu-root-list > .p-menuitem
     > .p-menuitem-link
       padding: 0.75rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-radius: 3px
       transition: box-shadow 0.2s
       user-select: none
 
       .p-menuitem-text
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
       .p-menuitem-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         margin-right: 0.5rem
 
       .p-submenu-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         margin-left: 0.5rem
 
       &:not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
         .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -4342,36 +4383,36 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     &.p-menuitem-active > .p-menuitem-link
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       &:not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       .p-menuitem-text, &:not(.p-disabled):hover .p-menuitem-text, .p-menuitem-icon, &:not(.p-disabled):hover .p-menuitem-icon, .p-submenu-icon, &:not(.p-disabled):hover .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4379,16 +4420,16 @@
       box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   .p-megamenu-panel
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    color: var(--text-color)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-megamenu-submenu-header
     margin: 0
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
     font-weight: 700
     border-top-right-radius: 3px
     border-top-left-radius: 3px
@@ -4398,14 +4439,14 @@
     width: 12.5rem
 
     .p-menu-separator
-      border-top: 1px solid #383838
+      border-top: 1px solid var(--surface-border)
       margin: 0.25rem 0
 
   .p-menuitem.p-menuitem-active > .p-menuitem-link
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
   &.p-megamenu-vertical
     width: 12.5rem
@@ -4413,34 +4454,34 @@
 
 .p-menu
   padding: 0.25rem 0
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   width: 12.5rem
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4448,52 +4489,52 @@
       box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-menu-overlay
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-submenu-header
     margin: 0
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
-    background: #1e1e1e
+    color: var(--text-color)
+    background: var(--surface-card)
     font-weight: 700
     border-top-right-radius: 0
     border-top-left-radius: 0
 
   .p-menu-separator
-    border-top: 1px solid #383838
+    border-top: 1px solid var(--surface-border)
     margin: 0.25rem 0
 
 .p-menubar
   padding: 0.5rem
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4503,27 +4544,27 @@
   .p-menubar-root-list > .p-menuitem
     > .p-menuitem-link
       padding: 0.75rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-radius: 3px
       transition: box-shadow 0.2s
       user-select: none
 
       .p-menuitem-text
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
       .p-menuitem-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         margin-right: 0.5rem
 
       .p-submenu-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         margin-left: 0.5rem
 
       &:not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
         .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -4531,33 +4572,33 @@
         box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
     &.p-menuitem-active > .p-menuitem-link
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       &:not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
       .p-menuitem-text, &:not(.p-disabled):hover .p-menuitem-text, .p-menuitem-icon, &:not(.p-disabled):hover .p-menuitem-icon, .p-submenu-icon, &:not(.p-disabled):hover .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
   .p-submenu-list
     padding: 0.25rem 0
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
     width: 12.5rem
 
     .p-menu-separator
-      border-top: 1px solid #383838
+      border-top: 1px solid var(--surface-border)
       margin: 0.25rem 0
 
     .p-submenu-icon
       font-size: 0.875rem
 
   .p-menuitem.p-menuitem-active > .p-menuitem-link
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
 @media screen and (max-width: 960px)
   .p-menubar
@@ -4567,13 +4608,13 @@
       display: flex
       width: 2rem
       height: 2rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       border-radius: 50%
       transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
       &:hover
-        color: rgba(255, 255, 255, 0.87)
-        background: rgba(255, 255, 255, 0.03)
+        color: var(--text-color)
+        background: var(--surface-hover)
 
       &:focus
         outline: 0 none
@@ -4584,13 +4625,13 @@
       position: absolute
       display: none
       padding: 0.25rem 0
-      background: #1e1e1e
-      border: 1px solid #383838
+      background: var(--surface-card)
+      border: 1px solid var(--surface-border)
       box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
       width: 100%
 
       .p-menu-separator
-        border-top: 1px solid #383838
+        border-top: 1px solid var(--surface-border)
         margin: 0.25rem 0
 
       .p-submenu-icon
@@ -4602,26 +4643,26 @@
 
         > .p-menuitem-link
           padding: 0.75rem 1rem
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
           border-radius: 0
           transition: box-shadow 0.2s
           user-select: none
 
           .p-menuitem-text
-            color: rgba(255, 255, 255, 0.87)
+            color: var(--text-color)
 
           .p-menuitem-icon
-            color: rgba(255, 255, 255, 0.6)
+            color: var(--text-color-secondary)
             margin-right: 0.5rem
 
           .p-submenu-icon
-            color: rgba(255, 255, 255, 0.6)
+            color: var(--text-color-secondary)
 
           &:not(.p-disabled):hover
-            background: rgba(255, 255, 255, 0.03)
+            background: var(--surface-hover)
 
             .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-              color: rgba(255, 255, 255, 0.87)
+              color: var(--text-color)
 
           &:focus
             outline: 0 none
@@ -4682,9 +4723,9 @@
   .p-panelmenu-header
     > a
       padding: 1rem
-      border: 1px solid #383838
-      color: rgba(255, 255, 255, 0.87)
-      background: #1e1e1e
+      border: 1px solid var(--surface-border)
+      color: var(--text-color)
+      background: var(--surface-card)
       font-weight: 700
       border-radius: 3px
       transition: box-shadow 0.2s
@@ -4698,30 +4739,30 @@
         box-shadow: 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled) > a:hover
-      background: rgba(255, 255, 255, 0.03)
-      border-color: #383838
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-hover)
+      border-color: var(--surface-border)
+      color: var(--text-color)
 
     &.p-highlight
       margin-bottom: 0
 
       > a
-        background: #1e1e1e
-        border-color: #383838
-        color: rgba(255, 255, 255, 0.87)
+        background: var(--surface-card)
+        border-color: var(--surface-border)
+        color: var(--text-color)
         border-bottom-right-radius: 0
         border-bottom-left-radius: 0
 
       &:not(.p-disabled) > a:hover
-        border-color: #383838
-        background: rgba(255, 255, 255, 0.03)
-        color: rgba(255, 255, 255, 0.87)
+        border-color: var(--surface-border)
+        background: var(--surface-hover)
+        color: var(--text-color)
 
   .p-panelmenu-content
     padding: 0.25rem 0
-    border: 1px solid #383838
-    background: #1e1e1e
-    color: rgba(255, 255, 255, 0.87)
+    border: 1px solid var(--surface-border)
+    background: var(--surface-card)
+    color: var(--text-color)
     border-top: 0
     border-top-right-radius: 0
     border-top-left-radius: 0
@@ -4730,26 +4771,26 @@
 
     .p-menuitem .p-menuitem-link
       padding: 0.75rem 1rem
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border-radius: 0
       transition: box-shadow 0.2s
       user-select: none
 
       .p-menuitem-text
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
       .p-menuitem-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
         margin-right: 0.5rem
 
       .p-submenu-icon
-        color: rgba(255, 255, 255, 0.6)
+        color: var(--text-color-secondary)
 
       &:not(.p-disabled):hover
-        background: rgba(255, 255, 255, 0.03)
+        background: var(--surface-hover)
 
         .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-          color: rgba(255, 255, 255, 0.87)
+          color: var(--text-color)
 
       &:focus
         outline: 0 none
@@ -4783,34 +4824,34 @@
 
 .p-slidemenu
   padding: 0.25rem 0
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   width: 12.5rem
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4818,24 +4859,24 @@
       box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-slidemenu-overlay
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-slidemenu-list
     padding: 0.25rem 0
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-card)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-slidemenu.p-slidemenu-active > .p-slidemenu-link
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-slidemenu-text, .p-slidemenu-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
   .p-slidemenu-separator
-    border-top: 1px solid #383838
+    border-top: 1px solid var(--surface-border)
     margin: 0.25rem 0
 
   .p-slidemenu-icon
@@ -4843,7 +4884,7 @@
 
   .p-slidemenu-backward
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
 
 .p-steps .p-steps-item
   .p-menuitem-link
@@ -4853,7 +4894,7 @@
     background: transparent
 
     .p-steps-number
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
       border: 0 none
       background: transparent
       min-width: 2rem
@@ -4865,7 +4906,7 @@
 
     .p-steps-title
       margin-top: 0.5rem
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):focus
       outline: 0 none
@@ -4874,16 +4915,16 @@
 
   &.p-highlight
     .p-steps-number
-      background: rgba(100, 181, 246, 0.16)
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--p-highlight-bg)
+      color: var(--text-color)
 
     .p-steps-title
       font-weight: 700
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
   &:before
     content: ' '
-    border-top: 1px solid #383838
+    border-top: 1px solid var(--surface-border)
     width: 100%
     top: 50%
     left: 0
@@ -4893,18 +4934,18 @@
 
 .p-tabmenu .p-tabmenu-nav
   background: transparent
-  border: 1px solid #383838
+  border: 1px solid var(--surface-border)
   border-width: 0 0 2px 0
 
   .p-tabmenuitem
     margin-right: 0
 
     .p-menuitem-link
-      border: solid #383838
+      border: solid var(--surface-border)
       border-width: 0 0 2px 0
-      border-color: transparent transparent #383838 transparent
-      background: #1e1e1e
-      color: rgba(255, 255, 255, 0.6)
+      border-color: transparent transparent var(--surface-border) transparent
+      background: var(--surface-card)
+      color: var(--text-color-secondary)
       padding: 1rem
       font-weight: 700
       border-top-right-radius: 3px
@@ -4922,45 +4963,45 @@
         box-shadow: inset 0 0 0 1px var(--focus-color)
 
     &:not(.p-highlight):not(.p-disabled):hover .p-menuitem-link
-      background: #1e1e1e
-      border-color: #64b5f6
-      color: rgba(255, 255, 255, 0.87)
+      background: var(--surface-card)
+      border-color: var(--primary-color)
+      color: var(--text-color)
 
     &.p-highlight .p-menuitem-link
-      background: #1e1e1e
-      border-color: #64b5f6
-      color: #64b5f6
+      background: var(--surface-card)
+      border-color: var(--primary-color)
+      color: var(--primary-color)
 
 .p-tieredmenu
   padding: 0.25rem 0
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   border-radius: 3px
   width: 12.5rem
 
   .p-menuitem-link
     padding: 0.75rem 1rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
     border-radius: 0
     transition: box-shadow 0.2s
     user-select: none
 
     .p-menuitem-text
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
     .p-menuitem-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
       margin-right: 0.5rem
 
     .p-submenu-icon
-      color: rgba(255, 255, 255, 0.6)
+      color: var(--text-color-secondary)
 
     &:not(.p-disabled):hover
-      background: rgba(255, 255, 255, 0.03)
+      background: var(--surface-hover)
 
       .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-        color: rgba(255, 255, 255, 0.87)
+        color: var(--text-color)
 
     &:focus
       outline: 0 none
@@ -4968,24 +5009,24 @@
       box-shadow: inset 0 0 0 0.15rem var(--focus-color)
 
   &.p-tieredmenu-overlay
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-submenu-list
     padding: 0.25rem 0
-    background: #1e1e1e
-    border: 1px solid #383838
+    background: var(--surface-overlay)
+    border: 1px solid var(--surface-border)
     box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12)
 
   .p-menuitem.p-menuitem-active > .p-menuitem-link
-    background: rgba(255, 255, 255, 0.03)
+    background: var(--surface-hover)
 
     .p-menuitem-text, .p-menuitem-icon, .p-submenu-icon
-      color: rgba(255, 255, 255, 0.87)
+      color: var(--text-color)
 
   .p-menu-separator
-    border-top: 1px solid #383838
+    border-top: 1px solid var(--surface-border)
     margin: 0.25rem 0
 
   .p-submenu-icon
@@ -5318,7 +5359,7 @@
     font-size: 1.5rem
 
 .p-avatar
-  background-color: #383838
+  background-color: var(--surface-d)
   border-radius: 3px
 
   &.p-avatar-lg
@@ -5338,11 +5379,11 @@
       font-size: 2rem
 
 .p-avatar-group .p-avatar
-  border: 2px solid #1e1e1e
+  border: 2px solid var(--surface-card)
 
 .p-chip
-  background-color: #383838
-  color: rgba(255, 255, 255, 0.87)
+  background-color: var(--surface-d)
+  color: var(--text-color)
   border-radius: 16px
   padding: 0 0.5rem
 
@@ -5378,25 +5419,25 @@
   transition: background-color 0.2s, color 0.2s, box-shadow 0.2s
 
   &.p-link
-    background: rgba(100, 181, 246, 0.16)
+    background: var(--p-highlight-bg)
 
     &:hover
       background: rgba(100, 181, 246, 0.3616)
 
   .p-scrolltop-icon
     font-size: 1.5rem
-    color: rgba(255, 255, 255, 0.87)
+    color: var(--text-color)
 
 .p-skeleton
-  background-color: rgba(255, 255, 255, 0.06)
+  background-color: var(--p-skeleton-bg)
   border-radius: 3px
 
   &:after
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0))
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), var(--p-skeleton-shine), rgba(255, 255, 255, 0))
 
 .p-tag
-  background: #64b5f6
-  color: #212529
+  background: var(--primary-color)
+  color: var(--primary-color-text)
   font-size: 0.75rem
   font-weight: 700
   padding: 0.25rem 0.4rem
@@ -5428,8 +5469,8 @@
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s
 
   &:not(.p-disabled):hover
-    background: rgba(255, 255, 255, 0.03)
-    color: rgba(255, 255, 255, 0.87)
+    background: var(--surface-hover)
+    color: var(--text-color)
 
   &:focus
     outline: 0 none
@@ -5439,22 +5480,22 @@
 .p-progressbar
   border: 0 none
   height: 1.5rem
-  background: #383838
+  background: var(--surface-d)
   border-radius: 3px
 
   .p-progressbar-value
     border: 0 none
     margin: 0
-    background: #64b5f6
+    background: var(--primary-color)
 
   .p-progressbar-label
-    color: #212529
+    color: var(--primary-color-text)
     line-height: 1.5rem
 
 .p-terminal
-  background: #1e1e1e
-  color: rgba(255, 255, 255, 0.87)
-  border: 1px solid #383838
+  background: var(--surface-card)
+  color: var(--text-color)
+  border: 1px solid var(--surface-border)
   padding: 1rem
 
   .p-terminal-input
@@ -5462,8 +5503,8 @@
     font-family: var(--base-font-size)
 
 .p-badge
-  background: #64b5f6
-  color: #212529
+  background: var(--primary-color)
+  color: var(--primary-color-text)
   font-size: 0.75rem
   font-weight: 700
   min-width: 1.5rem
@@ -5503,8 +5544,8 @@
     line-height: 3rem
 
 .p-tag
-  background: #64b5f6
-  color: #212529
+  background: var(--primary-color)
+  color: var(--primary-color-text)
   font-size: 0.75rem
   font-weight: 700
   padding: 0.25rem 0.4rem
@@ -5525,7 +5566,7 @@
 
 .p-datatable .p-datatable-tbody > tr
   &.p-datatable-dragpoint-top > td
-    box-shadow: inset 0 2px 0 0 #64b5f6
+    box-shadow: inset 0 2px 0 0 var(--primary-color)
 
   &.p-datatable-dragpoint-bottom > td
-    box-shadow: inset 0 -2px 0 0 #64b5f6
+    box-shadow: inset 0 -2px 0 0 var(--primary-color)

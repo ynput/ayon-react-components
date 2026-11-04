@@ -39,6 +39,8 @@
     --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
     --md-sys-color-surface: var(--md-sys-color-surface-dark);
     --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+    /* the most contrast on a surface (white on dark), for text and focus rings that need it */
+    --md-sys-color-on-surface-strong: var(--md-sys-color-on-surface-strong-dark);
     --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
     --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
     --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);

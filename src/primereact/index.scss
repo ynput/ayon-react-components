@@ -1,41 +1,17 @@
-// Obsolete
-
-$op-background-main: #2c313a;
-$op-background-light: #232c33;
-$op-background-dark: #21252b;
-$op-button-primary-background: #434a56;
-
-// New scheme
-
-$color-grey-00: var(--md-sys-color-surface-container-low);
-$color-grey-01: #2c313a;
-$color-grey-02: #373d48;
-$color-grey-03: #434a56;
-$color-grey-04: #4b5362;
-$color-grey-05: #576170;
-$color-grey-06: #6b7685;
-$color-grey-07: #99a3b2;
-$color-grey-08: #d3d8de;
-$color-grey-09: #f0f2f5;
-
-$prime-input-border: 1px solid $color-grey-03;
-$prime-input-background: $color-grey-00;
-$prime-button-background: $color-grey-03;
-
 // button
 
 .p-multiselect-panel,
 .p-dropdown-panel {
-  background: rgba($op-background-dark, 0.9);
+  background: var(--p-menu-bg);
   .p-multiselect-header {
-    background: $op-background-dark;
+    background: var(--p-menu-header-bg);
   }
 }
 
 .p-menu {
-  background: rgba($op-background-dark, 0.9);
+  background: var(--p-menu-bg);
   .p-submenu-header {
-    background: $op-background-dark;
+    background: var(--p-menu-header-bg);
   }
 }
 
@@ -137,7 +113,7 @@ $prime-button-background: $color-grey-03;
 
   &:hover {
     background: var(--md-sys-color-surface-container-low-active) !important;
-    color: white;
+    color: var(--md-sys-color-on-surface-strong);
   }
 }
 
