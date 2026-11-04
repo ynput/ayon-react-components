@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Icon } from '../../Icon'
 import { Button } from '../../Buttons/Button'
+import { getShimmerStyles } from '../../helpers'
 
 export const OptionsContainer = styled.div`
   position: absolute;
@@ -64,6 +65,39 @@ export const OptionsList = styled.ul`
       }
     }
   }
+`
+
+// non-interactive rows (loading / error), excluded from keyboard navigation via .status
+export const StatusItem = styled.li`
+  margin: 0;
+  list-style: none;
+  padding: 6px 8px;
+  color: var(--md-sys-color-outline);
+
+  &.error {
+    color: var(--md-sys-color-error);
+  }
+
+  &.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+`
+
+export const PlaceholderItem = styled.li`
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  list-style: none;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: var(--border-radius-m);
+  background-color: var(--md-sys-color-surface-container);
 `
 
 export const Item = styled.li`

@@ -41,6 +41,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
       width = 300,
       valueProps,
       isMultiple,
+      checkboxes = true,
       ...props
     },
     ref,
@@ -80,6 +81,8 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
             editor={editor}
             isMultiple={isMultiple}
             isOpen={o}
+            mixedCounts={props.mixedCounts}
+            mixedTotal={props.mixedTotal}
           />
         )}
         itemTemplate={(tag, isActive, isSelected, i) => (
@@ -87,7 +90,7 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
             className={clsx('option-child', { selected: isSelected })}
             style={{
               color: tag.color,
-              justifyContent: i ? 'center' : undefined,
+              justifyContent: i && !checkboxes ? 'center' : undefined,
             }}
           >
             {tag.icon && <Icon icon={tag.icon} />}
@@ -112,6 +115,8 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         align={align}
         style={styleDropdown}
         $width={width}
+        $checkboxes={checkboxes}
+        checkboxes={checkboxes}
         sortBySelected
       />
     )

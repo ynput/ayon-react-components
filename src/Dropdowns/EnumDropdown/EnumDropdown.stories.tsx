@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { EnumDropdown, EnumDropdownProps } from '.'
 import { useState } from 'react'
+import { useEditOptionDialog } from '../Dropdown/EditOptionDialog.stories.helper'
 
 const meta: Meta<typeof EnumDropdown> = {
   component: EnumDropdown,
@@ -130,4 +131,36 @@ export const NoValue: Story = {
     options: priorities,
   },
   render: Template,
+}
+
+// each option can be edited in a dialog; typing a new one and editing it creates it with details
+export const EditOptions: Story = {
+  args: { ...initArgs, value: ['high'], search: true },
+  render: (args) => {
+    const [value, setValue] = useState<EnumDropdownProps['value']>(args.value)
+    const [options, setOptions] = useState(priorities)
+    const { onEditOption, dialog } = useEditOptionDialog({
+      fields: ['label', 'color'],
+      onSave: ({ value, label, color }, isNew) =>
+        setOptions(
+          isNew
+            ? [...options, { value, label: label || value, color }]
+            : options.map((o) => (o.value === value ? { ...o, label: label || value, color } : o)),
+        ),
+    })
+
+    return (
+      <>
+        <EnumDropdown
+          {...args}
+          value={value}
+          options={options}
+          editable
+          onChange={setValue}
+          onEditOption={onEditOption}
+        />
+        {dialog}
+      </>
+    )
+  },
 }

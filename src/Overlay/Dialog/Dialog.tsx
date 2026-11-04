@@ -124,6 +124,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
         )}
       </Styled.Dialog>
     </Styled.Backdrop>,
-    portalRef || document.getElementById('root') || document.body,
+    // the end of body, after what is open already: a dialog opened from a menu or popover is above it
+    portalRef || document.body,
   )
 })

@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Dropdown, DropdownProps, DropdownRef } from '../Dropdown'
 import { forwardRef } from 'react'
-import { uniq } from 'lodash'
+import { uniq } from 'lodash-es'
 import { Status, StatusField, StatusSize } from './StatusField/StatusField'
 
 const StyledDropdown = styled(Dropdown)`

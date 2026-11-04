@@ -1,5 +1,7 @@
 import { OverlayScrollbarsComponent } from 'overlayscrollbars-react'
 import styled, { css, keyframes } from 'styled-components'
+import { labelSmall } from '../../theme/typography.styles'
+import { Button as BaseButton } from '../../Buttons/Button'
 
 export const Button = styled.button<{
   $isChanged: boolean
@@ -172,6 +174,10 @@ export const Scrollable = styled(OverlayScrollbarsComponent)`
   &.no-top-radius {
     border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
   }
+  &.no-bottom-radius {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
   box-shadow: 0 1px 16px rgb(0 0 0 / 20%);
 
@@ -217,6 +223,7 @@ export const Options = styled.ul`
 export const ListItem = styled.li<{
   $usingKeyboard: boolean
 }>`
+  position: relative;
   cursor: pointer;
   user-select: none;
 
@@ -252,10 +259,140 @@ export const ListItem = styled.li<{
   &.focused {
     background-color: var(--md-sys-color-surface-container-low-hover);
 
-    & > * {
+    & > *:not(.edit-option) {
       outline: solid var(--focus-color) 1px;
       outline-offset: -1px;
       border-radius: var(--border-radius-m);
+    }
+  }
+
+  /* the checkbox shows what is selected, instead of a highlighted row and a remove icon */
+  &&.checkbox {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+
+    & > *:not(.checkbox-icon):not(.mixed-count):not(.edit-option) {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* in line, so it doesn't cover the counts */
+    .edit-option {
+      position: static;
+      translate: none;
+      margin-left: 4px;
+    }
+
+    .selected,
+    .selected:hover {
+      background-color: transparent;
+      color: inherit;
+    }
+
+    .remove {
+      display: none;
+    }
+
+    &.focused {
+      outline: solid var(--focus-color) 1px;
+      border-radius: var(--border-radius-m);
+
+      & > * {
+        outline: none;
+      }
+    }
+  }
+
+  .checkbox-icon {
+    flex: none;
+    color: var(--md-sys-color-outline);
+
+    &.all,
+    &.some {
+      color: var(--md-sys-color-primary);
+    }
+  }
+
+  .mixed-count {
+    ${labelSmall}
+    flex: none;
+    margin-left: 4px;
+    padding: 1px 6px;
+    border-radius: var(--border-radius-l);
+    color: var(--md-sys-color-outline);
+    font-variant-numeric: tabular-nums;
+
+    &.adding {
+      color: var(--md-sys-color-on-tertiary-container);
+      background-color: var(--md-sys-color-tertiary-container);
+    }
+
+    &.removing {
+      color: var(--md-sys-color-on-error-container);
+      background-color: var(--md-sys-color-error-container);
+    }
+  }
+`
+
+// edits the option outside the dropdown; shows on the hovered or focused option
+export const EditOption = styled(BaseButton)`
+  &.edit-option {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    translate: 0 -50%;
+    flex: none;
+    padding: 2px;
+    opacity: 0;
+  }
+
+  .option:hover > &,
+  .option.focused > &,
+  .option.editing > & {
+    opacity: 1;
+  }
+`
+
+export const MixedFooter = styled.div`
+  ${labelSmall}
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 8px;
+
+  color: var(--md-sys-color-on-surface-variant);
+  background-color: var(--md-sys-color-surface-container-low);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-top: none;
+  border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
+
+  .summary {
+    color: var(--md-sys-color-on-surface);
+    /* wraps within the list's width instead of widening the dropdown */
+    width: 0;
+    min-width: 100%;
+
+    &.empty {
+      color: var(--md-sys-color-outline);
+    }
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .replace {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+
+    label {
+      cursor: pointer;
     }
   }
 `

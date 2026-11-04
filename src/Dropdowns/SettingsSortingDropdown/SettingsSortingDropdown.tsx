@@ -2,7 +2,7 @@ import { ElementRef, forwardRef } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { SortingDropdown, SortingDropdownProps } from '../SortingDropdown/SortingDropdown'
-import { Icon, IconPropType } from '../../Icon'
+import { Icon, IconImage, IconPropType, IconType, isIconImage } from '../../Icon'
 
 const StyledDropdown = styled(SortingDropdown)`
   &.settings-sorting-dropdown {
@@ -55,7 +55,12 @@ export const SettingsSortingDropdown = forwardRef<
 >(({ title = 'Sort by', icon, hideSort, disableSort, className, ...props }, ref) => {
   const renderValueContent: SortingDropdownProps['renderValueContent'] = ({ title, cards }) => (
     <StyledInner>
-      {icon && <Icon icon={icon} className="dropdown-icon" />}
+      {icon &&
+        (isIconImage(icon) ? (
+          <IconImage icon={icon} className="dropdown-icon" />
+        ) : (
+          <Icon icon={icon as IconType} className="dropdown-icon" />
+        ))}
       <span className="dropdown-title">{title}</span>
       {cards}
     </StyledInner>

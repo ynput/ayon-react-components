@@ -45,6 +45,7 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
       multiSelect = true,
       multipleOverride,
       disabledValues = [],
+      checkboxes = true,
       className,
       ...props
     },
@@ -102,6 +103,8 @@ export const AssigneeSelect = forwardRef<DropdownRef, AssigneeSelectProps>(
         )}
         options={sortedOptions}
         dataKey={'name'}
+        labelKey={'fullName'}
+        checkboxes={checkboxes}
         disabled={disabled}
         itemTemplate={(ops, _isActive, isSelected, _index, selectedMixed) => (
           <AssigneeDropdownTemplate

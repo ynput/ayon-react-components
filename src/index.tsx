@@ -1,6 +1,4 @@
-// import icons
-import 'material-symbols/outlined.css'
-
+// fonts, including the icon font
 import './fonts.scss'
 
 // import styles here
@@ -64,9 +62,14 @@ export { Dropdown, DefaultValueTemplate, DefaultItemTemplate } from './Dropdowns
 export type {
   DropdownProps,
   DefaultValueTemplateProps,
+  DefaultValueItem,
   DefaultItemTemplateProps,
   DropdownRef,
+  ValueIconMode,
+  EditOptionHandler,
 } from './Dropdowns/Dropdown'
+export { getMixedCounts, applyMixedChange } from './Dropdowns/Dropdown/mixedValues'
+export type { MixedChange, MixedState } from './Dropdowns/Dropdown/mixedValues'
 
 // SEARCH FILTER
 export * from './SearchFilter'
@@ -79,8 +82,8 @@ export type { FileCardProps } from './FileCard'
 
 // ICONS
 // icon
-export { Icon } from './Icon'
-export type { IconProps } from './Icon'
+export { Icon, IconImage, isIconImage } from './Icon'
+export type { IconProps, IconImageProps, IconType, IconPropType } from './Icon'
 
 // INPUT
 // text
@@ -90,6 +93,9 @@ export { InputText } from './Inputs/InputText'
 export { InputTextarea } from './Inputs/InputTextarea'
 // color
 export { InputColor } from './Inputs/InputColor'
+
+export { ColorPicker, COLOR_SUGGESTIONS } from './Inputs/ColorPicker'
+export type { ColorPickerProps } from './Inputs/ColorPicker'
 // number
 export { InputNumber } from './Inputs/InputNumber'
 // switch
@@ -100,6 +106,9 @@ export { InputPassword } from './Inputs/InputPassword'
 export { LockedInput } from './Inputs/LockedInput'
 // date
 export { InputDate } from './Inputs/InputDate'
+
+// FIELDS: form inputs with typed values, commit on Enter/blur and read-only mode
+export * from './Fields'
 
 // LAYOUT
 // divider
@@ -121,6 +130,9 @@ export { TableRow } from './Layout/TableRow'
 export type { TableRowProps } from './Layout/TableRow'
 // toolbar
 export { Toolbar } from './Layout/Toolbar'
+// borderedSection
+export { BorderedSection } from './BorderedSection'
+export type { BorderedSectionProps } from './BorderedSection'
 
 // OVERLAY
 // dialog

@@ -68,3 +68,12 @@
   font-weight: 800;
   src: url('./fonts/nunito-sans-v15-latin_latin-ext-800italic.woff2') format('woff2'); 
 }
+// Material Symbols Outlined with only the FILL axis (outlined and filled), see scripts/build-icon-font.sh.
+// Weight, grade and optical size are fixed, so 'wght', 'GRAD' and 'opsz' in font-variation-settings do nothing.
+@font-face {
+  font-display: block;
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 100 700;
+  src: url('./fonts/material-symbols-outlined.woff2') format('woff2');
+}
