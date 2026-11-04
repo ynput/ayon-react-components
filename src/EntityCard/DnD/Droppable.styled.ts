@@ -46,7 +46,7 @@ export const Column = styled.div<DroppableStyledProps>`
         content: '';
         position: absolute;
         inset: 0;
-        background-color: white;
+        background-color: var(--md-sys-color-on-surface-strong);
         opacity: 0.05;
         z-index: 500;
         border-radius: 16px;

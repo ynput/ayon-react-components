@@ -132,7 +132,7 @@ export const Button = styled.button<ButtonProps>`
         background-color: var(--md-sys-color-primary);
       }
       &:focus-visible {
-        outline-color: white;
+        outline-color: var(--md-sys-color-on-surface-strong);
       }
     `}
 
@@ -205,7 +205,7 @@ export const Button = styled.button<ButtonProps>`
         background-color: var(--md-sys-color-tertiary-active);
       }
       &:focus-visible {
-        outline-color: white;
+        outline-color: var(--md-sys-color-on-surface-strong);
       }
 
       &.selected {

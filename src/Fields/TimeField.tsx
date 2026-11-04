@@ -54,7 +54,7 @@ const TimePopover = styled.div<{
   overflow-y: auto;
   border: 1px solid var(--field-border-color, var(--md-sys-color-outline-variant));
   ${roundedFieldSurfaceStyles}
-  background: var(--md-sys-color-surface-container-high);
+  background: var(--md-sys-color-surface-overlay);
   box-shadow: var(--box-shadow);
 `
 
@@ -71,7 +71,7 @@ const TimeOption = styled.button`
   }
 
   &:hover {
-    background: var(--md-sys-color-surface-container-high-hover);
+    background: var(--md-sys-color-surface-overlay-hover);
   }
 
   &.selected:hover {
