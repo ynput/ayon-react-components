@@ -283,6 +283,7 @@ const SelectWithActionsTemplate = () => {
           options={[...options, { value: 'long', label: 'A label long enough to be truncated' }]}
           onChange={setSelect}
           actions={[{ label: 'Ends at' }]}
+          hoverSuffix="until 17 Aug 2027"
           placeholder="Select an option"
         />
       </FieldRow>
