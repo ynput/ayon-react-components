@@ -271,6 +271,29 @@ const AttributeFieldsTemplate = () => {
   )
 }
 
+const SelectWithActionsTemplate = () => {
+  const [select, setSelect] = useState<string | null>('animation')
+
+  return (
+    <Form>
+      <FieldRow icon="checklist" label="Select">
+        <SelectField
+          type="string"
+          value={select}
+          options={[...options, { value: 'long', label: 'A label long enough to be truncated' }]}
+          onChange={setSelect}
+          actions={[{ label: 'Ends at' }]}
+          placeholder="Select an option"
+        />
+      </FieldRow>
+    </Form>
+  )
+}
+
+export const SelectWithActions: Story = {
+  render: () => <SelectWithActionsTemplate />,
+}
+
 export const Attributes: Story = {
   render: () => <AttributeFieldsTemplate />,
 }
