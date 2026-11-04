@@ -1,4 +1,7 @@
-:root {
+/* the default theme, also used inside any [data-theme='dark'] element */
+:root,
+[data-theme='dark'] {
+    color-scheme: dark;
     --md-sys-color-primary: var(--md-sys-color-primary-dark);
     --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
     --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
@@ -84,4 +87,8 @@
     --md-sys-color-surface-container-lowest-active: var(--md-sys-color-surface-container-lowest-dark-active);
     --md-sys-color-error-active: var(--md-sys-color-error-dark-active);
     --md-sys-color-error-container-active: var(--md-sys-color-error-container-dark-active);
+    /* overlays: menus, dropdowns, dialogs, tooltips */
+    --md-sys-color-surface-overlay: var(--md-sys-color-surface-container-high-dark);
+    --md-sys-color-surface-overlay-hover: var(--md-sys-color-surface-container-high-dark-hover);
+    --md-sys-elevation-overlay: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
 }

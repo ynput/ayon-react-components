@@ -2,5 +2,6 @@
 @import url(states.css);
 @import url(colors.module.css);
 @import url(typography.module.css);
-/* @import url(theme.light.css) (prefers-color-scheme: light); */
+// dark is the default, light applies where data-theme="light" is set (normally on <html>)
 @import url(theme.dark.css);
+@import url(theme.light.css);

@@ -43,4 +43,48 @@
   --md-sys-color-error-dark-active: hsl(6, 70%, 76%);
   --md-sys-color-error-container-dark-active: hsl(6, 72%, 36%);
 
+  /* LIGHT: hover and active darken, as there is no lighter than white */
+  /* HOVER */
+  /* primary */
+  --md-sys-color-primary-light-hover: #0A69A6;
+  --md-sys-color-on-primary-light-hover: #EAF4FB;
+  --md-sys-color-primary-container-light-hover: #C7E2F7;
+  /* secondary */
+  --md-sys-color-secondary-light-hover: #475663;
+  --md-sys-color-on-secondary-light-hover: #EEF2F6;
+  --md-sys-color-secondary-container-light-hover: #D1DBE6;
+  /* tertiary */
+  --md-sys-color-tertiary-light-hover: #00754F;
+  --md-sys-color-on-tertiary-light-hover: #E6F7F0;
+  --md-sys-color-tertiary-container-light-hover: #BAEBD5;
+  /* container-surface */
+  --md-sys-color-surface-container-highest-light-hover: #CDD3DB;
+  --md-sys-color-surface-container-high-light-hover: #DAE0E6;
+  --md-sys-color-surface-container-light-hover: #E6E9EE;
+  --md-sys-color-surface-container-low-light-hover: #EEF1F4;
+  --md-sys-color-surface-container-lowest-light-hover: #F3F5F7;
+  /* error */
+  --md-sys-color-error-light-hover: #B02217;
+  --md-sys-color-error-container-light-hover: #F7CEC7;
+
+  /* ACTIVE */
+  /* primary */
+  --md-sys-color-primary-light-active: #095D93;
+  --md-sys-color-on-primary-light-active: #DCEDF8;
+  --md-sys-color-primary-container-light-active: #B9DAF3;
+  /* secondary */
+  --md-sys-color-secondary-light-active: #3F4C58;
+  --md-sys-color-secondary-container-light-active: #C6D2DE;
+  /* tertiary */
+  --md-sys-color-tertiary-light-active: #006845;
+  --md-sys-color-tertiary-container-light-active: #ABE3CA;
+  /* container-surface */
+  --md-sys-color-surface-container-highest-light-active: #C3CAD3;
+  --md-sys-color-surface-container-high-light-active: #D2D8DF;
+  --md-sys-color-surface-container-light-active: #DEE2E8;
+  --md-sys-color-surface-container-low-light-active: #E7EAEE;
+  --md-sys-color-surface-container-lowest-light-active: #ECEFF2;
+  /* error */
+  --md-sys-color-error-light-active: #9C1D13;
+  --md-sys-color-error-container-light-active: #F2BFB6;
 }

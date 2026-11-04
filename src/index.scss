@@ -1,7 +1,9 @@
 @import 'primereact/theme.sass';
 @import 'primereact/index.scss';
 
-:root {
+// declared on every theme scope too, so the values follow a nested data-theme
+:root,
+[data-theme] {
   // --color-text: #d3d8de;
   // --color-text-dim: #8e9297;
 
