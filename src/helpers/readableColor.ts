@@ -9,6 +9,11 @@ type RGB = [number, number, number] // sRGB channels, 0-1
 export const MIN_CONTRAST_TEXT = 4.5
 export const MIN_CONTRAST_ICON = 3
 
+// The light theme asks for half as much again: about 7:1 (AAA) for text, 4.5:1 for icons. Studios pick their
+// colours to stand out on dark, where they reach 7:1 and more, and coloured text at the AA minimum reads weak
+// next to the near-black text of the light theme.
+export const LIGHT_CONTRAST_FACTOR = 1.5
+
 // The surface coloured text is measured against: --md-sys-color-surface-container-{light,dark} (tokens.css).
 // Panels are a step further from the text colour on both themes, so they pass too.
 export const READABLE_SURFACES = { light: '#EEF1F4', dark: '#272D35' } as const
@@ -130,6 +135,7 @@ const cache = new Map<string, string>()
 /**
  * A user-defined colour (status, task type, tag, ...) that reads on whichever theme is showing.
  * Use it for text and icons; filled backgrounds keep the original colour and pair it with getTextColor.
+ * `minContrast` applies to the dark theme, the light one asks for LIGHT_CONTRAST_FACTOR times as much.
  *
  * Returns the colour unchanged when it reads on both themes, otherwise a CSS `light-dark()` value,
  * so it follows the theme (including nested data-theme scopes) without a re-render.
@@ -147,7 +153,11 @@ export function getReadableColor(
   const key = `${color}|${minContrast}`
   let result = cache.get(key)
   if (result === undefined) {
-    const light = ensureContrast(color, READABLE_SURFACES.light, minContrast)
+    const light = ensureContrast(
+      color,
+      READABLE_SURFACES.light,
+      minContrast * LIGHT_CONTRAST_FACTOR,
+    )
     const dark = ensureContrast(color, READABLE_SURFACES.dark, minContrast)
     result = light === color && dark === color ? color : `light-dark(${light}, ${dark})`
     cache.set(key, result)
