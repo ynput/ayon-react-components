@@ -92,3 +92,8 @@
     --md-sys-color-surface-overlay-hover: var(--md-sys-color-surface-container-light);
     --md-sys-elevation-overlay: 0px 8px 24px 0px rgba(16, 24, 40, 0.14), 0 0 0 1px var(--md-sys-color-outline-variant-light);
 }
+/* a nested theme scope sets its own text colour too, which would otherwise be inherited from outside it */
+[data-theme='dark'],
+[data-theme='light'] {
+    color: var(--md-sys-color-on-surface);
+}
