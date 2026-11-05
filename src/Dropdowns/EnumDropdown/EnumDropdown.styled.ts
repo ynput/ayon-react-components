@@ -72,3 +72,18 @@ export const Option = styled.div<IconStyledProps>`
     }
   }
 `
+
+// a value tinted with its colour, like a tag: the pill carries the text colour
+export const Pill = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 8px 2px 6px;
+  border-radius: var(--border-radius-m);
+
+  && .value-label,
+  && .icon {
+    color: inherit;
+  }
+`
