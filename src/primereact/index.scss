@@ -21,22 +21,14 @@
   margin-bottom: 40px; // to move the scrollbar at least a little bit lower
 }
 
-.p-datatable .p-datatable-tbody > tr {
-  // even background
-  background: var(--md-sys-color-surface-container-low-hover);
-
-  // odd background
-  &.p-row-odd {
-    background: var(--md-sys-color-surface-container-low);
-  }
-}
-
+// rows on the content surface with a hairline between them, like the app's project tables
+// (the --color-table-* values come from the app; the fallbacks are the light values)
+.p-datatable .p-datatable-tbody > tr,
 .p-treetable .p-treetable-tbody > tr {
-  &:nth-child(even) {
-    background: var(--md-sys-color-surface-container-low-hover);
-  }
-  &:nth-child(odd) {
-    background: var(--md-sys-color-surface-container-low);
+  background: var(--color-table-row, var(--md-sys-color-surface-container-lowest));
+
+  & > td {
+    box-shadow: inset 0 -1px 0 0 var(--color-table-border, var(--md-sys-color-surface-container));
   }
 }
 
@@ -112,7 +104,7 @@
   }
 
   &:hover {
-    background: var(--md-sys-color-surface-container-low-active) !important;
+    background: var(--color-table-row-hover, var(--md-sys-color-surface-container)) !important;
     color: var(--md-sys-color-on-surface-strong);
   }
 }
@@ -124,19 +116,19 @@
   .p-datatable-thead > tr > th,
   .p-treetable-thead > tr > th {
     border: 0;
-    background: var(--md-sys-color-surface-container-low);
+    background: var(--color-table-header, var(--md-sys-color-surface-container));
     border-right: 2px solid var(--md-sys-color-outline-variant);
     padding: 0.5rem 0.6rem 0.6rem 0.6rem;
   }
 }
 
 .p-treetable-scrollable-header {
-  background: var(--md-sys-color-surface-container-low) !important;
+  background: var(--color-table-header, var(--md-sys-color-surface-container)) !important;
 }
 
 .p-datatable-thead > tr,
 .p-treetable-thead > tr {
-  background: var(--md-sys-color-surface-container-low) !important;
+  background: var(--color-table-header, var(--md-sys-color-surface-container)) !important;
   user-select: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 
@@ -146,7 +138,7 @@
 }
 
 .p-datatable .p-sortable-column.p-highlight {
-  background: var(--md-sys-color-surface-container-low);
+  background: var(--color-table-header, var(--md-sys-color-surface-container));
 }
 
 // Splitter
