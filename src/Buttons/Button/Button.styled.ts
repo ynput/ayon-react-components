@@ -114,22 +114,22 @@ export const Button = styled.button<ButtonProps>`
   ${({ $variant }) =>
     $variant === 'filled' &&
     css`
-      background-color: var(--md-sys-color-primary);
-      color: var(--md-sys-color-on-primary);
+      background-color: var(--md-sys-color-primary-fixed);
+      color: var(--md-sys-color-on-primary-fixed);
 
       .shortcut {
-        background-color: var(--md-sys-color-on-primary);
-        color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-on-primary-fixed);
+        color: var(--md-sys-color-primary-fixed);
       }
 
       &:hover {
-        background-color: var(--md-sys-color-primary-hover);
+        background-color: var(--md-sys-color-primary-fixed-hover);
       }
       &:active {
-        background-color: var(--md-sys-color-primary-active);
+        background-color: var(--md-sys-color-primary-fixed-active);
       }
       &:disabled {
-        background-color: var(--md-sys-color-primary);
+        background-color: var(--md-sys-color-primary-fixed);
       }
       &:focus-visible {
         outline-color: var(--md-sys-color-on-surface-strong);
@@ -190,19 +190,19 @@ export const Button = styled.button<ButtonProps>`
   ${({ $variant }) =>
     $variant === 'tertiary' &&
     css`
-      background-color: var(--md-sys-color-tertiary);
-      color: var(--md-sys-color-on-tertiary);
+      background-color: var(--md-sys-color-tertiary-fixed);
+      color: var(--md-sys-color-on-tertiary-fixed);
 
       .shortcut {
-        background-color: var(--md-sys-color-on-tertiary);
-        color: var(--md-sys-color-tertiary);
+        background-color: var(--md-sys-color-on-tertiary-fixed);
+        color: var(--md-sys-color-tertiary-fixed);
       }
 
       &:hover {
-        background-color: var(--md-sys-color-tertiary-hover);
+        background-color: var(--md-sys-color-tertiary-fixed-hover);
       }
       &:active {
-        background-color: var(--md-sys-color-tertiary-active);
+        background-color: var(--md-sys-color-tertiary-fixed-active);
       }
       &:focus-visible {
         outline-color: var(--md-sys-color-on-surface-strong);
@@ -222,7 +222,7 @@ export const Button = styled.button<ButtonProps>`
       }
 
       &:disabled {
-        background-color: var(--md-sys-color-tertiary);
+        background-color: var(--md-sys-color-tertiary-fixed);
       }
     `}
 
