@@ -3,8 +3,9 @@
 
 type RGB = [number, number, number] // sRGB channels, 0-1
 
-// WCAG AA for text
+// WCAG AA: 4.5:1 for text, 3:1 for icons and other graphics
 export const MIN_CONTRAST_TEXT = 4.5
+export const MIN_CONTRAST_ICON = 3
 
 // The light surface coloured text is measured against: --md-sys-color-surface-container-light (tokens.css).
 // Panels are a step further from the text colour, so they pass too.
@@ -126,12 +127,16 @@ export const ensureContrast = (
 /** A user-defined colour, and the colour the studio picked for the light theme, if any. */
 export type UserColor = { color?: string | null; colorLight?: string | null }
 
-/** The colour darkened just enough to read as text on the light theme (WCAG AA), e.g. to fix it in an editor. */
-export const makeReadableOnLight = (color: string): string =>
-  ensureContrast(color, LIGHT_SURFACE, MIN_CONTRAST_TEXT)
+/**
+ * The colour darkened just enough to read on the light theme, e.g. to fix it in an editor.
+ * Pass MIN_CONTRAST_ICON for a colour mostly shown as icons.
+ */
+export const makeReadableOnLight = (color: string, minContrast = MIN_CONTRAST_TEXT): string =>
+  ensureContrast(color, LIGHT_SURFACE, minContrast)
 
-/** Whether a colour reads as text on the light theme (WCAG AA), e.g. to warn about it in an editor. */
-export const isReadableOnLight = (color: string): boolean => makeReadableOnLight(color) === color
+/** Whether a colour reads on the light theme, e.g. to warn about it in an editor (see makeReadableOnLight). */
+export const isReadableOnLight = (color: string, minContrast = MIN_CONTRAST_TEXT): boolean =>
+  makeReadableOnLight(color, minContrast) === color
 
 /**
  * A user-defined colour (status, task type, tag, ...) for text and icons on whichever theme is showing.
