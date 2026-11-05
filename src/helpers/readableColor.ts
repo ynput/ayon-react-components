@@ -1,7 +1,7 @@
 // User-defined colours (statuses, task types, tags, ...) on both themes, and contrast helpers for them.
 // Studios pick their colours for dark and may pick a second one for light; without it light shows the same one.
 
-type RGB = [number, number, number] // sRGB channels, 0-1
+export type RGB = [number, number, number] // sRGB channels, 0-1
 
 // WCAG AA: 4.5:1 for text, 3:1 for icons and other graphics
 export const MIN_CONTRAST_TEXT = 4.5
@@ -36,7 +36,7 @@ export const getContrastRatio = (l1: number, l2: number): number =>
   (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05)
 
 // OKLab, https://bottosson.github.io/posts/oklab/
-const rgbToOklab = (rgb: RGB): RGB => {
+export const rgbToOklab = (rgb: RGB): RGB => {
   const [r, g, b] = rgb.map(toLinear)
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
@@ -63,7 +63,7 @@ const oklabToLinear = ([L, a, b]: RGB): RGB => {
 const inGamut = (rgb: RGB) => rgb.every((c) => c >= -1e-4 && c <= 1 + 1e-4)
 
 // colour at lightness L with the given hue, reducing chroma until it fits sRGB
-const fromLightness = (L: number, a: number, b: number): RGB => {
+export const fromLightness = (L: number, a: number, b: number): RGB => {
   let scale = 1
   if (!inGamut(oklabToLinear([L, a, b]))) {
     let lo = 0
@@ -81,7 +81,7 @@ const fromLightness = (L: number, a: number, b: number): RGB => {
   ) as RGB
 }
 
-const toHex = (rgb: RGB) =>
+export const toHex = (rgb: RGB) =>
   '#' +
   rgb
     .map((c) =>

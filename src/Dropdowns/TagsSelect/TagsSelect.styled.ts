@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { DefaultValueTemplate, Dropdown } from '../Dropdown'
+import type { TagColors } from '../../helpers'
 export { DefaultItemStyled as DefaultItem } from '../Dropdown'
 
 export const TagSelectDropdown = styled(Dropdown)<{ $width: number; $checkboxes?: boolean }>`
@@ -45,12 +46,14 @@ export const PartialTag = styled.span`
   color: var(--md-sys-color-on-surface-variant);
 `
 
-export const Tag = styled.span<{ $backgroundColor?: string; $color: string }>`
-  background-color: ${({ $backgroundColor }) =>
-    $backgroundColor ?? 'var(--md-sys-color-surface-container-high)'};
+export const Tag = styled.span<{ $colors?: TagColors }>`
+  background-color: ${({ $colors }) =>
+    $colors?.background ?? 'var(--md-sys-color-surface-container-high)'};
+  /* an inset border, so a tag is the same size with or without one */
+  box-shadow: inset 0 0 0 1px ${({ $colors }) => $colors?.border ?? 'transparent'};
   border-radius: 3px;
   padding: 2px 4px;
-  color: ${({ $color }) => $color};
+  color: ${({ $colors }) => $colors?.text ?? 'var(--md-sys-color-on-surface)'};
 `
 
 export const TagsValueTemplate = styled(DefaultValueTemplate)`

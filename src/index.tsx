@@ -165,6 +165,7 @@ export type { EntityCardProps, Notification } from './EntityCard'
 export {
   getShimmerStyles,
   getTextColor,
+  getTagColors,
   getReadableColor,
   ensureContrast,
   isReadableOnLight,
@@ -172,4 +173,4 @@ export {
   MIN_CONTRAST_TEXT,
   MIN_CONTRAST_ICON,
 } from './helpers'
-export type { UserColor } from './helpers'
+export type { UserColor, TagColors } from './helpers'
