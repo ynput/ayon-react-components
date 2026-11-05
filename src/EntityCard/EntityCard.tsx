@@ -266,6 +266,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
         <Styled.Card
           ref={ref}
           $statusColor={status?.color}
+          // a card frames a thumbnail, so it stays dark like the viewer, whichever theme is showing
+          data-theme="dark"
           tabIndex={0}
           onMouseLeave={closeEditors}
           {...props}
