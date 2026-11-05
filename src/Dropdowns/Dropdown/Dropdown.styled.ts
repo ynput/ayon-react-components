@@ -137,7 +137,7 @@ export const Container = styled.div<{
         translate: 0 calc(-32px - 100%);
         position: absolute;
 
-        background-color: var(--md-sys-color-surface-container-low);
+        background-color: var(--md-sys-color-surface-overlay);
         border-radius: var(--border-radius-m);
         z-index: 10;
         display: flex;
@@ -168,7 +168,8 @@ export const Container = styled.div<{
 
 export const Scrollable = styled(OverlayScrollbarsComponent)`
   border: 1px solid var(--md-sys-color-outline-variant);
-  background-color: var(--md-sys-color-surface-container-low);
+  /* the open list is an overlay, like menus and dialogs */
+  background-color: var(--md-sys-color-surface-overlay);
 
   border-radius: var(--border-radius-m);
   &.no-top-radius {
@@ -231,16 +232,16 @@ export const ListItem = styled.li<{
     !$usingKeyboard &&
     css`
       &:hover {
-        background-color: var(--md-sys-color-surface-container-low-hover);
+        background-color: var(--md-sys-color-surface-overlay-hover);
       }
       &:active {
-        background-color: var(--md-sys-color-surface-container-low-active);
+        background-color: var(--md-sys-color-surface-overlay-hover);
       }
     `}
 
   &.disabled {
     .option-child {
-      background-color: var(--md-sys-color-surface-container-low) !important;
+      background-color: var(--md-sys-color-surface-overlay) !important;
       color: var(--md-sys-color-outline);
 
       .icon {
@@ -249,7 +250,7 @@ export const ListItem = styled.li<{
     }
     /* remove hover affect */
     &:hover {
-      background-color: var(--md-sys-color-surface-container-low);
+      background-color: var(--md-sys-color-surface-overlay);
     }
     cursor: default;
   }
@@ -257,7 +258,7 @@ export const ListItem = styled.li<{
   /* $focused */
   outline-offset: -1px;
   &.focused {
-    background-color: var(--md-sys-color-surface-container-low-hover);
+    background-color: var(--md-sys-color-surface-overlay-hover);
 
     & > *:not(.edit-option) {
       outline: solid var(--focus-color) 1px;
@@ -362,7 +363,7 @@ export const MixedFooter = styled.div`
   padding: 6px 8px;
 
   color: var(--md-sys-color-on-surface-variant);
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--md-sys-color-surface-overlay);
   border: 1px solid var(--md-sys-color-outline-variant);
   border-top: none;
   border-radius: 0 0 var(--border-radius-m) var(--border-radius-m);
@@ -398,7 +399,7 @@ export const MixedFooter = styled.div`
 `
 
 export const StartContent = styled.div`
-  background-color: var(--md-sys-color-surface-container-low);
+  background-color: var(--md-sys-color-surface-overlay);
   border-radius: var(--border-radius-m) var(--border-radius-m) 0 0;
   border: 1px solid var(--md-sys-color-outline-variant);
   border-bottom: none;
