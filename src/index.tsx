@@ -167,6 +167,8 @@ export {
   getTextColor,
   getReadableColor,
   ensureContrast,
+  isReadableOnLight,
+  makeReadableOnLight,
   MIN_CONTRAST_TEXT,
-  MIN_CONTRAST_ICON,
 } from './helpers'
+export type { UserColor } from './helpers'

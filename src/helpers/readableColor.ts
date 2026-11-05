@@ -1,22 +1,14 @@
-// Keeps user-defined colours (statuses, task types, tags, ...) readable on both themes.
-// A colour is only changed when its WCAG contrast against the theme surface is below the minimum.
-// Then its OKLCH lightness moves just far enough, keeping the hue and as much chroma as sRGB allows,
-// so a studio's palette still looks like itself.
+// User-defined colours (statuses, task types, tags, ...) on both themes, and contrast helpers for them.
+// Studios pick their colours for dark and may pick a second one for light; without it light shows the same one.
 
 type RGB = [number, number, number] // sRGB channels, 0-1
 
-// WCAG AA: 4.5:1 for text, 3:1 for icons and other graphics
+// WCAG AA for text
 export const MIN_CONTRAST_TEXT = 4.5
-export const MIN_CONTRAST_ICON = 3
 
-// The light theme asks for half as much again: about 7:1 (AAA) for text, 4.5:1 for icons. Studios pick their
-// colours to stand out on dark, where they reach 7:1 and more, and coloured text at the AA minimum reads weak
-// next to the near-black text of the light theme.
-export const LIGHT_CONTRAST_FACTOR = 1.5
-
-// The surface coloured text is measured against: --md-sys-color-surface-container-{light,dark} (tokens.css).
-// Panels are a step further from the text colour on both themes, so they pass too.
-export const READABLE_SURFACES = { light: '#EEF1F4', dark: '#272D35' } as const
+// The light surface coloured text is measured against: --md-sys-color-surface-container-light (tokens.css).
+// Panels are a step further from the text colour, so they pass too.
+const LIGHT_SURFACE = '#EEF1F4'
 
 export const parseColor = (color: string): RGB | null => {
   const value = color.trim()
@@ -99,7 +91,8 @@ const toHex = (rgb: RGB) =>
     .join('')
 
 /**
- * `color` adjusted to have at least `minContrast` against `background`.
+ * `color` adjusted to have at least `minContrast` against `background`: its OKLCH lightness moves just far
+ * enough, keeping the hue and as much chroma as sRGB allows, so it still looks like itself.
  * Returned as given when it already passes or can't be parsed (CSS variables, named colours).
  */
 export const ensureContrast = (
@@ -130,37 +123,29 @@ export const ensureContrast = (
   return toHex(fromLightness(L + (end - L) * hi, a, b))
 }
 
-const cache = new Map<string, string>()
+/** A user-defined colour, and the colour the studio picked for the light theme, if any. */
+export type UserColor = { color?: string | null; colorLight?: string | null }
+
+/** The colour darkened just enough to read as text on the light theme (WCAG AA), e.g. to fix it in an editor. */
+export const makeReadableOnLight = (color: string): string =>
+  ensureContrast(color, LIGHT_SURFACE, MIN_CONTRAST_TEXT)
+
+/** Whether a colour reads as text on the light theme (WCAG AA), e.g. to warn about it in an editor. */
+export const isReadableOnLight = (color: string): boolean => makeReadableOnLight(color) === color
 
 /**
- * A user-defined colour (status, task type, tag, ...) that reads on whichever theme is showing.
- * Use it for text and icons; filled backgrounds keep the original colour and pair it with getTextColor.
- * `minContrast` applies to the dark theme, the light one asks for LIGHT_CONTRAST_FACTOR times as much.
+ * A user-defined colour (status, task type, tag, ...) for text and icons on whichever theme is showing.
+ * Takes the colour, or the item with its `color` and `colorLight`: light shows `colorLight` when the studio
+ * picked one, otherwise both themes show `color`.
+ * Filled backgrounds keep the original colour and pair it with getTextColor.
  *
- * Returns the colour unchanged when it reads on both themes, otherwise a CSS `light-dark()` value,
- * so it follows the theme (including nested data-theme scopes) without a re-render.
+ * Returns a CSS `light-dark()` value when the two differ, so it follows the theme (including nested data-theme
+ * scopes) without a re-render.
  */
-export function getReadableColor(color: string, minContrast?: number): string
-export function getReadableColor(
-  color: string | undefined,
-  minContrast?: number,
-): string | undefined
-export function getReadableColor(
-  color: string | undefined,
-  minContrast: number = MIN_CONTRAST_TEXT,
-): string | undefined {
-  if (!color) return color
-  const key = `${color}|${minContrast}`
-  let result = cache.get(key)
-  if (result === undefined) {
-    const light = ensureContrast(
-      color,
-      READABLE_SURFACES.light,
-      minContrast * LIGHT_CONTRAST_FACTOR,
-    )
-    const dark = ensureContrast(color, READABLE_SURFACES.dark, minContrast)
-    result = light === color && dark === color ? color : `light-dark(${light}, ${dark})`
-    cache.set(key, result)
-  }
-  return result
+export function getReadableColor(color: string): string
+export function getReadableColor(color: string | UserColor | null | undefined): string | undefined
+export function getReadableColor(value: string | UserColor | null | undefined): string | undefined {
+  const { color, colorLight } = typeof value === 'string' ? { color: value } : value ?? {}
+  if (!color) return color ?? undefined
+  return colorLight && colorLight !== color ? `light-dark(${colorLight}, ${color})` : color
 }
