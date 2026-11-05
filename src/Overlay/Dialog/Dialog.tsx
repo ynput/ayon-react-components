@@ -1,4 +1,4 @@
-import { forwardRef, useEffect } from 'react'
+import { forwardRef, useEffect, useRef } from 'react'
 import * as Styled from './Dialog.styled'
 import { Button, ButtonProps } from '../../Buttons/Button'
 import clsx from 'clsx'
@@ -14,6 +14,12 @@ export interface DialogProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   isOpen: boolean
   onClose: (e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void
   onShow?: () => void
+  /**
+   * Called on Enter anywhere in the dialog, the same as clicking its primary action.
+   * Not called when the key comes from a multiline field, a button or link (they handle Enter
+   * themselves), with a modifier key, or when a child already handled it (preventDefault).
+   */
+  onConfirm?: (e: React.KeyboardEvent<HTMLElement>) => void
   classNames?: ClassNames
   size?: 'sm' | 'md' | 'lg' | 'full'
   hideBackdrop?: boolean
@@ -32,6 +38,16 @@ type ClassNames = {
   closeButton?: string
 }
 
+// Enter without modifiers, not typed into a multiline field and not on an element that
+// handles Enter natively (a focused button or link clicks itself)
+const isConfirmKey = (e: React.KeyboardEvent<HTMLElement>) => {
+  if (e.key !== 'Enter' || e.nativeEvent.isComposing) return false
+  if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return false
+  const target = e.target as HTMLElement
+  if (target.isContentEditable) return false
+  return !target.closest('textarea, button, a[href], select, [role="button"], [role="listbox"]')
+}
+
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
   const {
     children,
@@ -48,10 +64,19 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     classNames,
     size,
     onShow,
+    onConfirm,
     portalRef,
     pt,
+    onKeyDown,
     ...rest
   } = props
+
+  const dialogRef = useRef<HTMLDivElement | null>(null)
+  const setRefs = (el: HTMLDivElement | null) => {
+    dialogRef.current = el
+    if (typeof ref === 'function') ref(el)
+    else if (ref) ref.current = el
+  }
 
   const handleCloseModal = (
     e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>,
@@ -64,13 +89,32 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     if (isOpen && onShow) onShow()
   }, [isOpen])
 
+  // Focus the dialog itself when it opens, so Escape and Enter reach it. A child that took focus
+  // (autoFocus on a field or the primary button) keeps it. The close button is not focused: Enter
+  // on it would close the dialog instead of confirming it.
+  useEffect(() => {
+    const dialog = dialogRef.current
+    if (isOpen && dialog && !dialog.contains(document.activeElement)) {
+      dialog.focus({ preventScroll: true })
+    }
+  }, [isOpen])
+
   const closeIfClickOutside = (e: React.MouseEvent<HTMLElement>) => {
     if (e.currentTarget === e.target && enableBackdropClose) handleCloseModal(e)
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === 'Escape') {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    // a handler passed by the consumer runs first; when it exists it owns Escape, as before
+    onKeyDown?.(e)
+    if (e.defaultPrevented) return
+
+    if (e.key === 'Escape' && !onKeyDown) {
       handleCloseModal(e)
+    }
+
+    if (onConfirm && isConfirmKey(e)) {
+      e.preventDefault()
+      onConfirm(e)
     }
   }
 
@@ -84,7 +128,7 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
     >
       <Styled.Dialog
         $size={size}
-        ref={ref}
+        ref={setRefs}
         className={clsx('dialog', className)}
         onKeyDown={handleKeyDown}
         tabIndex={0}
@@ -102,7 +146,6 @@ export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
             icon="close"
             variant="text"
             onClick={handleCloseModal}
-            autoFocus
           />
         </Styled.Header>
         {children && (
