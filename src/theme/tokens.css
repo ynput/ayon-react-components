@@ -1,5 +1,11 @@
 :root {
   --md-source: #009BE1;
+  /* the brand colours, the same on both themes (M3 fixed roles): fills of filled buttons, switches and
+     highlights. The light theme's primary and tertiary are darker, for text and icons on light surfaces */
+  --md-sys-color-primary-fixed: #8FCEFF;
+  --md-sys-color-on-primary-fixed: #00344F;
+  --md-sys-color-tertiary-fixed: #23E0A9;
+  --md-sys-color-on-tertiary-fixed: #003827;
   /* dark */
   --md-sys-color-primary-dark: #8FCEFF;
   --md-sys-color-on-primary-dark: #00344F;
