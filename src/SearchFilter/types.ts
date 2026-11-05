@@ -8,6 +8,7 @@ export type SearchFilterDropdownOption = {
   icon?: string | null
   label?: string
   color?: string | null
+  colorLight?: string | null
 }
 
 export type FilterValue = {
@@ -16,6 +17,7 @@ export type FilterValue = {
   img?: string | null
   icon?: string | null
   color?: string | null
+  colorLight?: string | null // picked for the light theme, see getReadableColor
   isCustom?: boolean
   parentId?: string | null
   pt?: FilterValuePt
@@ -70,6 +72,7 @@ export interface Option extends Filter {
   allowExcludes?: boolean // allows the filter to be inverted
   operatorChangeable?: boolean // allows the operator to be changed
   color?: string | null // color of the filter (not used for root options)
+  colorLight?: string | null // picked for the light theme, see getReadableColor
   parentId?: string | null // parent filter id
   searchOnly?: boolean //  It will be shown when searching but hidden usually
   searchLabel?: string // label to be shown when searching

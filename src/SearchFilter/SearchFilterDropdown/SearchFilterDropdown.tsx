@@ -3,7 +3,7 @@ import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
-import checkColorBrightness from '../checkColorBrightness'
+import { getReadableFilterColor } from '../checkColorBrightness'
 import { buildFilterId } from '../buildFilterId'
 import { getFilterFromId } from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
@@ -386,6 +386,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   icon,
                   img,
                   color,
+                  colorLight,
                   pt: optionPt,
                   isCustom,
                   contentBefore,
@@ -409,9 +410,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   ? searchLabel ?? searchPresentation?.label ?? label
                   : label
                 const displayIcon = search ? searchPresentation?.icon ?? icon : icon
-                const displayColor = search ? searchPresentation?.color ?? color : color
-                const adjustedColor = displayColor
-                  ? checkColorBrightness(displayColor, '#1C2026')
+                const display =
+                  search && searchPresentation?.color ? searchPresentation : { color, colorLight }
+                const adjustedColor = display.color
+                  ? getReadableFilterColor(display.color, '#1C2026', display.colorLight)
                   : undefined
                 const opensSubmenu =
                   !parentId &&

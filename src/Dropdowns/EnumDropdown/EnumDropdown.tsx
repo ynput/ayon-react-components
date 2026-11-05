@@ -11,12 +11,13 @@ export interface EnumTemplateProps extends Omit<DefaultValueTemplateProps, 'valu
 }
 
 export const EnumTemplate = ({ option, isSelected, isChanged, ...props }: EnumTemplateProps) => {
-  const { value, label, icon, color } = option || {}
+  const { value, label, icon, color, colorLight } = option || {}
   return (
     <Styled.Option
       className={clsx({ selected: isSelected, isChanged }, props.className)}
       id={String(value)}
       $color={color}
+      $colorLight={colorLight}
       {...props}
     >
       {icon &&
@@ -31,6 +32,7 @@ export type EnumDropdownOption = {
   label: string
   icon?: IconPropType
   color?: string
+  colorLight?: string
 }
 
 export interface EnumDropdownProps

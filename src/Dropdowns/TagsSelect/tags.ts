@@ -1,6 +1,7 @@
 export type TagType = {
   name: string
   color: string
+  colorLight?: string
 }
 
 export type TagsType = {

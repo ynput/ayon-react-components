@@ -19,6 +19,7 @@ import { AssigneeSelect, AssigneeSelectProps } from '../Dropdowns/AssigneeSelect
 import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSelect'
 import { UserImage } from '../User/UserImage'
 import { NotificationDot, NotificationProps } from './Notification/Notification'
+import { getReadableColor, UserColor } from '../helpers'
 
 type Section = 'title' | 'header' | 'users' | 'status' | 'priority' | 'versions'
 
@@ -29,7 +30,7 @@ export interface EntityCardProps extends React.HTMLAttributes<HTMLDivElement> {
   showPath?: boolean // always show path
   title?: string // top left
   titleIcon?: IconType // top left
-  titleColor?: string
+  titleColor?: string | UserColor
   isPlayable?: boolean // top right - play icon
   users?: User[] | null // bottom left
   status?: Status // bottom right
@@ -354,7 +355,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     'loading card...'
                   ) : (
                     <>
-                      {titleIcon && <Icon style={{color: titleColor}} icon={titleIcon} />}
+                      {titleIcon && (
+                        <Icon style={{ color: getReadableColor(titleColor) }} icon={titleIcon} />
+                      )}
                       {title && <span className="inner-text">{title}</span>}
                     </>
                   )}
@@ -466,7 +469,10 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                   {priority?.icon && (
                     <Icon
                       icon={priority.icon}
-                      style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
+                      style={{
+                        // only show priority color in default variant
+                        color: variant == 'default' ? getReadableColor(priority) : undefined,
+                      }}
                     />
                   )}
                 </Styled.Tag>

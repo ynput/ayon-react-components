@@ -1,8 +1,10 @@
 import styled, { css } from 'styled-components'
 import { DefaultValueTemplate } from '../Dropdown'
+import { getReadableColor, getTextColor } from '../../helpers'
 
 interface IconStyledProps {
   $color?: string
+  $colorLight?: string
 }
 
 const getSelectedBg = ({ $color }: IconStyledProps) => {
@@ -14,7 +16,7 @@ const getSelectedBg = ({ $color }: IconStyledProps) => {
       }
       .value-label,
       .icon {
-        color: var(--md-sys-color-inverse-on-surface);
+        color: ${getTextColor($color)};
       }
     `
   else
@@ -53,7 +55,10 @@ export const Option = styled.div<IconStyledProps>`
 
   .value-label,
   .icon {
-    color: ${({ $color }) => ($color ? $color : `var(--md-sys-color-on-surface)`)};
+    color: ${({ $color, $colorLight }) =>
+      $color
+        ? getReadableColor({ color: $color, colorLight: $colorLight })
+        : `var(--md-sys-color-on-surface)`};
   }
 
   &.selected {
