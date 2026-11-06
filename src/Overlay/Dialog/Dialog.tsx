@@ -38,14 +38,22 @@ type ClassNames = {
   closeButton?: string
 }
 
-// Enter without modifiers, not typed into a multiline field and not on an element that
-// handles Enter natively (a focused button or link clicks itself)
+// elements that handle Enter themselves: a focused button, link or action input clicks itself,
+// a picker input opens its picker, a multiline field adds a newline
+const HANDLES_ENTER =
+  'textarea, button, a[href], select, [role="button"], [role="listbox"], ' +
+  'input:is([type="button"], [type="submit"], [type="reset"], [type="image"], [type="color"], [type="file"])'
+
+// Enter without modifiers, typed in this dialog (not in a dialog portalled out of it) and not on
+// an element that handles Enter itself
 const isConfirmKey = (e: React.KeyboardEvent<HTMLElement>) => {
   if (e.key !== 'Enter' || e.nativeEvent.isComposing) return false
   if (e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) return false
   const target = e.target as HTMLElement
+  // React events bubble through portals: Enter in a nested dialog must not confirm this one
+  if (!e.currentTarget.contains(target)) return false
   if (target.isContentEditable) return false
-  return !target.closest('textarea, button, a[href], select, [role="button"], [role="listbox"]')
+  return !target.closest(HANDLES_ENTER)
 }
 
 export const Dialog = forwardRef<HTMLDivElement, DialogProps>((props, ref) => {
