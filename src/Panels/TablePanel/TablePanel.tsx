@@ -17,6 +17,8 @@ export const TablePanel = forwardRef<HTMLDivElement, ScrollPanelProps>(
         padding: 0,
         minHeight: 150,
         flexGrow: 1,
+        // the panel's rounded corners clip the table header
+        overflow: 'hidden',
         ...(props.style || {}),
       }}
     >
@@ -24,7 +26,7 @@ export const TablePanel = forwardRef<HTMLDivElement, ScrollPanelProps>(
         <div
           style={{
             position: 'absolute',
-            top: 3, // prevent header covering rounded corners of the parent panel
+            top: 0,
             left: 0,
             right: 0,
             bottom: 0,
