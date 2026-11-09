@@ -65,6 +65,11 @@ export const Dialog = styled.div<{ $size?: string }>`
   animation-fill-mode: both;
 
   z-index: 1000;
+
+  /* the dialog takes focus when it opens so keys reach it; it is not a control, so no ring */
+  &:focus {
+    outline: none;
+  }
 `
 
 export const Close = styled(Button)`
