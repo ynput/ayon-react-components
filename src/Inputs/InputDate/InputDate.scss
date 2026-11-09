@@ -45,6 +45,7 @@
 }
 
 $background-color: var(--md-sys-color-surface-container-high);
+$overlay-color: var(--md-sys-color-surface-overlay);
 
 // background-color
 // .react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::before,
@@ -53,7 +54,7 @@ $background-color: var(--md-sys-color-surface-container-high);
 // }
 
 .react-datepicker__header {
-  background-color: $background-color;
+  background-color: $overlay-color;
   border-bottom: 1px solid var(--md-sys-color-outline);
 }
 
@@ -112,17 +113,17 @@ $background-color: var(--md-sys-color-surface-container-high);
 .react-datepicker__year-dropdown,
 .react-datepicker__month-dropdown,
 .react-datepicker__month-year-dropdown {
-  background-color: $background-color;
+  background-color: $overlay-color;
   border: 1px solid var(--md-sys-color-outline);
 }
 
 .react-datepicker__today-button {
-  background: $background-color;
+  background: $overlay-color;
   border-top: 1px solid var(--md-sys-color-outline);
 }
 
 .react-datepicker {
-  background-color: $background-color;
+  background-color: $overlay-color;
   border: 1px solid var(--md-sys-color-outline-variant);
 }
 

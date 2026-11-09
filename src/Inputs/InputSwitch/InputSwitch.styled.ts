@@ -65,24 +65,24 @@ export const Switch = styled.div`
 
     /* checked styles */
     input:checked + .slider {
-      background-color: var(--md-sys-color-primary);
-      border-color: var(--md-sys-color-primary);
+      background-color: var(--md-sys-color-primary-fixed);
+      border-color: var(--md-sys-color-primary-fixed);
       &::before {
         transform: translateX(calc(var(--bheight) * 0.75));
         scale: 1;
-        background-color: var(--md-sys-color-on-primary);
+        background-color: var(--md-sys-color-on-primary-fixed);
       }
 
       &:hover {
         &::before {
-          background-color: var(--md-sys-color-on-primary-hover);
+          background-color: var(--md-sys-color-on-primary-fixed-hover);
         }
       }
     }
 
     input:focus-visible + * {
       box-shadow: 0 0 0 2px var(--md-sys-color-surface-container-highest),
-        0 0 0 4px var(--md-sys-color-primary);
+        0 0 0 4px var(--md-sys-color-primary-fixed);
     }
 
     input:disabled {
@@ -102,7 +102,7 @@ export const Switch = styled.div`
 
         &:hover {
           &::before {
-            background-color: var(--md-sys-color-on-primary);
+            background-color: var(--md-sys-color-on-primary-fixed);
           }
         }
       }

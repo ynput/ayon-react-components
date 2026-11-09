@@ -33,7 +33,7 @@ export const FilterItem = styled.div`
   }
 
   &.editing {
-    outline: 2px solid #99c8ff;
+    outline: 2px solid light-dark(var(--md-sys-color-primary), #99c8ff);
   }
 
   &.disabled {

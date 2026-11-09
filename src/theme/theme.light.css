@@ -1,0 +1,100 @@
+/* used on <html> or on any element that switches its subtree to light */
+[data-theme='light'] {
+    color-scheme: light;
+    --md-sys-color-primary: var(--md-sys-color-primary-light);
+    --md-sys-color-on-primary: var(--md-sys-color-on-primary-light);
+    --md-sys-color-primary-container: var(--md-sys-color-primary-container-light);
+    --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-light);
+    --md-sys-color-primary-fixed: var(--md-sys-color-primary-fixed-light);
+    --md-sys-color-on-primary-fixed: var(--md-sys-color-on-primary-fixed-light);
+    --md-sys-color-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim-light);
+    --md-sys-color-on-primary-fixed-variant: var(--md-sys-color-on-primary-fixed-variant-light);
+    --md-sys-color-secondary: var(--md-sys-color-secondary-light);
+    --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-light);
+    --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-light);
+    --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-light);
+    --md-sys-color-secondary-fixed: var(--md-sys-color-secondary-fixed-light);
+    --md-sys-color-on-secondary-fixed: var(--md-sys-color-on-secondary-fixed-light);
+    --md-sys-color-secondary-fixed-dim: var(--md-sys-color-secondary-fixed-dim-light);
+    --md-sys-color-on-secondary-fixed-variant: var(--md-sys-color-on-secondary-fixed-variant-light);
+    --md-sys-color-tertiary: var(--md-sys-color-tertiary-light);
+    --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-light);
+    --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-light);
+    --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-light);
+    --md-sys-color-tertiary-fixed: var(--md-sys-color-tertiary-fixed-light);
+    --md-sys-color-on-tertiary-fixed: var(--md-sys-color-on-tertiary-fixed-light);
+    --md-sys-color-tertiary-fixed-dim: var(--md-sys-color-tertiary-fixed-dim-light);
+    --md-sys-color-on-tertiary-fixed-variant: var(--md-sys-color-on-tertiary-fixed-variant-light);
+    --md-sys-color-error: var(--md-sys-color-error-light);
+    --md-sys-color-on-error: var(--md-sys-color-on-error-light);
+    --md-sys-color-error-container: var(--md-sys-color-error-container-light);
+    --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-light);
+    --md-sys-color-warning: var(--md-sys-color-warning-light);
+    --md-sys-color-on-warning: var(--md-sys-color-on-warning-light);
+    --md-sys-color-warning-container: var(--md-sys-color-warning-container-light);
+    --md-sys-color-on-warning-container: var(--md-sys-color-on-warning-container-light);
+    --md-sys-color-outline: var(--md-sys-color-outline-light);
+    --md-sys-color-background: var(--md-sys-color-background-light);
+    --md-sys-color-on-background: var(--md-sys-color-on-background-light);
+    --md-sys-color-surface: var(--md-sys-color-surface-light);
+    --md-sys-color-on-surface: var(--md-sys-color-on-surface-light);
+    --md-sys-color-on-surface-strong: var(--md-sys-color-on-surface-strong-light);
+    --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-light);
+    --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-light);
+    --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-light);
+    --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-light);
+    --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-light);
+    --md-sys-color-shadow: var(--md-sys-color-shadow-light);
+    --md-sys-color-surface-tint: var(--md-sys-color-surface-tint-light);
+    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-light);
+    --md-sys-color-scrim: var(--md-sys-color-scrim-light);
+    --md-sys-color-surface-container-highest: var(--md-sys-color-surface-container-highest-light);
+    --md-sys-color-surface-container-high: var(--md-sys-color-surface-container-high-light);
+    --md-sys-color-surface-container: var(--md-sys-color-surface-container-light);
+    --md-sys-color-surface-container-low: var(--md-sys-color-surface-container-low-light);
+    --md-sys-color-surface-container-lowest: var(--md-sys-color-surface-container-lowest-light);
+    --md-sys-color-surface-bright: var(--md-sys-color-surface-bright-light);
+    --md-sys-color-surface-dim: var(--md-sys-color-surface-dim-light);
+    /* hover */
+    --md-sys-color-primary-hover: var(--md-sys-color-primary-light-hover);
+    --md-sys-color-on-primary-hover: var(--md-sys-color-on-primary-light-hover);
+    --md-sys-color-primary-container-hover: var(--md-sys-color-primary-container-light-hover);
+    --md-sys-color-secondary-hover: var(--md-sys-color-secondary-light-hover);
+    --md-sys-color-on-secondary-hover: var(--md-sys-color-on-secondary-light-hover);
+    --md-sys-color-secondary-container-hover: var(--md-sys-color-secondary-container-light-hover);
+    --md-sys-color-tertiary-hover: var(--md-sys-color-tertiary-light-hover);
+    --md-sys-color-on-tertiary-hover: var(--md-sys-color-on-tertiary-light-hover);
+    --md-sys-color-tertiary-container-hover: var(--md-sys-color-tertiary-container-light-hover);
+    --md-sys-color-surface-container-highest-hover: var(--md-sys-color-surface-container-highest-light-hover);
+    --md-sys-color-surface-container-high-hover: var(--md-sys-color-surface-container-high-light-hover);
+    --md-sys-color-surface-container-hover: var(--md-sys-color-surface-container-light-hover);
+    --md-sys-color-surface-container-low-hover: var(--md-sys-color-surface-container-low-light-hover);
+    --md-sys-color-surface-container-lowest-hover: var(--md-sys-color-surface-container-lowest-light-hover);
+    --md-sys-color-error-hover: var(--md-sys-color-error-light-hover);
+    --md-sys-color-error-container-hover: var(--md-sys-color-error-container-light-hover);
+    /* active */
+    --md-sys-color-primary-active: var(--md-sys-color-primary-light-active);
+    --md-sys-color-on-primary-active: var(--md-sys-color-on-primary-light-active);
+    --md-sys-color-primary-container-active: var(--md-sys-color-primary-container-light-active);
+    --md-sys-color-secondary-active: var(--md-sys-color-secondary-light-active);
+    --md-sys-color-secondary-container-active: var(--md-sys-color-secondary-container-light-active);
+    --md-sys-color-tertiary-active: var(--md-sys-color-tertiary-light-active);
+    --md-sys-color-tertiary-container-active: var(--md-sys-color-tertiary-container-light-active);
+    --md-sys-color-surface-container-highest-active: var(--md-sys-color-surface-container-highest-light-active);
+    --md-sys-color-surface-container-high-active: var(--md-sys-color-surface-container-high-light-active);
+    --md-sys-color-surface-container-active: var(--md-sys-color-surface-container-light-active);
+    --md-sys-color-surface-container-low-active: var(--md-sys-color-surface-container-low-light-active);
+    --md-sys-color-surface-container-lowest-active: var(--md-sys-color-surface-container-lowest-light-active);
+    --md-sys-color-error-active: var(--md-sys-color-error-light-active);
+    --md-sys-color-error-container-active: var(--md-sys-color-error-container-light-active);
+    /* overlays: menus, dropdowns, dialogs, tooltips */
+    /* a light surface can't be raised by making it lighter: white with a shadow and a hairline instead */
+    --md-sys-color-surface-overlay: var(--md-sys-color-surface-container-lowest-light);
+    --md-sys-color-surface-overlay-hover: var(--md-sys-color-surface-container-light);
+    --md-sys-elevation-overlay: 0px 8px 24px 0px rgba(16, 24, 40, 0.14), 0 0 0 1px var(--md-sys-color-outline-variant-light);
+}
+/* a nested theme scope sets its own text colour too, which would otherwise be inherited from outside it */
+[data-theme='dark'],
+[data-theme='light'] {
+    color: var(--md-sys-color-on-surface);
+}

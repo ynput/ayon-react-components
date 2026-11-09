@@ -99,3 +99,22 @@ function checkColorBrightness(foregroundHex: string, backgroundHex: string): str
 }
 
 export default checkColorBrightness
+
+const readableCache = new Map<string, string>()
+
+// brightened as above on the dark theme; on the light one the colour picked for it, or the colour as it is
+// (see getReadableColor)
+export const getReadableFilterColor = (
+  foregroundHex: string,
+  darkBackgroundHex: string,
+  lightHex?: string | null,
+): string => {
+  const key = `${foregroundHex}|${darkBackgroundHex}|${lightHex ?? ''}`
+  let result = readableCache.get(key)
+  if (result === undefined) {
+    const dark = checkColorBrightness(foregroundHex, darkBackgroundHex)
+    result = `light-dark(${lightHex || foregroundHex}, ${dark})`
+    readableCache.set(key, result)
+  }
+  return result
+}

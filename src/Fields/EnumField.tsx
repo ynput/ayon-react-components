@@ -20,6 +20,7 @@ import {
 import { Icon, IconImage, IconPropType, IconType, isIconImage } from '../Icon'
 import { dropdownVariantStyles, fieldLoadingStyles, fieldSubmittingStyles } from './fieldStyles'
 import { EMPTY_VALUE, ReadOnlyValue } from './common.styled'
+import { getReadableColor, UserColor } from '../helpers'
 
 /** An icon given as an object, as AYON enum items store it */
 export type EnumFieldIconObject = {
@@ -38,6 +39,8 @@ export type EnumFieldOption = {
   /** Material symbol name, an image URL/path, or an icon object */
   icon?: IconPropType | EnumFieldIconObject
   color?: string
+  /** Picked for the light theme, see getReadableColor */
+  colorLight?: string
 }
 
 /** The option icon as a material symbol name or image URL */
@@ -224,12 +227,16 @@ const Divider = styled.hr`
 `
 
 // Renders icon/image for an option
-const EnumIcon = ({ icon, color }: { icon?: IconPropType; color?: string }) => {
+const EnumIcon = ({ icon, color, colorLight }: { icon?: IconPropType } & UserColor) => {
   if (!icon) return null
 
   return (
     <OptionIcon>
-      {isImageIcon(icon) ? <IconImage icon={icon} /> : <Icon icon={icon} style={{ color }} />}
+      {isImageIcon(icon) ? (
+        <IconImage icon={icon} />
+      ) : (
+        <Icon icon={icon} style={{ color: getReadableColor({ color, colorLight }) }} />
+      )}
     </OptionIcon>
   )
 }
@@ -244,8 +251,10 @@ const OptionValue = ({
   suffix?: string
 }) => (
   <ValueContent>
-    <EnumIcon icon={option.icon} color={option.color} />
-    <ValueLabel style={{ color: !iconOnlyColor && !option.icon ? option.color : undefined }}>
+    <EnumIcon icon={option.icon} color={option.color} colorLight={option.colorLight} />
+    <ValueLabel
+      style={{ color: !iconOnlyColor && !option.icon ? getReadableColor(option) : undefined }}
+    >
       {option.label}
       {suffix}
     </ValueLabel>
@@ -451,7 +460,12 @@ export const EnumField = forwardRef<DropdownRef, EnumFieldProps>(
                       <ValueOptions>
                         {selectedOptions.map((opt, i, a) =>
                           showIconsOnly ? (
-                            <EnumIcon key={String(opt.value)} icon={opt.icon} color={opt.color} />
+                            <EnumIcon
+                              key={String(opt.value)}
+                              icon={opt.icon}
+                              color={opt.color}
+                              colorLight={opt.colorLight}
+                            />
                           ) : (
                             <OptionValue
                               key={String(opt.value)}
