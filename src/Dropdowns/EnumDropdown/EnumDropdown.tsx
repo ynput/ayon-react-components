@@ -9,19 +9,20 @@ export interface EnumTemplateProps extends Omit<DefaultValueTemplateProps, 'valu
   option: EnumDropdownOption | null | undefined
   isSelected?: boolean
   isChanged?: boolean
-  // show the value as a pill tinted with its colour, like a tag
-  tinted?: boolean
+  // the value already sits on its colour (an inverse dropdown), so it needs no pill
+  onColor?: boolean
 }
 
 export const EnumTemplate = ({
   option,
   isSelected,
   isChanged,
-  tinted,
+  onColor,
   ...props
 }: EnumTemplateProps) => {
   const { value, label, icon, color } = option || {}
-  const pill = tinted && color && !isChanged ? getTagColors(color) : undefined
+  // a coloured value is a pill tinted with its colour, like a tag, never coloured text
+  const pill = color && !isChanged && !onColor ? getTagColors(color) : undefined
   const content = (
     <>
       {icon && (isIconImage(icon) ? <IconImage icon={icon} /> : <Icon icon={icon as IconType} />)}
@@ -32,7 +33,6 @@ export const EnumTemplate = ({
     <Styled.Option
       className={clsx({ selected: isSelected, isChanged }, props.className)}
       id={String(value)}
-      $color={pill ? undefined : color}
       {...props}
     >
       {pill ? (
@@ -63,13 +63,11 @@ export interface EnumDropdownProps
   extends Omit<DropdownProps, 'value' | 'options' | 'valueTemplate' | 'itemTemplate' | 'ref'> {
   options: EnumDropdownOption[]
   colorInverse?: boolean
-  // values are pills tinted with their colour, like tags
-  tinted?: boolean
   value: (string | number | boolean)[]
 }
 
 export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
-  ({ colorInverse, tinted, value, itemStyle, ...props }, ref) => {
+  ({ colorInverse, value, itemStyle, ...props }, ref) => {
     return (
       <Dropdown
         ref={ref}
@@ -83,7 +81,7 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
               $color={props.isChanged ? undefined : option?.color} // use color (but not when in changed state - editor)
               className={clsx({ inverse: colorInverse })}
             >
-              <EnumTemplate option={option} isChanged={props.isChanged} tinted={tinted} />
+              <EnumTemplate option={option} isChanged={props.isChanged} onColor={colorInverse} />
             </Styled.StyledDefaultValueTemplate>
           )
         }}
@@ -91,7 +89,6 @@ export const EnumDropdown = forwardRef<DropdownRef, EnumDropdownProps>(
           <EnumTemplate
             option={option}
             isSelected={isSelected}
-            tinted={tinted}
             style={{ paddingLeft: '0.5rem', paddingRight: '12px', ...itemStyle }}
           />
         )}

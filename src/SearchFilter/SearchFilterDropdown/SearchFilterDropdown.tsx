@@ -3,7 +3,7 @@ import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
-import { getReadableFilterColor } from '../checkColorBrightness'
+import { getTagColors } from '../../helpers'
 import { buildFilterId } from '../buildFilterId'
 import { getFilterFromId } from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
@@ -410,9 +410,10 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   : label
                 const displayIcon = search ? searchPresentation?.icon ?? icon : icon
                 const displayColor = search ? searchPresentation?.color ?? color : color
-                const adjustedColor = displayColor
-                  ? getReadableFilterColor(displayColor, '#1C2026')
-                  : undefined
+                // a coloured value is tinted with its colour, like a tag, never coloured text; a caller
+                // that sets the label colour (types) keeps the colour on the icon only
+                const iconOnly = !!optionPt?.style?.color
+                const colors = displayColor && !iconOnly ? getTagColors(displayColor) : undefined
                 const opensSubmenu =
                   !parentId &&
                   (Boolean(groupItems) ||
@@ -430,17 +431,34 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                       {...pt.item}
                       onClick={(event) => handleSelectOption(event)}
                     >
-                      {displayIcon && (
-                        <Icon icon={displayIcon as IconType} style={{ color: adjustedColor }} />
+                      {colors ? (
+                        <Styled.ValuePill
+                          style={{
+                            color: colors.text,
+                            backgroundColor: colors.background,
+                            boxShadow: `inset 0 0 0 1px ${colors.border}`,
+                          }}
+                        >
+                          {displayIcon && <Icon icon={displayIcon as IconType} />}
+                          {img && <img src={img} alt={displayLabel} />}
+                          {contentBefore && contentBefore}
+                          <span className="label">{displayLabel}</span>
+                        </Styled.ValuePill>
+                      ) : (
+                        <>
+                          {displayIcon && (
+                            <Icon
+                              icon={displayIcon as IconType}
+                              style={{ color: iconOnly ? displayColor ?? undefined : undefined }}
+                            />
+                          )}
+                          {img && <img src={img} alt={displayLabel} />}
+                          {contentBefore && contentBefore}
+                          <span className="label" style={{ color: optionPt?.style?.color }}>
+                            {displayLabel}
+                          </span>
+                        </>
                       )}
-                      {img && <img src={img} alt={displayLabel} />}
-                      {contentBefore && contentBefore}
-                      <span
-                        className="label"
-                        style={{ color: optionPt?.style?.color ?? adjustedColor }}
-                      >
-                        {displayLabel}
-                      </span>
                       {!!contentAfter && contentAfter}
                       {isSelected && <Icon icon="check" className="check" />}
                       {!isSelected &&

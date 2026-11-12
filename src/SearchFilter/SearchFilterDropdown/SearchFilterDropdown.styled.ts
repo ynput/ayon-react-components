@@ -243,3 +243,23 @@ export const Operator = styled.div`
     border-radius: 0 var(--border-radius-m) var(--border-radius-m) 0;
   }
 `
+
+// a coloured value, tinted with its colour like a tag
+export const ValuePill = styled.span`
+  display: flex;
+  align-items: center;
+  gap: var(--base-gap-small);
+  min-width: 0;
+  padding: 1px 6px;
+  border-radius: var(--border-radius-m);
+
+  && .icon {
+    color: inherit;
+  }
+
+  .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`

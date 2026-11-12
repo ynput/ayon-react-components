@@ -38,7 +38,7 @@ export const StyledDefaultValueTemplate = styled(DefaultValueTemplate)<IconStyle
   }
 `
 
-export const Option = styled.div<IconStyledProps>`
+export const Option = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -54,11 +54,11 @@ export const Option = styled.div<IconStyledProps>`
 
   .value-label,
   .icon {
-    color: ${({ $color }) => ($color ? $color : `var(--md-sys-color-on-surface)`)};
+    color: var(--md-sys-color-on-surface);
   }
 
   &.selected {
-    ${({ $color }) => getSelectedBg({ $color })}
+    ${getSelectedBg({})}
   }
 
   &.isChanged {
