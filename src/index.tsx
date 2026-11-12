@@ -162,15 +162,5 @@ export { EntityCard, NotificationDot } from './EntityCard'
 export type { EntityCardProps, Notification } from './EntityCard'
 
 // export helpers
-export {
-  getShimmerStyles,
-  getTextColor,
-  getTagColors,
-  getReadableColor,
-  ensureContrast,
-  isReadableOnLight,
-  makeReadableOnLight,
-  MIN_CONTRAST_TEXT,
-  MIN_CONTRAST_ICON,
-} from './helpers'
-export type { UserColor, TagColors } from './helpers'
+export { getShimmerStyles, getTextColor, getTagColors } from './helpers'
+export type { TagColors } from './helpers'

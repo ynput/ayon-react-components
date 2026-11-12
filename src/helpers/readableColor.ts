@@ -1,15 +1,9 @@
-// User-defined colours (statuses, task types, tags, ...) on both themes, and contrast helpers for them.
-// Studios pick their colours for dark and may pick a second one for light; without it light shows the same one.
+// Contrast helpers for user-defined colours (statuses, task types, tags, ...) shown on both themes.
 
 export type RGB = [number, number, number] // sRGB channels, 0-1
 
-// WCAG AA: 4.5:1 for text, 3:1 for icons and other graphics
+// WCAG AA for text
 export const MIN_CONTRAST_TEXT = 4.5
-export const MIN_CONTRAST_ICON = 3
-
-// The light surface coloured text is measured against: --md-sys-color-surface-container-light (tokens.css).
-// Panels are a step further from the text colour, so they pass too.
-const LIGHT_SURFACE = '#EEF1F4'
 
 export const parseColor = (color: string): RGB | null => {
   const value = color.trim()
@@ -122,35 +116,4 @@ export const ensureContrast = (
     else lo = mid
   }
   return toHex(fromLightness(L + (end - L) * hi, a, b))
-}
-
-/** A user-defined colour, and the colour the studio picked for the light theme, if any. */
-export type UserColor = { color?: string | null; colorLight?: string | null }
-
-/**
- * The colour darkened just enough to read on the light theme, e.g. to fix it in an editor.
- * Pass MIN_CONTRAST_ICON for a colour mostly shown as icons.
- */
-export const makeReadableOnLight = (color: string, minContrast = MIN_CONTRAST_TEXT): string =>
-  ensureContrast(color, LIGHT_SURFACE, minContrast)
-
-/** Whether a colour reads on the light theme, e.g. to warn about it in an editor (see makeReadableOnLight). */
-export const isReadableOnLight = (color: string, minContrast = MIN_CONTRAST_TEXT): boolean =>
-  makeReadableOnLight(color, minContrast) === color
-
-/**
- * A user-defined colour (status, task type, tag, ...) for text and icons on whichever theme is showing.
- * Takes the colour, or the item with its `color` and `colorLight`: light shows `colorLight` when the studio
- * picked one, otherwise both themes show `color`.
- * Filled backgrounds keep the original colour and pair it with getTextColor.
- *
- * Returns a CSS `light-dark()` value when the two differ, so it follows the theme (including nested data-theme
- * scopes) without a re-render.
- */
-export function getReadableColor(color: string): string
-export function getReadableColor(color: string | UserColor | null | undefined): string | undefined
-export function getReadableColor(value: string | UserColor | null | undefined): string | undefined {
-  const { color, colorLight } = typeof value === 'string' ? { color: value } : value ?? {}
-  if (!color) return color ?? undefined
-  return colorLight && colorLight !== color ? `light-dark(${colorLight}, ${color})` : color
 }

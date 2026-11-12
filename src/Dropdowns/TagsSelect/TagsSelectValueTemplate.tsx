@@ -61,7 +61,7 @@ export const TagsSelectValueTemplate: FC<TagsSelectValueTemplateProps> = ({
         return (
           <Styled.Tag
             key={v}
-            $colors={tags[v]?.color ? getTagColors(tags[v]) : undefined}
+            $colors={tags[v]?.color ? getTagColors(tags[v].color) : undefined}
             className="tag"
           >
             {v}

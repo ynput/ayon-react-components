@@ -20,8 +20,8 @@ export const EnumTemplate = ({
   tinted,
   ...props
 }: EnumTemplateProps) => {
-  const { value, label, icon, color, colorLight } = option || {}
-  const pill = tinted && color && !isChanged ? getTagColors({ color, colorLight }) : undefined
+  const { value, label, icon, color } = option || {}
+  const pill = tinted && color && !isChanged ? getTagColors(color) : undefined
   const content = (
     <>
       {icon && (isIconImage(icon) ? <IconImage icon={icon} /> : <Icon icon={icon as IconType} />)}
@@ -33,7 +33,6 @@ export const EnumTemplate = ({
       className={clsx({ selected: isSelected, isChanged }, props.className)}
       id={String(value)}
       $color={pill ? undefined : color}
-      $colorLight={colorLight}
       {...props}
     >
       {pill ? (
@@ -58,7 +57,6 @@ export type EnumDropdownOption = {
   label: string
   icon?: IconPropType
   color?: string
-  colorLight?: string
 }
 
 export interface EnumDropdownProps

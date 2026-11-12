@@ -1,28 +1,24 @@
 import styled, { css } from 'styled-components'
 import { StatusSize } from './StatusField'
-import { getReadableColor } from '../../../helpers'
 
-type ColorProps = { $color: string; $colorLight?: string }
-
-const hoverStyle = css<ColorProps>`
+const hoverStyle = css<{ $color: string }>`
   background-color: var(--md-sys-color-surface-container-low-hover);
-  color: ${({ $color, $colorLight }) =>
-    getReadableColor({ color: $color, colorLight: $colorLight })};
+  color: ${({ $color }) => $color};
 `
 
-const invertHoverStyle = css<ColorProps>`
+const invertHoverStyle = css<{ $color: string }>`
   /* flips the bg color for text color */
   background-color: ${({ $color }) => $color};
   color: black;
 `
-const defaultStyle = css<ColorProps>`
+const defaultStyle = css<{ $color: string }>`
   /* default text color */
-  color: ${({ $color, $colorLight }) =>
-    getReadableColor({ color: $color, colorLight: $colorLight })};
+  color: ${({ $color }) => $color};
   background-color: transparent;
 `
 
-type StatusStyledProps = ColorProps & {
+type StatusStyledProps = {
+  $color: string
   $size: StatusSize
 }
 

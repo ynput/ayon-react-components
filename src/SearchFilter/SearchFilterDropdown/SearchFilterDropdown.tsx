@@ -386,7 +386,6 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   icon,
                   img,
                   color,
-                  colorLight,
                   pt: optionPt,
                   isCustom,
                   contentBefore,
@@ -410,10 +409,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   ? searchLabel ?? searchPresentation?.label ?? label
                   : label
                 const displayIcon = search ? searchPresentation?.icon ?? icon : icon
-                const display =
-                  search && searchPresentation?.color ? searchPresentation : { color, colorLight }
-                const adjustedColor = display.color
-                  ? getReadableFilterColor(display.color, '#1C2026', display.colorLight)
+                const displayColor = search ? searchPresentation?.color ?? color : color
+                const adjustedColor = displayColor
+                  ? getReadableFilterColor(displayColor, '#1C2026')
                   : undefined
                 const opensSubmenu =
                   !parentId &&
