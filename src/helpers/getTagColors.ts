@@ -6,7 +6,6 @@ import {
   parseColor,
   rgbToOklab,
   toHex,
-  UserColor,
 } from './readableColor'
 
 export type TagColors = { background: string; border: string; text: string }
@@ -48,17 +47,13 @@ const cache = new Map<string, TagColors>()
  * Colours for a chip in a user-defined colour (tags, multi-select values, ...): a tint of the colour
  * with a border a step stronger, and the text in a shade of it, dark on light and light on dark.
  *
- * Takes the colour, or the item with its `color` and `colorLight`; light starts from `colorLight` when set.
  * Each value is a CSS `light-dark()` pair. `color` may be one too, to start each theme from its own colour.
  */
-export const getTagColors = (value: string | UserColor): TagColors => {
-  const { color: given, colorLight } = typeof value === 'string' ? { color: value } : value
-  const color = given ?? ''
-  const key = `${color}|${colorLight ?? ''}`
-  let result = cache.get(key)
+export const getTagColors = (color: string): TagColors => {
+  let result = cache.get(color)
   if (!result) {
     const pair = /^light-dark\(\s*([^,]+?)\s*,\s*([^)]+?)\s*\)$/i.exec(color)
-    const [lightColor, darkColor] = pair ? [pair[1], pair[2]] : [colorLight || color, color]
+    const [lightColor, darkColor] = pair ? [pair[1], pair[2]] : [color, color]
     const light = getThemeColors(lightColor, 'light')
     const dark = getThemeColors(darkColor, 'dark')
     result = {
@@ -66,7 +61,7 @@ export const getTagColors = (value: string | UserColor): TagColors => {
       border: `light-dark(${light.border}, ${dark.border})`,
       text: `light-dark(${light.text}, ${dark.text})`,
     }
-    cache.set(key, result)
+    cache.set(color, result)
   }
   return result
 }

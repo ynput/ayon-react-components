@@ -7,7 +7,7 @@ const LIGHT_TEXT = 'var(--md-sys-color-on-surface-dark)'
 const DARK_TEXT_LUMINANCE = getLuminance(parseColor('#1A1E23')!)
 
 // text colour for a background filled with `backgroundColor` (a status pill, a tag, ...),
-// which may be a light-dark() pair, e.g. from getReadableColor
+// which may be a light-dark() pair
 export const getTextColor = (backgroundColor?: string): string => {
   const pair = /^light-dark\(\s*([^,]+?)\s*,\s*([^)]+?)\s*\)$/i.exec(backgroundColor ?? '')
   if (pair) return `light-dark(${getTextColor(pair[1])}, ${getTextColor(pair[2])})`

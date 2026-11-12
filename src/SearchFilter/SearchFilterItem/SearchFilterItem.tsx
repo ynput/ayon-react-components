@@ -4,7 +4,6 @@ import { SearchFilterItemValue, SearchFilterItemValueProps } from '../SearchFilt
 import clsx from 'clsx'
 import { Icon, IconType } from '../../Icon'
 import * as Styled from './SearchFilterItem.styled'
-import { getReadableColor } from '../../helpers'
 
 export interface SearchFilterItemProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'id'>,
@@ -133,6 +132,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     const rootOperatorLabel = rootOperator.toLowerCase()
     const filterLabel = valueOverride?.label ?? label
     const filterIcon = valueOverride?.icon ?? undefined
+    const filterColor = valueOverride?.color ?? undefined
 
     return (
       <>
@@ -170,7 +170,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 <Styled.SmallIcon icon={'do_not_disturb_on'} data-tooltip={'Exclude this filter'} />
               )}
               {!isCompact && (
-                <span className="label" style={{ color: getReadableColor(valueOverride) }}>
+                <span className="label" style={{ color: filterColor ?? undefined }}>
                   {filterIcon && <Icon icon={filterIcon as IconType} />}
                   {filterLabel}:
                 </span>
@@ -200,7 +200,6 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     img={value.img}
                     icon={value.icon}
                     color={value.color}
-                    colorLight={value.colorLight}
                     isCustom={value.isCustom}
                     operator={index > 0 ? operator : undefined}
                     isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
@@ -234,7 +233,6 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 img={value.img}
                 icon={value.icon}
                 color={value.color}
-                colorLight={value.colorLight}
                 isCustom={value.isCustom}
                 operator={index > 0 ? operator : undefined}
                 isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}

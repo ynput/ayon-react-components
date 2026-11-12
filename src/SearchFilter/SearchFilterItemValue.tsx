@@ -84,7 +84,6 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
       img,
       icon,
       color,
-      colorLight,
       operator,
       isCompact,
       isCustom,
@@ -96,7 +95,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     ref,
   ) => {
     const adjustedColor = color
-      ? getReadableFilterColor(color, '#353B46', colorLight)
+      ? getReadableFilterColor(color, '#353B46')
       : 'var(--md-sys-color-on-surface-strong)'
 
     // only collapse to icon-only when there's an icon/avatar to show, else keep the text

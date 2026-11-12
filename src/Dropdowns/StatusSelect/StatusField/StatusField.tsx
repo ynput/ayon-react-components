@@ -11,7 +11,6 @@ export type Status = {
   state?: 'not_started' | 'in_progress' | 'done' | 'blocked'
   icon?: IconType
   color?: string
-  colorLight?: string
   original_name?: string
 }
 
@@ -53,7 +52,6 @@ export const StatusField = forwardRef<HTMLDivElement, StatusFieldProps>(
       name,
       shortName,
       color = 'var(--md-sys-color-surface-container-highest)',
-      colorLight,
       icon = 'help_center',
     } = status || {}
 
@@ -64,7 +62,6 @@ export const StatusField = forwardRef<HTMLDivElement, StatusFieldProps>(
         style={{ ...style, height }}
         id={name}
         $color={color}
-        $colorLight={colorLight}
         $size={size}
         className={clsx(
           'status-field',
