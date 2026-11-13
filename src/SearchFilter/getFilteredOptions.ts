@@ -2,7 +2,14 @@ import { matchSorter } from 'match-sorter'
 import { Option } from './types'
 import { SEARCH_FILTER_ID } from './constants'
 
-export const getFilteredOptions = (options: Option[], search: string, isCustomAllowed: boolean) => {
+// `searchFirst` puts the typed text first (the top level of the search bar: Enter searches for
+// it, the arrow keys reach the suggestions); otherwise it is last
+export const getFilteredOptions = (
+  options: Option[],
+  search: string,
+  isCustomAllowed: boolean,
+  searchFirst = false,
+) => {
   // filter out options that don't match the search in any of the fields
 
   // no search? return all the main options
@@ -54,7 +61,7 @@ export const getFilteredOptions = (options: Option[], search: string, isCustomAl
 
   // if isCustomAllowed, add the custom value to the list
   if (isCustomAllowed && search.trim()) {
-    matched.push({
+    const searchOption: Option = {
       id: 'search',
       label: search,
       icon: 'search',
@@ -62,7 +69,9 @@ export const getFilteredOptions = (options: Option[], search: string, isCustomAl
       parentId: SEARCH_FILTER_ID,
       isCustom: true,
       searchOnly: true,
-    })
+    }
+    if (searchFirst) matched.unshift(searchOption)
+    else matched.push(searchOption)
   }
 
   return matched

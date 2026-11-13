@@ -152,8 +152,8 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
 
     // filter options based on search
     const filteredOptions = useMemo(
-      () => getFilteredOptions(allOptions, search, isCustomAllowed),
-      [allOptions, search],
+      () => getFilteredOptions(allOptions, search, isCustomAllowed, !parentId),
+      [allOptions, search, parentId],
     )
 
     const getOptionFromEventTarget = (target: EventTarget | null, optionsList: Option[]) => {
