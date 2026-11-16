@@ -3,7 +3,7 @@ import { Button } from '../Button'
 
 export const ButtonWrapper = styled(Button)`
   padding: 6px;
-  border-radius: var(--border-radius-l);
+  border-radius: var(--base-input-border-radius);
   max-height: 32px;
 
   .label {
