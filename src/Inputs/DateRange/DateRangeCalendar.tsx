@@ -60,7 +60,11 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
                   type="button"
                   className={clsx({ selected: value === preset })}
                   aria-pressed={value === preset}
-                  onClick={() => onPreset?.(value)}
+                  onClick={() => {
+                    // a half-picked range gives way to the preset
+                    setStart(null)
+                    onPreset?.(value)
+                  }}
                 >
                   {label}
                 </button>

@@ -59,7 +59,16 @@ export const DateRangePicker = ({
     const box = popover.current
     if (!open || !root.current || !box) return
     const field = root.current.getBoundingClientRect()
-    box.style.top = `${field.bottom + 4}px`
+    // under the field, or above it when there is no room below, else as low as fits
+    const below = field.bottom + 4
+    const above = field.top - 4 - box.offsetHeight
+    const fitsBelow = below + box.offsetHeight <= window.innerHeight - 8
+    const top = fitsBelow
+      ? below
+      : above >= 8
+      ? above
+      : Math.max(8, window.innerHeight - box.offsetHeight - 8)
+    box.style.top = `${top}px`
     box.style.left = `${Math.max(
       8,
       Math.min(field.left, window.innerWidth - box.offsetWidth - 8),
@@ -120,6 +129,7 @@ export const DateRangePicker = ({
         <>
           <Button
             icon="chevron_left"
+            type="button"
             variant="text"
             className="arrow"
             aria-label={`Previous ${stepName}`}
@@ -129,6 +139,7 @@ export const DateRangePicker = ({
           />
           <Button
             icon="chevron_right"
+            type="button"
             variant="text"
             className="arrow"
             aria-label={`Next ${stepName}`}

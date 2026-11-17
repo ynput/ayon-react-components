@@ -79,7 +79,8 @@ export const Popover = styled.div`
   position: fixed;
   z-index: 1000;
   max-width: calc(100vw - 16px);
-  overflow-x: auto;
+  max-height: calc(100vh - 16px);
+  overflow: auto;
   border-radius: 8px;
   background-color: var(--md-sys-color-surface-container-high);
   box-shadow: 0 4px 16px #00000066;
