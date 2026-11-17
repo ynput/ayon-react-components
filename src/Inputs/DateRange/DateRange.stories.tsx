@@ -54,6 +54,32 @@ export const Calendar: Story = {
   },
 }
 
+/** one click picks one day: for a single date */
+export const SingleDay: Story = {
+  render: () => {
+    const [range, setRange] = useState<DateRange>({ from: day(0), to: day(0) })
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div
+          style={{
+            width: 'fit-content',
+            borderRadius: 8,
+            background: 'var(--md-sys-color-surface-container-high)',
+          }}
+        >
+          <DateRangeCalendar
+            value={range}
+            onChange={setRange}
+            selectsRange={false}
+            monthsShown={1}
+          />
+        </div>
+        <span>{format(range)}</span>
+      </div>
+    )
+  },
+}
+
 /** the field with the arrows, opening the presets and calendar */
 export const Picker: Story = {
   render: () => {
