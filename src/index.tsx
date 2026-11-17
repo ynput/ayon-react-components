@@ -106,6 +106,8 @@ export { InputPassword } from './Inputs/InputPassword'
 export { LockedInput } from './Inputs/LockedInput'
 // date
 export { InputDate } from './Inputs/InputDate'
+// date range: a calendar to pick a range, and a field with a popover for it
+export * from './Inputs/DateRange'
 
 // FIELDS: form inputs with typed values, commit on Enter/blur and read-only mode
 export * from './Fields'
