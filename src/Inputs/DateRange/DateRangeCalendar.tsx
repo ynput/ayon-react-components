@@ -49,8 +49,9 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
     },
     ref,
   ) => {
-    /** the first day clicked, until the last one is */
-    const [start, setStart] = useState<Date | null>(null)
+    /** the first day clicked, until the last one is (none when one click picks a day) */
+    const [firstDay, setStart] = useState<Date | null>(null)
+    const start = selectsRange ? firstDay : null
     const from = start ?? fromDateString(value?.from)
     const to = start ? null : fromDateString(value?.to)
 
@@ -99,12 +100,15 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
             monthsShown={monthsShown}
             calendarStartDay={weekStartsOn}
             selected={from}
+            // the day picked again still reports it
+            allowSameDay
             // the day as a range of one: drawn like a range's ends
             startDate={from}
             endDate={to ?? from}
             openToDate={from ?? new Date()}
             onChange={(date: Date | null) => {
               if (!date) return
+              setStart(null)
               const day = toDateString(date)
               onChange({ from: day, to: day })
             }}
