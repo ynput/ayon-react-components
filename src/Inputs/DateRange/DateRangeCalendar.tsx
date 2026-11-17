@@ -49,9 +49,14 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
     },
     ref,
   ) => {
-    /** the first day clicked, until the last one is (none when one click picks a day) */
-    const [firstDay, setStart] = useState<Date | null>(null)
-    const start = selectsRange ? firstDay : null
+    /** the first day clicked, until the last one is */
+    const [start, setStart] = useState<Date | null>(null)
+    // a range half picked is dropped when the mode changes
+    const [mode, setMode] = useState(selectsRange)
+    if (mode !== selectsRange) {
+      setMode(selectsRange)
+      setStart(null)
+    }
     const from = start ?? fromDateString(value?.from)
     const to = start ? null : fromDateString(value?.to)
 
@@ -108,7 +113,6 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
             openToDate={from ?? new Date()}
             onChange={(date: Date | null) => {
               if (!date) return
-              setStart(null)
               const day = toDateString(date)
               onChange({ from: day, to: day })
             }}

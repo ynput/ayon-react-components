@@ -54,12 +54,17 @@ export const Calendar: Story = {
   },
 }
 
-/** one click picks one day: for a single date */
+/** one click picks one day; with "Several days" two clicks pick a range, as when a date gets an end */
 export const SingleDay: Story = {
   render: () => {
     const [range, setRange] = useState<DateRange>({ from: day(0), to: day(0) })
+    const [several, setSeveral] = useState(false)
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <label>
+          <input type="checkbox" checked={several} onChange={() => setSeveral(!several)} /> Several
+          days
+        </label>
         <div
           style={{
             width: 'fit-content',
@@ -70,7 +75,7 @@ export const SingleDay: Story = {
           <DateRangeCalendar
             value={range}
             onChange={setRange}
-            selectsRange={false}
+            selectsRange={several}
             monthsShown={1}
           />
         </div>
