@@ -1,9 +1,14 @@
-import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import type { ComponentType } from 'react'
+import ReactDatePicker, { DatePickerProps } from 'react-datepicker'
 import styled from 'styled-components'
 import 'react-datepicker/dist/react-datepicker.css'
 import './InputDate.scss'
 
-const StyledInputDate = styled(ReactDatePicker)<{ style?: any }>`
+// styled-components can't follow DatePicker's union of props, so the styled component is typed
+// with InputDateProps after it is made
+const StyledInputDate = styled(ReactDatePicker as ComponentType<{ className?: string }>)<{
+  style?: any
+}>`
   width: 100%;
 
   color: var(--md-sys-color-on-surface);
@@ -31,12 +36,19 @@ const StyledInputDate = styled(ReactDatePicker)<{ style?: any }>`
 
   /* spread style */
   ${({ style }) => style}
-`
+` as unknown as ComponentType<InputDateProps>
 
-export interface InputDateProps extends ReactDatePickerProps {
+// react-datepicker's props are a union (single date, range or several dates): a type, not an interface
+export type InputDateProps = DatePickerProps & {
   style?: React.CSSProperties
 }
 
 export const InputDate = (props: InputDateProps) => (
-  <StyledInputDate {...props} style={props.style} dateFormat={props.dateFormat || 'dd/MM/yyyy'} />
+  <StyledInputDate
+    // react-datepicker 4 opened under the input's left edge; newer versions centre it
+    popperPlacement="bottom-start"
+    {...props}
+    style={props.style}
+    dateFormat={props.dateFormat || 'dd/MM/yyyy'}
+  />
 )
