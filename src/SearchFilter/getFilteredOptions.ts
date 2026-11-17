@@ -53,11 +53,20 @@ export const getFilteredOptions = (
     ...matched.filter((option) => option.searchOnly),
   ]
 
-  // Keep search results in depth order so dividers represent sections rather than individual fields.
+  // Matches at the start of a word ("Me" for "me") come before matches inside a word ("Comment"),
+  // whatever their level: otherwise the many fields containing the text push the value out of view.
+  const startsWords = (option: Option) => {
+    const words = (option.searchLabel ?? option.label).toLowerCase().split(/[^\p{L}\p{N}]+/u)
+    return searchWords.every((word) => words.some((labelWord) => labelWord.startsWith(word)))
+  }
+  const tier = (option: Option) => (startsWords(option) ? 0 : 1)
+
+  // Within each, keep search results in depth order so dividers represent sections rather than
+  // individual fields.
   const levelOrder = { group: 0, option: 1, value: 2 }
   const getLevel = (option: Option) =>
     option.isGroup ? 'group' : option.parentId ? 'value' : 'option'
-  matched.sort((a, b) => levelOrder[getLevel(a)] - levelOrder[getLevel(b)])
+  matched.sort((a, b) => tier(a) - tier(b) || levelOrder[getLevel(a)] - levelOrder[getLevel(b)])
 
   // if isCustomAllowed, add the custom value to the list
   if (isCustomAllowed && search.trim()) {

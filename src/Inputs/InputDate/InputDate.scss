@@ -104,7 +104,8 @@ $background-color: var(--md-sys-color-surface-container-high);
 .react-datepicker__month-text,
 .react-datepicker__quarter-text,
 .react-datepicker__year-text {
-  &:hover {
+  // as specific as react-datepicker's own hover, which skips disabled days
+  &:not([aria-disabled='true']):hover {
     background-color: var(--md-sys-color-surface-container-highest);
   }
 }
@@ -153,7 +154,8 @@ $background-color: var(--md-sys-color-surface-container-high);
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
   border: 1px solid var(--md-sys-color-on-secondary-container);
-  &:hover {
+  // as specific as react-datepicker's own hover, which skips disabled days
+  &:not([aria-disabled='true']):hover {
     background-color: var(--md-sys-color-primary-container-hover);
   }
 }
@@ -162,7 +164,8 @@ $background-color: var(--md-sys-color-surface-container-high);
 .react-datepicker__day--today {
   color: var(--md-sys-color-on-secondary-container);
   background-color: var(--md-sys-color-secondary-container);
-  &:hover {
+  // as specific as react-datepicker's own hover, which skips disabled days
+  &:not([aria-disabled='true']):hover {
     background-color: var(--md-sys-color-secondary-container-hover);
   }
 
@@ -173,9 +176,10 @@ $background-color: var(--md-sys-color-surface-container-high);
   transform: none !important;
   left: 40px !important;
 }
-.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::before,
-.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle::after {
-  border-bottom-color: var(--md-sys-color-on-surface);
+// the triangle is an svg
+.react-datepicker-popper[data-placement^='bottom'] .react-datepicker__triangle {
+  fill: var(--md-sys-color-on-surface);
+  color: var(--md-sys-color-on-surface);
 }
 .react-datepicker {
   z-index: 200;
