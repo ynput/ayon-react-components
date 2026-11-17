@@ -11,9 +11,27 @@ export default meta
 type Story = StoryObj<typeof InputDate>
 
 export const Default: Story = {
-  render: (args) => {
-    const [value, setValue] = useState(new Date())
+  render: () => {
+    const [value, setValue] = useState<Date | null>(new Date())
 
-    return <InputDate {...args} selected={value} onChange={(d) => d && setValue(new Date(d))} />
+    return <InputDate selected={value} onChange={(d: Date | null) => setValue(d)} />
+  },
+}
+
+export const Range: Story = {
+  render: () => {
+    const [[startDate, endDate], setRange] = useState<[Date | null, Date | null]>([
+      new Date(),
+      null,
+    ])
+
+    return (
+      <InputDate
+        selectsRange
+        startDate={startDate}
+        endDate={endDate}
+        onChange={(range: [Date | null, Date | null]) => setRange(range)}
+      />
+    )
   },
 }
