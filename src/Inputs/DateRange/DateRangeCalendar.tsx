@@ -24,11 +24,14 @@ export interface DateRangeCalendarProps extends Omit<HTMLAttributes<HTMLDivEleme
   monthsShown?: number
   /** the first day of the week: 0 Sunday … 6 Saturday, Monday by default */
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+  /** false: one click picks one day, given as a range of that day; true by default (two clicks) */
+  selectsRange?: boolean
 }
 
 /**
- * Two clicks pick a range: the first and the last day. Optional presets (This week, Last month…)
- * are listed beside the calendar. Flat, for a popover or a dialog: no border or background of its own.
+ * Two clicks pick a range: the first and the last day (or one click one day, with `selectsRange`
+ * false). Optional presets (This week, Last month…) are listed beside the calendar. Flat, for a
+ * popover or a dialog: no border or background of its own.
  */
 export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarProps>(
   (
@@ -40,6 +43,7 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
       onPreset,
       monthsShown = 2,
       weekStartsOn = 1,
+      selectsRange = true,
       className,
       ...props
     },
@@ -47,6 +51,12 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
   ) => {
     /** the first day clicked, until the last one is */
     const [start, setStart] = useState<Date | null>(null)
+    // a range half picked is dropped when the mode changes
+    const [mode, setMode] = useState(selectsRange)
+    if (mode !== selectsRange) {
+      setMode(selectsRange)
+      setStart(null)
+    }
     const from = start ?? fromDateString(value?.from)
     const to = start ? null : fromDateString(value?.to)
 
@@ -72,22 +82,42 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
             ))}
           </ul>
         )}
-        <InputDate
-          inline
-          selectsRange
-          monthsShown={monthsShown}
-          calendarStartDay={weekStartsOn}
-          selected={from}
-          startDate={from}
-          endDate={to}
-          openToDate={from ?? new Date()}
-          onChange={([first, last]: [Date | null, Date | null]) => {
-            if (!first) return
-            if (!last) return setStart(first)
-            setStart(null)
-            onChange({ from: toDateString(first), to: toDateString(last) })
-          }}
-        />
+        {selectsRange ? (
+          <InputDate
+            inline
+            selectsRange
+            monthsShown={monthsShown}
+            calendarStartDay={weekStartsOn}
+            selected={from}
+            startDate={from}
+            endDate={to}
+            openToDate={from ?? new Date()}
+            onChange={([first, last]: [Date | null, Date | null]) => {
+              if (!first) return
+              if (!last) return setStart(first)
+              setStart(null)
+              onChange({ from: toDateString(first), to: toDateString(last) })
+            }}
+          />
+        ) : (
+          <InputDate
+            inline
+            monthsShown={monthsShown}
+            calendarStartDay={weekStartsOn}
+            selected={from}
+            // the day picked again still reports it
+            allowSameDay
+            // the day as a range of one: drawn like a range's ends
+            startDate={from}
+            endDate={to ?? from}
+            openToDate={from ?? new Date()}
+            onChange={(date: Date | null) => {
+              if (!date) return
+              const day = toDateString(date)
+              onChange({ from: day, to: day })
+            }}
+          />
+        )}
       </Styled.Calendar>
     )
   },
