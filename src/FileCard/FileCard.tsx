@@ -131,7 +131,9 @@ export const FileCard: FC<FileCardProps> = ({
         <Icon
           icon={!message ? 'check_circle' : 'error'}
           style={{
-            color: !message ? 'white' : 'var(--md-custom-color-warning)',
+            color: !message
+              ? 'var(--md-sys-color-on-surface-strong)'
+              : 'var(--md-custom-color-warning)',
           }}
           className="status-icon"
         />

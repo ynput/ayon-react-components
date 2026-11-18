@@ -74,7 +74,7 @@ export const Form = styled.form`
   }
 
   small {
-    color: #e53e3e !important;
+    color: light-dark(var(--md-sys-color-error), #e53e3e) !important;
     font-size: 0.8rem;
   }
 

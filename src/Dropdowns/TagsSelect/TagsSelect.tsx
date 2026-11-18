@@ -4,6 +4,7 @@ import { TagsSelectValueTemplate, TagsSelectValueTemplateProps } from './TagsSel
 import { type TagsOrderType, type TagsType } from './tags'
 import * as Styled from './TagsSelect.styled'
 import { Icon } from '../../Icon'
+import { getTagColors } from '../../helpers'
 import clsx from 'clsx'
 
 export interface TagsSelectProps extends Omit<DropdownProps, 'onChange'> {
@@ -88,13 +89,15 @@ export const TagsSelect = forwardRef<DropdownRef, TagsSelectProps>(
         itemTemplate={(tag, isActive, isSelected, i) => (
           <Styled.DefaultItem
             className={clsx('option-child', { selected: isSelected })}
-            style={{
-              color: tag.color,
-              justifyContent: i && !checkboxes ? 'center' : undefined,
-            }}
+            style={{ justifyContent: i && !checkboxes ? 'center' : undefined }}
           >
             {tag.icon && <Icon icon={tag.icon} />}
-            <span>{tag.name || tag.label}</span>
+            {/* tinted like the chosen tags, so the colour is never the text colour */}
+            {tag.color ? (
+              <Styled.Tag $colors={getTagColors(tag.color)}>{tag.name || tag.label}</Styled.Tag>
+            ) : (
+              <span>{tag.name || tag.label}</span>
+            )}
           </Styled.DefaultItem>
         )}
         options={tagsOptions || []}

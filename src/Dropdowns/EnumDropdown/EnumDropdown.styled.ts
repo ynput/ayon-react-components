@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { DefaultValueTemplate } from '../Dropdown'
+import { getTextColor } from '../../helpers'
 
 interface IconStyledProps {
   $color?: string
@@ -14,7 +15,7 @@ const getSelectedBg = ({ $color }: IconStyledProps) => {
       }
       .value-label,
       .icon {
-        color: var(--md-sys-color-inverse-on-surface);
+        color: ${getTextColor($color)};
       }
     `
   else
@@ -37,7 +38,7 @@ export const StyledDefaultValueTemplate = styled(DefaultValueTemplate)<IconStyle
   }
 `
 
-export const Option = styled.div<IconStyledProps>`
+export const Option = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -53,11 +54,11 @@ export const Option = styled.div<IconStyledProps>`
 
   .value-label,
   .icon {
-    color: ${({ $color }) => ($color ? $color : `var(--md-sys-color-on-surface)`)};
+    color: var(--md-sys-color-on-surface);
   }
 
   &.selected {
-    ${({ $color }) => getSelectedBg({ $color })}
+    ${getSelectedBg({})}
   }
 
   &.isChanged {
@@ -65,5 +66,20 @@ export const Option = styled.div<IconStyledProps>`
     .icon {
       color: var(--color-on-changed);
     }
+  }
+`
+
+// a value tinted with its colour, like a tag: the pill carries the text colour
+export const Pill = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 2px 8px 2px 6px;
+  border-radius: var(--border-radius-m);
+
+  && .value-label,
+  && .icon {
+    color: inherit;
   }
 `

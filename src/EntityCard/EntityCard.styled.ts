@@ -2,6 +2,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { Icon } from '../Icon'
 import * as Theme from '../theme'
 import adjustHexBrightness from '../helpers/adjustHexBrightness'
+import { getTextColor } from '../helpers'
 
 const boxShadowSizes = `inset 0 0 0 2px`
 
@@ -87,6 +88,11 @@ export const Card = styled.div<CardProps>`
   --active-color-text: var(--md-sys-color-on-primary-container);
   --active-border-color: var(--md-sys-color-primary);
   --status-color: ${(props) => props.$statusColor};
+  /* the status colour is a fill on both themes, so the text on it doesn't follow the theme */
+  --status-text-color: ${(props) =>
+    props.$statusColor
+      ? getTextColor(props.$statusColor)
+      : 'var(--md-sys-color-inverse-on-surface)'};
 
   &.hover {
     --hover-transition: 0ms;
@@ -270,7 +276,7 @@ export const Card = styled.div<CardProps>`
 
         /* priority icon */
         .icon {
-          color: var(--md-sys-color-inverse-on-surface) !important;
+          color: var(--status-text-color) !important;
         }
       }
       /* expand status full width */
@@ -628,7 +634,7 @@ export const StatusContainer = styled.div<StatusProps>`
     background-color: var(--status-color);
     /* targets label and icon */
     span {
-      color: var(--md-sys-color-inverse-on-surface) !important;
+      color: var(--status-text-color) !important;
     }
 
     .status-label {

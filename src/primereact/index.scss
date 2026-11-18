@@ -1,41 +1,17 @@
-// Obsolete
-
-$op-background-main: #2c313a;
-$op-background-light: #232c33;
-$op-background-dark: #21252b;
-$op-button-primary-background: #434a56;
-
-// New scheme
-
-$color-grey-00: var(--md-sys-color-surface-container-low);
-$color-grey-01: #2c313a;
-$color-grey-02: #373d48;
-$color-grey-03: #434a56;
-$color-grey-04: #4b5362;
-$color-grey-05: #576170;
-$color-grey-06: #6b7685;
-$color-grey-07: #99a3b2;
-$color-grey-08: #d3d8de;
-$color-grey-09: #f0f2f5;
-
-$prime-input-border: 1px solid $color-grey-03;
-$prime-input-background: $color-grey-00;
-$prime-button-background: $color-grey-03;
-
 // button
 
 .p-multiselect-panel,
 .p-dropdown-panel {
-  background: rgba($op-background-dark, 0.9);
+  background: var(--p-menu-bg);
   .p-multiselect-header {
-    background: $op-background-dark;
+    background: var(--p-menu-header-bg);
   }
 }
 
 .p-menu {
-  background: rgba($op-background-dark, 0.9);
+  background: var(--p-menu-bg);
   .p-submenu-header {
-    background: $op-background-dark;
+    background: var(--p-menu-header-bg);
   }
 }
 
@@ -45,22 +21,14 @@ $prime-button-background: $color-grey-03;
   margin-bottom: 40px; // to move the scrollbar at least a little bit lower
 }
 
-.p-datatable .p-datatable-tbody > tr {
-  // even background
-  background: var(--md-sys-color-surface-container-low-hover);
-
-  // odd background
-  &.p-row-odd {
-    background: var(--md-sys-color-surface-container-low);
-  }
-}
-
+// rows on the content surface with a hairline between them, like the app's project tables
+// (the --color-table-* values come from the app; the fallbacks are the light values)
+.p-datatable .p-datatable-tbody > tr,
 .p-treetable .p-treetable-tbody > tr {
-  &:nth-child(even) {
-    background: var(--md-sys-color-surface-container-low-hover);
-  }
-  &:nth-child(odd) {
-    background: var(--md-sys-color-surface-container-low);
+  background: var(--color-table-row, var(--md-sys-color-surface-container-lowest));
+
+  & > td {
+    box-shadow: inset 0 -1px 0 0 var(--color-table-border, var(--md-sys-color-surface-container));
   }
 }
 
@@ -136,8 +104,8 @@ $prime-button-background: $color-grey-03;
   }
 
   &:hover {
-    background: var(--md-sys-color-surface-container-low-active) !important;
-    color: white;
+    background: var(--color-table-row-hover, var(--md-sys-color-surface-container)) !important;
+    color: var(--md-sys-color-on-surface-strong);
   }
 }
 
@@ -148,19 +116,19 @@ $prime-button-background: $color-grey-03;
   .p-datatable-thead > tr > th,
   .p-treetable-thead > tr > th {
     border: 0;
-    background: var(--md-sys-color-surface-container-low);
+    background: var(--color-table-header, var(--md-sys-color-surface-container));
     border-right: 2px solid var(--md-sys-color-outline-variant);
     padding: 0.5rem 0.6rem 0.6rem 0.6rem;
   }
 }
 
 .p-treetable-scrollable-header {
-  background: var(--md-sys-color-surface-container-low) !important;
+  background: var(--color-table-header, var(--md-sys-color-surface-container)) !important;
 }
 
 .p-datatable-thead > tr,
 .p-treetable-thead > tr {
-  background: var(--md-sys-color-surface-container-low) !important;
+  background: var(--color-table-header, var(--md-sys-color-surface-container)) !important;
   user-select: none;
   border-bottom: 2px solid rgba(0, 0, 0, 0.1);
 
@@ -170,7 +138,7 @@ $prime-button-background: $color-grey-03;
 }
 
 .p-datatable .p-sortable-column.p-highlight {
-  background: var(--md-sys-color-surface-container-low);
+  background: var(--color-table-header, var(--md-sys-color-surface-container));
 }
 
 // Splitter
@@ -212,9 +180,18 @@ $prime-button-background: $color-grey-03;
 }
 
 .p-sidebar,
-.p-dialog,
 .p-paginator {
   background: var(--md-sys-color-surface-container);
+}
+
+// an overlay, like menus and dropdown lists
+.p-dialog {
+  background: var(--md-sys-color-surface-overlay);
+}
+
+.p-sidebar,
+.p-dialog,
+.p-paginator {
   border: 0;
 
   .p-dialog-content {

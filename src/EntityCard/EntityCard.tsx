@@ -19,6 +19,17 @@ import { AssigneeSelect, AssigneeSelectProps } from '../Dropdowns/AssigneeSelect
 import { Status, StatusSelect, StatusSelectProps } from '../Dropdowns/StatusSelect'
 import { UserImage } from '../User/UserImage'
 import { NotificationDot, NotificationProps } from './Notification/Notification'
+import { getTagColors } from '../helpers'
+
+const getPriorityStyle = (priority?: EnumDropdownOption): React.CSSProperties | undefined => {
+  if (!priority?.color) return undefined
+  const colors = getTagColors(priority.color)
+  return {
+    color: colors.text,
+    backgroundColor: colors.background,
+    boxShadow: `inset 0 0 0 1px ${colors.border}`,
+  }
+}
 
 type Section = 'title' | 'header' | 'users' | 'status' | 'priority' | 'versions'
 
@@ -347,6 +358,8 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               {(!isLoading || loadingSections.includes('title')) && (
                 <Styled.Tag
                   className={clsx('tag title', { isLoading, clickable: !!onTitleClick })}
+                  // the pills over the thumbnail stay dark on both themes, so they read on any image
+                  data-theme="dark"
                   onClick={handleTitleClick}
                   {...pt.title}
                 >
@@ -354,7 +367,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     'loading card...'
                   ) : (
                     <>
-                      {titleIcon && <Icon style={{color: titleColor}} icon={titleIcon} />}
+                      {titleIcon && <Icon style={{ color: titleColor }} icon={titleIcon} />}
                       {title && <span className="inner-text">{title}</span>}
                     </>
                   )}
@@ -363,7 +376,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
 
               {/* top right */}
               {isPlayable && (
-                <Styled.Tag className={clsx('tag playable')} {...pt.playableTag}>
+                <Styled.Tag className={clsx('tag playable')} data-theme="dark" {...pt.playableTag}>
                   <Icon icon={'play_circle'} />
                 </Styled.Tag>
               )}
@@ -430,6 +443,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                   })}
                   onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'assignees')}
                   onClick={(e) => handleEditableHover(e, 'assignees')}
+                  data-theme="dark"
                   {...pt.usersTag}
                 >
                   {users?.length ? (
@@ -456,6 +470,9 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 <Styled.Tag
                   onMouseEnter={(e) => editOnHover && handleEditableHover(e, 'priority')}
                   onClick={(e) => handleEditableHover(e, 'priority')}
+                  data-theme="dark"
+                  // tinted with its colour, like coloured values elsewhere
+                  style={variant == 'default' ? getPriorityStyle(priority) : undefined}
                   {...pt.priorityTag}
                   className={clsx(
                     'tag priority',
@@ -463,12 +480,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                     pt.priorityTag?.className,
                   )}
                 >
-                  {priority?.icon && (
-                    <Icon
-                      icon={priority.icon}
-                      style={{ color: variant == 'default' ? priority?.color : undefined }} // only show priority color in default variant
-                    />
-                  )}
+                  {priority?.icon && <Icon icon={priority.icon} style={{ color: 'inherit' }} />}
                 </Styled.Tag>
               )}
 
@@ -476,6 +488,7 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
               {shouldShowTag(versions, 'versions') && (
                 <Styled.Versions
                   className={clsx('versions')}
+                  data-theme="dark"
                   onClick={(e) => onVersionsClick && onVersionsClick(e)}
                   {...pt.versionsTag}
                 >
