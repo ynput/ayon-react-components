@@ -6,8 +6,7 @@
     --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
     --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
     --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
-    --md-sys-color-primary-fixed: var(--md-sys-color-primary-fixed-dark);
-    --md-sys-color-on-primary-fixed: var(--md-sys-color-on-primary-fixed-dark);
+    /* primary-fixed and on-primary-fixed: the brand colour in tokens.css, the same on both themes */
     --md-sys-color-primary-fixed-dim: var(--md-sys-color-primary-fixed-dim-dark);
     --md-sys-color-on-primary-fixed-variant: var(--md-sys-color-on-primary-fixed-variant-dark);
     --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
@@ -22,8 +21,7 @@
     --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);
     --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);
     --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);
-    --md-sys-color-tertiary-fixed: var(--md-sys-color-tertiary-fixed-dark);
-    --md-sys-color-on-tertiary-fixed: var(--md-sys-color-on-tertiary-fixed-dark);
+    /* tertiary-fixed and on-tertiary-fixed: the brand colour in tokens.css, the same on both themes */
     --md-sys-color-tertiary-fixed-dim: var(--md-sys-color-tertiary-fixed-dim-dark);
     --md-sys-color-on-tertiary-fixed-variant: var(--md-sys-color-on-tertiary-fixed-variant-dark);
     --md-sys-color-error: var(--md-sys-color-error-dark);
