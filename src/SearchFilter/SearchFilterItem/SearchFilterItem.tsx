@@ -132,7 +132,6 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
     const rootOperatorLabel = rootOperator.toLowerCase()
     const filterLabel = valueOverride?.label ?? label
     const filterIcon = valueOverride?.icon ?? undefined
-    const filterColor = valueOverride?.color ?? undefined
 
     return (
       <>
@@ -170,7 +169,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 <Styled.SmallIcon icon={'do_not_disturb_on'} data-tooltip={'Exclude this filter'} />
               )}
               {!isCompact && (
-                <span className="label" style={{ color: filterColor ?? undefined }}>
+                <span className="label">
                   {filterIcon && <Icon icon={filterIcon as IconType} />}
                   {filterLabel}:
                 </span>

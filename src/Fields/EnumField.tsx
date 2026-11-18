@@ -20,6 +20,7 @@ import {
 import { Icon, IconImage, IconPropType, IconType, isIconImage } from '../Icon'
 import { dropdownVariantStyles, fieldLoadingStyles, fieldSubmittingStyles } from './fieldStyles'
 import { EMPTY_VALUE, ReadOnlyValue } from './common.styled'
+import { getTagColors } from '../helpers'
 
 /** An icon given as an object, as AYON enum items store it */
 export type EnumFieldIconObject = {
@@ -156,6 +157,15 @@ const Actions = styled.div`
   gap: ${ACTION_GAP}px;
 `
 
+// a coloured value is tinted with its colour, like a tag, so the colour is never the text colour
+const ValuePill = styled(ValueContent)`
+  padding: 1px 6px;
+  border-radius: var(--border-radius-m);
+  .icon {
+    color: inherit !important;
+  }
+`
+
 const ValueLabel = styled.span`
   white-space: nowrap;
   overflow: hidden;
@@ -242,15 +252,35 @@ const OptionValue = ({
   option: ResolvedEnumFieldOption
   iconOnlyColor?: boolean
   suffix?: string
-}) => (
-  <ValueContent>
-    <EnumIcon icon={option.icon} color={option.color} />
-    <ValueLabel style={{ color: !iconOnlyColor && !option.icon ? option.color : undefined }}>
-      {option.label}
-      {suffix}
-    </ValueLabel>
-  </ValueContent>
-)
+}) => {
+  if (option.color && !iconOnlyColor) {
+    const colors = getTagColors(option.color)
+    return (
+      <ValuePill
+        style={{
+          color: colors.text,
+          backgroundColor: colors.background,
+          boxShadow: `inset 0 0 0 1px ${colors.border}`,
+        }}
+      >
+        <EnumIcon icon={option.icon} />
+        <ValueLabel>
+          {option.label}
+          {suffix}
+        </ValueLabel>
+      </ValuePill>
+    )
+  }
+  return (
+    <ValueContent>
+      <EnumIcon icon={option.icon} color={option.color} />
+      <ValueLabel>
+        {option.label}
+        {suffix}
+      </ValueLabel>
+    </ValueContent>
+  )
+}
 
 export interface EnumFieldProps
   extends Omit<DropdownProps, 'value' | 'onChange' | 'options' | 'onClear'> {

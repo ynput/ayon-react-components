@@ -31,8 +31,8 @@ export const Title = styled.span<{ $tooltip?: string }>`
         top: -38px; /* adjust as needed */
         left: 0;
         padding: 8px;
-        background-color: var(--md-sys-color-surface-container-high);
-        color: white;
+        background-color: var(--md-sys-color-surface-overlay);
+        color: var(--md-sys-color-on-surface-strong);
         border-radius: 3px;
         z-index: 1;
         user-select: none;

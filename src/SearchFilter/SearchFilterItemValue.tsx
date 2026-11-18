@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { FilterOperator, FilterValue } from './types'
 import styled from 'styled-components'
 import clsx from 'clsx'
-import checkColorBrightness from './checkColorBrightness'
+import { getTagColors } from '../helpers'
 import { Icon, IconType } from '../Icon'
 import { theme } from '..'
 
@@ -42,6 +42,11 @@ const ValueChip = styled.div`
     .label {
       display: none;
     }
+  }
+
+  /* a coloured value is tinted with its colour, like a tag, never coloured text */
+  &.tinted {
+    padding: 0 6px;
   }
 
   &.custom {
@@ -94,8 +99,10 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
     },
     ref,
   ) => {
-    const colorStyle = color ? color : '#ffffff'
-    const adjustedColor = checkColorBrightness(colorStyle, '#353B46')
+    // a caller that sets the label colour (types) keeps the colour on the icon only
+    const colorOnIcon = !!pt?.style?.color
+    const colors = color && !colorOnIcon ? getTagColors(color) : undefined
+    const textColor = colors ? 'inherit' : 'var(--md-sys-color-on-surface-strong)'
 
     // only collapse to icon-only when there's an icon/avatar to show, else keep the text
     const iconOnly = isCompact && (!!icon || !!img)
@@ -113,21 +120,33 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
         <ValueChip
           {...props}
           ref={ref}
-          className={clsx(props.className, { compact: iconOnly, custom: isCustom })}
+          className={clsx(props.className, {
+            compact: iconOnly,
+            custom: isCustom,
+            tinted: !!colors,
+          })}
+          style={
+            colors
+              ? {
+                  color: colors.text,
+                  backgroundColor: colors.background,
+                  boxShadow: `inset 0 0 0 1px ${colors.border}`,
+                  ...props.style,
+                }
+              : props.style
+          }
         >
           {icon && (
             <Icon
               icon={icon as IconType}
-              style={{
-                color: adjustedColor,
-              }}
+              style={{ color: colorOnIcon && color ? color : textColor }}
             />
           )}
           {img && <img src={img} alt={label} />}
           <span
             className="label"
             style={{
-              color: pt?.style?.color ?? adjustedColor,
+              color: pt?.style?.color ?? textColor,
             }}
           >
             {label}

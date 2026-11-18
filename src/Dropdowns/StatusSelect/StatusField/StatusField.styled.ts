@@ -1,20 +1,15 @@
 import styled, { css } from 'styled-components'
 import { StatusSize } from './StatusField'
+import { getTextColor } from '../../../helpers'
 
-const hoverStyle = css<{ $color: string }>`
-  background-color: var(--md-sys-color-surface-container-low-hover);
-  color: ${({ $color }) => $color};
-`
+// text on the status colour; a status without one has a theme colour, which follows the theme
+const textOn = (color: string) =>
+  color.startsWith('var(') ? 'var(--md-sys-color-on-surface)' : getTextColor(color)
 
+// the whole field filled with the status colour
 const invertHoverStyle = css<{ $color: string }>`
-  /* flips the bg color for text color */
   background-color: ${({ $color }) => $color};
-  color: black;
-`
-const defaultStyle = css<{ $color: string }>`
-  /* default text color */
-  color: ${({ $color }) => $color};
-  background-color: transparent;
+  color: ${({ $color }) => textOn($color)};
 `
 
 type StatusStyledProps = {
@@ -50,15 +45,38 @@ export const StatusStyled = styled.div<StatusStyledProps>`
   height: 27px;
   min-height: 27px;
 
+  /* the status colour is a block behind the icon and name, never their colour, so it reads on any surface */
   .status-texticon {
     display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 6px;
+    border-radius: var(--border-radius-m);
+    background-color: ${({ $color }) => $color};
+    color: ${({ $color }) => textOn($color)};
   }
 
   .status-text {
-    margin-left: 8px;
+    padding-right: 2px;
+    &:empty {
+      display: none;
+    }
   }
 
-  ${defaultStyle}
+  color: var(--md-sys-color-on-surface);
+  background-color: transparent;
+
+  /* filled as a whole: the block inside it has nothing to add */
+  &.changed,
+  &.changing:not(.selecting),
+  &.invert {
+    .status-texticon {
+      background-color: transparent;
+      color: inherit;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 
   &.changed {
     background-color: var(--md-sys-color-primary);
@@ -87,21 +105,15 @@ export const StatusStyled = styled.div<StatusStyledProps>`
     ${invertHoverStyle}
   }
 
-  /* sets for hover and when active whilst open (top one) */
   &:hover {
-    /* ${hoverStyle} */
     filter: brightness(110%);
   }
 
+  /* the current status in the list */
   &.active.selecting {
-    ${invertHoverStyle}
-
-    &:hover {
-      ${invertHoverStyle}
-    }
+    background-color: var(--md-sys-color-primary-container);
     [icon='expand_more'] {
       transform: rotate(180deg);
-      ${invertHoverStyle}
     }
   }
 
@@ -113,6 +125,14 @@ export const StatusStyled = styled.div<StatusStyledProps>`
 
       span {
         margin: auto;
+      }
+
+      /* the icon alone: a square block with even padding */
+      .status-texticon {
+        margin: auto;
+        padding: 2px;
+        aspect-ratio: 1;
+        justify-content: center;
       }
     `}
 `

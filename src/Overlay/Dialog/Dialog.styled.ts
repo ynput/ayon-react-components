@@ -33,7 +33,8 @@ const getHeightSize = (size: string) =>
   size ? heightSizes[size as keyof typeof heightSizes] : heightSizes.sm
 
 export const Dialog = styled.div<{ $size?: string }>`
-  background-color: var(--md-sys-color-surface-container);
+  /* an overlay, like menus and dropdown lists */
+  background-color: var(--md-sys-color-surface-overlay);
   border: none;
   border-radius: var(--border-radius-m);
   flex-direction: column;
