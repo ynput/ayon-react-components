@@ -27,12 +27,18 @@ const options: Option[] = [
     operatorChangeable: true,
 
     values: [
-      { id: 'waiting', label: 'Waiting', color: '#FFA500', icon: 'hourglass_empty' },
-      { id: 'inProgress', label: 'In Progress', color: '#4CAF50', icon: 'play_circle' },
-      { id: 'completed', label: 'Completed', color: '#2196F3', icon: 'check_circle' },
-      { id: 'error', label: 'Error', color: '#F44336', icon: 'error' },
-      { id: 'paused', label: 'Paused', color: '#9C27B0', icon: 'pause_circle' },
-      { id: 'cancelled', label: 'Cancelled', color: '#757575', icon: 'cancel' },
+      { id: 'waiting', label: 'Waiting', color: '#FFA500', icon: 'hourglass_empty', filled: true },
+      {
+        id: 'inProgress',
+        label: 'In Progress',
+        color: '#4CAF50',
+        icon: 'play_circle',
+        filled: true,
+      },
+      { id: 'completed', label: 'Completed', color: '#2196F3', icon: 'check_circle', filled: true },
+      { id: 'error', label: 'Error', color: '#F44336', icon: 'error', filled: true },
+      { id: 'paused', label: 'Paused', color: '#9C27B0', icon: 'pause_circle', filled: true },
+      { id: 'cancelled', label: 'Cancelled', color: '#757575', icon: 'cancel', filled: true },
     ],
   },
   {

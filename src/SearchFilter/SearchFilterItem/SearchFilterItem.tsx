@@ -200,6 +200,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                     icon={value.icon}
                     color={value.color}
                     isCustom={value.isCustom}
+                    filled={value.filled}
                     operator={index > 0 ? operator : undefined}
                     isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
                     {...pt.value}
@@ -233,6 +234,7 @@ export const SearchFilterItem = forwardRef<HTMLDivElement, SearchFilterItemProps
                 icon={value.icon}
                 color={value.color}
                 isCustom={value.isCustom}
+                filled={value.filled}
                 operator={index > 0 ? operator : undefined}
                 isCompact={(values.length > 1 && (!!value.icon || !!value.img)) || isCompact}
                 {...pt.value}
