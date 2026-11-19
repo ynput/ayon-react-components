@@ -244,7 +244,7 @@ export const Operator = styled.div`
   }
 `
 
-// a coloured value, tinted with its colour like a tag
+// a coloured value, filled or tinted with its colour
 export const ValuePill = styled.span`
   display: flex;
   align-items: center;

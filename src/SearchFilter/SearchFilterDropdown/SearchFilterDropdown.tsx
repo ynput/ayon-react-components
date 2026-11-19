@@ -3,7 +3,7 @@ import { Filter, FilterOperator, Option } from '../types'
 import * as Styled from './SearchFilterDropdown.styled'
 import clsx from 'clsx'
 import { matchSorter } from 'match-sorter'
-import { getTagColors } from '../../helpers'
+import { getValuePillStyle } from '../getValuePillStyle'
 import { buildFilterId } from '../buildFilterId'
 import { getFilterFromId } from '../getFilterFromId'
 import { Icon, IconType } from '../../Icon'
@@ -386,6 +386,7 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   icon,
                   img,
                   color,
+                  filled,
                   pt: optionPt,
                   isCustom,
                   contentBefore,
@@ -410,10 +411,11 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                   : label
                 const displayIcon = search ? searchPresentation?.icon ?? icon : icon
                 const displayColor = search ? searchPresentation?.color ?? color : color
-                // a coloured value is tinted with its colour, like a tag, never coloured text; a caller
-                // that sets the label colour (types) keeps the colour on the icon only
+                // a coloured value is a pill (filled or tinted with its colour), never coloured text; a
+                // caller that sets the label colour (types) keeps the colour on the icon only
                 const iconOnly = !!optionPt?.style?.color
-                const colors = displayColor && !iconOnly ? getTagColors(displayColor) : undefined
+                const pill =
+                  displayColor && !iconOnly ? getValuePillStyle(displayColor, filled) : undefined
                 const opensSubmenu =
                   !parentId &&
                   (Boolean(groupItems) ||
@@ -431,15 +433,9 @@ const SearchFilterDropdown = forwardRef<SearchFilterDropdownRef, SearchFilterDro
                       {...pt.item}
                       onClick={(event) => handleSelectOption(event)}
                     >
-                      {colors ? (
-                        <Styled.ValuePill
-                          style={{
-                            color: colors.text,
-                            backgroundColor: colors.background,
-                            boxShadow: `inset 0 0 0 1px ${colors.border}`,
-                          }}
-                        >
-                          {displayIcon && <Icon icon={displayIcon as IconType} />}
+                      {pill ? (
+                        <Styled.ValuePill style={pill}>
+                          {displayIcon && <Icon icon={displayIcon as IconType} filled={filled} />}
                           {img && <img src={img} alt={displayLabel} />}
                           {contentBefore && contentBefore}
                           <span className="label">{displayLabel}</span>

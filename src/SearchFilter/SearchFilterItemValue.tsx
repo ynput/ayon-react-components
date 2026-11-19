@@ -2,7 +2,7 @@ import { forwardRef } from 'react'
 import { FilterOperator, FilterValue } from './types'
 import styled from 'styled-components'
 import clsx from 'clsx'
-import { getTagColors } from '../helpers'
+import { getValuePillStyle } from './getValuePillStyle'
 import { Icon, IconType } from '../Icon'
 import { theme } from '..'
 
@@ -44,8 +44,8 @@ const ValueChip = styled.div`
     }
   }
 
-  /* a coloured value is tinted with its colour, like a tag, never coloured text */
-  &.tinted {
+  /* a coloured value is a pill (filled or tinted with its colour), never coloured text */
+  &.pill {
     padding: 0 6px;
   }
 
@@ -92,6 +92,7 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
       operator,
       isCompact,
       isCustom,
+      filled,
       pt,
       isOperatorChangeable,
       onOperatorChange,
@@ -101,8 +102,8 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
   ) => {
     // a caller that sets the label colour (types) keeps the colour on the icon only
     const colorOnIcon = !!pt?.style?.color
-    const colors = color && !colorOnIcon ? getTagColors(color) : undefined
-    const textColor = colors ? 'inherit' : 'var(--md-sys-color-on-surface-strong)'
+    const pill = color && !colorOnIcon ? getValuePillStyle(color, filled) : undefined
+    const textColor = pill ? 'inherit' : 'var(--md-sys-color-on-surface-strong)'
 
     // only collapse to icon-only when there's an icon/avatar to show, else keep the text
     const iconOnly = isCompact && (!!icon || !!img)
@@ -123,22 +124,14 @@ export const SearchFilterItemValue = forwardRef<HTMLDivElement, SearchFilterItem
           className={clsx(props.className, {
             compact: iconOnly,
             custom: isCustom,
-            tinted: !!colors,
+            pill: !!pill,
           })}
-          style={
-            colors
-              ? {
-                  color: colors.text,
-                  backgroundColor: colors.background,
-                  boxShadow: `inset 0 0 0 1px ${colors.border}`,
-                  ...props.style,
-                }
-              : props.style
-          }
+          style={pill ? { ...pill, ...props.style } : props.style}
         >
           {icon && (
             <Icon
               icon={icon as IconType}
+              filled={!!pill && filled}
               style={{ color: colorOnIcon && color ? color : textColor }}
             />
           )}
