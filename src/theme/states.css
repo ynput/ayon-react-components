@@ -12,10 +12,10 @@
   --md-sys-color-tertiary-dark-hover: hsl(162, 74%, 46%);
   --md-sys-color-on-tertiary-dark-hover: hsl(160, 74%, 16%);
   --md-sys-color-tertiary-container-dark-hover: hsl(162, 86%, 20%);
-  /* fixed, the same on both themes */
-  --md-sys-color-primary-fixed-hover: var(--md-sys-color-primary-dark-hover);
+  /* fixed, the same on both themes: the brand colour at rest, brighter on hover */
+  --md-sys-color-primary-fixed-hover: hsl(206, 100%, 84%);
   --md-sys-color-on-primary-fixed-hover: var(--md-sys-color-on-primary-dark-hover);
-  --md-sys-color-tertiary-fixed-hover: var(--md-sys-color-tertiary-dark-hover);
+  --md-sys-color-tertiary-fixed-hover: hsl(162, 75%, 60%);
   --md-sys-color-on-tertiary-fixed-hover: var(--md-sys-color-on-tertiary-dark-hover);
   /* container-surface */
   --md-sys-color-surface-container-highest-dark-hover: hsl(216, 11%, 34%);
@@ -38,9 +38,9 @@
   /* tertiary */
   --md-sys-color-tertiary-dark-active: hsl(163, 74%, 44%);
   --md-sys-color-tertiary-container-dark-active: hsl(162, 82%, 22%);
-  /* fixed, the same on both themes */
-  --md-sys-color-primary-fixed-active: var(--md-sys-color-primary-dark-active);
-  --md-sys-color-tertiary-fixed-active: var(--md-sys-color-tertiary-dark-active);
+  /* fixed, the same on both themes: between rest and hover */
+  --md-sys-color-primary-fixed-active: hsl(206, 100%, 81%);
+  --md-sys-color-tertiary-fixed-active: hsl(162, 75%, 55%);
   /* container-surface */
   --md-sys-color-surface-container-highest-dark-active: hsl(218, 10%, 36%);
   --md-sys-color-surface-container-high-dark-active: hsl(220, 10%, 31%);
