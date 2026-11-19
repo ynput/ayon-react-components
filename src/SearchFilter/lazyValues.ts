@@ -64,6 +64,7 @@ export const getDisplayValues = (filter: Filter, option?: Option): FilterValue[]
       icon: value.icon ?? loaded.icon,
       img: value.img ?? loaded.img,
       color: value.color ?? loaded.color,
+      filled: value.filled ?? loaded.filled,
     }
   })
 }

@@ -17,6 +17,7 @@ export type FilterValue = {
   icon?: string | null
   color?: string | null
   isCustom?: boolean
+  filled?: boolean // a coloured value filled with its colour (e.g. a status) instead of tinted
   parentId?: string | null
   pt?: FilterValuePt
 }
@@ -70,6 +71,7 @@ export interface Option extends Filter {
   allowExcludes?: boolean // allows the filter to be inverted
   operatorChangeable?: boolean // allows the operator to be changed
   color?: string | null // color of the filter (not used for root options)
+  filled?: boolean // a coloured value filled with its colour (e.g. a status) instead of tinted
   parentId?: string | null // parent filter id
   searchOnly?: boolean //  It will be shown when searching but hidden usually
   searchLabel?: string // label to be shown when searching
