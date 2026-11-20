@@ -112,6 +112,16 @@ const AllFieldsTemplate = ({ isReadOnly = false }: { isReadOnly?: boolean }) => 
       <FieldRow icon="calendar_month" label="Date" copyValue={date}>
         <DateField {...row} value={date} onChange={setDate} onCommit={commit('date')} />
       </FieldRow>
+      <FieldRow icon="calendar_month" label="Date (calendar only)" copyValue={date}>
+        <DateField
+          {...row}
+          typing={false}
+          value={date}
+          onChange={setDate}
+          onCommit={commit('date')}
+          placeholder="Pick a date"
+        />
+      </FieldRow>
       <FieldRow icon="schedule" label="Time" copyValue={time}>
         <TimeField {...row} value={time} onChange={setTime} onCommit={commit('time')} />
       </FieldRow>
