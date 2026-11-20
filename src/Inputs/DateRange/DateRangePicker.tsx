@@ -253,7 +253,7 @@ export const DateRangePicker = ({
             className="arrow"
             aria-label={`Previous ${stepName}`}
             data-tooltip={`Previous ${stepName}`}
-            disabled={!canStep}
+            disabled={disabled || !canStep}
             onClick={() => onStep(-1)}
           />
           <Button
@@ -263,7 +263,7 @@ export const DateRangePicker = ({
             className="arrow"
             aria-label={`Next ${stepName}`}
             data-tooltip={`Next ${stepName}`}
-            disabled={!canStep}
+            disabled={disabled || !canStep}
             onClick={() => onStep(1)}
           />
         </>

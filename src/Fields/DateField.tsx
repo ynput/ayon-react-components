@@ -73,6 +73,9 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
       placeholder,
       disabled,
       required,
+      readOnly,
+      min,
+      max,
       'aria-label': ariaLabel,
       onFocus,
       onBlur,
@@ -85,16 +88,23 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
     const [text, setTextState] = useState(() => formatDay(value))
     // the text now, for a blur right after a change, before the next render
     const textNow = useRef(text)
-    const setText = (next: string) => {
+    // typed and not saved yet
+    const isEditing = useRef(false)
+    const setText = (next: string, editing = false) => {
       textNow.current = next
+      isEditing.current = editing
       setTextState(next)
     }
     const [invalid, setInvalid] = useState(false)
-    const [open, setOpen] = useState(defaultOpen)
+    const [openState, setOpen] = useState(defaultOpen)
+    const open = openState && !readOnly
+    // the days that can be chosen, `YYYY-MM-DD`
+    const minDay = min === undefined ? undefined : String(min)
+    const maxDay = max === undefined ? undefined : String(max)
 
-    // the text follows the value while nobody types in it
+    // the text follows the value, also one the parent changed after a save, unless being typed
     useEffect(() => {
-      if (!field.isFocused()) setText(formatDay(value))
+      if (!isEditing.current) setText(formatDay(value))
     }, [value])
 
     /** the day changed and committed, and shown */
@@ -105,10 +115,18 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
       field.commit(day, onCommit)
     }
 
-    /** the typed date saved (an emptied field is no day); false when it is not a date */
-    const saveText = () => {
+    /** the typed day, '' for an emptied field; null when it is not a day that can be chosen */
+    const readText = () => {
       const typed = textNow.current.trim()
-      const day = typed ? parseTypedDate(typed) : required ? null : ''
+      if (!typed) return required ? null : ''
+      const day = parseTypedDate(typed)
+      if (!day || (minDay && day < minDay) || (maxDay && day > maxDay)) return null
+      return day
+    }
+
+    /** the typed date saved; false when it is not a date, which is marked */
+    const saveText = () => {
+      const day = readText()
       if (day === null) {
         setInvalid(true)
         return false
@@ -139,6 +157,8 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
         monthsShown={1}
         selectsRange={false}
         value={{ from: shown, to: shown }}
+        min={minDay}
+        max={maxDay}
         onChange={({ from }) => pick(from)}
       />
     )
@@ -170,9 +190,10 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
           value: text,
           placeholder,
           required,
+          readOnly,
           'aria-invalid': invalid || undefined,
           onChange: (event) => {
-            setText(event.target.value)
+            setText(event.target.value, true)
             setInvalid(false)
           },
           onFocus: (event) => {
@@ -192,9 +213,12 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
             if (!event.nativeEvent.isComposing && event.key === 'Enter') {
               event.preventDefault()
               event.stopPropagation()
-              if (!saveText()) return
-              setOpen(false)
+              const day = readText()
+              if (day === null) return setInvalid(true)
+              // before saving: onCommit may move the focus on, and that blur has nothing to save
               field.suppressBlurCommit()
+              save(day)
+              setOpen(false)
               event.currentTarget.blur()
             } else if (event.key === 'Escape') {
               event.preventDefault()
@@ -204,12 +228,11 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
                 setOpen(false)
                 return
               }
+              field.suppressBlurCommit()
               const last = field.cancelToLastCommit()
               if (last !== value) onChange(last)
               setText(formatDay(last))
               setInvalid(false)
-              setOpen(false)
-              field.suppressBlurCommit()
               event.currentTarget.blur()
             }
             onKeyDown?.(event)
