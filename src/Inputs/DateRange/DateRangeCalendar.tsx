@@ -26,6 +26,9 @@ export interface DateRangeCalendarProps extends Omit<HTMLAttributes<HTMLDivEleme
   weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
   /** false: one click picks one day, given as a range of that day; true by default (two clicks) */
   selectsRange?: boolean
+  /** the first and last days that can be picked, `YYYY-MM-DD` */
+  min?: string
+  max?: string
 }
 
 /**
@@ -44,6 +47,8 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
       monthsShown = 2,
       weekStartsOn = 1,
       selectsRange = true,
+      min,
+      max,
       className,
       ...props
     },
@@ -59,6 +64,10 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
     }
     const from = start ?? fromDateString(value?.from)
     const to = start ? null : fromDateString(value?.to)
+    const bounds = {
+      minDate: fromDateString(min) ?? undefined,
+      maxDate: fromDateString(max) ?? undefined,
+    }
 
     return (
       <Styled.Calendar ref={ref} className={clsx('date-range-calendar', className)} {...props}>
@@ -86,6 +95,7 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
           <InputDate
             inline
             selectsRange
+            {...bounds}
             monthsShown={monthsShown}
             calendarStartDay={weekStartsOn}
             selected={from}
@@ -102,6 +112,7 @@ export const DateRangeCalendar = forwardRef<HTMLDivElement, DateRangeCalendarPro
         ) : (
           <InputDate
             inline
+            {...bounds}
             monthsShown={monthsShown}
             calendarStartDay={weekStartsOn}
             selected={from}
