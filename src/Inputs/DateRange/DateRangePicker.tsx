@@ -36,8 +36,8 @@ export interface DateRangePickerProps {
   /** the popover's contents, given a way to close it: usually a DateRangeCalendar */
   children: (close: () => void) => ReactNode
   /**
-   * Typing: the field is this text input instead of a button, and the icon opens the popover. A
-   * click in the input opens it too, and ArrowDown moves into it. The focus stays in the input
+   * Typing: the field is this text input instead of a button, with no icon. A click in the input
+   * opens the popover, and ArrowDown moves into it. The focus stays in the input
    * while the popover is clicked.
    */
   input?: InputHTMLAttributes<HTMLInputElement> & { ref?: Ref<HTMLInputElement> }
@@ -185,27 +185,11 @@ export const DateRangePicker = ({
     >
       {input ? (
         <Styled.FieldTyping className={clsx({ open, highlighted })}>
-          <Styled.FieldIcon
-            ref={trigger}
-            type="button"
-            // the input is the field for the keyboard; the icon is a shortcut for the mouse
-            tabIndex={-1}
-            aria-label={popoverLabel}
-            aria-haspopup="dialog"
-            aria-expanded={open}
-            disabled={disabled}
-            // the focus stays in the input
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => {
-              setOpen(!open)
-              textInput.current?.focus()
-            }}
-          >
-            <Icon icon={icon} />
-          </Styled.FieldIcon>
           <input
             // a <label for> names it too; the label prop is its value here
             aria-label={ariaLabel}
+            aria-haspopup="dialog"
+            aria-expanded={open}
             data-tooltip={tooltip}
             disabled={disabled}
             {...input}
