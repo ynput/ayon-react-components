@@ -183,6 +183,9 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
           input={{
             ...props,
             ref,
+            // the text shown; a form gets the day from the hidden input
+            type: 'text',
+            form,
             value: text,
             placeholder,
             required,
@@ -210,7 +213,7 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
                 event.preventDefault()
                 event.stopPropagation()
                 const typed = draftNow.current
-                const day = typed === null ? value : readDraft(typed.trim())
+                const day = readDraft(typed === null ? text : typed.trim())
                 if (day === null) setInvalid(true)
                 else {
                   save(day)
