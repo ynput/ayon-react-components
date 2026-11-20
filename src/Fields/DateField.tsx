@@ -1,11 +1,10 @@
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import { forwardRef, useRef, useState } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { DateRangeCalendar } from '../Inputs/DateRange/DateRangeCalendar'
 import { DateRangePicker } from '../Inputs/DateRange/DateRangePicker'
 import { formatDay, parseTypedDate } from '../Inputs/DateRange/dates'
 import { fieldSubmittingStyles, roundedFieldSurfaceStyles } from './fieldStyles'
-import { useCommittedFieldValue } from './fieldUtils'
 import { EMPTY_VALUE, ReadOnlyValue } from './common.styled'
 
 /** the date picker's field as a form field: as wide and tall as the other fields */
@@ -55,7 +54,8 @@ export interface DateFieldProps
 /**
  * A day: typed, or picked in a calendar under the field. Enter or leaving the field saves a typed
  * date; a date it can't read turns red and is not saved (with `required`, nor is an empty one).
- * Escape closes the calendar, then goes back to the last saved day.
+ * Escape closes the calendar, then drops what was typed. onChange and onCommit are called together,
+ * with a day other than the value.
  */
 export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
   (
@@ -76,25 +76,24 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
       readOnly,
       min,
       max,
+      name,
+      form,
       'aria-label': ariaLabel,
-      onFocus,
       onBlur,
       onKeyDown,
       ...props
     },
     ref,
   ) => {
-    const field = useCommittedFieldValue(value)
-    const [text, setTextState] = useState(() => formatDay(value))
-    // the text now, for a blur right after a change, before the next render
-    const textNow = useRef(text)
-    // typed and not saved yet
-    const isEditing = useRef(false)
-    const setText = (next: string, editing = false) => {
-      textNow.current = next
-      isEditing.current = editing
-      setTextState(next)
+    // typed and not saved yet; without it the field shows the value
+    const [draft, setDraftState] = useState<string | null>(null)
+    // the draft now, for a blur right after a change, before the next render
+    const draftNow = useRef(draft)
+    const setDraft = (next: string | null) => {
+      draftNow.current = next
+      setDraftState(next)
     }
+    const text = draft ?? formatDay(value)
     const [invalid, setInvalid] = useState(false)
     const [openState, setOpen] = useState(defaultOpen)
     const open = openState && !readOnly
@@ -102,37 +101,22 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
     const minDay = min === undefined ? undefined : String(min)
     const maxDay = max === undefined ? undefined : String(max)
 
-    // the text follows the value, also one the parent changed after a save, unless being typed
-    useEffect(() => {
-      if (!isEditing.current) setText(formatDay(value))
-    }, [value])
-
-    /** the day changed and committed, and shown */
+    /** the draft dropped, and a day other than the value saved */
     const save = (day: string) => {
-      setText(formatDay(day))
+      // first: onCommit may move the focus on, and that blur has nothing left to save
+      setDraft(null)
       setInvalid(false)
-      if (day !== value) onChange(day)
-      field.commit(day, onCommit)
+      if (day === value) return
+      onChange(day)
+      onCommit?.(day)
     }
 
     /** the typed day, '' for an emptied field; null when it is not a day that can be chosen */
-    const readText = () => {
-      const typed = textNow.current.trim()
+    const readDraft = (typed: string) => {
       if (!typed) return required ? null : ''
       const day = parseTypedDate(typed)
       if (!day || (minDay && day < minDay) || (maxDay && day > maxDay)) return null
       return day
-    }
-
-    /** the typed date saved; false when it is not a date, which is marked */
-    const saveText = () => {
-      const day = readText()
-      if (day === null) {
-        setInvalid(true)
-        return false
-      }
-      save(day)
-      return true
     }
 
     const pick = (day: string) => {
@@ -149,7 +133,7 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
     }
 
     // the calendar shows the day typed so far, else the value
-    const shown = (typing && parseTypedDate(text)) || value
+    const shown = (draft !== null && parseTypedDate(draft)) || value
     const calendar = (
       <DateRangeCalendar
         // a new day: the calendar opens on its month, its keyboard on it
@@ -179,68 +163,79 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
       style,
     }
 
-    if (!typing) return <StyledPicker {...pickerProps}>{() => calendar}</StyledPicker>
+    // a form gets the day, `YYYY-MM-DD`, not the text shown
+    const formValue = name && (
+      <input type="hidden" name={name} form={form} value={value} disabled={disabled} />
+    )
+
+    if (!typing)
+      return (
+        <>
+          <StyledPicker {...pickerProps}>{() => calendar}</StyledPicker>
+          {formValue}
+        </>
+      )
 
     return (
-      <StyledPicker
-        {...pickerProps}
-        input={{
-          ...props,
-          ref,
-          value: text,
-          placeholder,
-          required,
-          readOnly,
-          'aria-invalid': invalid || undefined,
-          onChange: (event) => {
-            setText(event.target.value, true)
-            setInvalid(false)
-          },
-          onFocus: (event) => {
-            field.onFocus()
-            onFocus?.(event)
-          },
-          onBlur: (event) => {
-            setOpen(false)
-            if (!field.blurCommitSuppressed() && !saveText()) {
-              // not a date: back to the day saved
-              setText(formatDay(value))
+      <>
+        <StyledPicker
+          {...pickerProps}
+          input={{
+            ...props,
+            ref,
+            value: text,
+            placeholder,
+            required,
+            readOnly,
+            'aria-invalid': invalid || undefined,
+            onChange: (event) => {
+              setDraft(event.target.value)
               setInvalid(false)
-            }
-            onBlur?.(event)
-          },
-          onKeyDown: (event) => {
-            if (!event.nativeEvent.isComposing && event.key === 'Enter') {
-              event.preventDefault()
-              event.stopPropagation()
-              const day = readText()
-              if (day === null) return setInvalid(true)
-              // before saving: onCommit may move the focus on, and that blur has nothing to save
-              field.suppressBlurCommit()
-              save(day)
+            },
+            onBlur: (event) => {
               setOpen(false)
-              event.currentTarget.blur()
-            } else if (event.key === 'Escape') {
-              event.preventDefault()
-              event.stopPropagation()
-              // the first Escape only closes the calendar
-              if (open) {
-                setOpen(false)
-                return
+              const typed = draftNow.current
+              if (typed !== null) {
+                const day = readDraft(typed.trim())
+                // not a date: back to the value
+                if (day === null) {
+                  setDraft(null)
+                  setInvalid(false)
+                } else save(day)
               }
-              field.suppressBlurCommit()
-              const last = field.cancelToLastCommit()
-              if (last !== value) onChange(last)
-              setText(formatDay(last))
-              setInvalid(false)
-              event.currentTarget.blur()
-            }
-            onKeyDown?.(event)
-          },
-        }}
-      >
-        {() => calendar}
-      </StyledPicker>
+              onBlur?.(event)
+            },
+            onKeyDown: (event) => {
+              if (!event.nativeEvent.isComposing && event.key === 'Enter') {
+                event.preventDefault()
+                event.stopPropagation()
+                const typed = draftNow.current
+                const day = typed === null ? value : readDraft(typed.trim())
+                if (day === null) setInvalid(true)
+                else {
+                  save(day)
+                  setOpen(false)
+                  event.currentTarget.blur()
+                }
+              } else if (event.key === 'Escape') {
+                event.preventDefault()
+                event.stopPropagation()
+                // the first Escape only closes the calendar
+                if (open) setOpen(false)
+                else {
+                  setDraft(null)
+                  setInvalid(false)
+                  event.currentTarget.blur()
+                }
+              }
+              onKeyDown?.(event)
+            },
+          }}
+        >
+          {() => calendar}
+        </StyledPicker>
+        {formValue}
+      </>
     )
   },
 )

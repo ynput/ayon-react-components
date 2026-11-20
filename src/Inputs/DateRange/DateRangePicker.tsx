@@ -91,6 +91,9 @@ export const DateRangePicker = ({
     setOwnOpen(next)
     onOpenChange?.(next)
   }
+  // the listeners added on opening call the latest onOpenChange
+  const setOpenNow = useRef(setOpen)
+  setOpenNow.current = setOpen
   const root = useRef<HTMLDivElement>(null)
   const trigger = useRef<HTMLButtonElement>(null)
   const textInput = useRef<HTMLInputElement | null>(null)
@@ -160,7 +163,8 @@ export const DateRangePicker = ({
     if (!open) return
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target as Node
-      if (!root.current?.contains(target) && !popover.current?.contains(target)) setOpen(false)
+      if (!root.current?.contains(target) && !popover.current?.contains(target))
+        setOpenNow.current(false)
     }
     document.addEventListener('pointerdown', onPointerDown)
     return () => document.removeEventListener('pointerdown', onPointerDown)
