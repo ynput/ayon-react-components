@@ -101,7 +101,7 @@ export const FieldTyping = styled.div`
     flex: 1;
     min-width: 0;
     height: 100%;
-    padding: 0 10px 0 0;
+    padding: 0 10px;
     font-variant-numeric: tabular-nums;
 
     &::placeholder {
@@ -113,28 +113,6 @@ export const FieldTyping = styled.div`
   }
   .error & input {
     color: var(--md-sys-color-error);
-  }
-`
-
-export const FieldIcon = styled.button`
-  all: unset;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  height: 100%;
-  padding: 0 8px;
-  cursor: pointer;
-
-  .icon {
-    font-size: 18px;
-    color: var(--md-sys-color-on-surface-variant);
-  }
-  .highlighted & .icon {
-    color: var(--md-sys-color-primary);
-  }
-  &:disabled {
-    cursor: not-allowed;
   }
 `
 
