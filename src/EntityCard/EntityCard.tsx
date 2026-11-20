@@ -11,7 +11,6 @@ import { Icon, IconProps, IconType } from '../Icon'
 import * as Styled from './EntityCard.styled'
 import { User } from '../User/UserImagesStacked'
 import clsx from 'clsx'
-import useImageLoader from '../helpers/useImageLoader'
 import useUserImagesLoader from './useUserImagesLoader'
 import { EnumDropdown, EnumDropdownOption, EnumDropdownProps } from '../Dropdowns/EnumDropdown'
 import { DropdownRef } from '../Dropdowns/Dropdown'
@@ -241,8 +240,12 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
       onTitleClick(e)
     }
 
-    // check thumbnail image
-    const [isThumbnailLoading, isThumbnailError] = useImageLoader(imageUrl)
+    // the thumbnail shows once the img itself has loaded. Without a thumbnail the server
+    // answers with a 1px transparent image: that counts as an error, so the icon stays
+    const [thumbnail, setThumbnail] = useState<{ url: string; isError: boolean }>()
+    const isThumbnailLoaded = !!imageUrl && thumbnail?.url === imageUrl
+    const isThumbnailLoading = !!imageUrl && !isThumbnailLoaded
+    const isThumbnailError = isThumbnailLoaded && !!thumbnail?.isError
     // check first and second user images
     const { users: userWithValidatedImages, isLoading: isUserImagesLoading } =
       useUserImagesLoader(users)
@@ -346,6 +349,14 @@ export const EntityCard = forwardRef<HTMLDivElement, EntityCardProps>(
                 src={imageUrl}
                 onMouseEnter={closeEditors}
                 {...pt.image}
+                onLoad={(e) => {
+                  setThumbnail({ url: imageUrl, isError: e.currentTarget.naturalWidth <= 1 })
+                  pt.image?.onLoad?.(e)
+                }}
+                onError={(e) => {
+                  setThumbnail({ url: imageUrl, isError: true })
+                  pt.image?.onError?.(e)
+                }}
                 className={clsx(
                   { loading: isThumbnailLoading, error: isThumbnailError },
                   pt?.image?.className,
