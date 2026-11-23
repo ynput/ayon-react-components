@@ -5,6 +5,7 @@ import { fieldVariables } from './fieldStyles'
 import {
   AttributeFieldConfig,
   AttributeFields,
+  getAttributeDefaultValues,
   BooleanField,
   ColorField,
   DateField,
@@ -253,17 +254,18 @@ export const LabelWithNameCamelCase: Story = {
 const attributes: AttributeFieldConfig[] = [
   { name: 'department', label: 'Department', dataType: 'string', enum: options },
   { name: 'taskTypes', label: 'Task Types', dataType: 'list_of_strings', enum: options },
-  { name: 'effort', label: 'Effort', dataType: 'float', icon: 'timer' },
-  { name: 'billable', label: 'Billable', dataType: 'boolean', icon: 'paid' },
-  { name: 'note', label: 'Note', dataType: 'string' },
+  { name: 'effort', label: 'Effort', dataType: 'float', icon: 'timer', min: 0, max: 100 },
+  { name: 'billable', label: 'Billable', dataType: 'boolean', icon: 'paid', defaultValue: true },
+  { name: 'note', label: 'Note', dataType: 'string', pattern: '[A-Z].*' },
   { name: 'locked', label: 'Locked', dataType: 'integer', isReadOnly: true },
+  { name: 'internal', label: 'Internal', dataType: 'string', hidden: true },
 ]
 
 const AttributeFieldsTemplate = () => {
   const { log, commit } = useCommitLog()
   const [values, setValues] = useState<Record<string, unknown>>({
+    ...getAttributeDefaultValues(attributes),
     department: 'animation',
-    billable: false,
     locked: 0,
   })
   return (

@@ -35,10 +35,30 @@ export interface AttributeFieldConfig {
   icon?: string
   isReadOnly?: boolean
   isRequired?: boolean
+  /** Not rendered; its value is kept */
+  hidden?: boolean
+  /** Regular expression the text must match (string attributes without an enum) */
+  pattern?: string
+  /** Lowest allowed number (integer and float attributes) */
+  min?: number
+  /** Highest allowed number (integer and float attributes) */
+  max?: number
+  /** Value for a new item; see getAttributeDefaultValues */
+  defaultValue?: unknown
   placeholder?: string
   /** Small text under the input */
   helperText?: string
 }
+
+/** Default values by attribute name, to seed the values of a new item */
+export const getAttributeDefaultValues = (
+  attributes: AttributeFieldConfig[],
+): Record<string, unknown> =>
+  Object.fromEntries(
+    attributes
+      .filter((attribute) => attribute.defaultValue !== undefined)
+      .map((attribute) => [attribute.name, attribute.defaultValue]),
+  )
 
 const LIST_TYPES: AttributeDataType[] = [
   'list_of_strings',
@@ -202,6 +222,7 @@ export const AttributeField = ({
           value={typeof value === 'string' ? value : ''}
           onChange={onChange}
           onCommit={onCommit}
+          pattern={attribute.pattern}
           placeholder={placeholder ?? 'Enter text'}
         />
       )
@@ -214,6 +235,8 @@ export const AttributeField = ({
           value={typeof value === 'number' ? value : undefined}
           onChange={onChange}
           onCommit={onCommit}
+          min={attribute.min}
+          max={attribute.max}
           placeholder={
             placeholder ?? (dataType === 'integer' ? 'Enter a whole number' : 'Enter a number')
           }
@@ -276,6 +299,7 @@ export const AttributeFieldRow = ({
   ...props
 }: AttributeFieldRowProps) => {
   const { attribute, value } = props
+  if (attribute.hidden) return null
   const expanded = isExpandedAttribute(attribute)
 
   return (
@@ -349,13 +373,14 @@ export const AttributeFields = ({
   isSubmitting,
   className,
 }: AttributeFieldsProps) => {
-  if (!attributes.length) return null
+  const visible = attributes.filter((attribute) => !attribute.hidden)
+  if (!visible.length) return null
   const mixedSet = mixed instanceof Set ? mixed : new Set(mixed)
 
   return (
     <Section className={className}>
       {sectionLabel ? <SectionLabel>{sectionLabel}</SectionLabel> : null}
-      {attributes.map((attribute) => (
+      {visible.map((attribute) => (
         <AttributeFieldRow
           key={attribute.name}
           attribute={attribute}
