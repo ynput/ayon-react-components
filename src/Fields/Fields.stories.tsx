@@ -275,7 +275,12 @@ const AttributeFieldsTemplate = () => {
         values={values}
         onChange={(name, value) => setValues((prev) => ({ ...prev, [name]: value }))}
         onCommit={(name, value) => commit(name)(value)}
-        errors={{ effort: values.effort === 0 ? 'Effort must be more than 0' : undefined }}
+        errors={{
+          effort:
+            typeof values.effort === 'number' && (values.effort < 0 || values.effort > 100)
+              ? 'Effort must be between 0 and 100'
+              : undefined,
+        }}
         mixed={['note']}
       />
       <Log>{log.join('\n') || 'Commits appear here'}</Log>
