@@ -1,10 +1,11 @@
-import { ReactNode, forwardRef } from 'react'
+import { ReactNode, forwardRef, useId } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { Icon } from '../Icon'
 import { Button } from '../Buttons/Button'
 import { labelMedium, labelSmall } from '../theme'
 import { compactFieldRowStyles } from './fieldStyles'
+import { FieldErrorOverlay } from './common.styled'
 
 const StyledErrorBanner = styled.span`
   background-color: var(--md-sys-color-error-container);
@@ -87,6 +88,9 @@ const FieldIcon = styled.div`
   .icon {
     font-size: 16px;
   }
+  &.error {
+    color: var(--md-sys-color-error);
+  }
 `
 
 // Wraps icon + inline label
@@ -109,6 +113,7 @@ const FieldLabelText = styled.span`
 `
 
 const FieldBody = styled.div`
+  position: relative;
   min-width: 0;
   display: flex;
   align-items: center;
@@ -143,6 +148,15 @@ export interface FieldRowProps {
   /** Called after copyValue was written to the clipboard, e.g. to show a toast */
   onCopy?: (value: string) => void
   error?: string
+  /**
+   * Where the error shows:
+   * "banner" (default): a block below the row, which pushes the content below it down
+   * "overlay": small text under the input that takes no space, so nothing moves.
+   * Leave room below the row (a gap between rows) for it.
+   */
+  errorPlacement?: 'banner' | 'overlay'
+  /** Id of the overlay error text, to put in the input's aria-describedby. Generated when not set. */
+  errorId?: string
   showMixed?: boolean
   alignStart?: boolean
   /** Reserve the copy button column even when there is nothing to copy. Defaults to true. */
@@ -168,6 +182,8 @@ export const FieldRow = ({
   copyValue,
   onCopy,
   error,
+  errorPlacement = 'banner',
+  errorId,
   showMixed = false,
   alignStart = false,
   hasCopyButton = true,
@@ -176,6 +192,9 @@ export const FieldRow = ({
   className,
 }: FieldRowProps) => {
   const isInline = labelMode === 'inline'
+  const generatedErrorId = useId()
+  const overlayError = errorPlacement === 'overlay' && error ? error : undefined
+  const overlayErrorId = overlayError ? errorId || generatedErrorId : undefined
 
   const handleCopyValue = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -194,7 +213,7 @@ export const FieldRow = ({
       <Row $hasMeta={showMixed} $hasInlineLabel={isInline} $hasCopyButton={hasCopyButton}>
         {isInline ? (
           <FieldLeft data-tooltip={label}>
-            <FieldIcon>
+            <FieldIcon className={clsx({ error: overlayError })}>
               <Icon icon={icon} />
             </FieldIcon>
             <FieldLabelText title={label}>
@@ -203,15 +222,25 @@ export const FieldRow = ({
             </FieldLabelText>
           </FieldLeft>
         ) : (
-          <FieldIcon data-tooltip={label}>
+          <FieldIcon data-tooltip={label} className={clsx({ error: overlayError })}>
             {isRequired && <RequiredIndicator>*</RequiredIndicator>}
             <Icon icon={icon} />
           </FieldIcon>
         )}
 
         {/* Names the controls inside after the row label, also when the label is only a tooltip */}
-        <FieldBody role="group" aria-label={label} className={clsx({ 'align-start': alignStart })}>
+        <FieldBody
+          role="group"
+          aria-label={label}
+          aria-describedby={overlayErrorId}
+          className={clsx({ 'align-start': alignStart })}
+        >
           {children}
+          {overlayError ? (
+            <FieldErrorOverlay id={overlayErrorId} title={overlayError}>
+              {overlayError}
+            </FieldErrorOverlay>
+          ) : null}
         </FieldBody>
 
         {showMixed ? (
@@ -232,7 +261,7 @@ export const FieldRow = ({
         ) : null}
       </Row>
 
-      {error ? <FieldErrorBanner>{error}</FieldErrorBanner> : null}
+      {error && errorPlacement === 'banner' ? <FieldErrorBanner>{error}</FieldErrorBanner> : null}
     </Field>
   )
 }

@@ -315,3 +315,62 @@ export const SelectWithActions: Story = {
 export const Attributes: Story = {
   render: () => <AttributeFieldsTemplate />,
 }
+
+// Errors as small text under the input ("overlay") next to the default banner
+const ErrorsTemplate = () => {
+  const [text, setText] = useState('bad label')
+  const [select, setSelect] = useState<string | null>(null)
+  return (
+    <Form style={{ gap: 12 }}>
+      <FieldRow
+        icon="text_fields"
+        label="Label"
+        error="Label does not match the required format"
+        errorPlacement="overlay"
+      >
+        <TextField value={text} onChange={setText} className="ghost" />
+      </FieldRow>
+      <FieldRow
+        icon="checklist"
+        label="Cost center"
+        isRequired
+        error="Cost center is required"
+        errorPlacement="overlay"
+      >
+        <SelectField value={select} onChange={setSelect} options={options} className="ghost" />
+      </FieldRow>
+      <FieldRow icon="schedule" label="When" hasCopyButton={false}>
+        <DateTimeRangeField
+          startValue=""
+          endValue=""
+          onChange={() => undefined}
+          startError="Start is required"
+          endError="End is required"
+          errorPlacement="overlay"
+          ghost
+        />
+      </FieldRow>
+      <FieldRow icon="notes" label="Next row">
+        <TextField value="Does not move" onChange={() => undefined} className="ghost" />
+      </FieldRow>
+      <AttributeFields
+        attributes={attributes.slice(0, 3)}
+        values={{}}
+        onChange={() => undefined}
+        errors={Object.fromEntries(
+          attributes
+            .slice(0, 2)
+            .map((attribute) => [attribute.name, `${attribute.label} is required`]),
+        )}
+        errorPlacement="overlay"
+      />
+      <FieldRow icon="checklist" label="Banner (default)" error="Cost center is required">
+        <SelectField value={null} onChange={() => undefined} options={options} className="ghost" />
+      </FieldRow>
+    </Form>
+  )
+}
+
+export const Errors: Story = {
+  render: () => <ErrorsTemplate />,
+}
