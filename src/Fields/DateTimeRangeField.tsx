@@ -1,9 +1,9 @@
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import styled from 'styled-components'
 import clsx from 'clsx'
 import { DateField } from './DateField'
 import { TimeField } from './TimeField'
-import { FieldErrorBanner, FieldMixedIndicator } from './FieldRow'
+import { FieldErrorBanner, FieldErrorOverlay, FieldMixedIndicator } from './FieldRow'
 import { ReadOnlyValue } from './common.styled'
 
 const Container = styled.div`
@@ -22,9 +22,15 @@ const Columns = styled.div`
   min-width: 0;
   flex: 1 1 0;
   flex-wrap: wrap;
+
+  /* room for the error text under the start when the end wraps below it */
+  &.overlay-errors {
+    row-gap: 18px;
+  }
 `
 
 const Column = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -90,6 +96,8 @@ export interface DateTimeRangeFieldProps {
   defaultEndTime?: string
   startError?: string
   endError?: string
+  /** "banner" (default): errors as blocks below the range; "overlay": small text under each date that takes no space */
+  errorPlacement?: 'banner' | 'overlay'
   startMixed?: boolean
   endMixed?: boolean
   disabled?: boolean
@@ -113,6 +121,7 @@ export const DateTimeRangeField = ({
   defaultEndTime = '23:59',
   startError,
   endError,
+  errorPlacement = 'banner',
   startMixed = false,
   endMixed = false,
   disabled = false,
@@ -129,6 +138,7 @@ export const DateTimeRangeField = ({
   const showTime = allowTimeToggle && !!(start.time || end.time)
 
   // The latest range, so a commit right after a change (option pick) gets it before the parent re-renders
+  const errorIdBase = useId()
   const latestRange = useRef<DateTimeRangeFieldValue>({ startValue, endValue, withTime: showTime })
   latestRange.current = { startValue, endValue, withTime: showTime }
 
@@ -178,16 +188,22 @@ export const DateTimeRangeField = ({
   }
 
   const inputClassName = clsx({ ghost })
+  const isOverlay = errorPlacement === 'overlay'
+  const startErrorId = `${errorIdBase}-start`
+  const endErrorId = `${errorIdBase}-end`
+  const startDescribedBy = isOverlay && startError ? startErrorId : undefined
+  const endDescribedBy = isOverlay && endError ? endErrorId : undefined
 
   return (
     <Container className={className}>
-      <Columns>
+      <Columns className={clsx({ 'overlay-errors': isOverlay })}>
         <Column>
           <DateField
             value={start.date}
             onChange={(date) => updateRange({ startDate: date })}
             onCommit={commitRange}
             placeholder="Start"
+            aria-describedby={startDescribedBy}
             disabled={disabled}
             isSubmitting={isSubmitting}
             className={inputClassName}
@@ -198,12 +214,18 @@ export const DateTimeRangeField = ({
               value={start.time}
               onChange={(time) => updateRange({ startTime: time, withTime: true })}
               onCommit={commitRange}
+              aria-describedby={startDescribedBy}
               isSubmitting={isSubmitting}
               disabled={disabled}
               className={inputClassName}
             />
           )}
           <FieldMixedIndicator show={startMixed} />
+          {startDescribedBy && (
+            <FieldErrorOverlay id={startErrorId} title={startError}>
+              {startError}
+            </FieldErrorOverlay>
+          )}
         </Column>
 
         <Column>
@@ -212,6 +234,7 @@ export const DateTimeRangeField = ({
             onChange={(date) => updateRange({ endDate: date })}
             onCommit={commitRange}
             placeholder="End"
+            aria-describedby={endDescribedBy}
             isSubmitting={isSubmitting}
             disabled={disabled}
             className={inputClassName}
@@ -222,12 +245,18 @@ export const DateTimeRangeField = ({
               value={end.time}
               onChange={(time) => updateRange({ endTime: time, withTime: true })}
               onCommit={commitRange}
+              aria-describedby={endDescribedBy}
               isSubmitting={isSubmitting}
               disabled={disabled}
               className={inputClassName}
             />
           )}
           <FieldMixedIndicator show={endMixed} />
+          {endDescribedBy && (
+            <FieldErrorOverlay id={endErrorId} title={endError}>
+              {endError}
+            </FieldErrorOverlay>
+          )}
         </Column>
       </Columns>
 
@@ -260,7 +289,7 @@ export const DateTimeRangeField = ({
         </Toggle>
       )}
 
-      {(startError || endError) && (
+      {!isOverlay && (startError || endError) && (
         <Errors>
           {startError && <FieldErrorBanner>{startError}</FieldErrorBanner>}
           {endError && <FieldErrorBanner>{endError}</FieldErrorBanner>}

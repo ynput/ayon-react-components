@@ -288,13 +288,18 @@ export const AttributeField = ({
 
 export interface AttributeFieldRowProps
   extends AttributeFieldProps,
-    Pick<FieldRowProps, 'onCopy' | 'labelMode' | 'error' | 'showMixed'> {}
+    Pick<
+      FieldRowProps,
+      'onCopy' | 'labelMode' | 'error' | 'errorPlacement' | 'errorId' | 'showMixed'
+    > {}
 
 /** One attribute as a form row: icon, label, input, copy button, error and mixed state */
 export const AttributeFieldRow = ({
   onCopy,
   labelMode,
   error,
+  errorPlacement,
+  errorId,
   showMixed,
   ...props
 }: AttributeFieldRowProps) => {
@@ -309,6 +314,8 @@ export const AttributeFieldRow = ({
       isRequired={attribute.isRequired}
       showMixed={showMixed}
       error={error}
+      errorPlacement={errorPlacement}
+      errorId={errorId}
       alignStart={expanded}
       labelMode={labelMode}
       copyValue={getAttributeCopyValue(attribute, value)}
@@ -343,6 +350,7 @@ export interface AttributeFieldsProps {
   onCommit?: (name: string, value: unknown) => void
   /** Errors by attribute name */
   errors?: Record<string, string | undefined>
+  errorPlacement?: FieldRowProps['errorPlacement']
   /** Names of attributes whose value differs between the edited items */
   mixed?: string[] | Set<string>
   onCopy?: FieldRowProps['onCopy']
@@ -363,6 +371,7 @@ export const AttributeFields = ({
   onChange,
   onCommit,
   errors = {},
+  errorPlacement,
   mixed,
   onCopy,
   sectionLabel = 'Attributes',
@@ -388,6 +397,7 @@ export const AttributeFields = ({
           onChange={(value) => onChange(attribute.name, value)}
           onCommit={onCommit ? (value) => onCommit(attribute.name, value) : undefined}
           error={errors[attribute.name]}
+          errorPlacement={errorPlacement}
           showMixed={mixedSet.has(attribute.name)}
           onCopy={onCopy}
           labelMode={labelMode}
