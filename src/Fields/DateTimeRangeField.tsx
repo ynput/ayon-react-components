@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import clsx from 'clsx'
 import { DateField } from './DateField'
 import { TimeField } from './TimeField'
-import { FieldErrorBanner, FieldErrorOverlay, FieldMixedIndicator } from './FieldRow'
-import { ReadOnlyValue } from './common.styled'
+import { FieldErrorBanner, FieldMixedIndicator } from './FieldRow'
+import { FieldErrorOverlay, ReadOnlyValue } from './common.styled'
 
 const Container = styled.div`
   display: flex;

@@ -5,6 +5,7 @@ import { Icon } from '../Icon'
 import { Button } from '../Buttons/Button'
 import { labelMedium, labelSmall } from '../theme'
 import { compactFieldRowStyles } from './fieldStyles'
+import { FieldErrorOverlay } from './common.styled'
 
 const StyledErrorBanner = styled.span`
   background-color: var(--md-sys-color-error-container);
@@ -39,20 +40,6 @@ const Field = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-`
-
-// Small error text under the input that takes no space: the row keeps its height
-export const FieldErrorOverlay = styled.span`
-  ${labelSmall}
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  color: var(--md-sys-color-error);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `
 
 const Row = styled.div<{
@@ -101,7 +88,7 @@ const FieldIcon = styled.div`
   .icon {
     font-size: 16px;
   }
-  .has-error & {
+  &.error {
     color: var(--md-sys-color-error);
   }
 `
@@ -222,11 +209,11 @@ export const FieldRow = ({
   }
 
   return (
-    <Field className={clsx(className, { 'has-error': overlayError })}>
+    <Field className={className}>
       <Row $hasMeta={showMixed} $hasInlineLabel={isInline} $hasCopyButton={hasCopyButton}>
         {isInline ? (
           <FieldLeft data-tooltip={label}>
-            <FieldIcon>
+            <FieldIcon className={clsx({ error: overlayError })}>
               <Icon icon={icon} />
             </FieldIcon>
             <FieldLabelText title={label}>
@@ -235,7 +222,7 @@ export const FieldRow = ({
             </FieldLabelText>
           </FieldLeft>
         ) : (
-          <FieldIcon data-tooltip={label}>
+          <FieldIcon data-tooltip={label} className={clsx({ error: overlayError })}>
             {isRequired && <RequiredIndicator>*</RequiredIndicator>}
             <Icon icon={icon} />
           </FieldIcon>

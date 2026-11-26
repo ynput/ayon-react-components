@@ -353,6 +353,17 @@ const ErrorsTemplate = () => {
       <FieldRow icon="notes" label="Next row">
         <TextField value="Does not move" onChange={() => undefined} className="ghost" />
       </FieldRow>
+      <AttributeFields
+        attributes={attributes.slice(0, 3)}
+        values={{}}
+        onChange={() => undefined}
+        errors={Object.fromEntries(
+          attributes
+            .slice(0, 2)
+            .map((attribute) => [attribute.name, `${attribute.label} is required`]),
+        )}
+        errorPlacement="overlay"
+      />
       <FieldRow icon="checklist" label="Banner (default)" error="Cost center is required">
         <SelectField value={null} onChange={() => undefined} options={options} className="ghost" />
       </FieldRow>

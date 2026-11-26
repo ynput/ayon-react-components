@@ -333,6 +333,11 @@ const Section = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  /* room between rows for the error text under each input */
+  &.overlay-errors {
+    gap: 14px;
+  }
 `
 
 const SectionLabel = styled.label`
@@ -387,7 +392,7 @@ export const AttributeFields = ({
   const mixedSet = mixed instanceof Set ? mixed : new Set(mixed)
 
   return (
-    <Section className={className}>
+    <Section className={clsx(className, { 'overlay-errors': errorPlacement === 'overlay' })}>
       {sectionLabel ? <SectionLabel>{sectionLabel}</SectionLabel> : null}
       {visible.map((attribute) => (
         <AttributeFieldRow
